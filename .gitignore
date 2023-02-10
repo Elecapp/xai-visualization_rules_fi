@@ -8,3 +8,4 @@ externals/lore/__pycache__
 datasets/Dati-Banca-Lore
 datasets/.DS_Store
 .DS_Store
+notebooks/SuperLore/__pycache__
