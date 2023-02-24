@@ -10,3 +10,5 @@ datasets/.DS_Store
 .DS_Store
 notebooks/SuperLore/__pycache__
 notebooks/chart.zip
+notebooks/__pycache__
+.idea
