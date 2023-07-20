@@ -9,7 +9,7 @@ class PlotExplanation:
             numeric_columns,
             instance_number,
             x_train,
-            rules,
+            rules, crules,
             feature_importance_type,
             feature_importance
     ):
@@ -19,6 +19,7 @@ class PlotExplanation:
         self.instance_number = instance_number
         self.x_train = x_train
         self.rules = rules
+        self.crules = crules
         self.feature_importance_type = feature_importance_type
         self.feature_importance = feature_importance
         self.df = None
@@ -62,7 +63,7 @@ class PlotExplanation:
             inst = self.x_train.iloc[self.instance_number].values
             self.df['inst'] = inst
         if self.rules is not None:
-            df_rules = pd.DataFrame.from_records(self.rules)
+            df_rules = pd.DataFrame.from_records(self.rules['premise'])
             self.df = self.df.merge(df_rules, how='left', left_on='name', right_on='att')
             self.df = self.df.drop('att', axis=1)
             thr2_list = []
@@ -79,4 +80,91 @@ class PlotExplanation:
         self.df.sort_values(by=['feature_importance'], key=lambda x: abs(x), ascending=False, inplace=True)
         return self.df
 
+    def prepare_rule_descriptor(self):
+        feature_list = []
+        if self.feature_importance_type == 'lime':
+            lime_dict = {}
+            for (key, value) in self.feature_importance:
+                lime_dict.setdefault(key, value)
+        for i, el in enumerate(self.feature_names):
+            f = {}
+            if el in self.numeric_columns:
+                f['type'] = 'numeric'
+                f['name'] = el
+                f['rname'] = self.real_feature_names[i]
+                if self.x_train is not None:
+                    f['min'] = self.x_train[el].min()
+                    f['max'] = self.x_train[el].max()
+                    f['q1'] = self.x_train[el].quantile(0.25)
+                    f['median'] = self.x_train[el].quantile(0.50)
+                    f['q3'] = self.x_train[el].quantile(0.75)
+                    f['mean'] = self.x_train[el].mean()
+                    f['std'] = self.x_train[el].std()
+            else:
+                f['type'] = 'categorical'
+                f['name'] = el
+                f['rname'] = el.split('=')[0]
+                f['category'] = el.split('=', 1)[1]
+                if self.x_train is not None:
+                    f['count'] = self.x_train[el].sum()
+
+            if self.feature_importance_type == 'lime':
+                f['feature_importance'] = lime_dict[el]
+            if self.feature_importance_type == 'shap':
+                f['feature_importance'] = self.feature_importance[1][i]
+            feature_list.append(f)
+        feature_dict = {}
+        # Store data distribution in a dictionary with an entry for each feature
+        for f in feature_list:
+            feature_dict[f['name']] = {}
+            feature_dict[f['name']]['eda'] = f
+            feature_dict[f['name']]['rule'] = []
+            feature_dict[f['name']]['crules'] = {}
+        # Store the value of the instance in the corresponding entry of the dictionary
+        if self.instance_number:
+            inst = self.x_train.iloc[self.instance_number].values
+            for i, v in enumerate(inst):
+                feat_name = self.feature_names[i]
+                feature_dict[feat_name]['instance_value'] = v
+
+        if self.rules is not None:
+            for predicate in self.rules['premise']:
+                feat_name = predicate['att']
+                feature_dict[feat_name]['rule'].append((predicate, self.rules['cons']))
+
+        if len(self.crules) > 0:
+            for i, crule in enumerate(self.crules):
+                for predicate in crule['premise']:
+                    feat_name = predicate['att']
+                    if feat_name in feature_dict:
+                        if f'C{i}' not in feature_dict[feat_name]['crules']:
+                            feature_dict[feat_name]['crules'][f'C{i}'] = []
+                        feature_dict[feat_name]['crules'][f'C{i}'].append((predicate, crule['cons']))
+        else:
+            print("No counter rules found")
+
+        return feature_dict
+
+
+
+        # if self.instance_number:
+        #     inst = self.x_train.iloc[self.instance_number].values
+        #     self.df['inst'] = inst
+        # if self.rules is not None:
+        #     df_rules = pd.DataFrame.from_records(self.rules)
+        #     self.df = self.df.merge(df_rules, how='left', left_on='name', right_on='att')
+        #     self.df = self.df.drop('att', axis=1)
+        #     thr2_list = []
+        #     for i, row in self.df.iterrows():
+        #         if row['op'] == '>' or row['op'] == '>=':
+        #             thr2_list.append(row['max'])
+        #             continue
+        #         if row['op'] == '<' or row['op'] == '<=':
+        #             thr2_list.append(row['min'])
+        #             continue
+        #         else:
+        #             thr2_list.append(np.nan)
+        #     self.df['thr2'] = thr2_list
+        # self.df.sort_values(by=['feature_importance'], key=lambda x: abs(x), ascending=False, inplace=True)
+        # return self.df
 
