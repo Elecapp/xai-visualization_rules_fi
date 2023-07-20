@@ -12,3 +12,4 @@ notebooks/SuperLore/__pycache__
 notebooks/chart.zip
 notebooks/__pycache__
 .idea
+/node_modules/
