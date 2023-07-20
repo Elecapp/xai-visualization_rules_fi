@@ -9,7 +9,7 @@ class PlotExplanation:
             numeric_columns,
             instance_number,
             x_train,
-            rules, crules,
+            expDict,
             feature_importance_type,
             feature_importance
     ):
@@ -18,8 +18,9 @@ class PlotExplanation:
         self.numeric_columns = numeric_columns
         self.instance_number = instance_number
         self.x_train = x_train
-        self.rules = rules
-        self.crules = crules
+        self.rule = expDict['rule']
+        self.crules = expDict['crules']
+        self.expDict = expDict
         self.feature_importance_type = feature_importance_type
         self.feature_importance = feature_importance
         self.df = None
@@ -62,8 +63,8 @@ class PlotExplanation:
         if self.instance_number:
             inst = self.x_train.iloc[self.instance_number].values
             self.df['inst'] = inst
-        if self.rules is not None:
-            df_rules = pd.DataFrame.from_records(self.rules['premise'])
+        if self.rule is not None:
+            df_rules = pd.DataFrame.from_records(self.rule['premise'])
             self.df = self.df.merge(df_rules, how='left', left_on='name', right_on='att')
             self.df = self.df.drop('att', axis=1)
             thr2_list = []
@@ -116,10 +117,15 @@ class PlotExplanation:
         feature_dict = {}
         # Store data distribution in a dictionary with an entry for each feature
         for f in feature_list:
-            feature_dict[f['name']] = {}
-            feature_dict[f['name']]['eda'] = f
-            feature_dict[f['name']]['rule'] = []
-            feature_dict[f['name']]['crules'] = {}
+            f_name= f['name']
+            feature_dict[f_name] = {}
+            feature_dict[f_name]['name'] = f.pop('name')
+            feature_dict[f_name]['rname'] = f.pop('rname')
+            feature_dict[f_name]['type'] = f.pop('type')
+            feature_dict[f_name]['feature_importance'] = f.pop('feature_importance')
+            feature_dict[f_name]['eda'] = f
+            feature_dict[f_name]['rule'] = []
+            feature_dict[f_name]['crules'] = {}
         # Store the value of the instance in the corresponding entry of the dictionary
         if self.instance_number:
             inst = self.x_train.iloc[self.instance_number].values
@@ -127,10 +133,10 @@ class PlotExplanation:
                 feat_name = self.feature_names[i]
                 feature_dict[feat_name]['instance_value'] = v
 
-        if self.rules is not None:
-            for predicate in self.rules['premise']:
+        if self.rule is not None:
+            for predicate in self.rule['premise']:
                 feat_name = predicate['att']
-                feature_dict[feat_name]['rule'].append((predicate, self.rules['cons']))
+                feature_dict[feat_name]['rule'].append((predicate, self.rule['cons']))
 
         if len(self.crules) > 0:
             for i, crule in enumerate(self.crules):
@@ -143,7 +149,13 @@ class PlotExplanation:
         else:
             print("No counter rules found")
 
-        return feature_dict
+
+        descriptor = {
+            'features': list(feature_dict.values()),
+            'bb_pred': self.expDict['bb_pred'],
+            'dt_pred': self.expDict['dt_pred'],
+        }
+        return descriptor
 
 
 
