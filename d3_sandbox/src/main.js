@@ -111,6 +111,13 @@ function FIPERFeatureValuesView() {
         .attr('y2', SINGLE_FEATURE_HEIGHT / 2)
         .attr('stroke', 'lightgray')
         .attr('stroke-width', 1.3);
+      selection.selectAll('circle')
+        .data(d => d.values)
+        .join('circle')
+        .attr('cx', d => barLength(d.instance_value))
+        .attr('cy', SINGLE_FEATURE_HEIGHT / 2)
+        .attr('r', SINGLE_FEATURE_HEIGHT / 6)
+        .attr('fill', 'black');
     }
 
     return me;
