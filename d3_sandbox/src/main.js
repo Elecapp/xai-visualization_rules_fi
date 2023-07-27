@@ -43,7 +43,7 @@ function prepareNumericalValues(data) {
   newdata.push({
     value0: eda.min,
     value1: eda.q1,
-    type: 'line'
+    type: 'line',
   });
   newdata.push({
     value0: eda.q1,
@@ -64,7 +64,56 @@ function prepareNumericalValues(data) {
   return newdata;
 }
 
-function FIPERFeatureValuesView() {
+function FIPERFeatureInstanceValueView() {
+  let width = RULES_COLUMN_WIDTH;
+  let height = 50;
+  const barLength = d3.scaleLinear()
+    .range([0, width])
+    .domain([0, 1]);
+
+  function me(selection) {
+    if (selection.datum().type === 'categorical') {
+      // draw the symbol for the actual value of the instance
+      const total = d3.sum(selection.datum().values, d => d.eda.count);
+      barLength.domain([0, total]);
+      selection.selectAll('circle')
+        .data(d => prepareCategoricalValues(d.values).filter(v => v.instance_value > 0))
+        .join('circle')
+        .attr('cx', d => (barLength(d.cumulative) + barLength(d.value)) / 2)
+        .attr('cy', SINGLE_FEATURE_HEIGHT / 2)
+        .attr('r', SINGLE_FEATURE_HEIGHT / 6)
+        .attr('fill', 'black');
+    } else {
+      barLength.domain([selection.datum().values[0].eda.min, selection.datum().values[0].eda.max]);
+      selection.selectAll('circle.instance-value')
+        .data(d => d.values)
+        .join('circle')
+        .attr('cx', d => barLength(d.instance_value))
+        .attr('cy', SINGLE_FEATURE_HEIGHT / 2)
+        .attr('r', SINGLE_FEATURE_HEIGHT / 6)
+        .attr('fill', 'black');
+    }
+
+    return me;
+  }
+  // eslint-disable-next-line
+  me.width = function (_) {
+    if (!arguments.length) return width;
+    width = _;
+    barLength.range([0, width]);
+    return me;
+  };
+
+  // eslint-disable-next-line
+  me.height = function (_) {
+    if (!arguments.length) return height;
+    height = _;
+    return me;
+  };
+  return me;
+}
+
+function FIPERFeatureDistributionView() {
   let width = RULES_COLUMN_WIDTH;
   let height = 50;
   const barLength = d3.scaleLinear()
@@ -81,18 +130,9 @@ function FIPERFeatureValuesView() {
         .attr('x', d => barLength(d.cumulative))
         .attr('y', SINGLE_FEATURE_HEIGHT / 4)
         .attr('width', d => barLength(d.value))
-        .attr('height', SINGLE_FEATURE_HEIGHT * 2 / 3)
+        .attr('height', (SINGLE_FEATURE_HEIGHT * 2) / 3)
         .attr('fill', 'lightgray')
         .attr('stroke', 'white');
-
-      // draw the symbol for the actual value of the instance
-      selection.selectAll('circle')
-        .data(d => prepareCategoricalValues(d.values).filter(d => d.instance_value > 0))
-        .join('circle')
-        .attr('cx', d => barLength(d.cumulative) + barLength(d.value) / 2)
-        .attr('cy', SINGLE_FEATURE_HEIGHT / 2)
-        .attr('r', SINGLE_FEATURE_HEIGHT / 6)
-        .attr('fill', 'black');
     } else {
       barLength.domain([selection.datum().values[0].eda.min, selection.datum().values[0].eda.max]);
       selection.selectAll('rect')
@@ -101,7 +141,7 @@ function FIPERFeatureValuesView() {
         .attr('x', d => barLength(d.value0))
         .attr('y', SINGLE_FEATURE_HEIGHT / 4)
         .attr('width', d => barLength(d.value1) - barLength(d.value0))
-        .attr('height', SINGLE_FEATURE_HEIGHT * 2 / 3)
+        .attr('height', (SINGLE_FEATURE_HEIGHT * 2) / 3)
         .attr('fill', 'lightgray')
         .attr('stroke', 'white');
       selection.selectAll('line')
@@ -113,13 +153,6 @@ function FIPERFeatureValuesView() {
         .attr('y2', SINGLE_FEATURE_HEIGHT / 2)
         .attr('stroke', 'lightgray')
         .attr('stroke-width', 1.3);
-      selection.selectAll('circle')
-        .data(d => d.values)
-        .join('circle')
-        .attr('cx', d => barLength(d.instance_value))
-        .attr('cy', SINGLE_FEATURE_HEIGHT / 2)
-        .attr('r', SINGLE_FEATURE_HEIGHT / 6)
-        .attr('fill', 'black');
     }
 
     return me;
@@ -146,7 +179,7 @@ function FIPERFeatureValuesView() {
 function FIPERFeatureLabelsView() {
   let width = FI_COLUMN_WIDTH;
   let height = 50;
-  function me(selection){
+  function me(selection) {
     selection.append('text')
       .attr('x', width)
       .attr('y', SINGLE_FEATURE_HEIGHT / 2)
@@ -249,7 +282,10 @@ function FIPERView() {
       .width(FI_COLUMN_WIDTH)
       .height(SINGLE_FEATURE_HEIGHT)
       .fitExtent(fiExtent);
-    const fvv = FIPERFeatureValuesView()
+    const fvv = FIPERFeatureDistributionView()
+      .width(RULES_COLUMN_WIDTH)
+      .height(SINGLE_FEATURE_HEIGHT);
+    const fiv = FIPERFeatureInstanceValueView()
       .width(RULES_COLUMN_WIDTH)
       .height(SINGLE_FEATURE_HEIGHT);
     const flv = FIPERFeatureLabelsView()
@@ -267,17 +303,26 @@ function FIPERView() {
       d3.select(n[j])
         .append('g')
         .classed('feature-importance', true)
-        .attr('transform', `translate(${LABELS_COLUMN_WIDTH+RULES_COLUMN_WIDTH+2*GUTTER}, 0)`)
+        .attr('transform', `translate(${LABELS_COLUMN_WIDTH + RULES_COLUMN_WIDTH + 2 * GUTTER}, 0)`)
         .call(ffv);
-      d3.select(n[j])
+      const gValueStack = d3.select(n[j])
         .append('g')
         .classed('feature-values', true)
-        .attr('transform', `translate(${LABELS_COLUMN_WIDTH+GUTTER}, 0)`)
+        .attr('transform', `translate(${LABELS_COLUMN_WIDTH + GUTTER}, 0)`);
+      gValueStack.selectAll('g.distribution')
+        .data(d => [d])
+        .join('g')
+        .classed('distribution', true)
         .call(fvv);
+      gValueStack.selectAll('g.instance-value')
+        .data(d => [d])
+        .join('g')
+        .classed('instance-value', true)
+        .call(fiv);
       d3.select(n[j])
         .append('g')
         .classed('feature-labels', true)
-        .attr('transform', `translate(0, 0)`)
+        .attr('transform', 'translate(0, 0)')
         .call(flv);
     });
   }
