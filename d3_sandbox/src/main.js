@@ -187,7 +187,7 @@ function FIPERFeatureLabelsView() {
       .attr('y', SINGLE_FEATURE_HEIGHT / 2)
       .attr('text-anchor', 'end')
       .attr('alignment-baseline', 'middle')
-      .text(d => d.rname);
+      .text(d => `${d.rname} (${d.status})`);
     return me;
   }
 
@@ -297,26 +297,29 @@ function FIPERView() {
     const highlightScale = d3.scaleOrdinal()
       .domain([false, true])
       .range(['white', 'lightyellow']);
+    const backgroundHeight = d3.scaleOrdinal()
+      .domain([0, 1, 2])
+      .range([SINGLE_FEATURE_HEIGHT, 5 * SINGLE_FEATURE_HEIGHT, SINGLE_FEATURE_HEIGHT]);
     yScale.domain([0, features.length])
-      .range([0, height]);
+      .range([0, features.length * SINGLE_FEATURE_HEIGHT]);
     const gFeatures = selection.selectAll('g.feature')
       .data(features)
       .join('g')
       .classed('feature', true)
-      .attr('transform', (d, i) => `translate(0, ${yScale(i)})`);
+      .attr('transform', (d, i) => `translate(0, ${yScale(i) + (d.status>1 ? d.rows * SINGLE_FEATURE_HEIGHT:0)})`);
     gFeatures.selectAll('rect.background')
       .data(d => [d])
       .join('rect')
       .classed('background', true)
       .attr('width', width)
-      .attr('height', SINGLE_FEATURE_HEIGHT)
+      .attr('height', d => d.status === 1 ? (d.rows + 1) * SINGLE_FEATURE_HEIGHT : SINGLE_FEATURE_HEIGHT)
       .attr('fill', d => highlightScale(d.highlighted));
     gFeatures.each((_, j, n) => {
       d3.select(n[j]).selectAll('g.feature-importance')
         .data(d => [d])
         .join('g')
         .classed('feature-importance', true)
-        .attr('transform', `translate(${LABELS_COLUMN_WIDTH + RULES_COLUMN_WIDTH + 2 * GUTTER}, 0)`)
+        .attr('transform', `translate(${LABELS_COLUMN_WIDTH + RULES_COLUMN_WIDTH + (2 * GUTTER)}, 0)`)
         .call(ffv);
       const gValueStack = d3.select(n[j]).selectAll('g.feature-values')
         .data(d => [d])
@@ -341,10 +344,37 @@ function FIPERView() {
         .call(flv);
     });
     gFeatures.on('click', function () {
+      const currSelection = d3.select(this).datum().highlighted;
       gFeatures.data().forEach((d) => {
+        // eslint-disable-next-line no-param-reassign
         d.highlighted = false;
       });
-      d3.select(this).datum().highlighted = true;
+      if (!currSelection) {
+        d3.select(this).datum().highlighted = true;
+      }
+      let selectedIdx = 9999999999;
+      let rows = 1;
+      gFeatures.data().forEach((d, i) => {
+        if (d.highlighted) {
+          selectedIdx = i;
+          d.status = 1;
+          rows = gFeatures.data()[selectedIdx].values.length;
+          if (d.type === 'numeric') {
+            rows = 5;
+          }
+          d.rows = rows;
+        } else {
+          d.status = 0;
+          if (i > selectedIdx) {
+            d.status = 2;
+          }
+        }
+      });
+      gFeatures.data().forEach((d, i) => {
+        if(i >= selectedIdx) {
+          d.rows = rows;
+        }
+      });
       me(selection);
     });
   }
@@ -376,9 +406,12 @@ d3.json('/static/instance_34.json').then((data) => {
       feature_importance: d3.sum(d[1], f => f.feature_importance),
       type: d[1][0].type,
       highlighted: false,
+      status: 0,
+      rows: 1,
     }));
   rEntries.sort((a, b) => (b.feature_importance) - (a.feature_importance));
-  const height = rEntries.length * SINGLE_FEATURE_HEIGHT;
+  const maxValues = d3.max(rEntries, d => d.values.length);
+  const height = (rEntries.length + maxValues) * SINGLE_FEATURE_HEIGHT;
   const svg = d3.select('#app')
     .append('svg')
     .attr('width', GLOBAL_WIDTH)
