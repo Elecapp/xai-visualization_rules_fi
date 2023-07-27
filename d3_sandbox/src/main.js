@@ -3,8 +3,10 @@
 const d3 = require('d3');
 
 const SINGLE_FEATURE_HEIGHT = 25;
-const FIRST_COLUMN_WIDTH = 100;
-const SECOND_COLUMN_WIDTH = 300;
+const FI_COLUMN_WIDTH = 100;
+const RULES_COLUMN_WIDTH = 300;
+const LABELS_COLUMN_WIDTH = 200;
+const GUTTER = 10;
 
 // Format the data (instead of using d3.stack()) and
 // filter out 0 values:
@@ -63,7 +65,7 @@ function prepareNumericalValues(data) {
 }
 
 function FIPERFeatureValuesView() {
-  let width = SECOND_COLUMN_WIDTH;
+  let width = RULES_COLUMN_WIDTH;
   let height = 50;
   const barLength = d3.scaleLinear()
     .range([0, width])
@@ -141,8 +143,37 @@ function FIPERFeatureValuesView() {
   return me;
 }
 
+function FIPERFeatureLabelsView() {
+  let width = FI_COLUMN_WIDTH;
+  let height = 50;
+  function me(selection){
+    selection.append('text')
+      .attr('x', width)
+      .attr('y', SINGLE_FEATURE_HEIGHT / 2)
+      .attr('text-anchor', 'end')
+      .attr('alignment-baseline', 'middle')
+      .text(d => d.rname);
+    return me;
+  }
+
+  // eslint-disable-next-line
+  me.width = function (_) {
+    if (!arguments.length) return width;
+    width = _;
+    return me;
+  };
+
+  // eslint-disable-next-line
+  me.height = function (_) {
+    if (!arguments.length) return height;
+    height = _;
+    return me;
+  };
+  return me;
+}
+
 function FIPERFeatureImportanceView() {
-  let width = FIRST_COLUMN_WIDTH;
+  let width = FI_COLUMN_WIDTH;
   let height = 50;
   let fiExtent = [0, 1];
   const barLength = d3.scaleLinear()
@@ -175,11 +206,6 @@ function FIPERFeatureImportanceView() {
     selection.selectAll('rect')
       .filter(d => d.feature_importance < 0)
       .attr('x', d => (width / 2) - barLength(Math.abs(d.feature_importance)));
-    selection.append('text')
-      .attr('x', width + 350)
-      .attr('y', SINGLE_FEATURE_HEIGHT / 2)
-      .attr('dy', '0.35em')
-      .text(d => d.rname);
   }
 
   // eslint-disable-next-line
@@ -220,11 +246,14 @@ function FIPERView() {
     const fiMax = d3.max(features, d => Math.abs(d.feature_importance));
     const fiExtent = [0, fiMax];
     const ffv = FIPERFeatureImportanceView()
-      .width(FIRST_COLUMN_WIDTH)
+      .width(FI_COLUMN_WIDTH)
       .height(SINGLE_FEATURE_HEIGHT)
       .fitExtent(fiExtent);
     const fvv = FIPERFeatureValuesView()
-      .width(SECOND_COLUMN_WIDTH)
+      .width(RULES_COLUMN_WIDTH)
+      .height(SINGLE_FEATURE_HEIGHT);
+    const flv = FIPERFeatureLabelsView()
+      .width(LABELS_COLUMN_WIDTH)
       .height(SINGLE_FEATURE_HEIGHT);
 
     yScale.domain([0, features.length])
@@ -238,12 +267,18 @@ function FIPERView() {
       d3.select(n[j])
         .append('g')
         .classed('feature-importance', true)
+        .attr('transform', `translate(${LABELS_COLUMN_WIDTH+RULES_COLUMN_WIDTH+2*GUTTER}, 0)`)
         .call(ffv);
       d3.select(n[j])
         .append('g')
         .classed('feature-values', true)
-        .attr('transform', `translate(${FIRST_COLUMN_WIDTH}, 0)`)
+        .attr('transform', `translate(${LABELS_COLUMN_WIDTH+GUTTER}, 0)`)
         .call(fvv);
+      d3.select(n[j])
+        .append('g')
+        .classed('feature-labels', true)
+        .attr('transform', `translate(0, 0)`)
+        .call(flv);
     });
   }
 
