@@ -180,7 +180,9 @@ function FIPERFeatureLabelsView() {
   let width = FI_COLUMN_WIDTH;
   let height = 50;
   function me(selection) {
-    selection.append('text')
+    selection.selectAll('text')
+      .data(d => [d])
+      .join('text')
       .attr('x', width)
       .attr('y', SINGLE_FEATURE_HEIGHT / 2)
       .attr('text-anchor', 'end')
@@ -220,8 +222,9 @@ function FIPERFeatureImportanceView() {
    *  metadata of the feature to be visualized.
    */
   function me(selection) {
-    selection
-      .append('line')
+    selection.selectAll('line')
+      .data(d => [d])
+      .join('line')
       .attr('x1', width / 2)
       .attr('x2', width / 2)
       .attr('y1', 0)
@@ -282,48 +285,67 @@ function FIPERView() {
       .width(FI_COLUMN_WIDTH)
       .height(SINGLE_FEATURE_HEIGHT)
       .fitExtent(fiExtent);
-    const fvv = FIPERFeatureDistributionView()
+    const fdv = FIPERFeatureDistributionView()
       .width(RULES_COLUMN_WIDTH)
       .height(SINGLE_FEATURE_HEIGHT);
-    const fiv = FIPERFeatureInstanceValueView()
+    const fivv = FIPERFeatureInstanceValueView()
       .width(RULES_COLUMN_WIDTH)
       .height(SINGLE_FEATURE_HEIGHT);
     const flv = FIPERFeatureLabelsView()
       .width(LABELS_COLUMN_WIDTH)
       .height(SINGLE_FEATURE_HEIGHT);
-
+    const highlightScale = d3.scaleOrdinal()
+      .domain([false, true])
+      .range(['white', 'lightyellow']);
     yScale.domain([0, features.length])
       .range([0, height]);
-    const gFeatures = selection.selectAll('g')
+    const gFeatures = selection.selectAll('g.feature')
       .data(features)
       .join('g')
       .classed('feature', true)
       .attr('transform', (d, i) => `translate(0, ${yScale(i)})`);
+    gFeatures.selectAll('rect.background')
+      .data(d => [d])
+      .join('rect')
+      .classed('background', true)
+      .attr('width', width)
+      .attr('height', SINGLE_FEATURE_HEIGHT)
+      .attr('fill', d => highlightScale(d.highlighted));
     gFeatures.each((_, j, n) => {
-      d3.select(n[j])
-        .append('g')
+      d3.select(n[j]).selectAll('g.feature-importance')
+        .data(d => [d])
+        .join('g')
         .classed('feature-importance', true)
         .attr('transform', `translate(${LABELS_COLUMN_WIDTH + RULES_COLUMN_WIDTH + 2 * GUTTER}, 0)`)
         .call(ffv);
-      const gValueStack = d3.select(n[j])
-        .append('g')
+      const gValueStack = d3.select(n[j]).selectAll('g.feature-values')
+        .data(d => [d])
+        .join('g')
         .classed('feature-values', true)
         .attr('transform', `translate(${LABELS_COLUMN_WIDTH + GUTTER}, 0)`);
       gValueStack.selectAll('g.distribution')
         .data(d => [d])
         .join('g')
         .classed('distribution', true)
-        .call(fvv);
+        .call(fdv);
       gValueStack.selectAll('g.instance-value')
         .data(d => [d])
         .join('g')
         .classed('instance-value', true)
-        .call(fiv);
-      d3.select(n[j])
-        .append('g')
+        .call(fivv);
+      d3.select(n[j]).selectAll('g.feature-labels')
+        .data(d => [d])
+        .join('g')
         .classed('feature-labels', true)
         .attr('transform', 'translate(0, 0)')
         .call(flv);
+    });
+    gFeatures.on('click', function () {
+      gFeatures.data().forEach((d) => {
+        d.highlighted = false;
+      });
+      d3.select(this).datum().highlighted = true;
+      me(selection);
     });
   }
 
@@ -353,6 +375,7 @@ d3.json('/static/instance_34.json').then((data) => {
       values: d[1],
       feature_importance: d3.sum(d[1], f => f.feature_importance),
       type: d[1][0].type,
+      highlighted: false,
     }));
   rEntries.sort((a, b) => (b.feature_importance) - (a.feature_importance));
   const height = rEntries.length * SINGLE_FEATURE_HEIGHT;
