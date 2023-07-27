@@ -2,10 +2,10 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 const d3 = require('d3');
 
-const SINGLE_FEATURE_HEIGHT = 25;
+const SINGLE_FEATURE_HEIGHT = 30;
 const FI_COLUMN_WIDTH = 100;
 const RULES_COLUMN_WIDTH = 300;
-const LABELS_COLUMN_WIDTH = 200;
+const LABELS_COLUMN_WIDTH = 250;
 const GUTTER = 10;
 
 // Format the data (instead of using d3.stack()) and
@@ -76,11 +76,12 @@ function FIPERFeatureInstanceValueView() {
       // draw the symbol for the actual value of the instance
       const total = d3.sum(selection.datum().values, d => d.eda.count);
       barLength.domain([0, total]);
-      selection.selectAll('circle')
+      selection.selectAll('circle.instance-value')
         .data(d => prepareCategoricalValues(d.values).filter(v => v.instance_value > 0))
         .join('circle')
-        .attr('cx', d => (barLength(d.cumulative) + barLength(d.value)) / 2)
-        .attr('cy', SINGLE_FEATURE_HEIGHT / 2)
+        .classed('instance-value', true)
+        .attr('cx', d => barLength(d.cumulative) + (barLength(d.value) / 2))
+        .attr('cy', SINGLE_FEATURE_HEIGHT / 2 + 2) //TODO: fix this
         .attr('r', SINGLE_FEATURE_HEIGHT / 6)
         .attr('fill', 'black');
     } else {
@@ -88,6 +89,7 @@ function FIPERFeatureInstanceValueView() {
       selection.selectAll('circle.instance-value')
         .data(d => d.values)
         .join('circle')
+        .classed('instance-value', true)
         .attr('cx', d => barLength(d.instance_value))
         .attr('cy', SINGLE_FEATURE_HEIGHT / 2)
         .attr('r', SINGLE_FEATURE_HEIGHT / 6)
@@ -124,15 +126,63 @@ function FIPERFeatureDistributionView() {
     if (selection.datum().type === 'categorical') {
       const total = d3.sum(selection.datum().values, d => d.eda.count);
       barLength.domain([0, total]);
-      selection.selectAll('rect')
+
+      const gSingleBar = selection.selectAll('g.single-bar')
+        .data(d => [d])
+        .join('g')
+        .classed('single-bar', true);
+
+      gSingleBar.selectAll('rect.single-bar')
         .data(d => prepareCategoricalValues(d.values))
         .join('rect')
+        .classed('single-bar', true)
         .attr('x', d => barLength(d.cumulative))
         .attr('y', SINGLE_FEATURE_HEIGHT / 4)
         .attr('width', d => barLength(d.value))
         .attr('height', (SINGLE_FEATURE_HEIGHT * 2) / 3)
         .attr('fill', 'lightgray')
         .attr('stroke', 'white');
+
+      const gDetails = selection.selectAll('g.details')
+        .data(d => [d])
+        .join('g')
+        .classed('details', true)
+        .attr('transform', `translate(0, ${1.5 * SINGLE_FEATURE_HEIGHT})`)
+        .attr('visibility', d => (d.status === 1 ? 'visible' : 'hidden'));
+
+      if (selection.datum().status === 1) {
+        gDetails.selectAll('rect.single-bar')
+          .data(d => prepareCategoricalValues(d.values))
+          .join('rect')
+          .classed('single-bar', true)
+          .attr('x', 0)
+          .attr('y', (d, i) => (i * SINGLE_FEATURE_HEIGHT) + (SINGLE_FEATURE_HEIGHT / 4))
+          .attr('width', d => barLength(d.value))
+          .attr('height', (SINGLE_FEATURE_HEIGHT / 2))
+          .attr('fill', d => d.instance_value ? '#ccc':'#fff')
+          .attr('stroke', 'lightgray');
+        gDetails.selectAll('text.single-bar')
+          .data(d => prepareCategoricalValues(d.values))
+          .join('text')
+          .classed('single-bar', true)
+          .attr('x', -GUTTER)
+          .attr('y', (d, i) => (i * SINGLE_FEATURE_HEIGHT) + (SINGLE_FEATURE_HEIGHT / 2))
+          .attr('text-anchor', 'end')
+          .attr('alignment-baseline', 'middle')
+          .attr('font-size', 12)
+          .text(d => `${d.label}`);
+        gDetails.selectAll('text.single-bar-value')
+          .data(d => prepareCategoricalValues(d.values))
+          .join('text')
+          .classed('single-bar-value', true)
+          .attr('x', d => barLength(d.value) + GUTTER)
+          .attr('y', (d, i) => (i * SINGLE_FEATURE_HEIGHT) + (SINGLE_FEATURE_HEIGHT / 2))
+          .attr('text-anchor', 'start')
+          .attr('alignment-baseline', 'middle')
+          .attr('font-size', 12)
+          .text(d => `${d.value} (${d.percent.toFixed(2)}%)`);
+
+      }
     } else {
       barLength.domain([selection.datum().values[0].eda.min, selection.datum().values[0].eda.max]);
       selection.selectAll('rect')
@@ -187,7 +237,7 @@ function FIPERFeatureLabelsView() {
       .attr('y', SINGLE_FEATURE_HEIGHT / 2)
       .attr('text-anchor', 'end')
       .attr('alignment-baseline', 'middle')
-      .text(d => `${d.rname} (${d.status})`);
+      .text(d => `${d.rname}`);
     return me;
   }
 
@@ -296,7 +346,7 @@ function FIPERView() {
       .height(SINGLE_FEATURE_HEIGHT);
     const highlightScale = d3.scaleOrdinal()
       .domain([false, true])
-      .range(['white', 'lightyellow']);
+      .range(['#fafafa', 'white']);
     const backgroundHeight = d3.scaleOrdinal()
       .domain([0, 1, 2])
       .range([SINGLE_FEATURE_HEIGHT, 5 * SINGLE_FEATURE_HEIGHT, SINGLE_FEATURE_HEIGHT]);
@@ -306,13 +356,14 @@ function FIPERView() {
       .data(features)
       .join('g')
       .classed('feature', true)
-      .attr('transform', (d, i) => `translate(0, ${yScale(i) + (d.status>1 ? d.rows * SINGLE_FEATURE_HEIGHT:0)})`);
+      .attr('transform', (d, i) => `translate(0, ${yScale(i) + (d.status > 1 ? (d.rows + 1) * SINGLE_FEATURE_HEIGHT : 0)})`);
     gFeatures.selectAll('rect.background')
       .data(d => [d])
       .join('rect')
       .classed('background', true)
+      .attr('y', 0)
       .attr('width', width)
-      .attr('height', d => d.status === 1 ? (d.rows + 1) * SINGLE_FEATURE_HEIGHT : SINGLE_FEATURE_HEIGHT)
+      .attr('height', d => (d.status === 1 ? (d.rows +1 ) * SINGLE_FEATURE_HEIGHT : SINGLE_FEATURE_HEIGHT))
       .attr('fill', d => highlightScale(d.highlighted));
     gFeatures.each((_, j, n) => {
       d3.select(n[j]).selectAll('g.feature-importance')
@@ -371,7 +422,7 @@ function FIPERView() {
         }
       });
       gFeatures.data().forEach((d, i) => {
-        if(i >= selectedIdx) {
+        if (i >= selectedIdx) {
           d.rows = rows;
         }
       });
