@@ -43,21 +43,29 @@ function prepareNumericalValues(data) {
   newdata.push({
     value0: eda.min,
     value1: eda.q1,
+    y0: 0,
+    y1: 0.1,
     type: 'line',
   });
   newdata.push({
     value0: eda.q1,
     value1: eda.median,
+    y0: 0.1,
+    y1: 1,
     type: 'box',
   });
   newdata.push({
     value0: eda.median,
     value1: eda.q3,
+    y0: 1,
+    y1: 0.1,
     type: 'box',
   });
   newdata.push({
     value0: eda.q3,
     value1: eda.max,
+    y0: 0.1,
+    y1: 0,
     type: 'line',
   });
 
@@ -83,7 +91,7 @@ function FIPERFeatureInstanceValueView() {
         .attr('x', d => barLength(d.cumulative) + (barLength(d.value) / 2) - 2)
         .attr('y', SINGLE_FEATURE_HEIGHT / 3)
         .attr('width', 2)
-        .attr('height', (SINGLE_FEATURE_HEIGHT / 3) )
+        .attr('height', (SINGLE_FEATURE_HEIGHT / 3))
         .attr('fill', '#000');
     } else {
       barLength.domain([selection.datum().values[0].eda.min, selection.datum().values[0].eda.max]);
@@ -125,6 +133,13 @@ function FIPERFeatureDistributionView() {
     .domain([0, 1]);
 
   function me(selection) {
+    const gDetails = selection.selectAll('g.details')
+      .data(d => [d])
+      .join('g')
+      .classed('details', true)
+      .attr('transform', `translate(0, ${1.5 * SINGLE_FEATURE_HEIGHT})`)
+      .attr('visibility', d => (d.status === 1 ? 'visible' : 'hidden'));
+
     if (selection.datum().type === 'categorical') {
       const total = d3.sum(selection.datum().values, d => d.eda.count);
       barLength.domain([0, total]);
@@ -144,13 +159,6 @@ function FIPERFeatureDistributionView() {
         .attr('height', (SINGLE_FEATURE_HEIGHT * 2) / 3)
         .attr('fill', 'lightgray')
         .attr('stroke', 'white');
-
-      const gDetails = selection.selectAll('g.details')
-        .data(d => [d])
-        .join('g')
-        .classed('details', true)
-        .attr('transform', `translate(0, ${1.5 * SINGLE_FEATURE_HEIGHT})`)
-        .attr('visibility', d => (d.status === 1 ? 'visible' : 'hidden'));
 
       if (selection.datum().status === 1) {
         gDetails.selectAll('rect.single-bar')
@@ -204,6 +212,36 @@ function FIPERFeatureDistributionView() {
         .attr('y2', SINGLE_FEATURE_HEIGHT / 2)
         .attr('stroke', 'lightgray')
         .attr('stroke-width', 1.3);
+      if (selection.datum().status === 1) {
+        const yScale = d3.scaleLinear()
+          .domain([0, 1])
+          .range([1 * SINGLE_FEATURE_HEIGHT, 0]);
+        const line = d3.line()
+          .x(d => barLength(d.value1))
+          .y(d => yScale(d.y1))
+          .curve(d3.curveBasis);
+        gDetails.selectAll('path.single-bar-value')
+          .data(d => {
+            const values = prepareNumericalValues(d.values);
+            return [[{
+              value0: values[0].value0,
+              value1: values[0].value0,
+              y0: 0,
+              y1: 0,
+            }, ...values]];
+          })
+          .join('path')
+          .classed('single-bar-value', true)
+          .attr('d', d => {
+            console.log('line', d);
+            console.log('line', line(d));
+            return line(d);
+          })
+          //.attr('d', d => `M ${barLength(d.value0)} ${yScale(d.y0)} L ${barLength(d.value1)} ${yScale(d.y1)} Z`)
+          .attr('fill', '#ecc')
+          .attr('stroke', 'lightgray');
+
+      }
     }
 
     return me;
