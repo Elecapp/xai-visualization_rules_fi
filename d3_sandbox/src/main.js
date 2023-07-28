@@ -76,24 +76,26 @@ function FIPERFeatureInstanceValueView() {
       // draw the symbol for the actual value of the instance
       const total = d3.sum(selection.datum().values, d => d.eda.count);
       barLength.domain([0, total]);
-      selection.selectAll('circle.instance-value')
+      selection.selectAll('rect.instance-value')
         .data(d => prepareCategoricalValues(d.values).filter(v => v.instance_value > 0))
-        .join('circle')
+        .join('rect')
         .classed('instance-value', true)
-        .attr('cx', d => barLength(d.cumulative) + (barLength(d.value) / 2))
-        .attr('cy', SINGLE_FEATURE_HEIGHT / 2 + 2) //TODO: fix this
-        .attr('r', SINGLE_FEATURE_HEIGHT / 6)
-        .attr('fill', 'black');
+        .attr('x', d => barLength(d.cumulative) + (barLength(d.value) / 2) - 2)
+        .attr('y', SINGLE_FEATURE_HEIGHT / 4)
+        .attr('width', 4)
+        .attr('height', (SINGLE_FEATURE_HEIGHT * 2) / 3)
+        .attr('fill', '#777');
     } else {
       barLength.domain([selection.datum().values[0].eda.min, selection.datum().values[0].eda.max]);
-      selection.selectAll('circle.instance-value')
+      selection.selectAll('rect.instance-value')
         .data(d => d.values)
-        .join('circle')
+        .join('rect')
         .classed('instance-value', true)
-        .attr('cx', d => barLength(d.instance_value))
-        .attr('cy', SINGLE_FEATURE_HEIGHT / 2)
-        .attr('r', SINGLE_FEATURE_HEIGHT / 6)
-        .attr('fill', 'black');
+        .attr('x', d => (barLength(d.instance_value)  - 2))
+        .attr('y', SINGLE_FEATURE_HEIGHT / 4)
+        .attr('width', 4)
+        .attr('height', (SINGLE_FEATURE_HEIGHT * 2) / 3)
+        .attr('fill', '#777')
     }
 
     return me;
