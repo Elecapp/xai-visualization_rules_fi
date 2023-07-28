@@ -81,21 +81,21 @@ function FIPERFeatureInstanceValueView() {
         .join('rect')
         .classed('instance-value', true)
         .attr('x', d => barLength(d.cumulative) + (barLength(d.value) / 2) - 2)
-        .attr('y', SINGLE_FEATURE_HEIGHT / 4)
-        .attr('width', 4)
-        .attr('height', (SINGLE_FEATURE_HEIGHT * 2) / 3)
-        .attr('fill', '#777');
+        .attr('y', SINGLE_FEATURE_HEIGHT / 3)
+        .attr('width', 2)
+        .attr('height', (SINGLE_FEATURE_HEIGHT / 3) )
+        .attr('fill', '#000');
     } else {
       barLength.domain([selection.datum().values[0].eda.min, selection.datum().values[0].eda.max]);
       selection.selectAll('rect.instance-value')
         .data(d => d.values)
         .join('rect')
         .classed('instance-value', true)
-        .attr('x', d => (barLength(d.instance_value)  - 2))
-        .attr('y', SINGLE_FEATURE_HEIGHT / 4)
-        .attr('width', 4)
-        .attr('height', (SINGLE_FEATURE_HEIGHT * 2) / 3)
-        .attr('fill', '#777')
+        .attr('x', d => (barLength(d.instance_value) - 2))
+        .attr('y', SINGLE_FEATURE_HEIGHT / 3)
+        .attr('width', 2)
+        .attr('height', (SINGLE_FEATURE_HEIGHT / 3))
+        .attr('fill', '#000');
     }
 
     return me;
@@ -139,7 +139,7 @@ function FIPERFeatureDistributionView() {
         .join('rect')
         .classed('single-bar', true)
         .attr('x', d => barLength(d.cumulative))
-        .attr('y', SINGLE_FEATURE_HEIGHT / 4)
+        .attr('y', SINGLE_FEATURE_HEIGHT / 6)
         .attr('width', d => barLength(d.value))
         .attr('height', (SINGLE_FEATURE_HEIGHT * 2) / 3)
         .attr('fill', 'lightgray')
@@ -161,7 +161,7 @@ function FIPERFeatureDistributionView() {
           .attr('y', (d, i) => (i * SINGLE_FEATURE_HEIGHT) + (SINGLE_FEATURE_HEIGHT / 4))
           .attr('width', d => barLength(d.value))
           .attr('height', (SINGLE_FEATURE_HEIGHT / 2))
-          .attr('fill', d => d.instance_value ? '#ccc':'#fff')
+          .attr('fill', d => (d.instance_value ? '#ccc' : '#fff'))
           .attr('stroke', 'lightgray');
         gDetails.selectAll('text.single-bar')
           .data(d => prepareCategoricalValues(d.values))
@@ -183,7 +183,6 @@ function FIPERFeatureDistributionView() {
           .attr('alignment-baseline', 'middle')
           .attr('font-size', 12)
           .text(d => `${d.value} (${d.percent.toFixed(2)}%)`);
-
       }
     } else {
       barLength.domain([selection.datum().values[0].eda.min, selection.datum().values[0].eda.max]);
@@ -191,7 +190,7 @@ function FIPERFeatureDistributionView() {
         .data(d => prepareNumericalValues(d.values).filter(d => d.type === 'box'))
         .join('rect')
         .attr('x', d => barLength(d.value0))
-        .attr('y', SINGLE_FEATURE_HEIGHT / 4)
+        .attr('y', SINGLE_FEATURE_HEIGHT / 6)
         .attr('width', d => barLength(d.value1) - barLength(d.value0))
         .attr('height', (SINGLE_FEATURE_HEIGHT * 2) / 3)
         .attr('fill', 'lightgray')
@@ -365,7 +364,7 @@ function FIPERView() {
       .classed('background', true)
       .attr('y', 0)
       .attr('width', width)
-      .attr('height', d => (d.status === 1 ? (d.rows +1 ) * SINGLE_FEATURE_HEIGHT : SINGLE_FEATURE_HEIGHT))
+      .attr('height', d => (d.status === 1 ? (d.rows + 1) * SINGLE_FEATURE_HEIGHT : SINGLE_FEATURE_HEIGHT))
       .attr('fill', d => highlightScale(d.highlighted));
     gFeatures.each((_, j, n) => {
       d3.select(n[j]).selectAll('g.feature-importance')
