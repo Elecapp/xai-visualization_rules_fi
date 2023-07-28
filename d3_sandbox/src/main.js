@@ -8,6 +8,13 @@ const RULES_COLUMN_WIDTH = 300;
 const LABELS_COLUMN_WIDTH = 250;
 const GUTTER = 10;
 
+const MAIN_COLOR = '#9e2f50';
+const COMPLEMENTARY_COLOR = '#45578D';
+const THIRD_COLOR = '#f2c14e';
+const BACKGROUND_COLOR = '#fff1e0';
+const SECONDARY_BACKGROUND_COLOR = '#fdfdfd';
+
+
 // Format the data (instead of using d3.stack()) and
 // filter out 0 values:
 // extracted from: https://observablehq.com/@eesur/d3-single-stacked-bar
@@ -157,8 +164,9 @@ function FIPERFeatureDistributionView() {
         .attr('y', SINGLE_FEATURE_HEIGHT / 6)
         .attr('width', d => barLength(d.value))
         .attr('height', (SINGLE_FEATURE_HEIGHT * 2) / 3)
-        .attr('fill', 'lightgray')
-        .attr('stroke', 'white');
+        .attr('fill', MAIN_COLOR)
+        .attr('fill-opacity', 0.2)
+        .attr('stroke', MAIN_COLOR);
 
       if (selection.datum().status === 1) {
         gDetails.selectAll('rect.single-bar')
@@ -169,8 +177,9 @@ function FIPERFeatureDistributionView() {
           .attr('y', (d, i) => (i * SINGLE_FEATURE_HEIGHT) + (SINGLE_FEATURE_HEIGHT / 4))
           .attr('width', d => barLength(d.value))
           .attr('height', (SINGLE_FEATURE_HEIGHT / 2))
-          .attr('fill', d => (d.instance_value ? '#ccc' : '#fff'))
-          .attr('stroke', 'lightgray');
+          .attr('fill', MAIN_COLOR)
+          .attr('fill-opacity', d => (d.instance_value ? 0.5 : 0.2))
+          .attr('stroke', MAIN_COLOR);
         gDetails.selectAll('text.single-bar')
           .data(d => prepareCategoricalValues(d.values))
           .join('text')
@@ -201,8 +210,9 @@ function FIPERFeatureDistributionView() {
         .attr('y', SINGLE_FEATURE_HEIGHT / 6)
         .attr('width', d => barLength(d.value1) - barLength(d.value0))
         .attr('height', (SINGLE_FEATURE_HEIGHT * 2) / 3)
-        .attr('fill', 'lightgray')
-        .attr('stroke', 'white');
+        .attr('fill', MAIN_COLOR)
+        .attr('fill-opacity', 0.2)
+        .attr('stroke', MAIN_COLOR);
       selection.selectAll('line')
         .data(d => prepareNumericalValues(d.values).filter(d => d.type === 'line'))
         .join('line')
@@ -210,7 +220,7 @@ function FIPERFeatureDistributionView() {
         .attr('x2', d => barLength(d.value1))
         .attr('y1', SINGLE_FEATURE_HEIGHT / 2)
         .attr('y2', SINGLE_FEATURE_HEIGHT / 2)
-        .attr('stroke', 'lightgray')
+        .attr('stroke', MAIN_COLOR)
         .attr('stroke-width', 1.3);
       if (selection.datum().status === 1) {
         const yScale = d3.scaleLinear()
@@ -238,8 +248,9 @@ function FIPERFeatureDistributionView() {
             return line(d);
           })
           //.attr('d', d => `M ${barLength(d.value0)} ${yScale(d.y0)} L ${barLength(d.value1)} ${yScale(d.y1)} Z`)
-          .attr('fill', '#ecc')
-          .attr('stroke', 'lightgray');
+          .attr('fill', MAIN_COLOR)
+          .attr('fill-opacity', 0.2)
+          .attr('stroke', MAIN_COLOR);
 
       }
     }
@@ -327,7 +338,7 @@ function FIPERFeatureImportanceView() {
       .attr('y', SINGLE_FEATURE_HEIGHT / 4)
       .attr('width', d => barLength(Math.abs(d.feature_importance)))
       .attr('height', SINGLE_FEATURE_HEIGHT / 2)
-      .attr('fill', d => (d.feature_importance < 0 ? 'red' : 'blue'));
+      .attr('fill', d => (d.feature_importance < 0 ? MAIN_COLOR : COMPLEMENTARY_COLOR));
     selection.selectAll('rect')
       .filter(d => d.feature_importance < 0)
       .attr('x', d => (width / 2) - barLength(Math.abs(d.feature_importance)));
@@ -385,7 +396,7 @@ function FIPERView() {
       .height(SINGLE_FEATURE_HEIGHT);
     const highlightScale = d3.scaleOrdinal()
       .domain([false, true])
-      .range(['#fafafa', 'white']);
+      .range([BACKGROUND_COLOR, SECONDARY_BACKGROUND_COLOR]);
     const backgroundHeight = d3.scaleOrdinal()
       .domain([0, 1, 2])
       .range([SINGLE_FEATURE_HEIGHT, 5 * SINGLE_FEATURE_HEIGHT, SINGLE_FEATURE_HEIGHT]);
@@ -402,7 +413,7 @@ function FIPERView() {
       .classed('background', true)
       .attr('y', 0)
       .attr('width', width)
-      .attr('height', d => (d.status === 1 ? (d.rows + 1) * SINGLE_FEATURE_HEIGHT : SINGLE_FEATURE_HEIGHT))
+      .attr('height', d => (d.status === 1 ? (d.rows + 2) * SINGLE_FEATURE_HEIGHT : SINGLE_FEATURE_HEIGHT))
       .attr('fill', d => highlightScale(d.highlighted));
     gFeatures.each((_, j, n) => {
       d3.select(n[j]).selectAll('g.feature-importance')
