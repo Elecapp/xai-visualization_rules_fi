@@ -10,18 +10,15 @@ const GUTTER = 10;
 
 // create a dict for a color template
 const FT_Template = {
-  'MAIN_COLOR': '#dcc',
+  'MAIN_COLOR': '#9e2f50',
   'SECOND_COLOR': '#45578D',
   'THIRD_COLOR': '#f2c14e',
+  'BASE_COLOR': '#dcc',
   'BACKGROUND_COLOR': '#fff1e0',
   'SECONDARY_BACKGROUND_COLOR': '#fdfdfd',
   'TEXT_COLOR': '#000',
   'STROKE_COLOR': '#000',
 }
-
-
-
-
 
 // Format the data (instead of using d3.stack()) and
 // filter out 0 values:
