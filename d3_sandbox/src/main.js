@@ -8,11 +8,19 @@ const RULES_COLUMN_WIDTH = 300;
 const LABELS_COLUMN_WIDTH = 250;
 const GUTTER = 10;
 
-const MAIN_COLOR = '#9e2f50';
-const COMPLEMENTARY_COLOR = '#45578D';
-const THIRD_COLOR = '#f2c14e';
-const BACKGROUND_COLOR = '#fff1e0';
-const SECONDARY_BACKGROUND_COLOR = '#fdfdfd';
+// create a dict for a color template
+const FT_Template = {
+  'MAIN_COLOR': '#dcc',
+  'SECOND_COLOR': '#45578D',
+  'THIRD_COLOR': '#f2c14e',
+  'BACKGROUND_COLOR': '#fff1e0',
+  'SECONDARY_BACKGROUND_COLOR': '#fdfdfd',
+  'TEXT_COLOR': '#000',
+  'STROKE_COLOR': '#000',
+}
+
+
+
 
 
 // Format the data (instead of using d3.stack()) and
@@ -99,7 +107,7 @@ function FIPERFeatureInstanceValueView() {
         .attr('y', SINGLE_FEATURE_HEIGHT / 3)
         .attr('width', 2)
         .attr('height', (SINGLE_FEATURE_HEIGHT / 3))
-        .attr('fill', '#000');
+        .attr('fill', FT_Template.STROKE_COLOR);
     } else {
       barLength.domain([selection.datum().values[0].eda.min, selection.datum().values[0].eda.max]);
       selection.selectAll('rect.instance-value')
@@ -110,7 +118,7 @@ function FIPERFeatureInstanceValueView() {
         .attr('y', SINGLE_FEATURE_HEIGHT / 3)
         .attr('width', 2)
         .attr('height', (SINGLE_FEATURE_HEIGHT / 3))
-        .attr('fill', '#000');
+        .attr('fill', FT_Template.STROKE_COLOR);
     }
 
     return me;
@@ -164,9 +172,9 @@ function FIPERFeatureDistributionView() {
         .attr('y', SINGLE_FEATURE_HEIGHT / 6)
         .attr('width', d => barLength(d.value))
         .attr('height', (SINGLE_FEATURE_HEIGHT * 2) / 3)
-        .attr('fill', MAIN_COLOR)
+        .attr('fill', FT_Template.MAIN_COLOR)
         .attr('fill-opacity', 0.2)
-        .attr('stroke', MAIN_COLOR);
+        .attr('stroke', FT_Template.MAIN_COLOR);
 
       if (selection.datum().status === 1) {
         gDetails.selectAll('rect.single-bar')
@@ -177,9 +185,9 @@ function FIPERFeatureDistributionView() {
           .attr('y', (d, i) => (i * SINGLE_FEATURE_HEIGHT) + (SINGLE_FEATURE_HEIGHT / 4))
           .attr('width', d => barLength(d.value))
           .attr('height', (SINGLE_FEATURE_HEIGHT / 2))
-          .attr('fill', MAIN_COLOR)
+          .attr('fill', FT_Template.MAIN_COLOR)
           .attr('fill-opacity', d => (d.instance_value ? 0.5 : 0.2))
-          .attr('stroke', MAIN_COLOR);
+          .attr('stroke', FT_Template.MAIN_COLOR);
         gDetails.selectAll('text.single-bar')
           .data(d => prepareCategoricalValues(d.values))
           .join('text')
@@ -210,9 +218,9 @@ function FIPERFeatureDistributionView() {
         .attr('y', SINGLE_FEATURE_HEIGHT / 6)
         .attr('width', d => barLength(d.value1) - barLength(d.value0))
         .attr('height', (SINGLE_FEATURE_HEIGHT * 2) / 3)
-        .attr('fill', MAIN_COLOR)
+        .attr('fill', FT_Template.MAIN_COLOR)
         .attr('fill-opacity', 0.2)
-        .attr('stroke', MAIN_COLOR);
+        .attr('stroke', FT_Template.MAIN_COLOR);
       selection.selectAll('line')
         .data(d => prepareNumericalValues(d.values).filter(d => d.type === 'line'))
         .join('line')
@@ -220,7 +228,7 @@ function FIPERFeatureDistributionView() {
         .attr('x2', d => barLength(d.value1))
         .attr('y1', SINGLE_FEATURE_HEIGHT / 2)
         .attr('y2', SINGLE_FEATURE_HEIGHT / 2)
-        .attr('stroke', MAIN_COLOR)
+        .attr('stroke', FT_Template.MAIN_COLOR)
         .attr('stroke-width', 1.3);
       if (selection.datum().status === 1) {
         const yScale = d3.scaleLinear()
@@ -248,9 +256,9 @@ function FIPERFeatureDistributionView() {
             return line(d);
           })
           //.attr('d', d => `M ${barLength(d.value0)} ${yScale(d.y0)} L ${barLength(d.value1)} ${yScale(d.y1)} Z`)
-          .attr('fill', MAIN_COLOR)
+          .attr('fill', FT_Template.MAIN_COLOR)
           .attr('fill-opacity', 0.2)
-          .attr('stroke', MAIN_COLOR);
+          .attr('stroke', FT_Template.MAIN_COLOR);
 
       }
     }
@@ -338,7 +346,7 @@ function FIPERFeatureImportanceView() {
       .attr('y', SINGLE_FEATURE_HEIGHT / 4)
       .attr('width', d => barLength(Math.abs(d.feature_importance)))
       .attr('height', SINGLE_FEATURE_HEIGHT / 2)
-      .attr('fill', d => (d.feature_importance < 0 ? MAIN_COLOR : COMPLEMENTARY_COLOR));
+      .attr('fill', d => (d.feature_importance < 0 ? FT_Template.MAIN_COLOR : FT_Template.SECOND_COLOR));
     selection.selectAll('rect')
       .filter(d => d.feature_importance < 0)
       .attr('x', d => (width / 2) - barLength(Math.abs(d.feature_importance)));
@@ -396,7 +404,7 @@ function FIPERView() {
       .height(SINGLE_FEATURE_HEIGHT);
     const highlightScale = d3.scaleOrdinal()
       .domain([false, true])
-      .range([BACKGROUND_COLOR, SECONDARY_BACKGROUND_COLOR]);
+      .range([FT_Template.BACKGROUND_COLOR, FT_Template.SECONDARY_BACKGROUND_COLOR]);
     const backgroundHeight = d3.scaleOrdinal()
       .domain([0, 1, 2])
       .range([SINGLE_FEATURE_HEIGHT, 5 * SINGLE_FEATURE_HEIGHT, SINGLE_FEATURE_HEIGHT]);
