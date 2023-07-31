@@ -10,15 +10,16 @@ const GUTTER = 10;
 
 // create a dict for a color template
 const FT_Template = {
-  'MAIN_COLOR': '#9e2f50',
-  'SECOND_COLOR': '#45578D',
-  'THIRD_COLOR': '#f2c14e',
-  'BASE_COLOR': '#dcc',
-  'BACKGROUND_COLOR': '#fff1e0',
-  'SECONDARY_BACKGROUND_COLOR': '#fdfdfd',
-  'TEXT_COLOR': '#000',
-  'STROKE_COLOR': '#000',
-}
+  MAIN_COLOR: '#9e2f50',
+  SECOND_COLOR: '#45578D',
+  THIRD_COLOR: '#f2c14e',
+  BASE_COLOR: '#dcc',
+  BACKGROUND_COLOR: '#fff1e0',
+  SECONDARY_BACKGROUND_COLOR: '#fdfdfd',
+  TEXT_COLOR: '#000',
+  STROKE_COLOR: '#000',
+  DISTRIBUTION_COLOR: 'grey',
+};
 
 // Format the data (instead of using d3.stack()) and
 // filter out 0 values:
@@ -137,6 +138,58 @@ function FIPERFeatureInstanceValueView() {
   return me;
 }
 
+function FIPERNumericDistributionBoxPlotView() {
+  let width = RULES_COLUMN_WIDTH;
+  let height = 50;
+  let barLength = d3.scaleLinear();
+
+  function me(selection) {
+    selection.selectAll('rect')
+      .data(d => prepareNumericalValues(d.values).filter(d => d.type === 'box'))
+      .join('rect')
+      .attr('x', d => barLength(d.value0))
+      .attr('y', SINGLE_FEATURE_HEIGHT / 6)
+      .attr('width', d => barLength(d.value1) - barLength(d.value0))
+      .attr('height', (SINGLE_FEATURE_HEIGHT * 2) / 3)
+      .attr('fill', FT_Template.DISTRIBUTION_COLOR)
+      .attr('fill-opacity', 0.2)
+      .attr('stroke', FT_Template.DISTRIBUTION_COLOR);
+    selection.selectAll('line')
+      .data(d => prepareNumericalValues(d.values).filter(d => d.type === 'line'))
+      .join('line')
+      .attr('x1', d => barLength(d.value0))
+      .attr('x2', d => barLength(d.value1))
+      .attr('y1', SINGLE_FEATURE_HEIGHT / 2)
+      .attr('y2', SINGLE_FEATURE_HEIGHT / 2)
+      .attr('stroke', FT_Template.DISTRIBUTION_COLOR)
+      .attr('stroke-width', 1.3);
+
+    return me;
+  }
+
+  me.width = function (_) {
+    if (!arguments.length) return width;
+    width = _;
+    barLength.range([0, width]);
+    return me;
+  };
+
+  me.height = function (_) {
+    if (!arguments.length) return height;
+    height = _;
+    return me;
+  };
+
+  me.barLength = function (_) {
+    if (!arguments.length) return barLength;
+    barLength = _;
+    return me;
+  };
+
+
+  return me;
+}
+
 function FIPERFeatureDistributionView() {
   let width = RULES_COLUMN_WIDTH;
   let height = 50;
@@ -169,9 +222,9 @@ function FIPERFeatureDistributionView() {
         .attr('y', SINGLE_FEATURE_HEIGHT / 6)
         .attr('width', d => barLength(d.value))
         .attr('height', (SINGLE_FEATURE_HEIGHT * 2) / 3)
-        .attr('fill', FT_Template.MAIN_COLOR)
+        .attr('fill', FT_Template.DISTRIBUTION_COLOR)
         .attr('fill-opacity', 0.2)
-        .attr('stroke', FT_Template.MAIN_COLOR);
+        .attr('stroke', FT_Template.DISTRIBUTION_COLOR);
 
       if (selection.datum().status === 1) {
         gDetails.selectAll('rect.single-bar')
@@ -182,9 +235,9 @@ function FIPERFeatureDistributionView() {
           .attr('y', (d, i) => (i * SINGLE_FEATURE_HEIGHT) + (SINGLE_FEATURE_HEIGHT / 4))
           .attr('width', d => barLength(d.value))
           .attr('height', (SINGLE_FEATURE_HEIGHT / 2))
-          .attr('fill', FT_Template.MAIN_COLOR)
+          .attr('fill', FT_Template.DISTRIBUTION_COLOR)
           .attr('fill-opacity', d => (d.instance_value ? 0.5 : 0.2))
-          .attr('stroke', FT_Template.MAIN_COLOR);
+          .attr('stroke', FT_Template.DISTRIBUTION_COLOR);
         gDetails.selectAll('text.single-bar')
           .data(d => prepareCategoricalValues(d.values))
           .join('text')
@@ -207,26 +260,14 @@ function FIPERFeatureDistributionView() {
           .text(d => `${d.value} (${d.percent.toFixed(2)}%)`);
       }
     } else {
+      // Here we have a numerical feature
       barLength.domain([selection.datum().values[0].eda.min, selection.datum().values[0].eda.max]);
-      selection.selectAll('rect')
-        .data(d => prepareNumericalValues(d.values).filter(d => d.type === 'box'))
-        .join('rect')
-        .attr('x', d => barLength(d.value0))
-        .attr('y', SINGLE_FEATURE_HEIGHT / 6)
-        .attr('width', d => barLength(d.value1) - barLength(d.value0))
-        .attr('height', (SINGLE_FEATURE_HEIGHT * 2) / 3)
-        .attr('fill', FT_Template.MAIN_COLOR)
-        .attr('fill-opacity', 0.2)
-        .attr('stroke', FT_Template.MAIN_COLOR);
-      selection.selectAll('line')
-        .data(d => prepareNumericalValues(d.values).filter(d => d.type === 'line'))
-        .join('line')
-        .attr('x1', d => barLength(d.value0))
-        .attr('x2', d => barLength(d.value1))
-        .attr('y1', SINGLE_FEATURE_HEIGHT / 2)
-        .attr('y2', SINGLE_FEATURE_HEIGHT / 2)
-        .attr('stroke', FT_Template.MAIN_COLOR)
-        .attr('stroke-width', 1.3);
+      const ndbpv = FIPERNumericDistributionBoxPlotView()
+        .barLength(barLength)
+        .width(width)
+        .height(SINGLE_FEATURE_HEIGHT);
+      selection.call(ndbpv);
+
       if (selection.datum().status === 1) {
         const yScale = d3.scaleLinear()
           .domain([0, 1])
@@ -236,7 +277,7 @@ function FIPERFeatureDistributionView() {
           .y(d => yScale(d.y1))
           .curve(d3.curveBasis);
         gDetails.selectAll('path.single-bar-value')
-          .data(d => {
+          .data((d) => {
             const values = prepareNumericalValues(d.values);
             return [[{
               value0: values[0].value0,
@@ -247,16 +288,15 @@ function FIPERFeatureDistributionView() {
           })
           .join('path')
           .classed('single-bar-value', true)
-          .attr('d', d => {
+          .attr('d', (d) => {
             console.log('line', d);
             console.log('line', line(d));
             return line(d);
           })
-          //.attr('d', d => `M ${barLength(d.value0)} ${yScale(d.y0)} L ${barLength(d.value1)} ${yScale(d.y1)} Z`)
-          .attr('fill', FT_Template.MAIN_COLOR)
+          // .attr('d', d => `M ${barLength(d.value0)} ${yScale(d.y0)} L ${barLength(d.value1)} ${yScale(d.y1)} Z`)
+          .attr('fill', FT_Template.DISTRIBUTION_COLOR)
           .attr('fill-opacity', 0.2)
-          .attr('stroke', FT_Template.MAIN_COLOR);
-
+          .attr('stroke', FT_Template.DISTRIBUTION_COLOR);
       }
     }
 
@@ -343,7 +383,7 @@ function FIPERFeatureImportanceView() {
       .attr('y', SINGLE_FEATURE_HEIGHT / 4)
       .attr('width', d => barLength(Math.abs(d.feature_importance)))
       .attr('height', SINGLE_FEATURE_HEIGHT / 2)
-      .attr('fill', d => (d.feature_importance < 0 ? FT_Template.MAIN_COLOR : FT_Template.SECOND_COLOR));
+      .attr('fill', d => (d.feature_importance < 0 ? FT_Template.DISTRIBUTION_COLOR : FT_Template.SECOND_COLOR));
     selection.selectAll('rect')
       .filter(d => d.feature_importance < 0)
       .attr('x', d => (width / 2) - barLength(Math.abs(d.feature_importance)));
