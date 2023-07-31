@@ -49,42 +49,6 @@ function prepareCategoricalValues(data) {
   }).filter(d => d.value > 0);
 }
 
-function prepareNumericalValues(data) {
-  const eda = data[0].eda;
-  const valuePoints = ['min', 'q1', 'median', 'q3', 'max'];
-  const newdata = [];
-  newdata.push({
-    value0: eda.min,
-    value1: eda.q1,
-    y0: 0,
-    y1: 0.1,
-    type: 'line',
-  });
-  newdata.push({
-    value0: eda.q1,
-    value1: eda.median,
-    y0: 0.1,
-    y1: 1,
-    type: 'box',
-  });
-  newdata.push({
-    value0: eda.median,
-    value1: eda.q3,
-    y0: 1,
-    y1: 0.1,
-    type: 'box',
-  });
-  newdata.push({
-    value0: eda.q3,
-    value1: eda.max,
-    y0: 0.1,
-    y1: 0,
-    type: 'line',
-  });
-
-  return newdata;
-}
-
 function FIPERFeatureInstanceValueView() {
   let width = RULES_COLUMN_WIDTH;
   let height = 50;
@@ -115,7 +79,7 @@ function FIPERFeatureInstanceValueView() {
         .attr('x', d => (barLength(d.instance_value) - 2))
         .attr('y', SINGLE_FEATURE_HEIGHT / 3)
         .attr('width', 2)
-        .attr('height', (SINGLE_FEATURE_HEIGHT / 3))
+        .attr('height', (SINGLE_FEATURE_HEIGHT * 2 / 3))
         .attr('fill', FT_Template.STROKE_COLOR);
     }
 
@@ -141,15 +105,49 @@ function FIPERFeatureInstanceValueView() {
 function FIPERNumericDistributionBoxPlotView() {
   let width = RULES_COLUMN_WIDTH;
   let height = 50;
-  let barLength = d3.scaleLinear();
+  let xScale = d3.scaleLinear();
+
+  function prepareNumericalValues(data) {
+    const eda = data[0].eda;
+    const newdata = [];
+    newdata.push({
+      value0: eda.min,
+      value1: eda.q1,
+      y0: 0,
+      y1: 0.1,
+      type: 'line',
+    });
+    newdata.push({
+      value0: eda.q1,
+      value1: eda.median,
+      y0: 0.1,
+      y1: 1,
+      type: 'box',
+    });
+    newdata.push({
+      value0: eda.median,
+      value1: eda.q3,
+      y0: 1,
+      y1: 0.1,
+      type: 'box',
+    });
+    newdata.push({
+      value0: eda.q3,
+      value1: eda.max,
+      y0: 0.1,
+      y1: 0,
+      type: 'line',
+    });
+    return newdata;
+  }
 
   function me(selection) {
     selection.selectAll('rect')
       .data(d => prepareNumericalValues(d.values).filter(d => d.type === 'box'))
       .join('rect')
-      .attr('x', d => barLength(d.value0))
+      .attr('x', d => xScale(d.value0))
       .attr('y', SINGLE_FEATURE_HEIGHT / 6)
-      .attr('width', d => barLength(d.value1) - barLength(d.value0))
+      .attr('width', d => xScale(d.value1) - xScale(d.value0))
       .attr('height', (SINGLE_FEATURE_HEIGHT * 2) / 3)
       .attr('fill', FT_Template.DISTRIBUTION_COLOR)
       .attr('fill-opacity', 0.2)
@@ -157,8 +155,8 @@ function FIPERNumericDistributionBoxPlotView() {
     selection.selectAll('line')
       .data(d => prepareNumericalValues(d.values).filter(d => d.type === 'line'))
       .join('line')
-      .attr('x1', d => barLength(d.value0))
-      .attr('x2', d => barLength(d.value1))
+      .attr('x1', d => xScale(d.value0))
+      .attr('x2', d => xScale(d.value1))
       .attr('y1', SINGLE_FEATURE_HEIGHT / 2)
       .attr('y2', SINGLE_FEATURE_HEIGHT / 2)
       .attr('stroke', FT_Template.DISTRIBUTION_COLOR)
@@ -170,7 +168,7 @@ function FIPERNumericDistributionBoxPlotView() {
   me.width = function (_) {
     if (!arguments.length) return width;
     width = _;
-    barLength.range([0, width]);
+    xScale.range([0, width]);
     return me;
   };
 
@@ -180,12 +178,70 @@ function FIPERNumericDistributionBoxPlotView() {
     return me;
   };
 
-  me.barLength = function (_) {
-    if (!arguments.length) return barLength;
-    barLength = _;
+  me.xScale = function (_) {
+    if (!arguments.length) return xScale;
+    xScale = _;
     return me;
   };
 
+  return me;
+}
+
+function FIPERNumericDistributionLineChartView() {
+  let width = RULES_COLUMN_WIDTH;
+  let height = 50;
+  let xScale = d3.scaleLinear();
+  const yScale = d3.scaleLinear()
+    .domain([0, 1])
+    .range([1 * SINGLE_FEATURE_HEIGHT, 0]);
+  const line = d3.line()
+    .x(d => xScale(d.value1))
+    .y(d => yScale(d.y1))
+    .curve(d3.curveBasis);
+
+  function prepareNumericalValues(data) {
+    const eda = data[0].eda;
+    const yValues = [0, 0.1, 1.0, 0.1, 0];
+    const newdata = ['min', 'q1', 'median', 'q3', 'max']
+      .map((d, i) => ({
+        value1: eda[d],
+        y1: yValues[i],
+      }));
+
+    return newdata;
+  }
+
+  function me(selection) {
+    selection.selectAll('path.single-linechart-value')
+      .data(d => [prepareNumericalValues(d.values)])
+      .join('path')
+      .classed('single-linechart-value', true)
+      .attr('d', d => line(d))
+      .attr('fill', FT_Template.DISTRIBUTION_COLOR)
+      .attr('fill-opacity', 0.2)
+      .attr('stroke', FT_Template.DISTRIBUTION_COLOR);
+
+    return me;
+  }
+
+  me.width = function (_) {
+    if (!arguments.length) return width;
+    width = _;
+    xScale.range([0, width]);
+    return me;
+  };
+
+  me.height = function (_) {
+    if (!arguments.length) return height;
+    height = _;
+    return me;
+  };
+
+  me.xScale = function (_) {
+    if (!arguments.length) return xScale;
+    xScale = _;
+    return me;
+  };
 
   return me;
 }
@@ -262,41 +318,18 @@ function FIPERFeatureDistributionView() {
     } else {
       // Here we have a numerical feature
       barLength.domain([selection.datum().values[0].eda.min, selection.datum().values[0].eda.max]);
-      const ndbpv = FIPERNumericDistributionBoxPlotView()
-        .barLength(barLength)
+      const ndbpv = FIPERNumericDistributionLineChartView()
+        .xScale(barLength)
         .width(width)
         .height(SINGLE_FEATURE_HEIGHT);
       selection.call(ndbpv);
 
       if (selection.datum().status === 1) {
-        const yScale = d3.scaleLinear()
-          .domain([0, 1])
-          .range([1 * SINGLE_FEATURE_HEIGHT, 0]);
-        const line = d3.line()
-          .x(d => barLength(d.value1))
-          .y(d => yScale(d.y1))
-          .curve(d3.curveBasis);
-        gDetails.selectAll('path.single-bar-value')
-          .data((d) => {
-            const values = prepareNumericalValues(d.values);
-            return [[{
-              value0: values[0].value0,
-              value1: values[0].value0,
-              y0: 0,
-              y1: 0,
-            }, ...values]];
-          })
-          .join('path')
-          .classed('single-bar-value', true)
-          .attr('d', (d) => {
-            console.log('line', d);
-            console.log('line', line(d));
-            return line(d);
-          })
-          // .attr('d', d => `M ${barLength(d.value0)} ${yScale(d.y0)} L ${barLength(d.value1)} ${yScale(d.y1)} Z`)
-          .attr('fill', FT_Template.DISTRIBUTION_COLOR)
-          .attr('fill-opacity', 0.2)
-          .attr('stroke', FT_Template.DISTRIBUTION_COLOR);
+        const fndlcv = FIPERNumericDistributionBoxPlotView()
+          .xScale(barLength)
+          .width(width)
+          .height(SINGLE_FEATURE_HEIGHT);
+        gDetails.call(fndlcv);
       }
     }
 
