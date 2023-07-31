@@ -45,6 +45,8 @@ function prepareCategoricalValues(data) {
       label: d.eda.category,
       percent: percent(d.eda.count),
       instance_value: d.instance_value,
+      rule: d.rule,
+      crules: d.crules,
     };
   }).filter(d => d.value > 0);
 }
@@ -190,6 +192,7 @@ function FIPERNumericDistributionBoxPlotView() {
 function FIPERNumericDistributionLineChartView() {
   let width = RULES_COLUMN_WIDTH;
   let height = 50;
+  let color = FT_Template.DISTRIBUTION_COLOR;
   let xScale = d3.scaleLinear();
   const yScale = d3.scaleLinear()
     .domain([0, 1])
@@ -217,9 +220,9 @@ function FIPERNumericDistributionLineChartView() {
       .join('path')
       .classed('single-linechart-value', true)
       .attr('d', d => line(d))
-      .attr('fill', FT_Template.DISTRIBUTION_COLOR)
+      .attr('fill', color)
       .attr('fill-opacity', 0.2)
-      .attr('stroke', FT_Template.DISTRIBUTION_COLOR);
+      .attr('stroke', color);
 
     return me;
   }
@@ -234,6 +237,12 @@ function FIPERNumericDistributionLineChartView() {
   me.height = function (_) {
     if (!arguments.length) return height;
     height = _;
+    return me;
+  };
+
+  me.color = function (_) {
+    if (!arguments.length) return color;
+    color = _;
     return me;
   };
 
@@ -252,6 +261,8 @@ function FIPERFeatureDistributionView() {
   const barLength = d3.scaleLinear()
     .range([0, width])
     .domain([0, 1]);
+  let color = FT_Template.DISTRIBUTION_COLOR;
+  let fFilterRule = d => d.rule.length;
 
   function me(selection) {
     const gDetails = selection.selectAll('g.details')
@@ -271,16 +282,16 @@ function FIPERFeatureDistributionView() {
         .classed('single-bar', true);
 
       gSingleBar.selectAll('rect.single-bar')
-        .data(d => prepareCategoricalValues(d.values))
+        .data(d => prepareCategoricalValues(d.values).filter(fFilterRule))
         .join('rect')
         .classed('single-bar', true)
         .attr('x', d => barLength(d.cumulative))
         .attr('y', SINGLE_FEATURE_HEIGHT / 6)
         .attr('width', d => barLength(d.value))
         .attr('height', (SINGLE_FEATURE_HEIGHT * 2) / 3)
-        .attr('fill', FT_Template.DISTRIBUTION_COLOR)
+        .attr('fill', color)
         .attr('fill-opacity', 0.2)
-        .attr('stroke', FT_Template.DISTRIBUTION_COLOR);
+        .attr('stroke', color);
 
       if (selection.datum().status === 1) {
         gDetails.selectAll('rect.single-bar')
@@ -291,9 +302,9 @@ function FIPERFeatureDistributionView() {
           .attr('y', (d, i) => (i * SINGLE_FEATURE_HEIGHT) + (SINGLE_FEATURE_HEIGHT / 4))
           .attr('width', d => barLength(d.value))
           .attr('height', (SINGLE_FEATURE_HEIGHT / 2))
-          .attr('fill', FT_Template.DISTRIBUTION_COLOR)
+          .attr('fill', color)
           .attr('fill-opacity', d => (d.instance_value ? 0.5 : 0.2))
-          .attr('stroke', FT_Template.DISTRIBUTION_COLOR);
+          .attr('stroke', color);
         gDetails.selectAll('text.single-bar')
           .data(d => prepareCategoricalValues(d.values))
           .join('text')
@@ -321,7 +332,8 @@ function FIPERFeatureDistributionView() {
       const ndbpv = FIPERNumericDistributionLineChartView()
         .xScale(barLength)
         .width(width)
-        .height(SINGLE_FEATURE_HEIGHT);
+        .height(SINGLE_FEATURE_HEIGHT)
+        .color(color);
       selection.call(ndbpv);
 
       if (selection.datum().status === 1) {
@@ -348,6 +360,18 @@ function FIPERFeatureDistributionView() {
   me.height = function (_) {
     if (!arguments.length) return height;
     height = _;
+    return me;
+  };
+
+  me.color = function (_) {
+    if (!arguments.length) return color;
+    color = _;
+    return me;
+  };
+
+  me.fFilterRule = function (_) {
+    if (!arguments.length) return fFilterRule;
+    fFilterRule = _;
     return me;
   };
 
@@ -465,7 +489,22 @@ function FIPERView() {
       .fitExtent(fiExtent);
     const fdv = FIPERFeatureDistributionView()
       .width(RULES_COLUMN_WIDTH)
-      .height(SINGLE_FEATURE_HEIGHT);
+      .height(SINGLE_FEATURE_HEIGHT)
+      .color(FT_Template.DISTRIBUTION_COLOR)
+      .fFilterRule(() => true);
+
+    const rule_fdv = FIPERFeatureDistributionView()
+      .width(RULES_COLUMN_WIDTH)
+      .height(SINGLE_FEATURE_HEIGHT)
+      .color(FT_Template.THIRD_COLOR)
+      .fFilterRule(d => d.rule.length);
+
+    const crules_fdv = FIPERFeatureDistributionView()
+      .width(RULES_COLUMN_WIDTH)
+      .height(SINGLE_FEATURE_HEIGHT)
+      .color(FT_Template.MAIN_COLOR)
+      .fFilterRule(d => Object.keys(d.rule).length);
+
     const fivv = FIPERFeatureInstanceValueView()
       .width(RULES_COLUMN_WIDTH)
       .height(SINGLE_FEATURE_HEIGHT);
@@ -515,6 +554,17 @@ function FIPERView() {
         .join('g')
         .classed('instance-value', true)
         .call(fivv);
+      gValueStack.selectAll('g.rule')
+        .data(d => [d])
+        .join('g')
+        .classed('rule', true)
+        .call(rule_fdv);
+      gValueStack.selectAll('g.crules')
+        .data(d => [d])
+        .join('g')
+        .classed('crules', true)
+        .call(crules_fdv);
+
       d3.select(n[j]).selectAll('g.feature-labels')
         .data(d => [d])
         .join('g')
