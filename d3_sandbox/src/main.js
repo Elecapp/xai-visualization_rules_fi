@@ -68,9 +68,9 @@ function FIPERFeatureInstanceValueView() {
         .join('rect')
         .classed('instance-value', true)
         .attr('x', d => barLength(d.cumulative) + (barLength(d.value) / 2) - 2)
-        .attr('y', SINGLE_FEATURE_HEIGHT / 3)
+        .attr('y', height / 3)
         .attr('width', 2)
-        .attr('height', (SINGLE_FEATURE_HEIGHT / 3))
+        .attr('height', (height / 3))
         .attr('fill', FT_Template.STROKE_COLOR);
     } else {
       barLength.domain([selection.datum().values[0].eda.min, selection.datum().values[0].eda.max]);
@@ -79,9 +79,9 @@ function FIPERFeatureInstanceValueView() {
         .join('rect')
         .classed('instance-value', true)
         .attr('x', d => (barLength(d.instance_value) - 2))
-        .attr('y', SINGLE_FEATURE_HEIGHT / 3)
+        .attr('y', height / 3)
         .attr('width', 2)
-        .attr('height', (SINGLE_FEATURE_HEIGHT * 2 / 3))
+        .attr('height', height / 2)
         .attr('fill', FT_Template.STROKE_COLOR);
     }
 
@@ -196,7 +196,7 @@ function FIPERNumericDistributionLineChartView() {
   let xScale = d3.scaleLinear();
   const yScale = d3.scaleLinear()
     .domain([0, 1])
-    .range([height * 2 /3, height / 6]);
+    .range([height * 2 / 3, height / 6]);
   const line = d3.line()
     .x(d => xScale(d.value1))
     .y(d => yScale(d.y1))
@@ -237,7 +237,7 @@ function FIPERNumericDistributionLineChartView() {
   me.height = function (_) {
     if (!arguments.length) return height;
     height = _;
-    yScale.range([height * 5 /6, height / 6]);
+    yScale.range([(height * 5) / 6, height / 6]);
     return me;
   };
 
@@ -392,8 +392,8 @@ function FIPERFeatureLabelsView() {
       .classed('background', true)
       .attr('x1', 0)
       .attr('x2', d => Math.max(cLenght(d.rname.length) - 5, 0))
-      .attr('y1', height/2)
-      .attr('y2', height/2)
+      .attr('y1', height / 2)
+      .attr('y2', height / 2)
       .attr('stroke', 'black')
       .style('stroke-dasharray', ('3, 3'))
       .attr('stroke-width', 0.25);
@@ -447,8 +447,8 @@ function FIPERFeatureImportanceView() {
       .classed('background', true)
       .attr('x1', 0)
       .attr('x2', width)
-      .attr('y1', height/2)
-      .attr('y2', height/2)
+      .attr('y1', height / 2)
+      .attr('y2', height / 2)
       .attr('stroke', 'black')
       .style('stroke-dasharray', ('3, 3'))
       .attr('stroke-width', 0.25);
