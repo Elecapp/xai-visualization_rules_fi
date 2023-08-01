@@ -196,7 +196,7 @@ function FIPERNumericDistributionLineChartView() {
   let xScale = d3.scaleLinear();
   const yScale = d3.scaleLinear()
     .domain([0, 1])
-    .range([1 * SINGLE_FEATURE_HEIGHT, 0]);
+    .range([height * 2 /3, height / 6]);
   const line = d3.line()
     .x(d => xScale(d.value1))
     .y(d => yScale(d.y1))
@@ -237,6 +237,7 @@ function FIPERNumericDistributionLineChartView() {
   me.height = function (_) {
     if (!arguments.length) return height;
     height = _;
+    yScale.range([height * 5 /6, height / 6]);
     return me;
   };
 
