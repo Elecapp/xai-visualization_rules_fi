@@ -409,6 +409,42 @@ function FIPERFeatureLabelsView() {
   return me;
 }
 
+
+function FIPERBackgroundLine() {
+  let width = FI_COLUMN_WIDTH;
+  let height = 50;
+
+  function me(selection){
+    selection.selectAll('line.background')
+      .data(d => [d])
+      .join('line')
+      .classed('background', true)
+      .attr('x1', 0)
+      .attr('x2', width)
+      .attr('y1', height/2)
+      .attr('y2', height/2)
+      .attr('stroke', 'black')
+      .style('stroke-dasharray', ('3, 3'))
+      .attr('stroke-width', 0.25);
+
+    return me;
+  }
+  // eslint-disable-next-line
+  me.width = function (_) {
+    if (!arguments.length) return width;
+    width = _;
+    return me;
+  };
+
+  // eslint-disable-next-line
+  me.height = function (_) {
+    if (!arguments.length) return height;
+    height = _;
+    return me;
+  };
+  return me;
+}
+
 function FIPERFeatureImportanceView() {
   let width = FI_COLUMN_WIDTH;
   let height = 50;
@@ -424,9 +460,10 @@ function FIPERFeatureImportanceView() {
    *  metadata of the feature to be visualized.
    */
   function me(selection) {
-    selection.selectAll('line')
+    selection.selectAll('line.axis')
       .data(d => [d])
       .join('line')
+      .classed('axis', true)
       .attr('x1', width / 2)
       .attr('x2', width / 2)
       .attr('y1', 0)
@@ -475,45 +512,60 @@ function FIPERFeatureImportanceView() {
 const GLOBAL_WIDTH = 700;
 
 function FIPERView() {
+  // global width of the whole visualization
   let width = GLOBAL_WIDTH;
+  // global height of the whole visualization
   let height = 500;
+  // scale to position each feature row. HINT: maybe a d3.scaleBand() is better?
   const yScale = d3.scaleLinear();
+
   function me(selection) {
     console.log(selection.datum());
     const features = selection.datum();
+    // determine the maximum value of Feature Importance to fit the scale. We use absolute value
+    // to ignore the sign of the feature importance
     const fiMax = d3.max(features, d => Math.abs(d.feature_importance));
+    // create a scale to fit the feature importance values in absolute value
     const fiExtent = [0, fiMax];
+    const fbl = FIPERBackgroundLine()
+      .width(FI_COLUMN_WIDTH)
+      .height(SINGLE_FEATURE_HEIGHT);
+    // Component to handle the FI visualization for each feature
     const ffv = FIPERFeatureImportanceView()
       .width(FI_COLUMN_WIDTH)
       .height(SINGLE_FEATURE_HEIGHT)
       .fitExtent(fiExtent);
+    // Component to handle the distribution of the values of the descriptor of each feature
     const fdv = FIPERFeatureDistributionView()
       .width(RULES_COLUMN_WIDTH)
       .height(SINGLE_FEATURE_HEIGHT)
       .color(FT_Template.DISTRIBUTION_COLOR)
       .fFilterRule(() => true);
-
+    // Component to visualize the layer for the rules
     const rule_fdv = FIPERFeatureDistributionView()
       .width(RULES_COLUMN_WIDTH)
       .height(SINGLE_FEATURE_HEIGHT)
       .color(FT_Template.THIRD_COLOR)
       .fFilterRule(d => d.rule.length);
-
+    // Component to visualize the layer for the counter rules
     const crules_fdv = FIPERFeatureDistributionView()
       .width(RULES_COLUMN_WIDTH)
       .height(SINGLE_FEATURE_HEIGHT)
       .color(FT_Template.MAIN_COLOR)
       .fFilterRule(d => Object.keys(d.rule).length);
-
+    // Component to visualize the instance value for each row.
     const fivv = FIPERFeatureInstanceValueView()
       .width(RULES_COLUMN_WIDTH)
       .height(SINGLE_FEATURE_HEIGHT);
+    // Component to visualize the labels of the features at the beginning of each row
     const flv = FIPERFeatureLabelsView()
       .width(LABELS_COLUMN_WIDTH)
       .height(SINGLE_FEATURE_HEIGHT);
+    // colorscale to be used to highlight the selected feature
     const highlightScale = d3.scaleOrdinal()
       .domain([false, true])
-      .range([FT_Template.BACKGROUND_COLOR, FT_Template.SECONDARY_BACKGROUND_COLOR]);
+      .range(['transparent', FT_Template.SECONDARY_BACKGROUND_COLOR]);
+
     const backgroundHeight = d3.scaleOrdinal()
       .domain([0, 1, 2])
       .range([SINGLE_FEATURE_HEIGHT, 5 * SINGLE_FEATURE_HEIGHT, SINGLE_FEATURE_HEIGHT]);
@@ -524,6 +576,7 @@ function FIPERView() {
       .join('g')
       .classed('feature', true)
       .attr('transform', (d, i) => `translate(0, ${yScale(i) + (d.status > 1 ? (d.rows + 1) * SINGLE_FEATURE_HEIGHT : 0)})`);
+    // a rectangle to set the widht and height of the feature row.
     gFeatures.selectAll('rect.background')
       .data(d => [d])
       .join('rect')
@@ -532,13 +585,21 @@ function FIPERView() {
       .attr('width', width)
       .attr('height', d => (d.status === 1 ? (d.rows + 2) * SINGLE_FEATURE_HEIGHT : SINGLE_FEATURE_HEIGHT))
       .attr('fill', d => highlightScale(d.highlighted));
+
+    // for each feature row, we have 3 groups:
+    // 1. the feature importance
+    // 2. the distribution of the values
+    // 3. the labels
+    // We call separate components to handle each group. Each groups is located accordingly to the size of the
+    // corresponsing COLUMN.
     gFeatures.each((_, j, n) => {
-      d3.select(n[j]).selectAll('g.feature-importance')
+      const gFeatureImportance = d3.select(n[j]).selectAll('g.feature-importance')
         .data(d => [d])
         .join('g')
         .classed('feature-importance', true)
-        .attr('transform', `translate(${LABELS_COLUMN_WIDTH + RULES_COLUMN_WIDTH + (2 * GUTTER)}, 0)`)
-        .call(ffv);
+        .attr('transform', `translate(${LABELS_COLUMN_WIDTH + RULES_COLUMN_WIDTH + (2 * GUTTER)}, 0)`);
+      gFeatureImportance.call(fbl);
+      gFeatureImportance.call(ffv);
       const gValueStack = d3.select(n[j]).selectAll('g.feature-values')
         .data(d => [d])
         .join('g')
@@ -554,41 +615,53 @@ function FIPERView() {
         .join('g')
         .classed('instance-value', true)
         .call(fivv);
-      gValueStack.selectAll('g.rule')
-        .data(d => [d])
-        .join('g')
-        .classed('rule', true)
-        .call(rule_fdv);
-      gValueStack.selectAll('g.crules')
-        .data(d => [d])
-        .join('g')
-        .classed('crules', true)
-        .call(crules_fdv);
+      // gValueStack.selectAll('g.rule')
+      //   .data(d => [d])
+      //   .join('g')
+      //   .classed('rule', true)
+      //   .call(rule_fdv);
+      // gValueStack.selectAll('g.crules')
+      //   .data(d => [d])
+      //   .join('g')
+      //   .classed('crules', true)
+      //   .call(crules_fdv);
 
-      d3.select(n[j]).selectAll('g.feature-labels')
+      const gLabels = d3.select(n[j]).selectAll('g.feature-labels')
         .data(d => [d])
         .join('g')
         .classed('feature-labels', true)
-        .attr('transform', 'translate(0, 0)')
-        .call(flv);
+        .attr('transform', 'translate(0, 0)');
+      gLabels.call(fbl.width(LABELS_COLUMN_WIDTH));
+      gLabels.call(flv);
     });
     gFeatures.on('click', function () {
+      // mark the current selection as highlighted
       const currSelection = d3.select(this).datum().highlighted;
+      // reset all the other selections
       gFeatures.data().forEach((d) => {
         // eslint-disable-next-line no-param-reassign
         d.highlighted = false;
       });
+      // toggle the current selection (if it was selected, the selection is removed)
       if (!currSelection) {
         d3.select(this).datum().highlighted = true;
       }
+      // search for the index of the selected element. All previous elements will be
+      // marked with a 0, the selected element with a 1 and the following elements with a 2
       let selectedIdx = 9999999999;
+      // rows is the number of rows that the current selection will occupy. For categorical
+      // features, this is the number of distinct values. For numerical features, this is set to 5.
       let rows = 1;
       gFeatures.data().forEach((d, i) => {
         if (d.highlighted) {
           selectedIdx = i;
           d.status = 1;
+          // categorical features have a different number of rows, depending on the number
+          // of distinct values
           rows = gFeatures.data()[selectedIdx].values.length;
           if (d.type === 'numeric') {
+            // for numerical features, we want to show the distribution of the values
+            // in the instance. This is why we set the number of rows to 5.
             rows = 5;
           }
           d.rows = rows;
@@ -643,8 +716,13 @@ d3.json('/static/instance_34.json').then((data) => {
   const height = (rEntries.length + maxValues) * SINGLE_FEATURE_HEIGHT;
   const svg = d3.select('#app')
     .append('svg')
-    .attr('width', GLOBAL_WIDTH)
-    .attr('height', height);
+    .attr('width', GLOBAL_WIDTH + (4 * GUTTER))
+    .attr('height', height + (4 * GUTTER))
+    .attr('style', `background-color: ${FT_Template.BACKGROUND_COLOR};`)
+    .append('g')
+    .attr('transform', `translate(${2 * GUTTER}, ${2 * GUTTER})`)
+    ;
+
 
   const fv = FIPERView().width(GLOBAL_WIDTH).height(height);
   svg.datum(rEntries).call(fv);
