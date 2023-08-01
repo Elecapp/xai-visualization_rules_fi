@@ -381,7 +381,22 @@ function FIPERFeatureDistributionView() {
 function FIPERFeatureLabelsView() {
   let width = FI_COLUMN_WIDTH;
   let height = 50;
+  const cLenght = d3.scaleLinear()
+    .range([width, 0])
+    .domain([0, 26]); // using a fixed length for labels
   function me(selection) {
+    selection.selectAll('line.background')
+      .data(d => [d])
+      .join('line')
+      .classed('background', true)
+      .attr('x1', 0)
+      .attr('x2', d => Math.max(cLenght(d.rname.length) - 5, 0))
+      .attr('y1', height/2)
+      .attr('y2', height/2)
+      .attr('stroke', 'black')
+      .style('stroke-dasharray', ('3, 3'))
+      .attr('stroke-width', 0.25);
+
     selection.selectAll('text')
       .data(d => [d])
       .join('text')
@@ -397,42 +412,7 @@ function FIPERFeatureLabelsView() {
   me.width = function (_) {
     if (!arguments.length) return width;
     width = _;
-    return me;
-  };
-
-  // eslint-disable-next-line
-  me.height = function (_) {
-    if (!arguments.length) return height;
-    height = _;
-    return me;
-  };
-  return me;
-}
-
-
-function FIPERBackgroundLine() {
-  let width = FI_COLUMN_WIDTH;
-  let height = 50;
-
-  function me(selection){
-    selection.selectAll('line.background')
-      .data(d => [d])
-      .join('line')
-      .classed('background', true)
-      .attr('x1', 0)
-      .attr('x2', width)
-      .attr('y1', height/2)
-      .attr('y2', height/2)
-      .attr('stroke', 'black')
-      .style('stroke-dasharray', ('3, 3'))
-      .attr('stroke-width', 0.25);
-
-    return me;
-  }
-  // eslint-disable-next-line
-  me.width = function (_) {
-    if (!arguments.length) return width;
-    width = _;
+    cLenght.range([width, 0]);
     return me;
   };
 
@@ -460,6 +440,17 @@ function FIPERFeatureImportanceView() {
    *  metadata of the feature to be visualized.
    */
   function me(selection) {
+    selection.selectAll('line.background')
+      .data(d => [d])
+      .join('line')
+      .classed('background', true)
+      .attr('x1', 0)
+      .attr('x2', width)
+      .attr('y1', height/2)
+      .attr('y2', height/2)
+      .attr('stroke', 'black')
+      .style('stroke-dasharray', ('3, 3'))
+      .attr('stroke-width', 0.25);
     selection.selectAll('line.axis')
       .data(d => [d])
       .join('line')
@@ -527,9 +518,6 @@ function FIPERView() {
     const fiMax = d3.max(features, d => Math.abs(d.feature_importance));
     // create a scale to fit the feature importance values in absolute value
     const fiExtent = [0, fiMax];
-    const fbl = FIPERBackgroundLine()
-      .width(FI_COLUMN_WIDTH)
-      .height(SINGLE_FEATURE_HEIGHT);
     // Component to handle the FI visualization for each feature
     const ffv = FIPERFeatureImportanceView()
       .width(FI_COLUMN_WIDTH)
@@ -598,7 +586,6 @@ function FIPERView() {
         .join('g')
         .classed('feature-importance', true)
         .attr('transform', `translate(${LABELS_COLUMN_WIDTH + RULES_COLUMN_WIDTH + (2 * GUTTER)}, 0)`);
-      gFeatureImportance.call(fbl);
       gFeatureImportance.call(ffv);
       const gValueStack = d3.select(n[j]).selectAll('g.feature-values')
         .data(d => [d])
@@ -631,7 +618,6 @@ function FIPERView() {
         .join('g')
         .classed('feature-labels', true)
         .attr('transform', 'translate(0, 0)');
-      gLabels.call(fbl.width(LABELS_COLUMN_WIDTH));
       gLabels.call(flv);
     });
     gFeatures.on('click', function () {
