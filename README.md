@@ -9,3 +9,7 @@ To do so, run the following command in the terminal:
 ```bash
 python -m ipykernel install --user --name=[name of your environment]
 ```
+
+
+# D3 mockup
+
