@@ -649,7 +649,7 @@ function FIPERView() {
           if (d.type === 'numeric') {
             // for numerical features, we want to show the distribution of the values
             // in the instance. This is why we set the number of rows to 5.
-            rows = 5;
+            rows = 2;
           }
           d.rows = rows;
         } else {
@@ -697,7 +697,9 @@ d3.json('/static/instance_34.json').then((data) => {
       highlighted: false,
       status: 0,
       rows: 1,
-    }));
+    }))
+    .map(f => ({ ...f, rvalues: f.values.filter(v => v.rule.length) }))
+    .map(f => ({ ...f, crvalues: f.values.filter(v => Object.keys(v.crules).length) }));
   rEntries.sort((a, b) => (b.feature_importance) - (a.feature_importance));
   const maxValues = d3.max(rEntries, d => d.values.length);
   const height = (rEntries.length + maxValues) * SINGLE_FEATURE_HEIGHT;
