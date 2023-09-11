@@ -263,7 +263,7 @@ function FIPERFeatureDistributionView() {
     .range([0, width])
     .domain([0, 1]);
   let color = FT_Template.DISTRIBUTION_COLOR;
-  let fFilterRule = d => d.rule.length;
+  let fFilterRule = d => true;
 
   function me(selection) {
     const gDetails = selection.selectAll('g.details')
@@ -283,7 +283,7 @@ function FIPERFeatureDistributionView() {
         .classed('single-bar', true);
 
       gSingleBar.selectAll('rect.single-bar')
-        .data(d => prepareCategoricalValues(d.values).filter(fFilterRule))
+        .data(d => prepareCategoricalValues(d.values))
         .join('rect')
         .classed('single-bar', true)
         .attr('x', d => barLength(d.cumulative))
@@ -367,6 +367,102 @@ function FIPERFeatureDistributionView() {
   me.color = function (_) {
     if (!arguments.length) return color;
     color = _;
+    return me;
+  };
+
+  me.fFilterRule = function (_) {
+    if (!arguments.length) return fFilterRule;
+    fFilterRule = _;
+    return me;
+  };
+
+  return me;
+}
+
+function FIPERRulePredicateView() {
+  let width = RULES_COLUMN_WIDTH;
+  let height = 50;
+  const barLength = d3.scaleLinear()
+    .range([0, width])
+    .domain([0, 1]);
+  let color = FT_Template.DISTRIBUTION_COLOR;
+  let isFactualRule = true;
+  let fieldSelector = "rvalues";
+  let fFilterRule = d => (d.rule.length > 0);
+
+  function me(selection) {
+    const gPredicateBar = selection.selectAll('g.single-predicate')
+      .data(d => [d])
+      .join('g')
+      .classed('single-predicate', true);
+
+    gPredicateBar.selectAll('rect.single-predicate-box')
+      .data(d => d[fieldSelector])
+      .join('rect')
+      .classed('single-predicate-box', true)
+      .attr('width', 10)
+      .attr('height', height)
+      .attr('fill', color)
+      .attr('fill-opacity', 0.4)
+      .attr('stroke', color);
+
+    if (selection.datum().type === 'categorical') {
+      const total = d3.sum(selection.datum().values, d => d.eda.count);
+      barLength.domain([0, total]);
+
+      const gSingleBar = gPredicateBar.selectAll('g.single-predicate-bar')
+        .data(d => [d])
+        .join('g')
+        .classed('single-predicate-bar', true);
+
+      gSingleBar.selectAll('rect.single-predicate-bar')
+        .data(d => prepareCategoricalValues(d.values).filter(fFilterRule))
+        .join('rect')
+        .classed('single-predicate-bar', true)
+        .attr('x', d => barLength(d.cumulative))
+        .attr('width', d => barLength(d.value))
+        .attr('height', height)
+        .attr('fill', color)
+        .attr('fill-opacity', 0.2)
+        .attr('stroke', color);
+    } else {
+      // Here we have a numerical feature
+      barLength.domain([selection.datum().values[0].eda.min, selection.datum().values[0].eda.max]);
+      const ndbpv = FIPERNumericDistributionLineChartView()
+        .xScale(barLength)
+        .width(width)
+        .height(height)
+        .color(color);
+      selection.call(ndbpv);
+    }
+    return me;
+  }
+
+  // eslint-disable-next-line
+  me.width = function (_) {
+    if (!arguments.length) return width;
+    width = _;
+    barLength.range([0, width]);
+    return me;
+  };
+
+  // eslint-disable-next-line
+  me.height = function (_) {
+    if (!arguments.length) return height;
+    height = _;
+    return me;
+  };
+
+  me.color = function (_) {
+    if (!arguments.length) return color;
+    color = _;
+    return me;
+  };
+
+  me.isFactualRule = function (_) {
+    if (!arguments.length) return isFactualRule;
+    isFactualRule = _;
+    fieldSelector = isFactualRule ? "rvalues" : "crvalues";
     return me;
   };
 
@@ -512,7 +608,7 @@ function FIPERView() {
   const yScale = d3.scaleLinear();
 
   function me(selection) {
-    console.log(selection.datum());
+    console.log("features", selection.datum());
     const features = selection.datum();
     // determine the maximum value of Feature Importance to fit the scale. We use absolute value
     // to ignore the sign of the feature importance
@@ -531,17 +627,17 @@ function FIPERView() {
       .color(FT_Template.DISTRIBUTION_COLOR)
       .fFilterRule(() => true);
     // Component to visualize the layer for the rules
-    const rule_fdv = FIPERFeatureDistributionView()
+    const rule_fdv = FIPERRulePredicateView()
       .width(RULES_COLUMN_WIDTH)
-      .height(SINGLE_FEATURE_HEIGHT)
+      .height(2 * (SINGLE_FEATURE_HEIGHT / 3))
       .color(FT_Template.THIRD_COLOR)
-      .fFilterRule(d => d.rule.length);
+      .isFactualRule(true);
     // Component to visualize the layer for the counter rules
-    const crules_fdv = FIPERFeatureDistributionView()
+    const crules_fdv = FIPERRulePredicateView()
       .width(RULES_COLUMN_WIDTH)
       .height(SINGLE_FEATURE_HEIGHT)
       .color(FT_Template.MAIN_COLOR)
-      .fFilterRule(d => Object.keys(d.rule).length);
+      .isFactualRule(false);
     // Component to visualize the instance value for each row.
     const fivv = FIPERFeatureInstanceValueView()
       .width(RULES_COLUMN_WIDTH)
@@ -555,9 +651,9 @@ function FIPERView() {
       .domain([false, true])
       .range(['transparent', FT_Template.SECONDARY_BACKGROUND_COLOR]);
 
-    const backgroundHeight = d3.scaleOrdinal()
-      .domain([0, 1, 2])
-      .range([SINGLE_FEATURE_HEIGHT, 5 * SINGLE_FEATURE_HEIGHT, SINGLE_FEATURE_HEIGHT]);
+    // const backgroundHeight = d3.scaleOrdinal()
+    //   .domain([0, 1, 2])
+    //   .range([SINGLE_FEATURE_HEIGHT, 5 * SINGLE_FEATURE_HEIGHT, SINGLE_FEATURE_HEIGHT]);
     yScale.domain([0, features.length])
       .range([0, features.length * SINGLE_FEATURE_HEIGHT]);
     const gFeatures = selection.selectAll('g.feature')
@@ -603,15 +699,17 @@ function FIPERView() {
         .join('g')
         .classed('instance-value', true)
         .call(fivv);
-      // gValueStack.selectAll('g.rule')
-      //   .data(d => [d])
-      //   .join('g')
-      //   .classed('rule', true)
-      //   .call(rule_fdv);
+      gValueStack.selectAll('g.rule')
+        .data(d => [d])
+        .join('g')
+        .classed('rule', true)
+        .attr('transform', `translate(0, ${SINGLE_FEATURE_HEIGHT / 6})`)
+        .call(rule_fdv);
       // gValueStack.selectAll('g.crules')
       //   .data(d => [d])
       //   .join('g')
       //   .classed('crules', true)
+      //   .attr('transform', `translate(0, ${SINGLE_FEATURE_HEIGHT / 2})`)
       //   .call(crules_fdv);
 
       const gLabels = d3.select(n[j]).selectAll('g.feature-labels')
