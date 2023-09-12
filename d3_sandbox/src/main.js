@@ -725,11 +725,7 @@ function FIPERView() {
         .join('g')
         .classed('distribution', true)
         .call(fdv);
-      gValueStack.selectAll('g.instance-value')
-        .data(d => [d])
-        .join('g')
-        .classed('instance-value', true)
-        .call(fivv);
+
       gValueStack.selectAll('g.rule')
         .data(d => [d])
         .join('g')
@@ -742,6 +738,11 @@ function FIPERView() {
       //   .classed('crules', true)
       //   .attr('transform', `translate(0, ${SINGLE_FEATURE_HEIGHT / 2})`)
       //   .call(crules_fdv);
+      gValueStack.selectAll('g.instance-value')
+        .data(d => [d])
+        .join('g')
+        .classed('instance-value', true)
+        .call(fivv);
 
       const gLabels = d3.select(n[j]).selectAll('g.feature-labels')
         .data(d => [d])
