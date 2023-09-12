@@ -167,6 +167,7 @@ function FIPERNumericDistributionBoxPlotView() {
     return me;
   }
 
+  // eslint-disable-next-line func-names
   me.width = function (_) {
     if (!arguments.length) return width;
     width = _;
@@ -174,12 +175,14 @@ function FIPERNumericDistributionBoxPlotView() {
     return me;
   };
 
+  // eslint-disable-next-line func-names
   me.height = function (_) {
     if (!arguments.length) return height;
     height = _;
     return me;
   };
 
+  // eslint-disable-next-line func-names
   me.xScale = function (_) {
     if (!arguments.length) return xScale;
     xScale = _;
@@ -205,13 +208,11 @@ function FIPERNumericDistributionLineChartView() {
   function prepareNumericalValues(data) {
     const eda = data[0].eda;
     const yValues = [0, 0.1, 1.0, 0.1, 0];
-    const newdata = ['min', 'q1', 'median', 'q3', 'max']
+    return ['min', 'q1', 'median', 'q3', 'max']
       .map((d, i) => ({
         value1: eda[d],
         y1: yValues[i],
       }));
-
-    return newdata;
   }
 
   function me(selection) {
@@ -227,6 +228,7 @@ function FIPERNumericDistributionLineChartView() {
     return me;
   }
 
+  // eslint-disable-next-line func-names
   me.width = function (_) {
     if (!arguments.length) return width;
     width = _;
@@ -234,6 +236,7 @@ function FIPERNumericDistributionLineChartView() {
     return me;
   };
 
+  // eslint-disable-next-line func-names
   me.height = function (_) {
     if (!arguments.length) return height;
     height = _;
@@ -241,12 +244,14 @@ function FIPERNumericDistributionLineChartView() {
     return me;
   };
 
+  // eslint-disable-next-line func-names
   me.color = function (_) {
     if (!arguments.length) return color;
     color = _;
     return me;
   };
 
+  // eslint-disable-next-line func-names
   me.xScale = function (_) {
     if (!arguments.length) return xScale;
     xScale = _;
@@ -364,12 +369,14 @@ function FIPERFeatureDistributionView() {
     return me;
   };
 
+  // eslint-disable-next-line func-names
   me.color = function (_) {
     if (!arguments.length) return color;
     color = _;
     return me;
   };
 
+  // eslint-disable-next-line func-names
   me.fFilterRule = function (_) {
     if (!arguments.length) return fFilterRule;
     fFilterRule = _;
@@ -396,6 +403,7 @@ function FIPERRulePredicateView() {
       .classed('single-predicate', true);
 
     if (selection.datum().type === 'categorical') {
+      console.log('selection predicate', selection.datum());
       const total = d3.sum(selection.datum().values, d => d.eda.count);
       barLength.domain([0, total]);
 
@@ -416,7 +424,6 @@ function FIPERRulePredicateView() {
         .attr('stroke', color);
     } else {
       // Here we have a numerical feature
-      console.log('selection predicate', selection.datum());
       barLength.domain([selection.datum().values[0].eda.min, selection.datum().values[0].eda.max]);
 
       // create a tranformation of the data to create additional fields for ranges
@@ -445,9 +452,6 @@ function FIPERRulePredicateView() {
           });
         });
       }
-      console.log('ranges', ranges);
-
-
       gPredicateBar.selectAll('rect.single-predicate-box')
         .data(ranges)
         .join('rect')
@@ -478,18 +482,21 @@ function FIPERRulePredicateView() {
     return me;
   };
 
+  // eslint-disable-next-line func-names
   me.color = function (_) {
     if (!arguments.length) return color;
     color = _;
     return me;
   };
 
+  // eslint-disable-next-line func-names
   me.isFactualRule = function (_) {
     if (!arguments.length) return isFactualRule;
     isFactualRule = _;
     return me;
   };
 
+  // eslint-disable-next-line func-names
   me.fFilterRule = function (_) {
     if (!arguments.length) return fFilterRule;
     fFilterRule = _;
@@ -743,6 +750,7 @@ function FIPERView() {
         .attr('transform', 'translate(0, 0)');
       gLabels.call(flv);
     });
+    // eslint-disable-next-line func-names
     gFeatures.on('click', function () {
       // mark the current selection as highlighted
       const currSelection = d3.select(this).datum().highlighted;
@@ -820,7 +828,7 @@ d3.json('/static/instance_34.json').then((data) => {
       status: 0,
       rows: 1,
     }))
-    .map(f => ({ ...f, rvalues: f.values.filter(v => v.rule.length) }))
+    .map(f => ({ ...f, rvalues: f.values.filter(v => ((v.rule.length > 0) && (v.instance_value > 0))) }))
     .map(f => ({ ...f, crvalues: f.values.filter(v => Object.keys(v.crules).length) }));
   rEntries.sort((a, b) => (b.feature_importance) - (a.feature_importance));
   const maxValues = d3.max(rEntries, d => d.values.length);
