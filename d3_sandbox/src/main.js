@@ -394,6 +394,8 @@ function FIPERRulePredicateView() {
     .domain([0, 1]);
   let color = FTTemplate.DISTRIBUTION_COLOR;
   let isFactualRule = true;
+  let selectedCounterRule = 'C0';
+
   let fFilterRule = d => (d.rule.length > 0 && d.instance_value > 0);
 
   function me(selection) {
@@ -403,7 +405,6 @@ function FIPERRulePredicateView() {
       .classed('single-predicate', true);
 
     if (selection.datum().type === 'categorical') {
-      console.log('selection predicate', selection.datum());
       const total = d3.sum(selection.datum().values, d => d.eda.count);
       barLength.domain([0, total]);
 
@@ -435,7 +436,6 @@ function FIPERRulePredicateView() {
             // r[0] contains the predicate descriptor
             // r[1] contains the predicted class of the black box model
             const pred = r[0];
-
             if (pred.op.indexOf('>') > -1) {
               // the predicate is greater than a threshold
               ranges.push({
@@ -448,6 +448,32 @@ function FIPERRulePredicateView() {
                 low: selection.datum().values[0].eda.min,
                 high: Math.min(pred.thr, selection.datum().values[0].eda.max),
               });
+            }
+          });
+        });
+      } else {
+        selection.datum().values.filter(fFilterRule).forEach((rv) => {
+          console.log('cr value', rv);
+          rv.crules[selectedCounterRule].forEach((r) => {
+            // r[0] contains the predicate descriptor
+            // r[1] contains the predicted class of the black box model
+            const pred = r[0];
+            // check if it intersects the rule
+
+            if (rv.rule[0][0].op !== pred.op && rv.rule[0][0].thr !== pred.thr) {
+              if (pred.op.indexOf('>') > -1) {
+                // the predicate is greater than a threshold
+                ranges.push({
+                  low: Math.max(pred.thr, selection.datum().values[0].eda.min),
+                  high: selection.datum().values[0].eda.max,
+                });
+              } else if (pred.op.indexOf('<') > -1) {
+                // the predicate is lower than a threshold
+                ranges.push({
+                  low: selection.datum().values[0].eda.min,
+                  high: Math.min(pred.thr, selection.datum().values[0].eda.max),
+                });
+              }
             }
           });
         });
@@ -500,6 +526,13 @@ function FIPERRulePredicateView() {
   me.fFilterRule = function (_) {
     if (!arguments.length) return fFilterRule;
     fFilterRule = _;
+    return me;
+  };
+
+  // eslint-disable-next-line func-names
+  me.selectedCounterRule = function (_) {
+    if (!arguments.length) return selectedCounterRule;
+    selectedCounterRule = _;
     return me;
   };
 
@@ -658,17 +691,24 @@ function FIPERView() {
       .color(FTTemplate.DISTRIBUTION_COLOR)
       .fFilterRule(() => true);
     // Component to visualize the layer for the rules
-    const rule_fdv = FIPERRulePredicateView()
+    const rpv = FIPERRulePredicateView()
       .width(RULES_COLUMN_WIDTH)
       .height(2 * (SINGLE_FEATURE_HEIGHT / 3))
       .color(FTTemplate.THIRD_COLOR)
       .isFactualRule(true);
     // Component to visualize the layer for the counter rules
-    const crules_fdv = FIPERRulePredicateView()
+    const CounterRuleId = 'C0';
+    const crpv = FIPERRulePredicateView()
       .width(RULES_COLUMN_WIDTH)
-      .height(SINGLE_FEATURE_HEIGHT)
+      .height(SINGLE_FEATURE_HEIGHT / 3)
       .color(FTTemplate.MAIN_COLOR)
-      .isFactualRule(false);
+      .isFactualRule(false)
+      .selectedCounterRule(CounterRuleId)
+      .fFilterRule((f) => {
+        return (CounterRuleId in f.crules && f.rule.length &&
+          f.rule[0].op !== f.crules[CounterRuleId][0][0].op &&
+          f.rule[0].thr !== f.crules[CounterRuleId][0][0].thr);
+      }); // TODO: to make it dynamic
     // Component to visualize the instance value for each row.
     const fivv = FIPERFeatureInstanceValueView()
       .width(RULES_COLUMN_WIDTH)
@@ -731,13 +771,13 @@ function FIPERView() {
         .join('g')
         .classed('rule', true)
         .attr('transform', `translate(0, ${SINGLE_FEATURE_HEIGHT / 6})`)
-        .call(rule_fdv);
-      // gValueStack.selectAll('g.crules')
-      //   .data(d => [d])
-      //   .join('g')
-      //   .classed('crules', true)
-      //   .attr('transform', `translate(0, ${SINGLE_FEATURE_HEIGHT / 2})`)
-      //   .call(crules_fdv);
+        .call(rpv);
+      gValueStack.selectAll('g.crules')
+        .data(d => [d])
+        .join('g')
+        .classed('crules', true)
+        .attr('transform', `translate(0, ${SINGLE_FEATURE_HEIGHT / 2})`)
+        .call(crpv);
       gValueStack.selectAll('g.instance-value')
         .data(d => [d])
         .join('g')
@@ -835,12 +875,21 @@ d3.json('/static/instance_34.json').then((data) => {
       highlighted: false,
       status: 0,
       rows: 1,
-    }));
-    // .map(f => ({ ...f, rvalues: f.values.filter(v =>
-    // ((v.rule.length > 0) && (v.instance_value > 0))) }))
-    // .map(f => ({ ...f, crvalues: f.values.filter(v =>
-    // Object.keys(v.crules).length) }));
+    }))
+    .map(f => ({ ...f,
+      rvalues: f.values.filter(v =>
+        ((v.rule.length > 0) && (v.instance_value > 0))) }))
+    .map(f => ({ ...f,
+      crvalues: f.values.filter(v =>
+        Object.keys(v.crules).length) }));
   rEntries.sort((a, b) => (b.feature_importance) - (a.feature_importance));
+
+  // this list contains the set of all the counterRules that are present in the explanation
+  // object. This is used to create the legend and selectors of the visualization
+  const CRulesList = Array.from(new Set(rEntries.filter(v => v.crvalues.length)
+    .map(v => v.values.map(d => Object.keys(d.crules))
+      .filter(v2 => v2.length)).flat().flat()));
+  console.log('CRulesList', CRulesList);
   const maxValues = d3.max(rEntries, d => d.values.length);
   const height = (rEntries.length + maxValues) * SINGLE_FEATURE_HEIGHT;
   const svg = d3.select('#app')
