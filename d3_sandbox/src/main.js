@@ -9,7 +9,7 @@ const LABELS_COLUMN_WIDTH = 250;
 const GUTTER = 10;
 
 // create a dict for a color template
-const FT_Template = {
+const FTTemplate = {
   MAIN_COLOR: '#9e2f50',
   SECOND_COLOR: '#45578D',
   THIRD_COLOR: '#f2c14e',
@@ -67,11 +67,11 @@ function FIPERFeatureInstanceValueView() {
         .data(d => prepareCategoricalValues(d.values).filter(v => v.instance_value > 0))
         .join('rect')
         .classed('instance-value', true)
-        .attr('x', d => barLength(d.cumulative) + (barLength(d.value) / 2) - 2)
+        .attr('x', d => (barLength(d.cumulative) + (barLength(d.value) / 2)) - 2)
         .attr('y', height / 3)
         .attr('width', 2)
         .attr('height', (height / 3))
-        .attr('fill', FT_Template.STROKE_COLOR);
+        .attr('fill', FTTemplate.STROKE_COLOR);
     } else {
       barLength.domain([selection.datum().values[0].eda.min, selection.datum().values[0].eda.max]);
       selection.selectAll('rect.instance-value')
@@ -82,7 +82,7 @@ function FIPERFeatureInstanceValueView() {
         .attr('y', height / 3)
         .attr('width', 2)
         .attr('height', height / 2)
-        .attr('fill', FT_Template.STROKE_COLOR);
+        .attr('fill', FTTemplate.STROKE_COLOR);
     }
 
     return me;
@@ -145,23 +145,23 @@ function FIPERNumericDistributionBoxPlotView() {
 
   function me(selection) {
     selection.selectAll('rect')
-      .data(d => prepareNumericalValues(d.values).filter(d => d.type === 'box'))
+      .data(d => prepareNumericalValues(d.values).filter(v => v.type === 'box'))
       .join('rect')
       .attr('x', d => xScale(d.value0))
       .attr('y', SINGLE_FEATURE_HEIGHT / 6)
       .attr('width', d => xScale(d.value1) - xScale(d.value0))
       .attr('height', (SINGLE_FEATURE_HEIGHT * 2) / 3)
-      .attr('fill', FT_Template.DISTRIBUTION_COLOR)
+      .attr('fill', FTTemplate.DISTRIBUTION_COLOR)
       .attr('fill-opacity', 0.2)
-      .attr('stroke', FT_Template.DISTRIBUTION_COLOR);
+      .attr('stroke', FTTemplate.DISTRIBUTION_COLOR);
     selection.selectAll('line')
-      .data(d => prepareNumericalValues(d.values).filter(d => d.type === 'line'))
+      .data(d => prepareNumericalValues(d.values).filter(v => v.type === 'line'))
       .join('line')
       .attr('x1', d => xScale(d.value0))
       .attr('x2', d => xScale(d.value1))
       .attr('y1', SINGLE_FEATURE_HEIGHT / 2)
       .attr('y2', SINGLE_FEATURE_HEIGHT / 2)
-      .attr('stroke', FT_Template.DISTRIBUTION_COLOR)
+      .attr('stroke', FTTemplate.DISTRIBUTION_COLOR)
       .attr('stroke-width', 1.3);
 
     return me;
@@ -192,11 +192,11 @@ function FIPERNumericDistributionBoxPlotView() {
 function FIPERNumericDistributionLineChartView() {
   let width = RULES_COLUMN_WIDTH;
   let height = 50;
-  let color = FT_Template.DISTRIBUTION_COLOR;
+  let color = FTTemplate.DISTRIBUTION_COLOR;
   let xScale = d3.scaleLinear();
   const yScale = d3.scaleLinear()
     .domain([0, 1])
-    .range([height * 2 / 3, height / 6]);
+    .range([(height * 2) / 3, height / 6]);
   const line = d3.line()
     .x(d => xScale(d.value1))
     .y(d => yScale(d.y1))
@@ -262,8 +262,8 @@ function FIPERFeatureDistributionView() {
   const barLength = d3.scaleLinear()
     .range([0, width])
     .domain([0, 1]);
-  let color = FT_Template.DISTRIBUTION_COLOR;
-  let fFilterRule = d => true;
+  let color = FTTemplate.DISTRIBUTION_COLOR;
+  let fFilterRule = () => true;
 
   function me(selection) {
     const gDetails = selection.selectAll('g.details')
@@ -385,7 +385,7 @@ function FIPERRulePredicateView() {
   const barLength = d3.scaleLinear()
     .range([0, width])
     .domain([0, 1]);
-  let color = FT_Template.DISTRIBUTION_COLOR;
+  let color = FTTemplate.DISTRIBUTION_COLOR;
   let isFactualRule = true;
   let fFilterRule = d => (d.rule.length > 0);
 
@@ -445,7 +445,7 @@ function FIPERRulePredicateView() {
           });
         });
       }
-      console.log("ranges", ranges);
+      console.log('ranges', ranges);
 
 
       gPredicateBar.selectAll('rect.single-predicate-box')
@@ -453,13 +453,12 @@ function FIPERRulePredicateView() {
         .join('rect')
         .classed('single-predicate-box', true)
         .attr('x', d => barLength(d.low))
-        .attr('y', 2*height/3)
+        .attr('y', (2 * height) / 3)
         .attr('width', d => barLength(d.high) - barLength(d.low))
-        .attr('height', height/3)
+        .attr('height', height / 3)
         .attr('fill', color)
         .attr('fill-opacity', 0.7)
         .attr('stroke', color);
-
     }
     return me;
   }
@@ -590,7 +589,7 @@ function FIPERFeatureImportanceView() {
       .attr('y', SINGLE_FEATURE_HEIGHT / 4)
       .attr('width', d => barLength(Math.abs(d.feature_importance)))
       .attr('height', SINGLE_FEATURE_HEIGHT / 2)
-      .attr('fill', d => (d.feature_importance < 0 ? FT_Template.DISTRIBUTION_COLOR : FT_Template.SECOND_COLOR));
+      .attr('fill', d => (d.feature_importance < 0 ? FTTemplate.DISTRIBUTION_COLOR : FTTemplate.SECOND_COLOR));
     selection.selectAll('rect')
       .filter(d => d.feature_importance < 0)
       .attr('x', d => (width / 2) - barLength(Math.abs(d.feature_importance)));
@@ -649,19 +648,19 @@ function FIPERView() {
     const fdv = FIPERFeatureDistributionView()
       .width(RULES_COLUMN_WIDTH)
       .height(SINGLE_FEATURE_HEIGHT)
-      .color(FT_Template.DISTRIBUTION_COLOR)
+      .color(FTTemplate.DISTRIBUTION_COLOR)
       .fFilterRule(() => true);
     // Component to visualize the layer for the rules
     const rule_fdv = FIPERRulePredicateView()
       .width(RULES_COLUMN_WIDTH)
       .height(2 * (SINGLE_FEATURE_HEIGHT / 3))
-      .color(FT_Template.THIRD_COLOR)
+      .color(FTTemplate.THIRD_COLOR)
       .isFactualRule(true);
     // Component to visualize the layer for the counter rules
     const crules_fdv = FIPERRulePredicateView()
       .width(RULES_COLUMN_WIDTH)
       .height(SINGLE_FEATURE_HEIGHT)
-      .color(FT_Template.MAIN_COLOR)
+      .color(FTTemplate.MAIN_COLOR)
       .isFactualRule(false);
     // Component to visualize the instance value for each row.
     const fivv = FIPERFeatureInstanceValueView()
@@ -674,7 +673,7 @@ function FIPERView() {
     // colorscale to be used to highlight the selected feature
     const highlightScale = d3.scaleOrdinal()
       .domain([false, true])
-      .range(['transparent', FT_Template.SECONDARY_BACKGROUND_COLOR]);
+      .range(['transparent', FTTemplate.SECONDARY_BACKGROUND_COLOR]);
 
     // const backgroundHeight = d3.scaleOrdinal()
     //   .domain([0, 1, 2])
@@ -700,8 +699,8 @@ function FIPERView() {
     // 1. the feature importance
     // 2. the distribution of the values
     // 3. the labels
-    // We call separate components to handle each group. Each groups is located accordingly to the size of the
-    // corresponsing COLUMN.
+    // We call separate components to handle each group. Each groups is located accordingly
+    // to the size of the corresponsing COLUMN.
     gFeatures.each((_, j, n) => {
       const gFeatureImportance = d3.select(n[j]).selectAll('g.feature-importance')
         .data(d => [d])
@@ -830,7 +829,7 @@ d3.json('/static/instance_34.json').then((data) => {
     .append('svg')
     .attr('width', GLOBAL_WIDTH + (4 * GUTTER))
     .attr('height', height + (4 * GUTTER))
-    .attr('style', `background-color: ${FT_Template.BACKGROUND_COLOR};`)
+    .attr('style', `background-color: ${FTTemplate.BACKGROUND_COLOR};`)
     .append('g')
     .attr('transform', `translate(${2 * GUTTER}, ${2 * GUTTER})`)
     ;
