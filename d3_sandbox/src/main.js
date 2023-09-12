@@ -394,7 +394,7 @@ function FIPERRulePredicateView() {
     .domain([0, 1]);
   let color = FTTemplate.DISTRIBUTION_COLOR;
   let isFactualRule = true;
-  let fFilterRule = d => (d.rule.length > 0);
+  let fFilterRule = d => (d.rule.length > 0 && d.instance_value > 0);
 
   function me(selection) {
     const gPredicateBar = selection.selectAll('g.single-predicate')
@@ -430,7 +430,7 @@ function FIPERRulePredicateView() {
       // of rule predicate
       const ranges = [];
       if (isFactualRule) {
-        selection.datum().rvalues.forEach((rv) => {
+        selection.datum().values.filter(fFilterRule).forEach((rv) => {
           rv.rule.forEach((r) => {
             // r[0] contains the predicate descriptor
             // r[1] contains the predicted class of the black box model
@@ -769,31 +769,38 @@ function FIPERView() {
       // rows is the number of rows that the current selection will occupy. For categorical
       // features, this is the number of distinct values. For numerical features, this is set to 5.
       let rows = 1;
-      gFeatures.data().forEach((d, i) => {
+      const prevFeatures = gFeatures.data();
+      const newFeatures = prevFeatures.map((d, i) => {
+        const current = { ...d };
         if (d.highlighted) {
           selectedIdx = i;
-          d.status = 1;
+          current.status = 1;
           // categorical features have a different number of rows, depending on the number
           // of distinct values
-          rows = gFeatures.data()[selectedIdx].values.length;
+          rows = prevFeatures[selectedIdx].values.length;
           if (d.type === 'numeric') {
             // for numerical features, we want to show the distribution of the values
             // in the instance. This is why we set the number of rows to 5.
             rows = 2;
           }
-          d.rows = rows;
+          current.rows = rows;
         } else {
-          d.status = 0;
+          current.status = 0;
           if (i > selectedIdx) {
-            d.status = 2;
+            current.status = 2;
           }
         }
-      });
-      gFeatures.data().forEach((d, i) => {
+        return current;
+      }).map((d, i) => {
         if (i >= selectedIdx) {
-          d.rows = rows;
+          return {
+            ...d,
+            rows,
+          };
         }
+        return d;
       });
+      selection.datum(newFeatures);
       me(selection);
     });
   }
@@ -827,9 +834,11 @@ d3.json('/static/instance_34.json').then((data) => {
       highlighted: false,
       status: 0,
       rows: 1,
-    }))
-    .map(f => ({ ...f, rvalues: f.values.filter(v => ((v.rule.length > 0) && (v.instance_value > 0))) }))
-    .map(f => ({ ...f, crvalues: f.values.filter(v => Object.keys(v.crules).length) }));
+    }));
+    // .map(f => ({ ...f, rvalues: f.values.filter(v =>
+    // ((v.rule.length > 0) && (v.instance_value > 0))) }))
+    // .map(f => ({ ...f, crvalues: f.values.filter(v =>
+    // Object.keys(v.crules).length) }));
   rEntries.sort((a, b) => (b.feature_importance) - (a.feature_importance));
   const maxValues = d3.max(rEntries, d => d.values.length);
   const height = (rEntries.length + maxValues) * SINGLE_FEATURE_HEIGHT;
