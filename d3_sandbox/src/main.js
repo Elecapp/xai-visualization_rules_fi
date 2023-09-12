@@ -387,7 +387,6 @@ function FIPERRulePredicateView() {
     .domain([0, 1]);
   let color = FT_Template.DISTRIBUTION_COLOR;
   let isFactualRule = true;
-  let fieldSelector = "rvalues";
   let fFilterRule = d => (d.rule.length > 0);
 
   function me(selection) {
@@ -395,16 +394,6 @@ function FIPERRulePredicateView() {
       .data(d => [d])
       .join('g')
       .classed('single-predicate', true);
-
-    gPredicateBar.selectAll('rect.single-predicate-box')
-      .data(d => d[fieldSelector])
-      .join('rect')
-      .classed('single-predicate-box', true)
-      .attr('width', 10)
-      .attr('height', height)
-      .attr('fill', color)
-      .attr('fill-opacity', 0.4)
-      .attr('stroke', color);
 
     if (selection.datum().type === 'categorical') {
       const total = d3.sum(selection.datum().values, d => d.eda.count);
@@ -423,17 +412,54 @@ function FIPERRulePredicateView() {
         .attr('width', d => barLength(d.value))
         .attr('height', height)
         .attr('fill', color)
-        .attr('fill-opacity', 0.2)
+        .attr('fill-opacity', 0.7)
         .attr('stroke', color);
     } else {
       // Here we have a numerical feature
+      console.log('selection predicate', selection.datum());
       barLength.domain([selection.datum().values[0].eda.min, selection.datum().values[0].eda.max]);
-      const ndbpv = FIPERNumericDistributionLineChartView()
-        .xScale(barLength)
-        .width(width)
-        .height(height)
-        .color(color);
-      selection.call(ndbpv);
+
+      // create a tranformation of the data to create additional fields for ranges
+      // of rule predicate
+      const ranges = [];
+      if (isFactualRule) {
+        selection.datum().rvalues.forEach((rv) => {
+          rv.rule.forEach((r) => {
+            // r[0] contains the predicate descriptor
+            // r[1] contains the predicted class of the black box model
+            const pred = r[0];
+
+            if (pred.op.indexOf('>') > -1) {
+              // the predicate is greater than a threshold
+              ranges.push({
+                low: Math.max(pred.thr, selection.datum().values[0].eda.min),
+                high: selection.datum().values[0].eda.max,
+              });
+            } else if (pred.op.indexOf('<') > -1) {
+              // the predicate is lower than a threshold
+              ranges.push({
+                low: selection.datum().values[0].eda.min,
+                high: Math.min(pred.thr, selection.datum().values[0].eda.max),
+              });
+            }
+          });
+        });
+      }
+      console.log("ranges", ranges);
+
+
+      gPredicateBar.selectAll('rect.single-predicate-box')
+        .data(ranges)
+        .join('rect')
+        .classed('single-predicate-box', true)
+        .attr('x', d => barLength(d.low))
+        .attr('y', 2*height/3)
+        .attr('width', d => barLength(d.high) - barLength(d.low))
+        .attr('height', height/3)
+        .attr('fill', color)
+        .attr('fill-opacity', 0.7)
+        .attr('stroke', color);
+
     }
     return me;
   }
@@ -462,7 +488,6 @@ function FIPERRulePredicateView() {
   me.isFactualRule = function (_) {
     if (!arguments.length) return isFactualRule;
     isFactualRule = _;
-    fieldSelector = isFactualRule ? "rvalues" : "crvalues";
     return me;
   };
 
@@ -608,7 +633,7 @@ function FIPERView() {
   const yScale = d3.scaleLinear();
 
   function me(selection) {
-    console.log("features", selection.datum());
+    console.log('features', selection.datum());
     const features = selection.datum();
     // determine the maximum value of Feature Importance to fit the scale. We use absolute value
     // to ignore the sign of the feature importance
