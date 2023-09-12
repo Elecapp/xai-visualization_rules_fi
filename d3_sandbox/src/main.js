@@ -453,14 +453,14 @@ function FIPERRulePredicateView() {
         });
       } else {
         selection.datum().values.filter(fFilterRule).forEach((rv) => {
-          console.log('cr value', rv);
           rv.crules[selectedCounterRule].forEach((r) => {
             // r[0] contains the predicate descriptor
             // r[1] contains the predicted class of the black box model
             const pred = r[0];
             // check if it intersects the rule
 
-            if (rv.rule[0][0].op !== pred.op && rv.rule[0][0].thr !== pred.thr) {
+            //if (rv.rule[0][0].op !== pred.op && rv.rule[0][0].thr !== pred.thr) {
+            if(true){
               if (pred.op.indexOf('>') > -1) {
                 // the predicate is greater than a threshold
                 ranges.push({
@@ -671,6 +671,16 @@ function FIPERView() {
   // scale to position each feature row. HINT: maybe a d3.scaleBand() is better?
   const yScale = d3.scaleLinear();
 
+  function filterFalsifiedConditions(fv, cruleSelector) {
+    if (cruleSelector in fv.crules){
+      const pred = new Function(`return ${fv.instance_value} ${fv.crules[cruleSelector][0][0].op} ${fv.crules[cruleSelector][0][0].thr}`);
+      console.log('fv', fv,fv.instance_value, fv.crules[cruleSelector][0][0].op, fv.crules[cruleSelector][0][0].thr);
+      console.log('check', pred());
+      return !pred();
+    }
+    return false;
+  }
+
   function me(selection) {
     console.log('features', selection.datum());
     const features = selection.datum();
@@ -697,18 +707,14 @@ function FIPERView() {
       .color(FTTemplate.THIRD_COLOR)
       .isFactualRule(true);
     // Component to visualize the layer for the counter rules
-    const CounterRuleId = 'C0';
+    const CounterRuleId = 'C0'; // TODO: to make it dynamic
     const crpv = FIPERRulePredicateView()
       .width(RULES_COLUMN_WIDTH)
-      .height(SINGLE_FEATURE_HEIGHT / 3)
+      .height(SINGLE_FEATURE_HEIGHT / 6)
       .color(FTTemplate.MAIN_COLOR)
       .isFactualRule(false)
       .selectedCounterRule(CounterRuleId)
-      .fFilterRule((f) => {
-        return (CounterRuleId in f.crules && f.rule.length &&
-          f.rule[0].op !== f.crules[CounterRuleId][0][0].op &&
-          f.rule[0].thr !== f.crules[CounterRuleId][0][0].thr);
-      }); // TODO: to make it dynamic
+      .fFilterRule(f => filterFalsifiedConditions(f, CounterRuleId));
     // Component to visualize the instance value for each row.
     const fivv = FIPERFeatureInstanceValueView()
       .width(RULES_COLUMN_WIDTH)
@@ -776,7 +782,7 @@ function FIPERView() {
         .data(d => [d])
         .join('g')
         .classed('crules', true)
-        .attr('transform', `translate(0, ${SINGLE_FEATURE_HEIGHT / 2})`)
+        .attr('transform', `translate(0, ${2 * SINGLE_FEATURE_HEIGHT / 3 })`)
         .call(crpv);
       gValueStack.selectAll('g.instance-value')
         .data(d => [d])
