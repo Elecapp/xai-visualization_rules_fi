@@ -389,6 +389,7 @@ function FIPERFeatureDistributionView() {
 function FIPERRulePredicateView() {
   let width = RULES_COLUMN_WIDTH;
   let height = 50;
+  let subHeight = height / 3;
   const barLength = d3.scaleLinear()
     .range([0, width])
     .domain([0, 1]);
@@ -458,22 +459,18 @@ function FIPERRulePredicateView() {
             // r[1] contains the predicted class of the black box model
             const pred = r[0];
             // check if it intersects the rule
-
-            //if (rv.rule[0][0].op !== pred.op && rv.rule[0][0].thr !== pred.thr) {
-            if(true){
-              if (pred.op.indexOf('>') > -1) {
-                // the predicate is greater than a threshold
-                ranges.push({
-                  low: Math.max(pred.thr, selection.datum().values[0].eda.min),
-                  high: selection.datum().values[0].eda.max,
-                });
-              } else if (pred.op.indexOf('<') > -1) {
-                // the predicate is lower than a threshold
-                ranges.push({
-                  low: selection.datum().values[0].eda.min,
-                  high: Math.min(pred.thr, selection.datum().values[0].eda.max),
-                });
-              }
+            if (pred.op.indexOf('>') > -1) {
+              // the predicate is greater than a threshold
+              ranges.push({
+                low: Math.max(pred.thr, selection.datum().values[0].eda.min),
+                high: selection.datum().values[0].eda.max,
+              });
+            } else if (pred.op.indexOf('<') > -1) {
+              // the predicate is lower than a threshold
+              ranges.push({
+                low: selection.datum().values[0].eda.min,
+                high: Math.min(pred.thr, selection.datum().values[0].eda.max),
+              });
             }
           });
         });
@@ -483,9 +480,9 @@ function FIPERRulePredicateView() {
         .join('rect')
         .classed('single-predicate-box', true)
         .attr('x', d => barLength(d.low))
-        .attr('y', (2 * height) / 3)
+        .attr('y', height - subHeight)
         .attr('width', d => barLength(d.high) - barLength(d.low))
-        .attr('height', height / 3)
+        .attr('height', subHeight)
         .attr('fill', color)
         .attr('fill-opacity', 0.7)
         .attr('stroke', color);
@@ -507,6 +504,13 @@ function FIPERRulePredicateView() {
     height = _;
     return me;
   };
+
+  // eslint-disable-next-line func-names
+  me.subHeight = function (_) {
+    if (!arguments.length) return subHeight;
+    subHeight = _;
+    return me;
+  }
 
   // eslint-disable-next-line func-names
   me.color = function (_) {
@@ -673,6 +677,7 @@ function FIPERView() {
 
   function filterFalsifiedConditions(fv, cruleSelector) {
     if (cruleSelector in fv.crules){
+      // FIXME: remove Function constructor for security reason!!!
       const pred = new Function(`return ${fv.instance_value} ${fv.crules[cruleSelector][0][0].op} ${fv.crules[cruleSelector][0][0].thr}`);
       console.log('fv', fv,fv.instance_value, fv.crules[cruleSelector][0][0].op, fv.crules[cruleSelector][0][0].thr);
       console.log('check', pred());
@@ -704,13 +709,15 @@ function FIPERView() {
     const rpv = FIPERRulePredicateView()
       .width(RULES_COLUMN_WIDTH)
       .height(2 * (SINGLE_FEATURE_HEIGHT / 3))
+      .subHeight(SINGLE_FEATURE_HEIGHT / 6)
       .color(FTTemplate.THIRD_COLOR)
       .isFactualRule(true);
     // Component to visualize the layer for the counter rules
-    const CounterRuleId = 'C0'; // TODO: to make it dynamic
+    const CounterRuleId = 'C1'; // TODO: to make it dynamic
     const crpv = FIPERRulePredicateView()
       .width(RULES_COLUMN_WIDTH)
       .height(SINGLE_FEATURE_HEIGHT / 6)
+      .subHeight(SINGLE_FEATURE_HEIGHT / 6)
       .color(FTTemplate.MAIN_COLOR)
       .isFactualRule(false)
       .selectedCounterRule(CounterRuleId)
@@ -870,7 +877,7 @@ function FIPERView() {
 }
 
 
-d3.json('/static/instance_34.json').then((data) => {
+d3.json('/static/instance_180.json').then((data) => {
   const rFeatures = d3.group(data.features, d => d.rname);
   const rEntries = Array.from(rFeatures.entries())
     .map(d => ({
