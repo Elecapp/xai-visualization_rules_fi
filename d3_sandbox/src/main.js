@@ -510,7 +510,7 @@ function FIPERRulePredicateView() {
     if (!arguments.length) return subHeight;
     subHeight = _;
     return me;
-  }
+  };
 
   // eslint-disable-next-line func-names
   me.color = function (_) {
@@ -667,6 +667,25 @@ function FIPERFeatureImportanceView() {
 
 const GLOBAL_WIDTH = 700;
 
+function EvaluatePredicate(val1, op, val2) {
+  switch (op) {
+    case '>':
+      return val1 > val2;
+    case '<':
+      return val1 < val2;
+    case '>=':
+      return val1 >= val2;
+    case '<=':
+      return val1 <= val2;
+    case '==':
+      return val1 === val2;
+    case '!=':
+      return val1 !== val2;
+    default:
+      return false;
+  }
+}
+
 function FIPERView() {
   // global width of the whole visualization
   let width = GLOBAL_WIDTH;
@@ -676,12 +695,11 @@ function FIPERView() {
   const yScale = d3.scaleLinear();
 
   function filterFalsifiedConditions(fv, cruleSelector) {
-    if (cruleSelector in fv.crules){
-      // FIXME: remove Function constructor for security reason!!!
-      const pred = new Function(`return ${fv.instance_value} ${fv.crules[cruleSelector][0][0].op} ${fv.crules[cruleSelector][0][0].thr}`);
-      console.log('fv', fv,fv.instance_value, fv.crules[cruleSelector][0][0].op, fv.crules[cruleSelector][0][0].thr);
-      console.log('check', pred());
-      return !pred();
+    if (cruleSelector in fv.crules) {
+      const pred = EvaluatePredicate(fv.instance_value, fv.crules[cruleSelector][0][0].op, fv.crules[cruleSelector][0][0].thr);
+      console.log('fv', fv, fv.instance_value, fv.crules[cruleSelector][0][0].op, fv.crules[cruleSelector][0][0].thr);
+      console.log('check', pred);
+      return !pred;
     }
     return false;
   }
@@ -789,7 +807,7 @@ function FIPERView() {
         .data(d => [d])
         .join('g')
         .classed('crules', true)
-        .attr('transform', `translate(0, ${2 * SINGLE_FEATURE_HEIGHT / 3 })`)
+        .attr('transform', `translate(0, ${2 * SINGLE_FEATURE_HEIGHT / 3})`)
         .call(crpv);
       gValueStack.selectAll('g.instance-value')
         .data(d => [d])
@@ -894,7 +912,15 @@ d3.json('/static/instance_180.json').then((data) => {
         ((v.rule.length > 0) && (v.instance_value > 0))) }))
     .map(f => ({ ...f,
       crvalues: f.values.filter(v =>
-        Object.keys(v.crules).length) }));
+        Object.keys(v.crules).length) }))
+    .map(f => ({
+      ...f,
+      values: f.values.map(v => ({
+        ...v,
+        crvalues: f.crvalues,
+        rvalues: f.rvalues,
+      })),
+    }));
   rEntries.sort((a, b) => (b.feature_importance) - (a.feature_importance));
 
   // this list contains the set of all the counterRules that are present in the explanation
