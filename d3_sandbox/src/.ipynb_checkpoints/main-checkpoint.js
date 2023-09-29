@@ -569,6 +569,7 @@ function FIPERFeatureLabelsView() {
       .attr('y', SINGLE_FEATURE_HEIGHT / 2)
       .attr('text-anchor', 'end')
       .attr('alignment-baseline', 'middle')
+      .attr('font-size', 11)
       .text(d => `${d.rname}`);
     return me;
   }
@@ -895,7 +896,7 @@ function FIPERView() {
 }
 
 
-d3.json('/static/instance_0.json').then((data) => {
+d3.json('/static/instance_180.json').then((data) => {
   const rFeatures = d3.group(data.features, d => d.rname);
   const rEntries = Array.from(rFeatures.entries())
     .map(d => ({
