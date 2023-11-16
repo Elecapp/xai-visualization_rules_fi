@@ -1,0 +1,4444 @@
+{
+    "features": [
+        {
+            "name": "ACCESS_ALL_DOWNLOADS",
+            "rname": "ACCESS_ALL_DOWNLOADS",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0007468259895444362,
+                "std": 0.02732301247741239
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "ACCESS_CACHE_FILESYSTEM",
+            "rname": "ACCESS_CACHE_FILESYSTEM",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0011202389843166542,
+                "std": 0.033457466255020656
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "ACCESS_CHECKIN_PROPERTIES",
+            "rname": "ACCESS_CHECKIN_PROPERTIES",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "ACCESS_COARSE_LOCATION",
+            "rname": "ACCESS_COARSE_LOCATION",
+            "type": "numeric",
+            "feature_importance": -0.009856181268868286,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.08588498879761015,
+                "std": 0.2802464712324367
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 1.0
+        },
+        {
+            "name": "ACCESS_COARSE_UPDATES",
+            "rname": "ACCESS_COARSE_UPDATES",
+            "type": "numeric",
+            "feature_importance": -0.0016429469641108928,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.006721433905899925,
+                "std": 0.0817236206016884
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "ACCESS_FINE_LOCATION",
+            "rname": "ACCESS_FINE_LOCATION",
+            "type": "numeric",
+            "feature_importance": -0.01700486743252842,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.08849887976101568,
+                "std": 0.2840721058746573
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 1.0
+        },
+        {
+            "name": "ACCESS_LOCATION_EXTRA_COMMANDS",
+            "rname": "ACCESS_LOCATION_EXTRA_COMMANDS",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.024645257654966394,
+                "std": 0.15507046248637613
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "ACCESS_MOCK_LOCATION",
+            "rname": "ACCESS_MOCK_LOCATION",
+            "type": "numeric",
+            "feature_importance": 1.7813284861049558e-06,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.024645257654966394,
+                "std": 0.15507046248637613
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "ACCESS_MTK_MMHW",
+            "rname": "ACCESS_MTK_MMHW",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 0.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0,
+                "std": 0.0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "ACCESS_NETWORK_STATE",
+            "rname": "ACCESS_NETWORK_STATE",
+            "type": "numeric",
+            "feature_importance": -0.002710042157928601,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 1.0,
+                "q3": 1.0,
+                "mean": 0.5955937266616879,
+                "std": 0.4908684283607753
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 1.0
+        },
+        {
+            "name": "ACCESS_PROVIDER",
+            "rname": "ACCESS_PROVIDER",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 0.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0,
+                "std": 0.0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "ACCESS_SERVICE",
+            "rname": "ACCESS_SERVICE",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 0.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0,
+                "std": 0.0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "ACCESS_SHARED_DATA",
+            "rname": "ACCESS_SHARED_DATA",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 0.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0,
+                "std": 0.0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "ACCESS_SUPERUSER",
+            "rname": "ACCESS_SUPERUSER",
+            "type": "numeric",
+            "feature_importance": -2.3143208861977818e-05,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0011202389843166542,
+                "std": 0.033457466255020656
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "ACCESS_SURFACE_FLINGER",
+            "rname": "ACCESS_SURFACE_FLINGER",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "ACCESS_WIFI_STATE",
+            "rname": "ACCESS_WIFI_STATE",
+            "type": "numeric",
+            "feature_importance": 0.0048490595171431115,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 1.0,
+                "mean": 0.3300970873786408,
+                "std": 0.4703356302305367
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "activityCalled",
+            "rname": "activityCalled",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 0.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0,
+                "std": 0.0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "ACTIVITY_RECOGNITION",
+            "rname": "ACTIVITY_RECOGNITION",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 0.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0,
+                "std": 0.0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "ACCOUNT_MANAGER",
+            "rname": "ACCOUNT_MANAGER",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.006348020911127707,
+                "std": 0.07943601077243077
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "ADD_VOICEMAIL",
+            "rname": "ADD_VOICEMAIL",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.022404779686333084,
+                "std": 0.14802360413446328
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "ANT",
+            "rname": "ANT",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 0.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0,
+                "std": 0.0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "ANT_ADMIN",
+            "rname": "ANT_ADMIN",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 0.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0,
+                "std": 0.0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "AUTHENTICATE_ACCOUNTS",
+            "rname": "AUTHENTICATE_ACCOUNTS",
+            "type": "numeric",
+            "feature_importance": 3.781095459434875e-05,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.03435399551904406,
+                "std": 0.1821707733577567
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "AUTORUN_MANAGER_LICENSE_MANAGER",
+            "rname": "AUTORUN_MANAGER_LICENSE_MANAGER",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 0.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0,
+                "std": 0.0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "AUTORUN_MANAGER_LICENSE_SERVICE(.autorun)",
+            "rname": "AUTORUN_MANAGER_LICENSE_SERVICE(.autorun)",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 0.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0,
+                "std": 0.0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "BATTERY_STATS",
+            "rname": "BATTERY_STATS",
+            "type": "numeric",
+            "feature_importance": -0.0019685928898342665,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.08103061986557132,
+                "std": 0.2729330961388493
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "BILLING",
+            "rname": "BILLING",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 0.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0,
+                "std": 0.0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "BIND_ACCESSIBILITY_SERVICE",
+            "rname": "BIND_ACCESSIBILITY_SERVICE",
+            "type": "numeric",
+            "feature_importance": 0.00010349923443942484,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.006721433905899925,
+                "std": 0.08172362060168842
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "BIND_APPWIDGET",
+            "rname": "BIND_APPWIDGET",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.006348020911127707,
+                "std": 0.07943601077243077
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "BIND_CARRIER_MESSAGING_SERVICE",
+            "rname": "BIND_CARRIER_MESSAGING_SERVICE",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "BIND_DEVICE_ADMIN",
+            "rname": "BIND_DEVICE_ADMIN",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.02539208364451083,
+                "std": 0.15734220717183253
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "BIND_DREAM_SERVICE",
+            "rname": "BIND_DREAM_SERVICE",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "BIND_GET_INSTALL_REFERRER_SERVICE",
+            "rname": "BIND_GET_INSTALL_REFERRER_SERVICE",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 0.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0,
+                "std": 0.0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "BIND_INPUT_METHOD",
+            "rname": "BIND_INPUT_METHOD",
+            "type": "numeric",
+            "feature_importance": -0.0001587005227781927,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "BIND_NFC_SERVICE",
+            "rname": "BIND_NFC_SERVICE",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "BIND_0TIFICATION_LISTENER_SERVICE",
+            "rname": "BIND_0TIFICATION_LISTENER_SERVICE",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005601194921583271,
+                "std": 0.07464517504638186
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "BIND_PRINT_SERVICE",
+            "rname": "BIND_PRINT_SERVICE",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "BIND_REMOTEVIEWS",
+            "rname": "BIND_REMOTEVIEWS",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "BIND_TEXT_SERVICE",
+            "rname": "BIND_TEXT_SERVICE",
+            "type": "numeric",
+            "feature_importance": -1.2447099825740598e-05,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "BIND_TV_INPUT",
+            "rname": "BIND_TV_INPUT",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "BIND_VOICE_INTERACTION",
+            "rname": "BIND_VOICE_INTERACTION",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "BIND_VPN_SERVICE",
+            "rname": "BIND_VPN_SERVICE",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "BIND_WALLPAPER",
+            "rname": "BIND_WALLPAPER",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "BLUETOOTH",
+            "rname": "BLUETOOTH",
+            "type": "numeric",
+            "feature_importance": 0.0009107585442108331,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0474234503360717,
+                "std": 0.21258255273786336
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "BLUETOOTH_ADMIN",
+            "rname": "BLUETOOTH_ADMIN",
+            "type": "numeric",
+            "feature_importance": 0.0020111314015698327,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.04256908140403286,
+                "std": 0.2019212212079945
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "BLUETOOTH_PRIVILEGED",
+            "rname": "BLUETOOTH_PRIVILEGED",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "BODY_SENSORS",
+            "rname": "BODY_SENSORS",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.007094846900672144,
+                "std": 0.08394725452542257
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "BRICK",
+            "rname": "BRICK",
+            "type": "numeric",
+            "feature_importance": -4.845617988636736e-06,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.00597460791635549,
+                "std": 0.07707872904973956
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "BROADCAST_PACKAGE_REMOVED",
+            "rname": "BROADCAST_PACKAGE_REMOVED",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "BROADCAST_SMS",
+            "rname": "BROADCAST_SMS",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "BROADCAST_STICKY",
+            "rname": "BROADCAST_STICKY",
+            "type": "numeric",
+            "feature_importance": -0.00010789566276156738,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.02912621359223301,
+                "std": 0.16819167799066068
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "BROADCAST_WAP_PUSH",
+            "rname": "BROADCAST_WAP_PUSH",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "C2D_MESSAGE",
+            "rname": "C2D_MESSAGE",
+            "type": "numeric",
+            "feature_importance": 3.353257309930015e-06,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0003734129947722181,
+                "std": 0.01932389698720778
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "CALL_PHONE",
+            "rname": "CALL_PHONE",
+            "type": "numeric",
+            "feature_importance": -0.0056107464703803785,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.05451829723674384,
+                "std": 0.22707995873504386
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 1.0
+        },
+        {
+            "name": "CALL_PRIVILEGED",
+            "rname": "CALL_PRIVILEGED",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "CAMERA",
+            "rname": "CAMERA",
+            "type": "numeric",
+            "feature_importance": -0.0007842677434776349,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.2292755787901419,
+                "std": 0.420445356236034
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "CAPTURE_AUDIO_OUTPUT",
+            "rname": "CAPTURE_AUDIO_OUTPUT",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "CAPTURE_SECURE_VIDEO_OUTPUT",
+            "rname": "CAPTURE_SECURE_VIDEO_OUTPUT",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "CAPTURE_VIDEO_OUTPUT",
+            "rname": "CAPTURE_VIDEO_OUTPUT",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "CHANGE_COMPONENT_ENABLED_STATE",
+            "rname": "CHANGE_COMPONENT_ENABLED_STATE",
+            "type": "numeric",
+            "feature_importance": 6.94570530188068e-05,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005601194921583271,
+                "std": 0.07464517504638186
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "CHANGE_CONFIGURATION",
+            "rname": "CHANGE_CONFIGURATION",
+            "type": "numeric",
+            "feature_importance": -0.00030438438178791654,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.024645257654966394,
+                "std": 0.15507046248637613
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "CHANGE_DISPLAY_MODE",
+            "rname": "CHANGE_DISPLAY_MODE",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 0.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0,
+                "std": 0.0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "CHANGE_NETWORK_STATE",
+            "rname": "CHANGE_NETWORK_STATE",
+            "type": "numeric",
+            "feature_importance": 0.0010158967595128119,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.05974607916355489,
+                "std": 0.23706005579542183
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "CHANGE_WIFI_MULTICAST_STATE",
+            "rname": "CHANGE_WIFI_MULTICAST_STATE",
+            "type": "numeric",
+            "feature_importance": 6.512721494130156e-05,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.02725914861837192,
+                "std": 0.16286802198499256
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "CHANGE_WIFI_STATE",
+            "rname": "CHANGE_WIFI_STATE",
+            "type": "numeric",
+            "feature_importance": 0.008505122494381102,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 1.0,
+                "mean": 0.280806572068708,
+                "std": 0.4494771202855503
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "CHECK_LICENSE",
+            "rname": "CHECK_LICENSE",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 0.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0,
+                "std": 0.0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "CLEAR_APP_CACHE",
+            "rname": "CLEAR_APP_CACHE",
+            "type": "numeric",
+            "feature_importance": 0.00013297589267152653,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.026512322628827484,
+                "std": 0.16068310598931912
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "CLEAR_APP_USER_DATA",
+            "rname": "CLEAR_APP_USER_DATA",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0074682598954443615,
+                "std": 0.08611186876244094
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "CONTROL_LOCATION_UPDATES",
+            "rname": "CONTROL_LOCATION_UPDATES",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "DATABASE_INTERFACE_SERVICE",
+            "rname": "DATABASE_INTERFACE_SERVICE",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 0.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0,
+                "std": 0.0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "DELETE_CACHE_FILES",
+            "rname": "DELETE_CACHE_FILES",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "DELETE_PACKAGES",
+            "rname": "DELETE_PACKAGES",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.008215085884988798,
+                "std": 0.0902809049824855
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "DEVICE_POWER",
+            "rname": "DEVICE_POWER",
+            "type": "numeric",
+            "feature_importance": 1.9033951547283895e-05,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.006721433905899925,
+                "std": 0.08172362060168842
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "DIAG0STIC",
+            "rname": "DIAG0STIC",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "DISABLE_KEYGUARD",
+            "rname": "DISABLE_KEYGUARD",
+            "type": "numeric",
+            "feature_importance": -0.007604340075577293,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 1.0,
+                "mean": 0.2811799850634802,
+                "std": 0.44965909606039783
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "DOWNLOAD_SERVICE",
+            "rname": "DOWNLOAD_SERVICE",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 0.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0,
+                "std": 0.0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "DOWNLOAD_WITHOUT_0TIFICATION",
+            "rname": "DOWNLOAD_WITHOUT_0TIFICATION",
+            "type": "numeric",
+            "feature_importance": 0.0015946676424518852,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0048543689320388345,
+                "std": 0.06951696622521603
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "DUMP",
+            "rname": "DUMP",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "EXPAND_STATUS_BAR",
+            "rname": "EXPAND_STATUS_BAR",
+            "type": "numeric",
+            "feature_importance": 9.677010041842618e-06,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.027632561613144136,
+                "std": 0.1639482849398347
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "EXTENSION_PERMISSION",
+            "rname": "EXTENSION_PERMISSION",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 0.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0,
+                "std": 0.0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "FACTORY_TEST",
+            "rname": "FACTORY_TEST",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "FLASHLIGHT",
+            "rname": "FLASHLIGHT",
+            "type": "numeric",
+            "feature_importance": 0.00010823340552483991,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.03398058252427184,
+                "std": 0.18121303687378232
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "FORCE_BACK",
+            "rname": "FORCE_BACK",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "FULLSCREEN.FULL",
+            "rname": "FULLSCREEN.FULL",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 0.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0,
+                "std": 0.0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "GET_ACCOUNTS",
+            "rname": "GET_ACCOUNTS",
+            "type": "numeric",
+            "feature_importance": -0.0002703572693232742,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.1508588498879761,
+                "std": 0.35797808528245756
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "GET_PACKAGE_SIZE",
+            "rname": "GET_PACKAGE_SIZE",
+            "type": "numeric",
+            "feature_importance": 6.76322062866265e-06,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.030619865571321882,
+                "std": 0.17231766391364906
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "GET_TASKS",
+            "rname": "GET_TASKS",
+            "type": "numeric",
+            "feature_importance": 0.01956114504868194,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 1.0,
+                "q3": 1.0,
+                "mean": 0.6389096340552651,
+                "std": 0.48040638386823376
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 1.0
+        },
+        {
+            "name": "GET_TOP_ACTIVITY_INFO",
+            "rname": "GET_TOP_ACTIVITY_INFO",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [
+                [
+                    {
+                        "att": "GET_TOP_ACTIVITY_INFO",
+                        "op": ">",
+                        "thr": -0.10027514025568962,
+                        "is_continuous": true
+                    },
+                    1
+                ]
+            ],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "GLOBAL_SEARCH",
+            "rname": "GLOBAL_SEARCH",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "GOOGLE_AUTH",
+            "rname": "GOOGLE_AUTH",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 0.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0,
+                "std": 0.0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "GOOGLE_PHOTOS",
+            "rname": "GOOGLE_PHOTOS",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 0.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0,
+                "std": 0.0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "HARDWARE_TEST",
+            "rname": "HARDWARE_TEST",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.006348020911127707,
+                "std": 0.07943601077243077
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "INJECT_EVENTS",
+            "rname": "INJECT_EVENTS",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "INSTALL_LOCATION_PROVIDER",
+            "rname": "INSTALL_LOCATION_PROVIDER",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "INSTALL_PACKAGES",
+            "rname": "INSTALL_PACKAGES",
+            "type": "numeric",
+            "feature_importance": 2.5389947898416325e-06,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0074682598954443615,
+                "std": 0.08611186876244094
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "INSTALL_SHORTCUT",
+            "rname": "INSTALL_SHORTCUT",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "INTERACT_ACROSS_USERS",
+            "rname": "INTERACT_ACROSS_USERS",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 0.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0,
+                "std": 0.0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "INTERNAL_SYSTEM_WINDOW",
+            "rname": "INTERNAL_SYSTEM_WINDOW",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "INTERNET",
+            "rname": "INTERNET",
+            "type": "numeric",
+            "feature_importance": -0.0004005131447223972,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 1.0,
+                "q3": 1.0,
+                "mean": 0.7374906646751307,
+                "std": 0.4400801100649647
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 1.0
+        },
+        {
+            "name": "JPUSH_MESSAGE",
+            "rname": "JPUSH_MESSAGE",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 0.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0,
+                "std": 0.0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "KILL_BACKGROUND_PROCESSES",
+            "rname": "KILL_BACKGROUND_PROCESSES",
+            "type": "numeric",
+            "feature_importance": -0.037576280026212106,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 1.0,
+                "q3": 1.0,
+                "mean": 0.5059746079163555,
+                "std": 0.5000576755205042
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "LOCATION_HARDWARE",
+            "rname": "LOCATION_HARDWARE",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "MANAGE_ACCOUNTS",
+            "rname": "MANAGE_ACCOUNTS",
+            "type": "numeric",
+            "feature_importance": 0.0001044149231668129,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.03286034353995519,
+                "std": 0.17830427101604732
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "MANAGE_APP_TOKENS",
+            "rname": "MANAGE_APP_TOKENS",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "MANAGE_DOCUMENTS",
+            "rname": "MANAGE_DOCUMENTS",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "MAPS_RECEIVE",
+            "rname": "MAPS_RECEIVE",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 0.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0,
+                "std": 0.0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "MASTER_CLEAR",
+            "rname": "MASTER_CLEAR",
+            "type": "numeric",
+            "feature_importance": -1.2833374824355111e-05,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.00597460791635549,
+                "std": 0.07707872904973956
+            },
+            "rule": [
+                [
+                    {
+                        "att": "MASTER_CLEAR",
+                        "op": ">",
+                        "thr": -0.03150738589465618,
+                        "is_continuous": true
+                    },
+                    1
+                ]
+            ],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "MEDIA_BUTTON",
+            "rname": "MEDIA_BUTTON",
+            "type": "numeric",
+            "feature_importance": 5.9307719710512046e-05,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0003734129947722181,
+                "std": 0.01932389698720778
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "MEDIA_CONTENT_CONTROL",
+            "rname": "MEDIA_CONTENT_CONTROL",
+            "type": "numeric",
+            "feature_importance": 6.223549912870299e-06,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.006348020911127707,
+                "std": 0.07943601077243077
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "MESSAGE",
+            "rname": "MESSAGE",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 0.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0,
+                "std": 0.0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "MODIFY_AUDIO_SETTINGS",
+            "rname": "MODIFY_AUDIO_SETTINGS",
+            "type": "numeric",
+            "feature_importance": 0.0003371499309756825,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.04555638536221061,
+                "std": 0.2085599279605722
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "MODIFY_PHONE_STATE",
+            "rname": "MODIFY_PHONE_STATE",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.01194921583271098,
+                "std": 0.10867769962473457
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "MOUNT_FORMAT_FILESYSTEMS",
+            "rname": "MOUNT_FORMAT_FILESYSTEMS",
+            "type": "numeric",
+            "feature_importance": -0.00239891163409911,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.022778192681105303,
+                "std": 0.1492235291551314
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "MOUNT_UNMOUNT_FILESYSTEMS",
+            "rname": "MOUNT_UNMOUNT_FILESYSTEMS",
+            "type": "numeric",
+            "feature_importance": -0.0005072120613845317,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.03174010455563853,
+                "std": 0.17534009975980075
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "NFC",
+            "rname": "NFC",
+            "type": "numeric",
+            "feature_importance": 1.3538319766826018e-05,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.029499626587005227,
+                "std": 0.1692338417728715
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "PERSISTENT_ACTIVITY",
+            "rname": "PERSISTENT_ACTIVITY",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.024271844660194174,
+                "std": 0.15392065799203353
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "PERMISSION",
+            "rname": "PERMISSION",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 0.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0,
+                "std": 0.0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "PERMISSION_RUN_TASKS",
+            "rname": "PERMISSION_RUN_TASKS",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 0.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0,
+                "std": 0.0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "PLUGIN",
+            "rname": "PLUGIN",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 0.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0,
+                "std": 0.0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "PROCESS_OUTGOING_CALLS",
+            "rname": "PROCESS_OUTGOING_CALLS",
+            "type": "numeric",
+            "feature_importance": -0.00041035113641254314,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.030619865571321882,
+                "std": 0.17231766391364903
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "READ",
+            "rname": "READ",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 0.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0,
+                "std": 0.0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "READ_ATTACHMENT",
+            "rname": "READ_ATTACHMENT",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 0.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0,
+                "std": 0.0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "READ_AVESTTINGS",
+            "rname": "READ_AVESTTINGS",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 0.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0,
+                "std": 0.0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "READ_CALENDAR",
+            "rname": "READ_CALENDAR",
+            "type": "numeric",
+            "feature_importance": 0.000669213475989337,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.02875280059746079,
+                "std": 0.16714218172178824
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "READ_CALL_LOG",
+            "rname": "READ_CALL_LOG",
+            "type": "numeric",
+            "feature_importance": -0.0022696264624357883,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.027632561613144136,
+                "std": 0.1639482849398347
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "READ_CONTACTS",
+            "rname": "READ_CONTACTS",
+            "type": "numeric",
+            "feature_importance": -0.0036261764111598237,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.14899178491411502,
+                "std": 0.3561468754170907
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "READ_CONTENT_PROVIDER",
+            "rname": "READ_CONTENT_PROVIDER",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 0.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0,
+                "std": 0.0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "READ_DATA",
+            "rname": "READ_DATA",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 0.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0,
+                "std": 0.0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "READ_DATABASES",
+            "rname": "READ_DATABASES",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 0.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0,
+                "std": 0.0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "READ_EXTERNAL_STORAGE",
+            "rname": "READ_EXTERNAL_STORAGE",
+            "type": "numeric",
+            "feature_importance": 0.005797332432027452,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 1.0,
+                "mean": 0.2789395070948469,
+                "std": 0.44856146951262116
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "READ_FRAME_BUFFER",
+            "rname": "READ_FRAME_BUFFER",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "READ_GMAIL",
+            "rname": "READ_GMAIL",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 0.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0,
+                "std": 0.0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "READ_GSERVICES",
+            "rname": "READ_GSERVICES",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 0.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0,
+                "std": 0.0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "READ_HISTORY_BOOKMARKS",
+            "rname": "READ_HISTORY_BOOKMARKS",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "READ_INPUT_STATE",
+            "rname": "READ_INPUT_STATE",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "READ_LOGS",
+            "rname": "READ_LOGS",
+            "type": "numeric",
+            "feature_importance": 0.0003829073128793687,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.01194921583271098,
+                "std": 0.10867769962473457
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "READ_MESSAGES",
+            "rname": "READ_MESSAGES",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 0.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0,
+                "std": 0.0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "READ_OWNER_DATA",
+            "rname": "READ_OWNER_DATA",
+            "type": "numeric",
+            "feature_importance": 0.0002960159394347627,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0048543689320388345,
+                "std": 0.06951696622521601
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "READ_PHONE_STATE",
+            "rname": "READ_PHONE_STATE",
+            "type": "numeric",
+            "feature_importance": 0.017096822293073653,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 1.0,
+                "q3": 1.0,
+                "mean": 0.5321135175504108,
+                "std": 0.4990608428589727
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 1.0
+        },
+        {
+            "name": "READ_PROFILE",
+            "rname": "READ_PROFILE",
+            "type": "numeric",
+            "feature_importance": -1.978046760476722e-05,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.03398058252427184,
+                "std": 0.18121303687378232
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "READ_SETTINGS",
+            "rname": "READ_SETTINGS",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0014936519790888724,
+                "std": 0.03862613243475531
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "READ_SMS",
+            "rname": "READ_SMS",
+            "type": "numeric",
+            "feature_importance": 0.016691432209393446,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.09522031366691561,
+                "std": 0.2935738209560622
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 1.0
+        },
+        {
+            "name": "READ_SOCIAL_STREAM",
+            "rname": "READ_SOCIAL_STREAM",
+            "type": "numeric",
+            "feature_importance": -0.00028472740851381644,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.024271844660194174,
+                "std": 0.15392065799203353
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "READ_SYNC_SETTINGS",
+            "rname": "READ_SYNC_SETTINGS",
+            "type": "numeric",
+            "feature_importance": -0.006089096604013555,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.03323375653472741,
+                "std": 0.17927988155791277
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "READ_SYNC_STATS",
+            "rname": "READ_SYNC_STATS",
+            "type": "numeric",
+            "feature_importance": 6.6837625790965086e-06,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.02501867064973861,
+                "std": 0.15621091106601048
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "READ_USER_DICTIONARY",
+            "rname": "READ_USER_DICTIONARY",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.02539208364451083,
+                "std": 0.15734220717183253
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "READ_VOICEMAIL",
+            "rname": "READ_VOICEMAIL",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "REBOOT",
+            "rname": "REBOOT",
+            "type": "numeric",
+            "feature_importance": -4.8441871864202e-06,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "RECEIVE",
+            "rname": "RECEIVE",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 0.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0,
+                "std": 0.0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "RECEIVE_BOOT_COMPLETED",
+            "rname": "RECEIVE_BOOT_COMPLETED",
+            "type": "numeric",
+            "feature_importance": 0.039038468664705034,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 1.0,
+                "median": 1.0,
+                "q3": 1.0,
+                "mean": 0.8446601941747572,
+                "std": 0.36229596206728193
+            },
+            "rule": [
+                [
+                    {
+                        "att": "RECEIVE_BOOT_COMPLETED",
+                        "op": ">",
+                        "thr": 0.5068870931863785,
+                        "is_continuous": true
+                    },
+                    1
+                ]
+            ],
+            "crules": {},
+            "instance_value": 1.0
+        },
+        {
+            "name": "RECEIVE_MMS",
+            "rname": "RECEIVE_MMS",
+            "type": "numeric",
+            "feature_importance": -0.000140563740310461,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.02315160567587752,
+                "std": 0.15041295471921562
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "RECEIVE_SIGNED_DATA_RESULT",
+            "rname": "RECEIVE_SIGNED_DATA_RESULT",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 0.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0,
+                "std": 0.0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "RECEIVE_SMS",
+            "rname": "RECEIVE_SMS",
+            "type": "numeric",
+            "feature_importance": 0.01274635206786169,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.1590739357729649,
+                "std": 0.36581332483840745
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 1.0
+        },
+        {
+            "name": "RECEIVE_USER_PRESENT",
+            "rname": "RECEIVE_USER_PRESENT",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0007468259895444362,
+                "std": 0.02732301247741239
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "RECEIVE_WAP_PUSH",
+            "rname": "RECEIVE_WAP_PUSH",
+            "type": "numeric",
+            "feature_importance": -0.00037424122161254096,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.02315160567587752,
+                "std": 0.15041295471921562
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "RECORD_AUDIO",
+            "rname": "RECORD_AUDIO",
+            "type": "numeric",
+            "feature_importance": 0.00046021259288926377,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.041822255414488425,
+                "std": 0.20022018827504384
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "REORDER_TASKS",
+            "rname": "REORDER_TASKS",
+            "type": "numeric",
+            "feature_importance": 0.00012228645136924942,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.026512322628827484,
+                "std": 0.16068310598931912
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "RESPOND",
+            "rname": "RESPOND",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 0.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0,
+                "std": 0.0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "RESTART_PACKAGES",
+            "rname": "RESTART_PACKAGES",
+            "type": "numeric",
+            "feature_importance": 0.00010232348318472947,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.03659447348767737,
+                "std": 0.18779906205690622
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "REQUEST",
+            "rname": "REQUEST",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 0.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0,
+                "std": 0.0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "SDCARD_WRITE",
+            "rname": "SDCARD_WRITE",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 0.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0,
+                "std": 0.0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "SEND",
+            "rname": "SEND",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 0.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0,
+                "std": 0.0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "SEND_RESPOND_VIA_MESSAGE",
+            "rname": "SEND_RESPOND_VIA_MESSAGE",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "SEND_SMS",
+            "rname": "SEND_SMS",
+            "type": "numeric",
+            "feature_importance": 0.01694131108166296,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.1430171769977595,
+                "std": 0.35015574805093663
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 1.0
+        },
+        {
+            "name": "SET_ACTIVITY_WATCHER",
+            "rname": "SET_ACTIVITY_WATCHER",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005601194921583271,
+                "std": 0.07464517504638186
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "SET_ALARM",
+            "rname": "SET_ALARM",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "SET_ALWAYS_FINISH",
+            "rname": "SET_ALWAYS_FINISH",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "SET_ANIMATION_SCALE",
+            "rname": "SET_ANIMATION_SCALE",
+            "type": "numeric",
+            "feature_importance": 4.6486571909347305e-06,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.006348020911127707,
+                "std": 0.07943601077243077
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "SET_DEBUG_APP",
+            "rname": "SET_DEBUG_APP",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [
+                [
+                    {
+                        "att": "SET_DEBUG_APP",
+                        "op": ">",
+                        "thr": -0.12166877463459969,
+                        "is_continuous": true
+                    },
+                    1
+                ]
+            ],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "SET_ORIENTATION",
+            "rname": "SET_ORIENTATION",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "SET_POINTER_SPEED",
+            "rname": "SET_POINTER_SPEED",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "SET_PREFERRED_APPLICATIONS",
+            "rname": "SET_PREFERRED_APPLICATIONS",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "SET_PROCESS_LIMIT",
+            "rname": "SET_PROCESS_LIMIT",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "SET_TIME",
+            "rname": "SET_TIME",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "SET_TIME_ZONE",
+            "rname": "SET_TIME_ZONE",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.024271844660194174,
+                "std": 0.15392065799203353
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "SET_WALLPAPER",
+            "rname": "SET_WALLPAPER",
+            "type": "numeric",
+            "feature_importance": -0.002287431486181283,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.030619865571321882,
+                "std": 0.17231766391364903
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "SET_WALLPAPER_HINTS",
+            "rname": "SET_WALLPAPER_HINTS",
+            "type": "numeric",
+            "feature_importance": 0.00018635939311631056,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.02725914861837192,
+                "std": 0.16286802198499253
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "SIGNAL_PERSISTENT_PROCESSES",
+            "rname": "SIGNAL_PERSISTENT_PROCESSES",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "STATUS_BAR",
+            "rname": "STATUS_BAR",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005601194921583271,
+                "std": 0.07464517504638186
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "STORAGE",
+            "rname": "STORAGE",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0003734129947722181,
+                "std": 0.01932389698720778
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "SUBSCRIBED_FEEDS_READ",
+            "rname": "SUBSCRIBED_FEEDS_READ",
+            "type": "numeric",
+            "feature_importance": -6.700321580281718e-07,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.024645257654966394,
+                "std": 0.15507046248637615
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "SUBSCRIBED_FEEDS_WRITE",
+            "rname": "SUBSCRIBED_FEEDS_WRITE",
+            "type": "numeric",
+            "feature_importance": -0.00025830620288418675,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.024645257654966394,
+                "std": 0.15507046248637615
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "SYSTEM_ALERT_WINDOW",
+            "rname": "SYSTEM_ALERT_WINDOW",
+            "type": "numeric",
+            "feature_importance": 0.00941317756367591,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 1.0,
+                "mean": 0.4010455563853622,
+                "std": 0.4902017425415592
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 1.0
+        },
+        {
+            "name": "TRANSMIT_IR",
+            "rname": "TRANSMIT_IR",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.007094846900672144,
+                "std": 0.08394725452542257
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "UNINSTALL_SHORTCUT",
+            "rname": "UNINSTALL_SHORTCUT",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "UPDATE_DEVICE_STATS",
+            "rname": "UPDATE_DEVICE_STATS",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "USES_POLICY_FORCE_LOCK",
+            "rname": "USES_POLICY_FORCE_LOCK",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0007468259895444362,
+                "std": 0.027323012477412388
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "USE_CREDENTIALS",
+            "rname": "USE_CREDENTIALS",
+            "type": "numeric",
+            "feature_importance": 4.000669949410568e-05,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.03659447348767737,
+                "std": 0.18779906205690625
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "USE_FINGERPRINT",
+            "rname": "USE_FINGERPRINT",
+            "type": "numeric",
+            "feature_importance": 0.0005543091818386763,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.008215085884988798,
+                "std": 0.09028090498248549
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "USE_SIP",
+            "rname": "USE_SIP",
+            "type": "numeric",
+            "feature_importance": -3.5026904982729556e-05,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.024271844660194174,
+                "std": 0.15392065799203353
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "VIBRATE",
+            "rname": "VIBRATE",
+            "type": "numeric",
+            "feature_importance": 0.010322269596202893,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.1982823002240478,
+                "std": 0.39878040567033063
+            },
+            "rule": [
+                [
+                    {
+                        "att": "VIBRATE",
+                        "op": "<=",
+                        "thr": 0.6615315973758698,
+                        "is_continuous": true
+                    },
+                    1
+                ]
+            ],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "WAKE_LOCK",
+            "rname": "WAKE_LOCK",
+            "type": "numeric",
+            "feature_importance": 0.02591158568496758,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 1.0,
+                "median": 1.0,
+                "q3": 1.0,
+                "mean": 0.8890963405526512,
+                "std": 0.3140714433879469
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 1.0
+        },
+        {
+            "name": "WRITE",
+            "rname": "WRITE",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 0.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0,
+                "std": 0.0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "WRITE_APN_SETTINGS",
+            "rname": "WRITE_APN_SETTINGS",
+            "type": "numeric",
+            "feature_importance": 6.730063244067303e-06,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0074682598954443615,
+                "std": 0.08611186876244092
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "WRITE_AVSETTING",
+            "rname": "WRITE_AVSETTING",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 0.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0,
+                "std": 0.0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "WRITE_CALENDAR",
+            "rname": "WRITE_CALENDAR",
+            "type": "numeric",
+            "feature_importance": 1.8872583951043467e-05,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.027632561613144136,
+                "std": 0.1639482849398347
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "WRITE_CALL_LOG",
+            "rname": "WRITE_CALL_LOG",
+            "type": "numeric",
+            "feature_importance": -0.00034035038586009475,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.024271844660194174,
+                "std": 0.15392065799203353
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "WRITE_CONTACTS",
+            "rname": "WRITE_CONTACTS",
+            "type": "numeric",
+            "feature_importance": 0.0004975015109179348,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.038834951456310676,
+                "std": 0.19323752616874032
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "WRITE_DATA",
+            "rname": "WRITE_DATA",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 0.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0,
+                "std": 0.0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "WRITE_DATABASES",
+            "rname": "WRITE_DATABASES",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 0.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0,
+                "std": 0.0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "WRITE_EXTERNAL_STORAGE",
+            "rname": "WRITE_EXTERNAL_STORAGE",
+            "type": "numeric",
+            "feature_importance": -0.007442399602332507,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 1.0,
+                "mean": 0.4424943988050784,
+                "std": 0.49677485710703
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "WRITE_GSERVICES",
+            "rname": "WRITE_GSERVICES",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "WRITE_HISTORY_BOOKMARKS",
+            "rname": "WRITE_HISTORY_BOOKMARKS",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "WRITE_INTERNAL_STORAGE",
+            "rname": "WRITE_INTERNAL_STORAGE",
+            "type": "numeric",
+            "feature_importance": -3.426203168110643e-05,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0014936519790888724,
+                "std": 0.03862613243475531
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "WRITE_MEDIA_STORAGE",
+            "rname": "WRITE_MEDIA_STORAGE",
+            "type": "numeric",
+            "feature_importance": 0.000278213446214377,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.002987303958177745,
+                "std": 0.05458472821657052
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "WRITE_OWNER_DATA",
+            "rname": "WRITE_OWNER_DATA",
+            "type": "numeric",
+            "feature_importance": 4.134286071408923e-06,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.002987303958177745,
+                "std": 0.05458472821657052
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "WRITE_PROFILE",
+            "rname": "WRITE_PROFILE",
+            "type": "numeric",
+            "feature_importance": -8.710756673647828e-05,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.024645257654966394,
+                "std": 0.15507046248637613
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "WRITE_SECURE_SETTINGS",
+            "rname": "WRITE_SECURE_SETTINGS",
+            "type": "numeric",
+            "feature_importance": 0.0001260502980022698,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.006721433905899925,
+                "std": 0.0817236206016884
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "WRITE_SETTINGS",
+            "rname": "WRITE_SETTINGS",
+            "type": "numeric",
+            "feature_importance": -0.00028306601336061665,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.14002987303958178,
+                "std": 0.34708283081916086
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "WRITE_SMS",
+            "rname": "WRITE_SMS",
+            "type": "numeric",
+            "feature_importance": 9.253660078791133e-06,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.027632561613144136,
+                "std": 0.1639482849398347
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "WRITE_SOCIAL_STREAM",
+            "rname": "WRITE_SOCIAL_STREAM",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.024271844660194174,
+                "std": 0.15392065799203353
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "WRITE_SYNC_SETTINGS",
+            "rname": "WRITE_SYNC_SETTINGS",
+            "type": "numeric",
+            "feature_importance": 0.00023233268091515997,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.03286034353995519,
+                "std": 0.17830427101604732
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "WRITE_USER_DICTIONARY",
+            "rname": "WRITE_USER_DICTIONARY",
+            "type": "numeric",
+            "feature_importance": -7.905958487444746e-05,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.024645257654966394,
+                "std": 0.15507046248637615
+            },
+            "rule": [
+                [
+                    {
+                        "att": "WRITE_USER_DICTIONARY",
+                        "op": "<=",
+                        "thr": 0.1509881317615509,
+                        "is_continuous": true
+                    },
+                    1
+                ]
+            ],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "WRITE_VOICEMAIL",
+            "rname": "WRITE_VOICEMAIL",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.005227781926811053,
+                "std": 0.07212762899737664
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "Ljava/lang/reflect/Method;->invoke",
+            "rname": "Ljava/lang/reflect/Method;->invoke",
+            "type": "numeric",
+            "feature_importance": 0.0009877162216477752,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 1.0,
+                "q3": 1.0,
+                "mean": 0.5481702763256161,
+                "std": 0.49776716024433026
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 1.0
+        },
+        {
+            "name": "Ljavax/crypto/Cipher;->doFinal",
+            "rname": "Ljavax/crypto/Cipher;->doFinal",
+            "type": "numeric",
+            "feature_importance": 5.854225160359983e-05,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 1.0,
+                "q3": 1.0,
+                "mean": 0.5160567587752054,
+                "std": 0.49983544523127843
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "Ljava/lang/Runtime;->exec",
+            "rname": "Ljava/lang/Runtime;->exec",
+            "type": "numeric",
+            "feature_importance": -0.003534288200837179,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 1.0,
+                "mean": 0.3401792382374907,
+                "std": 0.47385775365678273
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "Ljava/lang/System;->load",
+            "rname": "Ljava/lang/System;->load",
+            "type": "numeric",
+            "feature_importance": 0.014379689151053265,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.11127707244212098,
+                "std": 0.31453366731017923
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "Ldalvik/system/DexClassLoader;->loadClass",
+            "rname": "Ldalvik/system/DexClassLoader;->loadClass",
+            "type": "numeric",
+            "feature_importance": 0.0073033129330004045,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.05937266616878267,
+                "std": 0.23636500306269773
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "Ljava/lang/System;->loadLibrary",
+            "rname": "Ljava/lang/System;->loadLibrary",
+            "type": "numeric",
+            "feature_importance": 0.00400454184995325,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.10306198655713218,
+                "std": 0.30409660431417124
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "Ljava/net/URL;->openConnection",
+            "rname": "Ljava/net/URL;->openConnection",
+            "type": "numeric",
+            "feature_importance": 0.03456609811736583,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.18259895444361463,
+                "std": 0.3864095385009984
+            },
+            "rule": [
+                [
+                    {
+                        "att": "Ljava/net/URL;->openConnection",
+                        "op": "<=",
+                        "thr": 0.5312570035457611,
+                        "is_continuous": true
+                    },
+                    1
+                ]
+            ],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "Landroid/hardware/Camera;->open",
+            "rname": "Landroid/hardware/Camera;->open",
+            "type": "numeric",
+            "feature_importance": -0.002374877704114132,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.20761762509335324,
+                "std": 0.4056772127128811
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "Landroid/hardware/Camera;->takePicture",
+            "rname": "Landroid/hardware/Camera;->takePicture",
+            "type": "numeric",
+            "feature_importance": -0.00022862134438967558,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.1075429424943988,
+                "std": 0.3098601468919588
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "Landroid/telephony/SmsManager;->sendMultipartTextMessage",
+            "rname": "Landroid/telephony/SmsManager;->sendMultipartTextMessage",
+            "type": "numeric",
+            "feature_importance": 0.002957923903873494,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.07991038088125467,
+                "std": 0.27120504650069743
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 1.0
+        },
+        {
+            "name": "Landroid/telephony/SmsManager;->sendTextMessage",
+            "rname": "Landroid/telephony/SmsManager;->sendTextMessage",
+            "type": "numeric",
+            "feature_importance": 0.008449983269800064,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.08215085884988797,
+                "std": 0.2746457024606408
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 1.0
+        },
+        {
+            "name": "Landroid/media/AudioRecord;->startRecording",
+            "rname": "Landroid/media/AudioRecord;->startRecording",
+            "type": "numeric",
+            "feature_importance": -0.0007709292353872307,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.014936519790888723,
+                "std": 0.12132154137694844
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "Landroid/telephony/TelephonyManager;->getCellLocation",
+            "rname": "Landroid/telephony/TelephonyManager;->getCellLocation",
+            "type": "numeric",
+            "feature_importance": -9.784543877043037e-05,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.018297236743838687,
+                "std": 0.13404908723449743
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "Lcom/google/android/gms/location/LocationClient;->getLastLocation",
+            "rname": "Lcom/google/android/gms/location/LocationClient;->getLastLocation",
+            "type": "numeric",
+            "feature_importance": 0.0,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.0003734129947722181,
+                "std": 0.01932389698720778
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "Landroid/location/LocationManager;->getLastK0wnLocation",
+            "rname": "Landroid/location/LocationManager;->getLastK0wnLocation",
+            "type": "numeric",
+            "feature_importance": 0.013375182858554522,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.12023898431665422,
+                "std": 0.3253015307922219
+            },
+            "rule": [
+                [
+                    {
+                        "att": "Landroid/location/LocationManager;->getLastK0wnLocation",
+                        "op": "<=",
+                        "thr": 0.5016870349645615,
+                        "is_continuous": true
+                    },
+                    1
+                ]
+            ],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "Landroid/telephony/TelephonyManager;->getDeviceId",
+            "rname": "Landroid/telephony/TelephonyManager;->getDeviceId",
+            "type": "numeric",
+            "feature_importance": 0.0013401843495195113,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 1.0,
+                "mean": 0.4268110530246453,
+                "std": 0.4947067466512159
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 1.0
+        },
+        {
+            "name": "Landroid/content/pm/PackageManager;->getInstalledApplications",
+            "rname": "Landroid/content/pm/PackageManager;->getInstalledApplications",
+            "type": "numeric",
+            "feature_importance": -0.010349104534134367,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.07244212098581031,
+                "std": 0.25926696796094967
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 1.0
+        },
+        {
+            "name": "Landroid/content/pm/PackageManager;->getInstalledPackages",
+            "rname": "Landroid/content/pm/PackageManager;->getInstalledPackages",
+            "type": "numeric",
+            "feature_importance": 0.0025437740722831976,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.05041075429424944,
+                "std": 0.21883188049313793
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "Landroid/telephony/TelephonyManager;->getLine1Number",
+            "rname": "Landroid/telephony/TelephonyManager;->getLine1Number",
+            "type": "numeric",
+            "feature_importance": 0.007357908767929048,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.16579536967886482,
+                "std": 0.37196630236400907
+            },
+            "rule": [
+                [
+                    {
+                        "att": "Landroid/telephony/TelephonyManager;->getLine1Number",
+                        "op": ">",
+                        "thr": 0.05290841683745384,
+                        "is_continuous": true
+                    },
+                    1
+                ]
+            ],
+            "crules": {},
+            "instance_value": 1.0
+        },
+        {
+            "name": "Landroid/telephony/TelephonyManager;->getNetworkOperator",
+            "rname": "Landroid/telephony/TelephonyManager;->getNetworkOperator",
+            "type": "numeric",
+            "feature_importance": 0.026888545846922435,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.2393577296489918,
+                "std": 0.4267711540931572
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "Landroid/telephony/TelephonyManager;->getNetworkOperatorName",
+            "rname": "Landroid/telephony/TelephonyManager;->getNetworkOperatorName",
+            "type": "numeric",
+            "feature_importance": 0.0019442475727068633,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.20724421209858104,
+                "std": 0.40540772205302095
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "Landroid/telephony/TelephonyManager;->getNetworkCountryIso",
+            "rname": "Landroid/telephony/TelephonyManager;->getNetworkCountryIso",
+            "type": "numeric",
+            "feature_importance": 0.0036889777065278536,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.09559372666168783,
+                "std": 0.29408818707336004
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "Landroid/telephony/TelephonyManager;->getSimOperator",
+            "rname": "Landroid/telephony/TelephonyManager;->getSimOperator",
+            "type": "numeric",
+            "feature_importance": -0.0024052767604805843,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.08663181478715459,
+                "std": 0.28134729685109217
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 1.0
+        },
+        {
+            "name": "Landroid/telephony/TelephonyManager;->getSimOperatorName",
+            "rname": "Landroid/telephony/TelephonyManager;->getSimOperatorName",
+            "type": "numeric",
+            "feature_importance": 0.0017908147274756615,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.05601194921583271,
+                "std": 0.22998774359315868
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "Landroid/telephony/TelephonyManager;->getSimCountryIso",
+            "rname": "Landroid/telephony/TelephonyManager;->getSimCountryIso",
+            "type": "numeric",
+            "feature_importance": 0.007493010239781514,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.13592233009708737,
+                "std": 0.34277007317569486
+            },
+            "rule": [
+                [
+                    {
+                        "att": "Landroid/telephony/TelephonyManager;->getSimCountryIso",
+                        "op": ">",
+                        "thr": -0.4860190153121948,
+                        "is_continuous": true
+                    },
+                    1
+                ]
+            ],
+            "crules": {},
+            "instance_value": 1.0
+        },
+        {
+            "name": "Landroid/telephony/TelephonyManager;->getSimSerialNumber",
+            "rname": "Landroid/telephony/TelephonyManager;->getSimSerialNumber",
+            "type": "numeric",
+            "feature_importance": 1.9774950971663013e-05,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.013816280806572068,
+                "std": 0.11674965092013197
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.0
+        },
+        {
+            "name": "Lorg/apache/http/impl/client/DefaultHttpClient;->execute",
+            "rname": "Lorg/apache/http/impl/client/DefaultHttpClient;->execute",
+            "type": "numeric",
+            "feature_importance": -0.003941516806382001,
+            "eda": {
+                "min": 0.0,
+                "max": 1.0,
+                "q1": 0.0,
+                "median": 0.0,
+                "q3": 0.0,
+                "mean": 0.1445108289768484,
+                "std": 0.3516726185332872
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 1.0
+        }
+    ],
+    "bb_pred": 1,
+    "dt_pred": 1
+}
