@@ -896,7 +896,7 @@ function FIPERView() {
 }
 
 
-d3.json('/static/instance_180.json').then((data) => {
+d3.json('/static/instance_6_mush.json').then((data) => {
   const rFeatures = d3.group(data.features, d => d.rname);
   const rEntries = Array.from(rFeatures.entries())
     .map(d => ({

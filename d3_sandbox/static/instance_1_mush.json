@@ -1,0 +1,1615 @@
+{
+    "features": [
+        {
+            "name": "cap-shape=b",
+            "rname": "cap-shape",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "b",
+                "count": 91
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "cap-shape=c",
+            "rname": "cap-shape",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "c",
+                "count": 1
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "cap-shape=f",
+            "rname": "cap-shape",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "f",
+                "count": 640
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "cap-shape=k",
+            "rname": "cap-shape",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "k",
+                "count": 174
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "cap-shape=s",
+            "rname": "cap-shape",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "s",
+                "count": 6
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "cap-shape=x",
+            "rname": "cap-shape",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "x",
+                "count": 712
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 1
+        },
+        {
+            "name": "cap-surface=f",
+            "rname": "cap-surface",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "f",
+                "count": 485
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "cap-surface=g",
+            "rname": "cap-surface",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "g",
+                "count": 2
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "cap-surface=s",
+            "rname": "cap-surface",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "s",
+                "count": 472
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "cap-surface=y",
+            "rname": "cap-surface",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "y",
+                "count": 665
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 1
+        },
+        {
+            "name": "cap-color=b",
+            "rname": "cap-color",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "b",
+                "count": 33
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "cap-color=c",
+            "rname": "cap-color",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "c",
+                "count": 11
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "cap-color=e",
+            "rname": "cap-color",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "e",
+                "count": 296
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 1
+        },
+        {
+            "name": "cap-color=g",
+            "rname": "cap-color",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "g",
+                "count": 381
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "cap-color=n",
+            "rname": "cap-color",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "n",
+                "count": 442
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "cap-color=p",
+            "rname": "cap-color",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "p",
+                "count": 37
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "cap-color=r",
+            "rname": "cap-color",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "r",
+                "count": 4
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "cap-color=u",
+            "rname": "cap-color",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "u",
+                "count": 6
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "cap-color=w",
+            "rname": "cap-color",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "w",
+                "count": 198
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "cap-color=y",
+            "rname": "cap-color",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "y",
+                "count": 216
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "bruises=f",
+            "rname": "bruises",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "f",
+                "count": 936
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 1
+        },
+        {
+            "name": "bruises=t",
+            "rname": "bruises",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "t",
+                "count": 688
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "odor=a",
+            "rname": "odor",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "a",
+                "count": 87
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "odor=c",
+            "rname": "odor",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "c",
+                "count": 37
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "odor=f",
+            "rname": "odor",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "f",
+                "count": 425
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "odor=l",
+            "rname": "odor",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "l",
+                "count": 76
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "odor=m",
+            "rname": "odor",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "m",
+                "count": 11
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 1
+        },
+        {
+            "name": "odor=n",
+            "rname": "odor",
+            "type": "categorical",
+            "feature_importance": -0.4858658730674816,
+            "eda": {
+                "category": "n",
+                "count": 721
+            },
+            "rule": [
+                [
+                    {
+                        "att": "odor=n",
+                        "op": ">",
+                        "thr": 0.6607384383678436,
+                        "is_continuous": true
+                    },
+                    0
+                ]
+            ],
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "odor=n",
+                            "op": ">",
+                            "thr": 0.6607384383678436,
+                            "is_continuous": true
+                        },
+                        1
+                    ]
+                ],
+                "C1": [
+                    [
+                        {
+                            "att": "odor=n",
+                            "op": ">",
+                            "thr": 0.6607384383678436,
+                            "is_continuous": true
+                        },
+                        1
+                    ]
+                ]
+            },
+            "instance_value": 0
+        },
+        {
+            "name": "odor=p",
+            "rname": "odor",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "p",
+                "count": 45
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "odor=s",
+            "rname": "odor",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "s",
+                "count": 117
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "odor=y",
+            "rname": "odor",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "y",
+                "count": 105
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "gill-attachment=a",
+            "rname": "gill-attachment",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "a",
+                "count": 36
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 1
+        },
+        {
+            "name": "gill-attachment=f",
+            "rname": "gill-attachment",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "f",
+                "count": 1588
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "gill-spacing=c",
+            "rname": "gill-spacing",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "c",
+                "count": 1359
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 1
+        },
+        {
+            "name": "gill-spacing=w",
+            "rname": "gill-spacing",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "w",
+                "count": 265
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "gill-size=b",
+            "rname": "gill-size",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "b",
+                "count": 1152
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 1
+        },
+        {
+            "name": "gill-size=n",
+            "rname": "gill-size",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "n",
+                "count": 472
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "gill-color=b",
+            "rname": "gill-color",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "b",
+                "count": 324
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "gill-color=e",
+            "rname": "gill-color",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "e",
+                "count": 16
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "gill-color=g",
+            "rname": "gill-color",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "g",
+                "count": 146
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "gill-color=h",
+            "rname": "gill-color",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "h",
+                "count": 163
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "gill-color=k",
+            "rname": "gill-color",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "k",
+                "count": 95
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "gill-color=n",
+            "rname": "gill-color",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "n",
+                "count": 203
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "gill-color=o",
+            "rname": "gill-color",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "o",
+                "count": 8
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "gill-color=p",
+            "rname": "gill-color",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "p",
+                "count": 304
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "gill-color=r",
+            "rname": "gill-color",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "r",
+                "count": 4
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "gill-color=u",
+            "rname": "gill-color",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "u",
+                "count": 103
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "gill-color=w",
+            "rname": "gill-color",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "w",
+                "count": 239
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 1
+        },
+        {
+            "name": "gill-color=y",
+            "rname": "gill-color",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "y",
+                "count": 19
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "stalk-shape=e",
+            "rname": "stalk-shape",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "e",
+                "count": 700
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 1
+        },
+        {
+            "name": "stalk-shape=t",
+            "rname": "stalk-shape",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "t",
+                "count": 924
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "stalk-root=?",
+            "rname": "stalk-root",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "?",
+                "count": 459
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "stalk-root=b",
+            "rname": "stalk-root",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "b",
+                "count": 782
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "stalk-root=c",
+            "rname": "stalk-root",
+            "type": "categorical",
+            "feature_importance": 0.03365676613235817,
+            "eda": {
+                "category": "c",
+                "count": 124
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 1
+        },
+        {
+            "name": "stalk-root=e",
+            "rname": "stalk-root",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "e",
+                "count": 226
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "stalk-root=r",
+            "rname": "stalk-root",
+            "type": "categorical",
+            "feature_importance": 0.010436464501431255,
+            "eda": {
+                "category": "r",
+                "count": 33
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "stalk-surface-above-ring=f",
+            "rname": "stalk-surface-above-ring",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "f",
+                "count": 117
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "stalk-surface-above-ring=k",
+            "rname": "stalk-surface-above-ring",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "k",
+                "count": 476
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 1
+        },
+        {
+            "name": "stalk-surface-above-ring=s",
+            "rname": "stalk-surface-above-ring",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "s",
+                "count": 1027
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "stalk-surface-above-ring=y",
+            "rname": "stalk-surface-above-ring",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "y",
+                "count": 4
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "stalk-surface-below-ring=f",
+            "rname": "stalk-surface-below-ring",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "f",
+                "count": 132
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "stalk-surface-below-ring=k",
+            "rname": "stalk-surface-below-ring",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "k",
+                "count": 451
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "stalk-surface-below-ring=s",
+            "rname": "stalk-surface-below-ring",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "s",
+                "count": 987
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "stalk-surface-below-ring=y",
+            "rname": "stalk-surface-below-ring",
+            "type": "categorical",
+            "feature_importance": -0.0070611605275915056,
+            "eda": {
+                "category": "y",
+                "count": 54
+            },
+            "rule": [
+                [
+                    {
+                        "att": "stalk-surface-below-ring=y",
+                        "op": "<=",
+                        "thr": 0.5,
+                        "is_continuous": true
+                    },
+                    0
+                ]
+            ],
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "stalk-surface-below-ring=y",
+                            "op": ">",
+                            "thr": 0.5,
+                            "is_continuous": true
+                        },
+                        1
+                    ]
+                ]
+            },
+            "instance_value": 1
+        },
+        {
+            "name": "stalk-color-above-ring=b",
+            "rname": "stalk-color-above-ring",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "b",
+                "count": 93
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "stalk-color-above-ring=c",
+            "rname": "stalk-color-above-ring",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "c",
+                "count": 11
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 1
+        },
+        {
+            "name": "stalk-color-above-ring=e",
+            "rname": "stalk-color-above-ring",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "e",
+                "count": 22
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "stalk-color-above-ring=g",
+            "rname": "stalk-color-above-ring",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "g",
+                "count": 121
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "stalk-color-above-ring=n",
+            "rname": "stalk-color-above-ring",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "n",
+                "count": 88
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "stalk-color-above-ring=o",
+            "rname": "stalk-color-above-ring",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "o",
+                "count": 31
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "stalk-color-above-ring=p",
+            "rname": "stalk-color-above-ring",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "p",
+                "count": 369
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "stalk-color-above-ring=w",
+            "rname": "stalk-color-above-ring",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "w",
+                "count": 888
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "stalk-color-above-ring=y",
+            "rname": "stalk-color-above-ring",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "y",
+                "count": 1
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "stalk-color-below-ring=b",
+            "rname": "stalk-color-below-ring",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "b",
+                "count": 89
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "stalk-color-below-ring=c",
+            "rname": "stalk-color-below-ring",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "c",
+                "count": 11
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 1
+        },
+        {
+            "name": "stalk-color-below-ring=e",
+            "rname": "stalk-color-below-ring",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "e",
+                "count": 21
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "stalk-color-below-ring=g",
+            "rname": "stalk-color-below-ring",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "g",
+                "count": 129
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "stalk-color-below-ring=n",
+            "rname": "stalk-color-below-ring",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "n",
+                "count": 113
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "stalk-color-below-ring=o",
+            "rname": "stalk-color-below-ring",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "o",
+                "count": 31
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "stalk-color-below-ring=p",
+            "rname": "stalk-color-below-ring",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "p",
+                "count": 370
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "stalk-color-below-ring=w",
+            "rname": "stalk-color-below-ring",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "w",
+                "count": 857
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "stalk-color-below-ring=y",
+            "rname": "stalk-color-below-ring",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "y",
+                "count": 3
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "veil-type=p",
+            "rname": "veil-type",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "p",
+                "count": 0
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "veil-color=n",
+            "rname": "veil-color",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "n",
+                "count": 21
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "veil-color=o",
+            "rname": "veil-color",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "o",
+                "count": 10
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "veil-color=w",
+            "rname": "veil-color",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "w",
+                "count": 1592
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 1
+        },
+        {
+            "name": "veil-color=y",
+            "rname": "veil-color",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "y",
+                "count": 1
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "ring-number=n",
+            "rname": "ring-number",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "n",
+                "count": 11
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 1
+        },
+        {
+            "name": "ring-number=o",
+            "rname": "ring-number",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "o",
+                "count": 1500
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "ring-number=t",
+            "rname": "ring-number",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "t",
+                "count": 113
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "ring-type=e",
+            "rname": "ring-type",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "e",
+                "count": 544
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "ring-type=f",
+            "rname": "ring-type",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "f",
+                "count": 14
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "ring-type=l",
+            "rname": "ring-type",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "l",
+                "count": 270
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "ring-type=n",
+            "rname": "ring-type",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "n",
+                "count": 11
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 1
+        },
+        {
+            "name": "ring-type=p",
+            "rname": "ring-type",
+            "type": "categorical",
+            "feature_importance": -0.002257799671592775,
+            "eda": {
+                "category": "p",
+                "count": 785
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "spore-print-color=b",
+            "rname": "spore-print-color",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "b",
+                "count": 5
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "spore-print-color=h",
+            "rname": "spore-print-color",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "h",
+                "count": 337
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "spore-print-color=k",
+            "rname": "spore-print-color",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "k",
+                "count": 394
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "spore-print-color=n",
+            "rname": "spore-print-color",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "n",
+                "count": 391
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "spore-print-color=o",
+            "rname": "spore-print-color",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "o",
+                "count": 10
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "spore-print-color=r",
+            "rname": "spore-print-color",
+            "type": "categorical",
+            "feature_importance": -0.016876271190607108,
+            "eda": {
+                "category": "r",
+                "count": 17
+            },
+            "rule": [
+                [
+                    {
+                        "att": "spore-print-color=r",
+                        "op": "<=",
+                        "thr": 0.5,
+                        "is_continuous": true
+                    },
+                    0
+                ]
+            ],
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "spore-print-color=r",
+                            "op": "<=",
+                            "thr": 0.5,
+                            "is_continuous": true
+                        },
+                        1
+                    ]
+                ],
+                "C1": [
+                    [
+                        {
+                            "att": "spore-print-color=r",
+                            "op": ">",
+                            "thr": 0.5,
+                            "is_continuous": true
+                        },
+                        1
+                    ]
+                ]
+            },
+            "instance_value": 0
+        },
+        {
+            "name": "spore-print-color=u",
+            "rname": "spore-print-color",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "u",
+                "count": 10
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "spore-print-color=w",
+            "rname": "spore-print-color",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "w",
+                "count": 451
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 1
+        },
+        {
+            "name": "spore-print-color=y",
+            "rname": "spore-print-color",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "y",
+                "count": 9
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "population=a",
+            "rname": "population",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "a",
+                "count": 86
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "population=c",
+            "rname": "population",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "c",
+                "count": 66
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 1
+        },
+        {
+            "name": "population=n",
+            "rname": "population",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "n",
+                "count": 80
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "population=s",
+            "rname": "population",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "s",
+                "count": 247
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "population=v",
+            "rname": "population",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "v",
+                "count": 797
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "population=y",
+            "rname": "population",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "y",
+                "count": 348
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "habitat=d",
+            "rname": "habitat",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "d",
+                "count": 646
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 1
+        },
+        {
+            "name": "habitat=g",
+            "rname": "habitat",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "g",
+                "count": 444
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "habitat=l",
+            "rname": "habitat",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "l",
+                "count": 153
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "habitat=m",
+            "rname": "habitat",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "m",
+                "count": 68
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "habitat=p",
+            "rname": "habitat",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "p",
+                "count": 222
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "habitat=u",
+            "rname": "habitat",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "u",
+                "count": 55
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        },
+        {
+            "name": "habitat=w",
+            "rname": "habitat",
+            "type": "categorical",
+            "feature_importance": 0.0,
+            "eda": {
+                "category": "w",
+                "count": 36
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0
+        }
+    ],
+    "bb_pred": 0,
+    "dt_pred": 0
+}
