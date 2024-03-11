@@ -20,6 +20,7 @@ const FTTemplate = {
   STROKE_COLOR: '#000',
   DISTRIBUTION_COLOR: 'grey',
   CATEGORICAL_VALUE_COLOR: '#999999',
+  NEGATIVE_FI_COLOR: '#f37744',
 };
 
 // Format the data (instead of using d3.stack()) and
@@ -426,7 +427,7 @@ function FIPERRulePredicateView() {
 
   // let fFilterRule = d => (d.rule.length > 0 && d.instance_value > 0);
   let fFilterRule = (v) => {
-    console.log('v', v);
+    // console.log('v', v);
     return (
       v.rvalues.length > 0 &&
       v.name === v.rvalues[0].rule[0][0].att &&
@@ -631,7 +632,7 @@ function FIPERFeatureImportanceView() {
   let height = 50;
   let fiExtent = [0, 1];
   const barLength = d3.scaleLinear()
-    .range([0, width / 2])
+    .range([0, width])
     .domain(fiExtent);
 
   /**
@@ -656,8 +657,8 @@ function FIPERFeatureImportanceView() {
       .data(d => [d])
       .join('line')
       .classed('axis', true)
-      .attr('x1', width / 2)
-      .attr('x2', width / 2)
+      // .attr('x1', 0)
+      // .attr('x2', 0)
       .attr('y1', 0)
       .attr('y2', SINGLE_FEATURE_HEIGHT)
       .attr('stroke', 'black')
@@ -665,21 +666,21 @@ function FIPERFeatureImportanceView() {
     selection.selectAll('rect')
       .data(d => [d])
       .join('rect')
-      .attr('x', (width / 2))
+      // .attr('x', (width / 2))
       .attr('y', SINGLE_FEATURE_HEIGHT / 4)
       .attr('width', d => barLength(Math.abs(d.feature_importance)))
       .attr('height', SINGLE_FEATURE_HEIGHT / 2)
-      .attr('fill', d => (d.feature_importance < 0 ? FTTemplate.DISTRIBUTION_COLOR : FTTemplate.SECOND_COLOR));
-    selection.selectAll('rect')
-      .filter(d => d.feature_importance < 0)
-      .attr('x', d => (width / 2) - barLength(Math.abs(d.feature_importance)));
+      .attr('fill', d => (d.feature_importance < 0 ? FTTemplate.NEGATIVE_FI_COLOR : FTTemplate.SECOND_COLOR));
+    // selection.selectAll('rect')
+    //   .filter(d => d.feature_importance < 0)
+    //   .attr('x', d => (width / 2) - barLength(Math.abs(d.feature_importance)));
   }
 
   // eslint-disable-next-line
   me.width = function (_) {
     if (!arguments.length) return width;
     width = _;
-    barLength.range([0, width / 2]);
+    barLength.range([0, width]);
     return me;
   };
 
@@ -733,7 +734,7 @@ function FIPERView() {
     const fiExtent = [0, fiMax];
     // Component to handle the FI visualization for each feature
     const ffv = FIPERFeatureImportanceView()
-      .width(FI_COLUMN_WIDTH)
+      .width(FI_COLUMN_WIDTH / 2)
       .height(SINGLE_FEATURE_HEIGHT)
       .fitExtent(fiExtent);
     // Component to handle the distribution of the values of the descriptor of each feature
