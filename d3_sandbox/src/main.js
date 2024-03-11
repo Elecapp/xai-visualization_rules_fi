@@ -3,7 +3,7 @@
 const d3 = require('d3');
 
 const SINGLE_FEATURE_HEIGHT = 30;
-const FI_COLUMN_WIDTH = 100;
+const FI_COLUMN_WIDTH = 50;
 const RULES_COLUMN_WIDTH = 300;
 const LABELS_COLUMN_WIDTH = 250;
 const GUTTER = 10;
@@ -734,7 +734,7 @@ function FIPERView() {
     const fiExtent = [0, fiMax];
     // Component to handle the FI visualization for each feature
     const ffv = FIPERFeatureImportanceView()
-      .width(FI_COLUMN_WIDTH / 2)
+      .width(FI_COLUMN_WIDTH)
       .height(SINGLE_FEATURE_HEIGHT)
       .fitExtent(fiExtent);
     // Component to handle the distribution of the values of the descriptor of each feature
@@ -804,13 +804,13 @@ function FIPERView() {
         .data(d => [d])
         .join('g')
         .classed('feature-importance', true)
-        .attr('transform', `translate(${LABELS_COLUMN_WIDTH + RULES_COLUMN_WIDTH + (2 * GUTTER)}, 0)`);
+        .attr('transform', `translate(${LABELS_COLUMN_WIDTH + GUTTER}, 0)`);
       gFeatureImportance.call(ffv);
       const gValueStack = d3.select(n[j]).selectAll('g.feature-values')
         .data(d => [d])
         .join('g')
         .classed('feature-values', true)
-        .attr('transform', `translate(${LABELS_COLUMN_WIDTH + GUTTER}, 0)`);
+        .attr('transform', `translate(${LABELS_COLUMN_WIDTH + FI_COLUMN_WIDTH + (2 * GUTTER)}, 0)`);
       gValueStack.selectAll('g.distribution')
         .data(d => [d])
         .join('g')
