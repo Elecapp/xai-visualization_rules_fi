@@ -19,6 +19,7 @@ const FTTemplate = {
   TEXT_COLOR: '#000',
   STROKE_COLOR: '#000',
   DISTRIBUTION_COLOR: 'grey',
+  CATEGORICAL_VALUE_COLOR: '#999999',
 };
 
 // Format the data (instead of using d3.stack()) and
@@ -47,9 +48,33 @@ function prepareCategoricalValues(data) {
       instance_value: d.instance_value,
       rule: d.rule,
       crules: d.crules,
+      crvalues: d.crvalues,
+      rvalues: d.rvalues,
+      name: d.name,
     };
   }).filter(d => d.value > 0);
 }
+
+
+function doesHold(val1, op, val2) {
+  switch (op) {
+    case '>':
+      return val1 > val2;
+    case '<':
+      return val1 < val2;
+    case '>=':
+      return val1 >= val2;
+    case '<=':
+      return val1 <= val2;
+    case '==':
+      return val1 === val2;
+    case '!=':
+      return val1 !== val2;
+    default:
+      return false;
+  }
+}
+
 
 function FIPERFeatureInstanceValueView() {
   let width = RULES_COLUMN_WIDTH;
@@ -67,11 +92,13 @@ function FIPERFeatureInstanceValueView() {
         .data(d => prepareCategoricalValues(d.values).filter(v => v.instance_value > 0))
         .join('rect')
         .classed('instance-value', true)
-        .attr('x', d => (barLength(d.cumulative) + (barLength(d.value) / 2)) - 2)
-        .attr('y', height / 3)
-        .attr('width', 2)
-        .attr('height', (height / 3))
-        .attr('fill', FTTemplate.STROKE_COLOR);
+        .attr('x', d => barLength(d.cumulative))
+        .attr('y', SINGLE_FEATURE_HEIGHT / 6)
+        .attr('width', d => barLength(d.value))
+        .attr('height', (SINGLE_FEATURE_HEIGHT * 2) / 3)
+        .attr('fill', FTTemplate.CATEGORICAL_VALUE_COLOR)
+        .attr('fill-opacity', 0.9)
+        .attr('stroke', FTTemplate.STROKE_COLOR);
     } else {
       barLength.domain([selection.datum().values[0].eda.min, selection.datum().values[0].eda.max]);
       selection.selectAll('rect.instance-value')
@@ -397,7 +424,15 @@ function FIPERRulePredicateView() {
   let isFactualRule = true;
   let selectedCounterRule = 'C0';
 
-  let fFilterRule = d => (d.rule.length > 0 && d.instance_value > 0);
+  // let fFilterRule = d => (d.rule.length > 0 && d.instance_value > 0);
+  let fFilterRule = (v) => {
+    console.log('v', v);
+    return (
+      v.rvalues.length > 0 &&
+      v.name === v.rvalues[0].rule[0][0].att &&
+      doesHold(v.instance_value, v.rvalues[0].rule[0][0].op, v.rvalues[0].rule[0][0].thr)
+    );
+  };
 
   function me(selection) {
     const gPredicateBar = selection.selectAll('g.single-predicate')
@@ -668,25 +703,6 @@ function FIPERFeatureImportanceView() {
 
 const GLOBAL_WIDTH = 700;
 
-function EvaluatePredicate(val1, op, val2) {
-  switch (op) {
-    case '>':
-      return val1 > val2;
-    case '<':
-      return val1 < val2;
-    case '>=':
-      return val1 >= val2;
-    case '<=':
-      return val1 <= val2;
-    case '==':
-      return val1 === val2;
-    case '!=':
-      return val1 !== val2;
-    default:
-      return false;
-  }
-}
-
 function FIPERView() {
   // global width of the whole visualization
   let width = GLOBAL_WIDTH;
@@ -697,9 +713,11 @@ function FIPERView() {
 
   function filterFalsifiedConditions(fv, cruleSelector) {
     if (cruleSelector in fv.crules) {
-      const pred = EvaluatePredicate(fv.instance_value, fv.crules[cruleSelector][0][0].op, fv.crules[cruleSelector][0][0].thr);
-      console.log('fv', fv, fv.instance_value, fv.crules[cruleSelector][0][0].op, fv.crules[cruleSelector][0][0].thr);
-      console.log('check', pred);
+      const pred = doesHold(fv.instance_value, fv.crules[cruleSelector][0][0].op,
+        fv.crules[cruleSelector][0][0].thr);
+      console.log('fv', fv, fv.instance_value, fv.crules[cruleSelector][0][0].op,
+        fv.crules[cruleSelector][0][0].thr);
+      // We are interested in the Falsified predicates, so we return the negation
       return !pred;
     }
     return false;
@@ -808,7 +826,7 @@ function FIPERView() {
         .data(d => [d])
         .join('g')
         .classed('crules', true)
-        .attr('transform', `translate(0, ${2 * SINGLE_FEATURE_HEIGHT / 3})`)
+        .attr('transform', `translate(0, ${(2 * SINGLE_FEATURE_HEIGHT) / 3})`)
         .call(crpv);
       gValueStack.selectAll('g.instance-value')
         .data(d => [d])
@@ -896,7 +914,7 @@ function FIPERView() {
 }
 
 
-d3.json('/static/instance_6_mush.json').then((data) => {
+d3.json('/static/instance_180.json').then((data) => {
   const rFeatures = d3.group(data.features, d => d.rname);
   const rEntries = Array.from(rFeatures.entries())
     .map(d => ({
