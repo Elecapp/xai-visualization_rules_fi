@@ -328,6 +328,7 @@ function FIPERFeatureDistributionView() {
         .attr('stroke', color);
 
       if (selection.datum().status === 1) {
+        // draw the symbol for the actual value of the instance
         gDetails.selectAll('rect.single-bar')
           .data(d => prepareCategoricalValues(d.values))
           .join('rect')
@@ -336,9 +337,11 @@ function FIPERFeatureDistributionView() {
           .attr('y', (d, i) => (i * SINGLE_FEATURE_HEIGHT) + (SINGLE_FEATURE_HEIGHT / 4))
           .attr('width', d => barLength(d.value))
           .attr('height', (SINGLE_FEATURE_HEIGHT / 2))
-          .attr('fill', color)
-          .attr('fill-opacity', d => (d.instance_value ? 0.5 : 0.2))
-          .attr('stroke', color);
+          .attr('fill', d => (d.instance_value ? FTTemplate.CATEGORICAL_VALUE_COLOR : color))
+          .attr('fill-opacity', d => (d.instance_value ? 1 : 0.2))
+          .attr('stroke', d => (d.instance_value ? FTTemplate.STROKE_COLOR : color));
+        // text for the labels for each value of the feature
+        // TODO: constrain the text to the width of the column
         gDetails.selectAll('text.single-bar')
           .data(d => prepareCategoricalValues(d.values))
           .join('text')
@@ -349,6 +352,7 @@ function FIPERFeatureDistributionView() {
           .attr('alignment-baseline', 'middle')
           .attr('font-size', 12)
           .text(d => `${d.label}`);
+        // text for the values for each value of the feature
         gDetails.selectAll('text.single-bar-value')
           .data(d => prepareCategoricalValues(d.values))
           .join('text')
@@ -931,6 +935,11 @@ d3.json('/static/instance_180.json').then((data) => {
       rvalues: f.values.filter(v =>
         ((v.rule.length > 0) && (v.instance_value > 0))) }))
     .map(f => ({ ...f,
+      // TODO: here we should add a copy of d.values with a boolean value to indicate
+      // if the predicate of the counter rule holds or not. This set of values will be used
+      // to draw the corresponding values for the counter rule. This only for categorical
+      // data types. No need for the numeric data
+
       crvalues: f.values.filter(v =>
         Object.keys(v.crules).length) }))
     .map(f => ({
