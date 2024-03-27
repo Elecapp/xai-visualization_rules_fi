@@ -430,14 +430,11 @@ function FIPERRulePredicateView() {
   let selectedCounterRule = 'C0';
 
   // let fFilterRule = d => (d.rule.length > 0 && d.instance_value > 0);
-  let fFilterRule = (v) => {
-    // console.log('v', v);
-    return (
-      v.rvalues.length > 0 &&
+  let fFilterRule = v => (
+    v.rvalues.length > 0 &&
       v.name === v.rvalues[0].rule[0][0].att &&
       doesHold(v.instance_value, v.rvalues[0].rule[0][0].op, v.rvalues[0].rule[0][0].thr)
-    );
-  };
+  );
 
   function me(selection) {
     const gPredicateBar = selection.selectAll('g.single-predicate')
@@ -918,19 +915,90 @@ function FIPERView() {
   return me;
 }
 
+function computeBooleanExpectedValue(value) {
+  // Given a dictionary like following, return an expected boolean value for it
+  // {
+  //     "att": "present_emp_since=.. >= 7 years",
+  //     "op": "<=",
+  //     "thr": 0.6689819991588593,
+  //     "is_continuous": true,
+  //     "exp_value": 15
+  // }
+  if (value.op === '<=') {
+    return !(value.thr >= 0);
+  }
+  if (value.op === '<') {
+    return !(value.thr > 0);
+  }
+  if (value.op === '>=') {
+    return (value.thr <= 1);
+  }
+  if (value.op === '>') {
+    return (value.thr < 1);
+  }
+
+  return false;
+}
+
+function adjustCounterRuleMatrix(matrix) {
+  // For a feature we take the matrix of the form:
+  // crmatrix:
+  //   Array(4)
+  //     0 : (5) [ 0, 0, -1, -1, -1]
+  //     1 : (5) [-1, 0, -1, -1, -1]
+  //     2 : (5) [-1, 0, -1, -1, -1]
+  //     3 : (5) [-1, 0, -1, -1, -1]
+  // and we adjust the values to have only 0 or 1. The approach is the following:
+  // 1. If the maximum value of the matrix is 0, then all the -1 are changed to 1
+  // 2. If the maximum value of the matrix is 1, then all the -1 are changed to 0
+  // 3. If the maximum value of the matrix is -1, then we do nothing
+  const max = d3.max(matrix.flat());
+  if (max === 0) {
+    return matrix.map(r => r.map(d => (d === -1 ? 1 : d)));
+  }
+  if (max === 1) {
+    return matrix.map(r => r.map(d => (d === -1 ? 0 : d)));
+  }
+  return matrix;
+}
 
 d3.json('/static/instance_180.json').then((data) => {
-  const rFeatures = d3.group(data.features, d => d.rname);
+  console.log('data', data);
+  // preprocess each entry to copmute the expected value for the categorical counterrules
+  const tfeature = data.features
+    // .filter(f => f.type === 'categorical')
+    // .filter(f => Object.entries(f.crules).length)
+    .map((f) => {
+      if (f.type === 'categorical') {
+        return {
+          ...f,
+          mcrules: Object.fromEntries(
+            Object.keys(f.crules)
+              .map(k => [k,
+                f.crules[k].map(p => [{ ...p[0], exp_value: computeBooleanExpectedValue(p[0]) }, p[1]])])),
+        };
+      }
+      return f;
+    });
+  console.log('tfeature', tfeature);
+
+  // all values of a single features are grouped by the name of the feature
+  const rFeatures = d3.group(tfeature, d => d.rname);
+  console.log('rFeatures', rFeatures.entries());
+  // after the aggregation, we create a list of objects with the properties of the feature
   const rEntries = Array.from(rFeatures.entries())
     .map(d => ({
       rname: d[0],
       values: d[1],
       feature_importance: d3.sum(d[1], f => f.feature_importance),
       type: d[1][0].type,
-      highlighted: false,
-      status: 0,
-      rows: 1,
+      highlighted: false, // flag if a feature is selected
+      status: 0, // flag to indicate the status of the feature. 0: normal, 1: selected
+      rows: d[1].length, // how many distinct values the feature has
     }))
+    // since each value as references to a rule or counterrules, we select only those values
+    // that have a rule, i.e. the corresponding v.rule array is not empty and the value is the
+    // instance value
     .map(f => ({ ...f,
       rvalues: f.values.filter(v =>
         ((v.rule.length > 0) && (v.instance_value > 0))) }))
@@ -946,18 +1014,46 @@ d3.json('/static/instance_180.json').then((data) => {
       ...f,
       values: f.values.map(v => ({
         ...v,
-        crvalues: f.crvalues,
-        rvalues: f.rvalues,
+        crvalues: [],
+        rvalues: [],
       })),
     }));
+  console.log('rEntries', rEntries);
   rEntries.sort((a, b) => (b.feature_importance) - (a.feature_importance));
 
   // this list contains the set of all the counterRules that are present in the explanation
   // object. This is used to create the legend and selectors of the visualization
-  const CRulesList = Array.from(new Set(rEntries.filter(v => v.crvalues.length)
-    .map(v => v.values.map(d => Object.keys(d.crules))
-      .filter(v2 => v2.length)).flat().flat()));
+  const CRulesList = Array.from(new Set(rEntries
+    .map(e => e.values.map(v =>
+      (v.mcrules ? Object.entries(v.mcrules).map(r => r[0]) : []))).flat().flat()));
   console.log('CRulesList', CRulesList);
+  let eEntries = rEntries.map(e => ({
+    ...e,
+    crmatrix: CRulesList.map(c => // for each CounterRule,
+      // for each value in the current Feature
+      e.values.map(v =>
+        // check if the current CR id is present in the mcrules of the current value
+        (v.mcrules ? v.mcrules[c] : []))
+        // in case of categorical features, we have a list of possible values.
+        // We take the first position otherwise we take a -1
+        .map(v => (v ? v[0] : -1))
+        // for those entries where there is an array, we take the expected value
+        // of the first element
+        .map(v => ((v && v.length) ? v[0].exp_value : -1))
+        //  we convert the boolean values as 0 or 1. We leave -1 values as they are
+        // eslint-disable-next-line no-nested-ternary
+        .map(d => (d === -1 ? -1 : (d ? 1 : 0))),
+    ),
+  }));
+  // adjust the value of the crmatrix to have only 0 or 1 values
+  eEntries = eEntries.map(e => ({
+    ...e,
+    crmatrix: adjustCounterRuleMatrix(e.crmatrix),
+  }));
+
+  console.log('eEntries', eEntries);
+
+
   const maxValues = d3.max(rEntries, d => d.values.length);
   const height = (rEntries.length + maxValues) * SINGLE_FEATURE_HEIGHT;
   const svg = d3.select('#app')
