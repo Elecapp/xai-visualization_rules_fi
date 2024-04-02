@@ -963,7 +963,7 @@ function adjustCounterRuleMatrix(matrix) {
 }
 
 d3.json('/static/instance_180.json').then((data) => {
-  console.log('data', data);
+  // console.log('data', data);
   // preprocess each entry to copmute the expected value for the categorical counterrules
   const tfeature = data.features
     // .filter(f => f.type === 'categorical')
@@ -975,7 +975,8 @@ d3.json('/static/instance_180.json').then((data) => {
           mcrules: Object.fromEntries(
             Object.keys(f.crules)
               .map(k => [k,
-                f.crules[k].map(p => [{ ...p[0], exp_value: computeBooleanExpectedValue(p[0]) }, p[1]])])),
+                f.crules[k].map(p =>
+                  [{ ...p[0], exp_value: computeBooleanExpectedValue(p[0]) }, p[1]])])),
         };
       }
       return f;
@@ -984,7 +985,7 @@ d3.json('/static/instance_180.json').then((data) => {
 
   // all values of a single features are grouped by the name of the feature
   const rFeatures = d3.group(tfeature, d => d.rname);
-  console.log('rFeatures', rFeatures.entries());
+  // console.log('rFeatures', rFeatures.entries());
   // after the aggregation, we create a list of objects with the properties of the feature
   const rEntries = Array.from(rFeatures.entries())
     .map(d => ({
@@ -1018,7 +1019,7 @@ d3.json('/static/instance_180.json').then((data) => {
         rvalues: [],
       })),
     }));
-  console.log('rEntries', rEntries);
+  // console.log('rEntries', rEntries);
   rEntries.sort((a, b) => (b.feature_importance) - (a.feature_importance));
 
   // this list contains the set of all the counterRules that are present in the explanation
@@ -1026,7 +1027,7 @@ d3.json('/static/instance_180.json').then((data) => {
   const CRulesList = Array.from(new Set(rEntries
     .map(e => e.values.map(v =>
       (v.mcrules ? Object.entries(v.mcrules).map(r => r[0]) : []))).flat().flat()));
-  console.log('CRulesList', CRulesList);
+  // console.log('CRulesList', CRulesList);
   let eEntries = rEntries.map(e => ({
     ...e,
     crmatrix: CRulesList.map(c => // for each CounterRule,
@@ -1051,7 +1052,7 @@ d3.json('/static/instance_180.json').then((data) => {
     crmatrix: adjustCounterRuleMatrix(e.crmatrix),
   }));
 
-  console.log('eEntries', eEntries);
+  // console.log('eEntries', eEntries);
 
 
   const maxValues = d3.max(rEntries, d => d.values.length);
@@ -1067,5 +1068,5 @@ d3.json('/static/instance_180.json').then((data) => {
 
 
   const fv = FIPERView().width(GLOBAL_WIDTH).height(height);
-  svg.datum(rEntries).call(fv);
+  svg.datum(eEntries).call(fv);
 });
