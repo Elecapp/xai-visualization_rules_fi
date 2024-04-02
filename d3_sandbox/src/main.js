@@ -949,17 +949,19 @@ function adjustCounterRuleMatrix(matrix) {
   //     2 : (5) [-1, 0, -1, -1, -1]
   //     3 : (5) [-1, 0, -1, -1, -1]
   // and we adjust the values to have only 0 or 1. The approach is the following:
-  // 1. If the maximum value of the matrix is 0, then all the -1 are changed to 1
-  // 2. If the maximum value of the matrix is 1, then all the -1 are changed to 0
-  // 3. If the maximum value of the matrix is -1, then we do nothing
-  const max = d3.max(matrix.flat());
-  if (max === 0) {
-    return matrix.map(r => r.map(d => (d === -1 ? 1 : d)));
-  }
-  if (max === 1) {
-    return matrix.map(r => r.map(d => (d === -1 ? 0 : d)));
-  }
-  return matrix;
+  // 1. If the maximum value of one row is 0, then all the -1 are changed to 1
+  // 2. If the maximum value of one row is 1, then all the -1 are changed to 0
+  // 3. If the maximum value of one row is -1, then we do nothing
+  return matrix.map((r) => {
+    const max = d3.max(r);
+    if (max === 0) {
+      return r.map(d => (d === -1 ? 1 : d));
+    }
+    if (max === 1) {
+      return r.map(d => (d === -1 ? 0 : d));
+    }
+    return r;
+  });
 }
 
 d3.json('/static/instance_180.json').then((data) => {
@@ -985,42 +987,24 @@ d3.json('/static/instance_180.json').then((data) => {
 
   // all values of a single features are grouped by the name of the feature
   const rFeatures = d3.group(tfeature, d => d.rname);
-  // console.log('rFeatures', rFeatures.entries());
   // after the aggregation, we create a list of objects with the properties of the feature
   const rEntries = Array.from(rFeatures.entries())
     .map(d => ({
       rname: d[0],
-      values: d[1],
+      values: d[1].map(v => ({ ...v, rvalues: [], crvalues: [] })),
       feature_importance: d3.sum(d[1], f => f.feature_importance),
       type: d[1][0].type,
       highlighted: false, // flag if a feature is selected
       status: 0, // flag to indicate the status of the feature. 0: normal, 1: selected
       rows: d[1].length, // how many distinct values the feature has
-    }))
+      rvalues: [], // to be removed
+      crvalues: [], // to be removed
+    }));
     // since each value as references to a rule or counterrules, we select only those values
     // that have a rule, i.e. the corresponding v.rule array is not empty and the value is the
     // instance value
-    .map(f => ({ ...f,
-      rvalues: f.values.filter(v =>
-        ((v.rule.length > 0) && (v.instance_value > 0))) }))
-    .map(f => ({ ...f,
-      // TODO: here we should add a copy of d.values with a boolean value to indicate
-      // if the predicate of the counter rule holds or not. This set of values will be used
-      // to draw the corresponding values for the counter rule. This only for categorical
-      // data types. No need for the numeric data
-
-      crvalues: f.values.filter(v =>
-        Object.keys(v.crules).length) }))
-    .map(f => ({
-      ...f,
-      values: f.values.map(v => ({
-        ...v,
-        crvalues: [],
-        rvalues: [],
-      })),
-    }));
   // console.log('rEntries', rEntries);
-  rEntries.sort((a, b) => (b.feature_importance) - (a.feature_importance));
+  // rEntries.sort((a, b) => (b.feature_importance) - (a.feature_importance));
 
   // this list contains the set of all the counterRules that are present in the explanation
   // object. This is used to create the legend and selectors of the visualization
@@ -1050,6 +1034,12 @@ d3.json('/static/instance_180.json').then((data) => {
   eEntries = eEntries.map(e => ({
     ...e,
     crmatrix: adjustCounterRuleMatrix(e.crmatrix),
+  })).map(e => ({
+    ...e,
+    values: e.values.map((v, i) => ({
+      ...v,
+      _crvalues: e.type === 'categorical' ? Object.fromEntries(CRulesList.map((_, j) => [_, e.crmatrix[j][i]])) : [],
+    })),
   }));
 
   // console.log('eEntries', eEntries);
