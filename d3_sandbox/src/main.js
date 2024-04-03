@@ -944,21 +944,24 @@ function adjustCounterRuleMatrix(matrix) {
   // For a feature we take the matrix of the form:
   // crmatrix:
   //   Array(4)
-  //     0 : (5) [ 0, 0, -1, -1, -1]
-  //     1 : (5) [-1, 0, -1, -1, -1]
-  //     2 : (5) [-1, 0, -1, -1, -1]
-  //     3 : (5) [-1, 0, -1, -1, -1]
-  // and we adjust the values to have only 0 or 1. The approach is the following:
+  //     0 : (5) [ [0,0], [0,0], [-1, undef], [-1, undef], [-1, undef]]
+  //     1 : (5) [ [-1, undef], [0,0], [-1, undef], [-1, undef], [-1, undef] ]
+  //     2 : (5) [ [-1, undef], [0,0], [-1, undef], [-1, undef], [-1, undef] ]
+  //     3 : (5) [ [-1, undef], [0,0], [-1, undef], [-1, undef], [-1, undef] ]
+  // and we adjust the values to have only 0 or 1 in the first compoent.
+  //  The approach is the following:
   // 1. If the maximum value of one row is 0, then all the -1 are changed to 1
   // 2. If the maximum value of one row is 1, then all the -1 are changed to 0
   // 3. If the maximum value of one row is -1, then we do nothing
+
   return matrix.map((r) => {
-    const max = d3.max(r);
+    const max = d3.max(r, v => v[0]);
+    const minV = d3.min(r, v => v[1]);
     if (max === 0) {
-      return r.map(d => (d === -1 ? 1 : d));
+      return r.map(d => (d[0] === -1 ? [1, minV] : d));
     }
     if (max === 1) {
-      return r.map(d => (d === -1 ? 0 : d));
+      return r.map(d => (d[0] === -1 ? [0, minV] : d));
     }
     return r;
   });
@@ -974,7 +977,9 @@ d3.json('/static/instance_180.json').then((data) => {
       if (f.type === 'categorical') {
         return {
           ...f,
-          mcrules: Object.fromEntries(
+          // transform the original crules into a dictionary where each entry is extended
+          // with the expected value of the rule
+          crules: Object.fromEntries(
             Object.keys(f.crules)
               .map(k => [k,
                 f.crules[k].map(p =>
@@ -1004,52 +1009,61 @@ d3.json('/static/instance_180.json').then((data) => {
     // that have a rule, i.e. the corresponding v.rule array is not empty and the value is the
     // instance value
   // console.log('rEntries', rEntries);
-  rEntries.sort((a, b) => (b.feature_importance) - (a.feature_importance));
 
   // this list contains the set of all the counterRules that are present in the explanation
   // object. This is used to create the legend and selectors of the visualization
   const CRulesList = Array.from(new Set(rEntries
     .map(e => e.values.map(v =>
-      (v.mcrules ? Object.entries(v.mcrules).map(r => r[0]) : []))).flat().flat()));
+      (v.crules ? Object.entries(v.crules).map(r => r[0]) : []))).flat().flat()));
   // console.log('CRulesList', CRulesList);
-  let eEntries = rEntries.map(e => ({
+
+  // first manage the counter rules for categorical features
+  // =============================================================
+  //            CATEGORICAL FEATURES
+  // =============================================================
+  const cEntries = rEntries.filter(e => e.type === 'categorical').map(e => ({
     ...e,
-    crmatrix: CRulesList.map(c => // for each CounterRule,
+    crmatrix: adjustCounterRuleMatrix(CRulesList.map(c => // for each CounterRule,
       // for each value in the current Feature
       e.values.map(v =>
-        // check if the current CR id is present in the mcrules of the current value
-        (v.mcrules ? v.mcrules[c] : []))
+      // check if the current CR id is present in the mcrules of the current value
+        (v.crules ? v.crules[c] : []),
+      )
         // in case of categorical features, we have a list of possible values.
         // We take the first position otherwise we take a -1
-        .map(v => (v ? v[0] : -1))
+        .map(v => ((v && v.length) ? v[0] : [({ exp_value: -1 }), 27]))
         // for those entries where there is an array, we take the expected value
         // of the first element
-        .map(v => ((v && v.length) ? v[0].exp_value : -1))
+        .map(v => [v[0].exp_value, v[1]])
         //  we convert the boolean values as 0 or 1. We leave -1 values as they are
         // eslint-disable-next-line no-nested-ternary
-        .map(d => (d === -1 ? -1 : (d ? 1 : 0))),
-    ),
-  }));
-  // adjust the value of the crmatrix to have only 0 or 1 values
-  eEntries = eEntries.map(e => ({
-    ...e,
-    crmatrix: adjustCounterRuleMatrix(e.crmatrix),
+        .map(d => (d[0] === -1 ? [-1, d[1]] : (d[0] ? [1, d[1]] : [0, d[1]]))),
+    )),
   })).map(e => ({
     ...e,
     values: e.values.map((v, i) => ({
       ...v,
-      _crvalues: e.type === 'categorical' ? Object.fromEntries(
+      crDict: e.type === 'categorical' ? Object.fromEntries(
         CRulesList.map((_, j) => [_, e.crmatrix[j][i]])
-          .filter(vv => vv[1] >= 0),
+          .filter(vv => vv[1][0] >= 0),
       ) : [],
     })),
   }));
 
+  // then manage the counter rules for numerical features
+  // =============================================================
+  //            NUMERICAL FEATURES
+  // =============================================================
+  const nEntries = rEntries.filter(e => e.type === 'numeric');
+
+
   // console.log('eEntries', eEntries);
+  // concatenate cEntries and nEntries into a single array
+  const aEntries = cEntries.concat(nEntries);
+  aEntries.sort((a, b) => (b.feature_importance) - (a.feature_importance));
 
-
-  const maxValues = d3.max(rEntries, d => d.values.length);
-  const height = (rEntries.length + maxValues) * SINGLE_FEATURE_HEIGHT;
+  const maxValues = d3.max(aEntries, d => d.values.length);
+  const height = (aEntries.length + maxValues) * SINGLE_FEATURE_HEIGHT;
   const svg = d3.select('#app')
     .append('svg')
     .attr('width', GLOBAL_WIDTH + (4 * GUTTER))
@@ -1061,5 +1075,5 @@ d3.json('/static/instance_180.json').then((data) => {
 
 
   const fv = FIPERView().width(GLOBAL_WIDTH).height(height);
-  svg.datum(eEntries).call(fv);
+  svg.datum(aEntries).call(fv);
 });
