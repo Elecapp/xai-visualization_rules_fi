@@ -1004,7 +1004,7 @@ d3.json('/static/instance_180.json').then((data) => {
     // that have a rule, i.e. the corresponding v.rule array is not empty and the value is the
     // instance value
   // console.log('rEntries', rEntries);
-  // rEntries.sort((a, b) => (b.feature_importance) - (a.feature_importance));
+  rEntries.sort((a, b) => (b.feature_importance) - (a.feature_importance));
 
   // this list contains the set of all the counterRules that are present in the explanation
   // object. This is used to create the legend and selectors of the visualization
@@ -1038,7 +1038,10 @@ d3.json('/static/instance_180.json').then((data) => {
     ...e,
     values: e.values.map((v, i) => ({
       ...v,
-      _crvalues: e.type === 'categorical' ? Object.fromEntries(CRulesList.map((_, j) => [_, e.crmatrix[j][i]])) : [],
+      _crvalues: e.type === 'categorical' ? Object.fromEntries(
+        CRulesList.map((_, j) => [_, e.crmatrix[j][i]])
+          .filter(vv => vv[1] >= 0),
+      ) : [],
     })),
   }));
 
