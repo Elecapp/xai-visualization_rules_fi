@@ -759,8 +759,8 @@ function FIPERView() {
       .subHeight(SINGLE_FEATURE_HEIGHT / 6)
       .color(FTTemplate.MAIN_COLOR)
       .isFactualRule(false)
-      .selectedCounterRule(CounterRuleId)
-      .fFilterRule(f => filterFalsifiedConditions(f, CounterRuleId));
+      .selectedCounterRule(CounterRuleId);
+      // .fFilterRule(f => filterFalsifiedConditions(f, CounterRuleId));
     // Component to visualize the instance value for each row.
     const fivv = FIPERFeatureInstanceValueView()
       .width(RULES_COLUMN_WIDTH)
@@ -967,6 +967,26 @@ function adjustCounterRuleMatrix(matrix) {
   });
 }
 
+function rewritePredicates(c, e, ruleSelector) { // for each CounterRule,
+  // for each value in the current Feature
+  return e.values.map(v =>
+  // check if the current CR id is present in the crules of the current value
+    (v[ruleSelector] ? v[ruleSelector][c] : []),
+  )
+  // in case of categorical features, we have a list of possible predicates
+  // of the form {exp_value: false, conquent_class: 0}
+    .map(v => ((v) ? v[0] : ({ exp_value: -1, consequent_class: 27 })))
+  // for those entries where there is an array, we take the expected value
+  // of the first element
+  // .map(v => [v[0].exp_value, v[1]])
+  //  we convert the boolean values as 0 or 1. We leave -1 values as they are
+    .map(d => ({
+      // eslint-disable-next-line no-nested-ternary
+      exp_value: d.exp_value === -1 ? -1 : (d.exp_value ? 1 : 0),
+      consequent_class: d.consequent_class,
+    }));
+}
+
 d3.json('/static/instance_180.json').then((data) => {
   // console.log('data', data);
   // preprocess each entry to copmute the expected value for the categorical counterrules
@@ -988,6 +1008,16 @@ d3.json('/static/instance_180.json').then((data) => {
                     consequent_class: p[1],
                   }),
                 )])),
+          rules: Object.fromEntries(
+            ['R0'].map(k => [k,
+              f.rule.map(p =>
+                ({
+                  exp_value: computeBooleanExpectedValue(p[0]),
+                  consequent_class: p[1],
+                }),
+              )],
+            ).filter(v => v[1].length > 0),
+          ),
         };
       }
       return f;
@@ -1026,26 +1056,8 @@ d3.json('/static/instance_180.json').then((data) => {
   // =============================================================
   const cEntries = rEntries.filter(e => e.type === 'categorical').map(e => ({
     ...e,
-    crmatrix: adjustCounterRuleMatrix(CRulesList.map(c => // for each CounterRule,
-      // for each value in the current Feature
-      e.values.map(v =>
-      // check if the current CR id is present in the mcrules of the current value
-        (v.crules ? v.crules[c] : []),
-      )
-        // in case of categorical features, we have a list of possible predicates
-        // of the form {exp_value: false, conquent_class: 0}
-        .map(v => ((v) ? v[0] : ({ exp_value: -1, consequent_class: 27 })),
-        )
-        // for those entries where there is an array, we take the expected value
-        // of the first element
-        // .map(v => [v[0].exp_value, v[1]])
-        //  we convert the boolean values as 0 or 1. We leave -1 values as they are
-        // eslint-disable-next-line no-nested-ternary
-        .map(d => ({
-          exp_value: d.exp_value === -1 ? -1 : (d.exp_value ? 1 : 0),
-          consequent_class: d.consequent_class,
-        })),
-    )),
+    crmatrix: adjustCounterRuleMatrix(CRulesList.map(c => rewritePredicates(c, e, 'crules'))),
+    rmatrix: adjustCounterRuleMatrix(['R0'].map(c => rewritePredicates(c, e, 'rules'))),
   })).map(e => ({
     ...e,
     values: e.values.map((v, i) => ({
@@ -1053,9 +1065,18 @@ d3.json('/static/instance_180.json').then((data) => {
       // we add the bitmap to decide if this value is visible for a specific counter rule.
       crDict: Object.fromEntries(
         CRulesList.map((_, j) => [_, e.crmatrix[j][i]])
-          .filter(vv => vv[1][0] >= 0),
+          .filter(vv => vv[1].exp_value >= 0),
       ),
     })),
+    // .map(v => ({
+    //   eda: v.eda,
+    //   feature_importance: v.feature_importance,
+    //   instance_value: v.instance_value,
+    //   name: v.name,
+    //   rname: v.rname,
+    //   type: v.type,
+    //   predicates: v.crDict,
+    // }))
   }));
 
   // then manage the counter rules for numerical features
