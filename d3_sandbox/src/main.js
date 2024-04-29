@@ -1050,6 +1050,7 @@ d3.json('/static/instance_180.json').then((data) => {
     .map(e => e.values.map(v =>
       (v.crules ? Object.entries(v.crules).map(r => r[0]) : []))).flat().flat()));
 
+  console.log('CRulesList', CRulesList);
   // first manage the counter rules for categorical features
   // =============================================================
   //            CATEGORICAL FEATURES
@@ -1063,9 +1064,10 @@ d3.json('/static/instance_180.json').then((data) => {
     values: e.values.map((v, i) => ({
       ...v,
       // we add the bitmap to decide if this value is visible for a specific counter rule.
-      crDict: Object.fromEntries(
+      predicates: Object.fromEntries(
         CRulesList.map((_, j) => [_, e.crmatrix[j][i]])
-          .filter(vv => vv[1].exp_value >= 0),
+          .concat([['R0', e.rmatrix[0][i]]])
+          .filter(vv => vv[1].exp_value >= 0)
       ),
     })),
     // .map(v => ({
