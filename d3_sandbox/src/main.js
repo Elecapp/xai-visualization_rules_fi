@@ -955,13 +955,13 @@ function adjustCounterRuleMatrix(matrix) {
   // 3. If the maximum value of one row is -1, then we do nothing
 
   return matrix.map((r) => {
-    const max = d3.max(r, v => v[0]);
-    const minV = d3.min(r, v => v[1]);
+    const max = d3.max(r, v => v.exp_value);
+    const minV = d3.min(r, v => v.consequent_class);
     if (max === 0) {
-      return r.map(d => (d[0] === -1 ? [1, minV] : d));
+      return r.map(d => (d.exp_value === -1 ? ({ exp_value: 1, conquent_class: minV }) : d));
     }
     if (max === 1) {
-      return r.map(d => (d[0] === -1 ? [0, minV] : d));
+      return r.map(d => (d.exp_value === -1 ? ({ exp_value: 0, conquent_class: minV }) : d));
     }
     return r;
   });
@@ -983,7 +983,10 @@ d3.json('/static/instance_180.json').then((data) => {
             Object.keys(f.crules)
               .map(k => [k,
                 f.crules[k].map(p =>
-                  [{ ...p[0], exp_value: computeBooleanExpectedValue(p[0]) }, p[1]]
+                  ({
+                    exp_value: computeBooleanExpectedValue(p[0]),
+                    consequent_class: p[1],
+                  }),
                 )])),
         };
       }
@@ -1029,15 +1032,19 @@ d3.json('/static/instance_180.json').then((data) => {
       // check if the current CR id is present in the mcrules of the current value
         (v.crules ? v.crules[c] : []),
       )
-        // in case of categorical features, we have a list of possible values.
-        // We take the first position otherwise we take a -1
-        .map(v => ((v && v.length) ? v[0] : [({ exp_value: -1 }), 27]))
+        // in case of categorical features, we have a list of possible predicates
+        // of the form {exp_value: false, conquent_class: 0}
+        .map(v => ((v) ? v[0] : ({ exp_value: -1, consequent_class: 27 })),
+        )
         // for those entries where there is an array, we take the expected value
         // of the first element
-        .map(v => [v[0].exp_value, v[1]])
+        // .map(v => [v[0].exp_value, v[1]])
         //  we convert the boolean values as 0 or 1. We leave -1 values as they are
         // eslint-disable-next-line no-nested-ternary
-        .map(d => (d[0] === -1 ? [-1, d[1]] : (d[0] ? [1, d[1]] : [0, d[1]]))),
+        .map(d => ({
+          exp_value: d.exp_value === -1 ? -1 : (d.exp_value ? 1 : 0),
+          consequent_class: d.consequent_class,
+        })),
     )),
   })).map(e => ({
     ...e,
