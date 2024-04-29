@@ -983,7 +983,8 @@ d3.json('/static/instance_180.json').then((data) => {
             Object.keys(f.crules)
               .map(k => [k,
                 f.crules[k].map(p =>
-                  [{ ...p[0], exp_value: computeBooleanExpectedValue(p[0]) }, p[1]])])),
+                  [{ ...p[0], exp_value: computeBooleanExpectedValue(p[0]) }, p[1]]
+                )])),
         };
       }
       return f;
@@ -1002,8 +1003,8 @@ d3.json('/static/instance_180.json').then((data) => {
       highlighted: false, // flag if a feature is selected
       status: 0, // flag to indicate the status of the feature. 0: normal, 1: selected
       rows: d[1].length, // how many distinct values the feature has
-      rvalues: [], // to be removed
-      crvalues: [], // to be removed
+      // rvalues: [], // to be removed
+      // crvalues: [], // to be removed
     }));
     // since each value as references to a rule or counterrules, we select only those values
     // that have a rule, i.e. the corresponding v.rule array is not empty and the value is the
@@ -1015,7 +1016,6 @@ d3.json('/static/instance_180.json').then((data) => {
   const CRulesList = Array.from(new Set(rEntries
     .map(e => e.values.map(v =>
       (v.crules ? Object.entries(v.crules).map(r => r[0]) : []))).flat().flat()));
-  // console.log('CRulesList', CRulesList);
 
   // first manage the counter rules for categorical features
   // =============================================================
@@ -1043,10 +1043,11 @@ d3.json('/static/instance_180.json').then((data) => {
     ...e,
     values: e.values.map((v, i) => ({
       ...v,
-      crDict: e.type === 'categorical' ? Object.fromEntries(
+      // we add the bitmap to decide if this value is visible for a specific counter rule.
+      crDict: Object.fromEntries(
         CRulesList.map((_, j) => [_, e.crmatrix[j][i]])
           .filter(vv => vv[1][0] >= 0),
-      ) : [],
+      ),
     })),
   }));
 
@@ -1057,7 +1058,6 @@ d3.json('/static/instance_180.json').then((data) => {
   const nEntries = rEntries.filter(e => e.type === 'numeric');
 
 
-  // console.log('eEntries', eEntries);
   // concatenate cEntries and nEntries into a single array
   const aEntries = cEntries.concat(nEntries);
   aEntries.sort((a, b) => (b.feature_importance) - (a.feature_importance));
