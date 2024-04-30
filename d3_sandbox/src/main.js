@@ -48,35 +48,10 @@ function prepareCategoricalValues(data) {
       percent: percent(d.eda.count),
       instance_value: d.instance_value,
       predicates: d.predicates,
-      rule: d.rule,
-      crules: d.crules,
-      crvalues: d.crvalues,
-      rvalues: d.rvalues,
       name: d.name,
     };
   }).filter(d => d.value > 0);
 }
-
-
-function doesHold(val1, op, val2) {
-  switch (op) {
-    case '>':
-      return val1 > val2;
-    case '<':
-      return val1 < val2;
-    case '>=':
-      return val1 >= val2;
-    case '<=':
-      return val1 <= val2;
-    case '==':
-      return val1 === val2;
-    case '!=':
-      return val1 !== val2;
-    default:
-      return false;
-  }
-}
-
 
 function FIPERFeatureInstanceValueView() {
   let width = RULES_COLUMN_WIDTH;
@@ -447,10 +422,8 @@ function FIPERRulePredicateView() {
         .classed('single-predicate-bar', true);
 
       gSingleBar.selectAll('rect.single-predicate-bar')
-        .data(d => prepareCategoricalValues(d.values).filter(v => {
-          return v.predicates[selectedCounterRule] &&
-            (v.predicates[selectedCounterRule].exp_value > 0);
-        }))
+        .data(d => prepareCategoricalValues(d.values).filter(v => v.predicates[selectedCounterRule] &&
+            (v.predicates[selectedCounterRule].exp_value > 0)))
         .join('rect')
         .classed('single-predicate-bar', true)
         .attr('x', d => barLength(d.cumulative))
@@ -695,7 +668,7 @@ function FIPERView() {
       .color(FTTemplate.THIRD_COLOR)
       .isFactualRule(true);
     // Component to visualize the layer for the counter rules
-    const CounterRuleId = 'C0'; // TODO: to make it dynamic
+    const CounterRuleId = 'C3'; // TODO: to make it dynamic
     const crpv = FIPERRulePredicateView()
       .width(RULES_COLUMN_WIDTH)
       .height(SINGLE_FEATURE_HEIGHT / 6)
@@ -1095,16 +1068,16 @@ d3.json('/static/instance_180.json').then((data) => {
           .concat([['R0', e.rmatrix[0][i]]])
           .filter(vv => vv[1].exp_value >= 0),
       ),
-    })),
-    // .map(v => ({
-    //   eda: v.eda,
-    //   feature_importance: v.feature_importance,
-    //   instance_value: v.instance_value,
-    //   name: v.name,
-    //   rname: v.rname,
-    //   type: v.type,
-    //   predicates: v.crDict,
-    // }))
+    }))
+      .map(v => ({
+        eda: v.eda,
+        feature_importance: v.feature_importance,
+        instance_value: v.instance_value,
+        name: v.name,
+        rname: v.rname,
+        type: v.type,
+        predicates: v.predicates,
+      })),
   }));
 
   // then manage the counter rules for numerical features
