@@ -422,7 +422,8 @@ function FIPERRulePredicateView() {
         .classed('single-predicate-bar', true);
 
       gSingleBar.selectAll('rect.single-predicate-bar')
-        .data(d => prepareCategoricalValues(d.values).filter(v => v.predicates[selectedCounterRule] &&
+        .data(d => prepareCategoricalValues(d.values)
+          .filter(v => v.predicates[selectedCounterRule] &&
             (v.predicates[selectedCounterRule].exp_value > 0)))
         .join('rect')
         .classed('single-predicate-bar', true)
@@ -488,13 +489,6 @@ function FIPERRulePredicateView() {
   me.isFactualRule = function (_) {
     if (!arguments.length) return isFactualRule;
     isFactualRule = _;
-    return me;
-  };
-
-  // eslint-disable-next-line func-names
-  me.fFilterRule = function (_) {
-    if (!arguments.length) return fFilterRule;
-    fFilterRule = _;
     return me;
   };
 
@@ -631,7 +625,7 @@ function FIPERFeatureImportanceView() {
   return me;
 }
 
-const GLOBAL_WIDTH = 700;
+const GLOBAL_WIDTH = 900;
 
 function FIPERView() {
   // global width of the whole visualization
@@ -642,8 +636,8 @@ function FIPERView() {
   const yScale = d3.scaleLinear();
 
   function me(selection) {
-    console.log('features', selection.datum());
-    const features = selection.datum();
+    const origDatum = selection.datum();
+    const features = selection.datum().features;
     // determine the maximum value of Feature Importance to fit the scale. We use absolute value
     // to ignore the sign of the feature importance
     const fiMax = d3.max(features, d => Math.abs(d.feature_importance));
@@ -808,7 +802,10 @@ function FIPERView() {
         }
         return d;
       });
-      selection.datum(newFeatures);
+      selection.datum(({
+        ...origDatum,
+        features: newFeatures,
+      }));
       me(selection);
     });
   }
@@ -919,6 +916,7 @@ function resolveInterval(pred, min, max) {
   if (pred.op === '<=') {
     return [min, pred.thr];
   }
+  return [min, max];
 }
 
 function intervalUnion(intervals) {
@@ -931,7 +929,7 @@ function intervalUnion(intervals) {
   const union = [];
   let current = intervals[0];
 
-  for (let i = 1; i < intervals.length; i++) {
+  for (let i = 1; i < intervals.length; i += 1) {
     if (intervals[i].interval[0] <= current.interval[1]) {
       current.interval[1] = Math.min(current.interval[1], intervals[i].interval[1]);
     } else {
@@ -955,7 +953,7 @@ function intervalIntersection(intervals) {
   const intersection = [];
   let current = intervals[0];
 
-  for (let i = 1; i < intervals.length; i++) {
+  for (let i = 1; i < intervals.length; i += 1) {
     if (intervals[i].interval[0] <= current.interval[1]) {
       current.interval[0] = Math.max(current.interval[0], intervals[i].interval[0]);
       current.interval[1] = Math.min(current.interval[1], intervals[i].interval[1]);
@@ -1021,7 +1019,7 @@ d3.json('/static/instance_180.json').then((data) => {
       }
       return f;
     });
-  console.log('tfeature', tfeature);
+  // console.log('tfeature', tfeature);
 
   // all values of a single features are grouped by the name of the feature
   const rFeatures = d3.group(tfeature, d => d.rname);
@@ -1049,7 +1047,7 @@ d3.json('/static/instance_180.json').then((data) => {
     .map(e => e.values.map(v =>
       (v.crules ? Object.entries(v.crules).map(r => r[0]) : []))).flat().flat()));
 
-  console.log('CRulesList', CRulesList);
+  // console.log('CRulesList', CRulesList);
   // first manage the counter rules for categorical features
   // =============================================================
   //            CATEGORICAL FEATURES
@@ -1124,6 +1122,14 @@ d3.json('/static/instance_180.json').then((data) => {
   const aEntries = cEntries.concat(nEntries);
   aEntries.sort((a, b) => (b.feature_importance) - (a.feature_importance));
 
+  const explanationDescriptor = {
+    features: aEntries,
+    counterRules: CRulesList,
+    bb_pred: data.bb_pred,
+    dt_pred: data.dt_pred,
+  };
+
+
   const maxValues = d3.max(aEntries, d => d.values.length);
   const height = (aEntries.length + maxValues) * SINGLE_FEATURE_HEIGHT;
   const svg = d3.select('#app')
@@ -1137,5 +1143,5 @@ d3.json('/static/instance_180.json').then((data) => {
 
 
   const fv = FIPERView().width(GLOBAL_WIDTH).height(height);
-  svg.datum(aEntries).call(fv);
+  svg.datum(explanationDescriptor).call(fv);
 });
