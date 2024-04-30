@@ -427,14 +427,8 @@ function FIPERRulePredicateView() {
     .domain([0, 1]);
   let color = FTTemplate.DISTRIBUTION_COLOR;
   let isFactualRule = true;
-  let selectedCounterRule = 'C0';
+  let selectedCounterRule = 'R0';
 
-  // let fFilterRule = d => (d.rule.length > 0 && d.instance_value > 0);
-  let fFilterRule = v => (
-    v.rvalues.length > 0 &&
-      v.name === v.rvalues[0].rule[0][0].att &&
-      doesHold(v.instance_value, v.rvalues[0].rule[0][0].op, v.rvalues[0].rule[0][0].thr)
-  );
 
   function me(selection) {
     const gPredicateBar = selection.selectAll('g.single-predicate')
@@ -452,7 +446,7 @@ function FIPERRulePredicateView() {
         .classed('single-predicate-bar', true);
 
       gSingleBar.selectAll('rect.single-predicate-bar')
-        .data(d => prepareCategoricalValues(d.values).filter(fFilterRule))
+        .data(d => prepareCategoricalValues(d.values))
         .join('rect')
         .classed('single-predicate-bar', true)
         .attr('x', d => barLength(d.cumulative))
@@ -467,58 +461,17 @@ function FIPERRulePredicateView() {
 
       // create a tranformation of the data to create additional fields for ranges
       // of rule predicate
-      const ranges = [];
-      if (isFactualRule) {
-        selection.datum().values.filter(fFilterRule).forEach((rv) => {
-          rv.rule.forEach((r) => {
-            // r[0] contains the predicate descriptor
-            // r[1] contains the predicted class of the black box model
-            const pred = r[0];
-            if (pred.op.indexOf('>') > -1) {
-              // the predicate is greater than a threshold
-              ranges.push({
-                low: Math.max(pred.thr, selection.datum().values[0].eda.min),
-                high: selection.datum().values[0].eda.max,
-              });
-            } else if (pred.op.indexOf('<') > -1) {
-              // the predicate is lower than a threshold
-              ranges.push({
-                low: selection.datum().values[0].eda.min,
-                high: Math.min(pred.thr, selection.datum().values[0].eda.max),
-              });
-            }
-          });
-        });
-      } else {
-        selection.datum().values.filter(fFilterRule).forEach((rv) => {
-          rv.crules[selectedCounterRule].forEach((r) => {
-            // r[0] contains the predicate descriptor
-            // r[1] contains the predicted class of the black box model
-            const pred = r[0];
-            // check if it intersects the rule
-            if (pred.op.indexOf('>') > -1) {
-              // the predicate is greater than a threshold
-              ranges.push({
-                low: Math.max(pred.thr, selection.datum().values[0].eda.min),
-                high: selection.datum().values[0].eda.max,
-              });
-            } else if (pred.op.indexOf('<') > -1) {
-              // the predicate is lower than a threshold
-              ranges.push({
-                low: selection.datum().values[0].eda.min,
-                high: Math.min(pred.thr, selection.datum().values[0].eda.max),
-              });
-            }
-          });
-        });
-      }
+      const ranges = selection.datum().values[0].predicates[selectedCounterRule];
+      console.log('selection', selection.datum());
+      console.log('ranges', ranges);
+
       gPredicateBar.selectAll('rect.single-predicate-box')
         .data(ranges)
         .join('rect')
         .classed('single-predicate-box', true)
-        .attr('x', d => barLength(d.low))
+        .attr('x', d => barLength(d.interval[0]))
         .attr('y', height - subHeight)
-        .attr('width', d => barLength(d.high) - barLength(d.low))
+        .attr('width', d => barLength(d.interval[1]) - barLength(d.interval[0]))
         .attr('height', subHeight)
         .attr('fill', color)
         .attr('fill-opacity', 0.7)
@@ -713,18 +666,6 @@ function FIPERView() {
   // scale to position each feature row. HINT: maybe a d3.scaleBand() is better?
   const yScale = d3.scaleLinear();
 
-  function filterFalsifiedConditions(fv, cruleSelector) {
-    if (cruleSelector in fv.crules) {
-      const pred = doesHold(fv.instance_value, fv.crules[cruleSelector][0][0].op,
-        fv.crules[cruleSelector][0][0].thr);
-      console.log('fv', fv, fv.instance_value, fv.crules[cruleSelector][0][0].op,
-        fv.crules[cruleSelector][0][0].thr);
-      // We are interested in the Falsified predicates, so we return the negation
-      return !pred;
-    }
-    return false;
-  }
-
   function me(selection) {
     console.log('features', selection.datum());
     const features = selection.datum();
@@ -752,14 +693,14 @@ function FIPERView() {
       .color(FTTemplate.THIRD_COLOR)
       .isFactualRule(true);
     // Component to visualize the layer for the counter rules
-    const CounterRuleId = 'C1'; // TODO: to make it dynamic
-    const crpv = FIPERRulePredicateView()
-      .width(RULES_COLUMN_WIDTH)
-      .height(SINGLE_FEATURE_HEIGHT / 6)
-      .subHeight(SINGLE_FEATURE_HEIGHT / 6)
-      .color(FTTemplate.MAIN_COLOR)
-      .isFactualRule(false)
-      .selectedCounterRule(CounterRuleId);
+    // const CounterRuleId = 'C1'; // TODO: to make it dynamic
+    // const crpv = FIPERRulePredicateView()
+    //   .width(RULES_COLUMN_WIDTH)
+    //   .height(SINGLE_FEATURE_HEIGHT / 6)
+    //   .subHeight(SINGLE_FEATURE_HEIGHT / 6)
+    //   .color(FTTemplate.MAIN_COLOR)
+    //   .isFactualRule(false)
+    //   .selectedCounterRule(CounterRuleId);
       // .fFilterRule(f => filterFalsifiedConditions(f, CounterRuleId));
     // Component to visualize the instance value for each row.
     const fivv = FIPERFeatureInstanceValueView()
@@ -824,12 +765,12 @@ function FIPERView() {
         .classed('rule', true)
         .attr('transform', `translate(0, ${SINGLE_FEATURE_HEIGHT / 6})`)
         .call(rpv);
-      gValueStack.selectAll('g.crules')
-        .data(d => [d])
-        .join('g')
-        .classed('crules', true)
-        .attr('transform', `translate(0, ${(2 * SINGLE_FEATURE_HEIGHT) / 3})`)
-        .call(crpv);
+      // gValueStack.selectAll('g.crules')
+      //   .data(d => [d])
+      //   .join('g')
+      //   .classed('crules', true)
+      //   .attr('transform', `translate(0, ${(2 * SINGLE_FEATURE_HEIGHT) / 3})`)
+      //   .call(crpv);
       gValueStack.selectAll('g.instance-value')
         .data(d => [d])
         .join('g')
@@ -1018,7 +959,7 @@ function intervalUnion(intervals) {
 
   for (let i = 1; i < intervals.length; i++) {
     if (intervals[i].interval[0] <= current.interval[1]) {
-      current.interval[1] = Math.max(current.interval[1], intervals[i].interval[1]);
+      current.interval[1] = Math.min(current.interval[1], intervals[i].interval[1]);
     } else {
       union.push(current);
       current = intervals[i];
@@ -1045,8 +986,9 @@ function intervalIntersection(intervals) {
     if (interval1.interval[1] > interval2.interval[0]) {
       intersection.push({
         consequent_class: interval1.consequent_class,
-        interval: [interval2.interval[0], Math.min(interval1.interval[1], interval2.interval[1])],
+        interval: [Math.max(interval1.interval[0], interval2.interval[0]), Math.min(interval1.interval[1], interval2.interval[1])],
       });
+      console.log('intersection', interval1.interval, interval2.interval, [interval2.interval[0], Math.min(interval1.interval[1], interval2.interval[1])]);
     }
   }
 
