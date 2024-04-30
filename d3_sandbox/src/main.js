@@ -967,7 +967,7 @@ function adjustCounterRuleMatrix(matrix) {
   });
 }
 
-function rewritePredicates(c, e, ruleSelector) { // for each CounterRule,
+function rewritePredicatesCategorical(c, e, ruleSelector) { // for each CounterRule,
   // for each value in the current Feature
   return e.values.map(v =>
   // check if the current CR id is present in the crules of the current value
@@ -986,6 +986,90 @@ function rewritePredicates(c, e, ruleSelector) { // for each CounterRule,
       consequent_class: d.consequent_class,
     }));
 }
+
+function resolveInterval(pred, min, max) {
+  // this function receives a predicate and the minimum and maximum values of the feature.
+  // The predicate has the following form: {att: 'att_name', op: '>', thr: 0.5}
+  // The function returns the interval that the predicate represents.
+
+  if (pred.op === '>') {
+    return [pred.thr, max];
+  }
+  if (pred.op === '>=') {
+    return [pred.thr, max];
+  }
+  if (pred.op === '<') {
+    return [min, pred.thr];
+  }
+  if (pred.op === '<=') {
+    return [min, pred.thr];
+  }
+}
+
+function intervalUnion(intervals) {
+  // this function receives a list of intervals and returns the union of all the intervals.
+  // Each interval has the form {consequent_class: 0, interval: [0.5, 1]}
+  if (intervals.length === 0) {
+    return [];
+  }
+  intervals.sort((a, b) => a.interval[0] - b.interval[0]);
+  const union = [];
+  let current = intervals[0];
+
+  for (let i = 1; i < intervals.length; i++) {
+    if (intervals[i].interval[0] <= current.interval[1]) {
+      current.interval[1] = Math.max(current.interval[1], intervals[i].interval[1]);
+    } else {
+      union.push(current);
+      current = intervals[i];
+    }
+  }
+
+  union.push(current);
+  return union;
+}
+
+function intervalIntersection(intervals) {
+  // this function receives a list of intervals and returns the intersection of all the intervals.
+  // Each interval has the form {consequent_class: 0, interval: [0.5, 1]}
+  const union = intervalUnion(intervals);
+  const intersection = [];
+
+  if (intervals.length < 2) {
+    return intersection;
+  }
+
+  for (let i = 1; i < union.length; i++) {
+    const interval1 = union[i - 1];
+    const interval2 = union[i];
+    if (interval1.interval[1] > interval2.interval[0]) {
+      intersection.push({
+        consequent_class: interval1.consequent_class,
+        interval: [interval2.interval[0], Math.min(interval1.interval[1], interval2.interval[1])],
+      });
+    }
+  }
+
+  return intersection;
+}
+
+function reduceUnionIntersection(predicatesWithIntervals) {
+  // this function receives a list of predicates with intervals and returns the intersection
+  // of all the intervals.
+  // Each predicate has the form {att: 'att_name', op: '>', thr: 0.5, interval: [0.5, 1]}
+
+  if (predicatesWithIntervals.length === 0) {
+    return [];
+  }
+
+  let result = intervalIntersection(predicatesWithIntervals);
+  if (result.length === 0) {
+    result = intervalUnion(predicatesWithIntervals);
+  }
+
+  return result;
+}
+
 
 d3.json('/static/instance_180.json').then((data) => {
   // console.log('data', data);
@@ -1057,8 +1141,8 @@ d3.json('/static/instance_180.json').then((data) => {
   // =============================================================
   const cEntries = rEntries.filter(e => e.type === 'categorical').map(e => ({
     ...e,
-    crmatrix: adjustCounterRuleMatrix(CRulesList.map(c => rewritePredicates(c, e, 'crules'))),
-    rmatrix: adjustCounterRuleMatrix(['R0'].map(c => rewritePredicates(c, e, 'rules'))),
+    crmatrix: adjustCounterRuleMatrix(CRulesList.map(c => rewritePredicatesCategorical(c, e, 'crules'))),
+    rmatrix: adjustCounterRuleMatrix(['R0'].map(c => rewritePredicatesCategorical(c, e, 'rules'))),
   })).map(e => ({
     ...e,
     values: e.values.map((v, i) => ({
@@ -1067,7 +1151,7 @@ d3.json('/static/instance_180.json').then((data) => {
       predicates: Object.fromEntries(
         CRulesList.map((_, j) => [_, e.crmatrix[j][i]])
           .concat([['R0', e.rmatrix[0][i]]])
-          .filter(vv => vv[1].exp_value >= 0)
+          .filter(vv => vv[1].exp_value >= 0),
       ),
     })),
     // .map(v => ({
@@ -1085,7 +1169,40 @@ d3.json('/static/instance_180.json').then((data) => {
   // =============================================================
   //            NUMERICAL FEATURES
   // =============================================================
-  const nEntries = rEntries.filter(e => e.type === 'numeric');
+  const nEntries = rEntries.filter(e => e.type === 'numeric')
+    // transform each predicate into a dictionary with the consequent class
+    .map(e => ({
+      ...e,
+      values: e.values.map(v => ({
+        ...v,
+        rule: v.rule.map(r => ({
+          attr: r[0].att,
+          op: r[0].op,
+          thr: r[0].thr,
+          consequent_class: r[1],
+        })),
+        predicates: Object.fromEntries(
+          CRulesList.map(c => [c, v.crules[c] ? v.crules[c].map(r => ({
+            attr: r[0].att,
+            op: r[0].op,
+            thr: r[0].thr,
+            consequent_class: r[1],
+          })) : []])
+            .concat([['R0', v.rule.map(r => ({
+              attr: r[0].att,
+              op: r[0].op,
+              thr: r[0].thr,
+              consequent_class: r[1],
+            }))]])
+            .map(pr => [pr[0], pr[1].map(pl => ({
+              ...pl,
+              // find the actual interval of the predicate
+              interval: resolveInterval(pl, v.eda.min, v.eda.max),
+            }))])
+            .map(pr => [pr[0], reduceUnionIntersection(pr[1])]),
+        ),
+      })),
+    }));
 
 
   // concatenate cEntries and nEntries into a single array
