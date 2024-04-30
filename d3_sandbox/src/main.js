@@ -693,15 +693,14 @@ function FIPERView() {
       .color(FTTemplate.THIRD_COLOR)
       .isFactualRule(true);
     // Component to visualize the layer for the counter rules
-    // const CounterRuleId = 'C1'; // TODO: to make it dynamic
-    // const crpv = FIPERRulePredicateView()
-    //   .width(RULES_COLUMN_WIDTH)
-    //   .height(SINGLE_FEATURE_HEIGHT / 6)
-    //   .subHeight(SINGLE_FEATURE_HEIGHT / 6)
-    //   .color(FTTemplate.MAIN_COLOR)
-    //   .isFactualRule(false)
-    //   .selectedCounterRule(CounterRuleId);
-      // .fFilterRule(f => filterFalsifiedConditions(f, CounterRuleId));
+    const CounterRuleId = 'C0'; // TODO: to make it dynamic
+    const crpv = FIPERRulePredicateView()
+      .width(RULES_COLUMN_WIDTH)
+      .height(SINGLE_FEATURE_HEIGHT / 6)
+      .subHeight(SINGLE_FEATURE_HEIGHT / 6)
+      .color(FTTemplate.MAIN_COLOR)
+      .isFactualRule(false)
+      .selectedCounterRule(CounterRuleId);
     // Component to visualize the instance value for each row.
     const fivv = FIPERFeatureInstanceValueView()
       .width(RULES_COLUMN_WIDTH)
@@ -765,12 +764,12 @@ function FIPERView() {
         .classed('rule', true)
         .attr('transform', `translate(0, ${SINGLE_FEATURE_HEIGHT / 6})`)
         .call(rpv);
-      // gValueStack.selectAll('g.crules')
-      //   .data(d => [d])
-      //   .join('g')
-      //   .classed('crules', true)
-      //   .attr('transform', `translate(0, ${(2 * SINGLE_FEATURE_HEIGHT) / 3})`)
-      //   .call(crpv);
+      gValueStack.selectAll('g.crules')
+        .data(d => [d])
+        .join('g')
+        .classed('crules', true)
+        .attr('transform', `translate(0, ${(2 * SINGLE_FEATURE_HEIGHT) / 3})`)
+        .call(crpv);
       gValueStack.selectAll('g.instance-value')
         .data(d => [d])
         .join('g')
@@ -973,25 +972,25 @@ function intervalUnion(intervals) {
 function intervalIntersection(intervals) {
   // this function receives a list of intervals and returns the intersection of all the intervals.
   // Each interval has the form {consequent_class: 0, interval: [0.5, 1]}
-  const union = intervalUnion(intervals);
-  const intersection = [];
-
   if (intervals.length < 2) {
-    return intersection;
+    return [];
   }
 
-  for (let i = 1; i < union.length; i++) {
-    const interval1 = union[i - 1];
-    const interval2 = union[i];
-    if (interval1.interval[1] > interval2.interval[0]) {
-      intersection.push({
-        consequent_class: interval1.consequent_class,
-        interval: [Math.max(interval1.interval[0], interval2.interval[0]), Math.min(interval1.interval[1], interval2.interval[1])],
-      });
-      console.log('intersection', interval1.interval, interval2.interval, [interval2.interval[0], Math.min(interval1.interval[1], interval2.interval[1])]);
+  intervals.sort((a, b) => a.interval[0] - b.interval[0]);
+  const intersection = [];
+  let current = intervals[0];
+
+  for (let i = 1; i < intervals.length; i++) {
+    if (intervals[i].interval[0] <= current.interval[1]) {
+      current.interval[0] = Math.max(current.interval[0], intervals[i].interval[0]);
+      current.interval[1] = Math.min(current.interval[1], intervals[i].interval[1]);
+    } else {
+      intersection.push(current);
+      current = intervals[i];
     }
   }
 
+  intersection.push(current);
   return intersection;
 }
 
@@ -999,7 +998,6 @@ function reduceUnionIntersection(predicatesWithIntervals) {
   // this function receives a list of predicates with intervals and returns the intersection
   // of all the intervals.
   // Each predicate has the form {att: 'att_name', op: '>', thr: 0.5, interval: [0.5, 1]}
-
   if (predicatesWithIntervals.length === 0) {
     return [];
   }
