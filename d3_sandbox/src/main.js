@@ -47,6 +47,7 @@ function prepareCategoricalValues(data) {
       label: d.eda.category,
       percent: percent(d.eda.count),
       instance_value: d.instance_value,
+      predicates: d.predicates,
       rule: d.rule,
       crules: d.crules,
       crvalues: d.crvalues,
@@ -446,7 +447,10 @@ function FIPERRulePredicateView() {
         .classed('single-predicate-bar', true);
 
       gSingleBar.selectAll('rect.single-predicate-bar')
-        .data(d => prepareCategoricalValues(d.values))
+        .data(d => prepareCategoricalValues(d.values).filter(v => {
+          return v.predicates[selectedCounterRule] &&
+            (v.predicates[selectedCounterRule].exp_value > 0);
+        }))
         .join('rect')
         .classed('single-predicate-bar', true)
         .attr('x', d => barLength(d.cumulative))
@@ -462,8 +466,6 @@ function FIPERRulePredicateView() {
       // create a tranformation of the data to create additional fields for ranges
       // of rule predicate
       const ranges = selection.datum().values[0].predicates[selectedCounterRule];
-      console.log('selection', selection.datum());
-      console.log('ranges', ranges);
 
       gPredicateBar.selectAll('rect.single-predicate-box')
         .data(ranges)
