@@ -6,6 +6,7 @@ const SINGLE_FEATURE_HEIGHT = 30;
 const FI_COLUMN_WIDTH = 50;
 const RULES_COLUMN_WIDTH = 300;
 const LABELS_COLUMN_WIDTH = 250;
+const CRULES_GRID_COLUMN_WIDTH = 100;
 const GUTTER = 10;
 
 // create a dict for a color template
@@ -645,6 +646,16 @@ function FIPERCRuleGrid() {
     // TODO: to be implemented
     // we need to scan all the values elements, to extract the exp_value from the dictionary
     // predicates...
+    selection.selectAll('circle.predicate')
+      .data(bandScale.domain().filter((d) => {
+        return selection.datum().cRulesPredicateMap[d];
+      }))
+      .join('circle')
+      .classed('predicate', true)
+      .attr('cx', d => bandScale(d) + bandScale.bandwidth() / 2)
+      .attr('cy', height / 2)
+      .attr('r', 6)
+      .attr('fill', FTTemplate.MAIN_COLOR);
   }
 
   // eslint-disable-next-line
@@ -729,8 +740,9 @@ function FIPERView() {
       .height(SINGLE_FEATURE_HEIGHT);
     // component to visualize the grid of available counter rules
     const fcrg = FIPERCRuleGrid()
-      .width(RULES_COLUMN_WIDTH)
-      .height(SINGLE_FEATURE_HEIGHT);
+      .width(CRULES_GRID_COLUMN_WIDTH)
+      .height(SINGLE_FEATURE_HEIGHT)
+      .cruleList(origDatum.counterRules);
 
 
     // colorscale to be used to highlight the selected feature
@@ -802,7 +814,7 @@ function FIPERView() {
         .data(d => [d])
         .join('g')
         .classed('crule-grid', true)
-        .attr('transform', `translate(0, ${SINGLE_FEATURE_HEIGHT})`)
+        .attr('transform', `translate(${LABELS_COLUMN_WIDTH + FI_COLUMN_WIDTH + (2 * GUTTER)}, 0)`)
         .call(fcrg);
 
 
@@ -1046,7 +1058,7 @@ function reduceUnionIntersection(predicatesWithIntervals) {
 }
 
 
-d3.json('/static/instance_134.json').then((data) => {
+d3.json('/static/instance_180.json').then((data) => {
   // console.log('data', data);
   // preprocess each entry to copmute the expected value for the categorical counterrules
   const tfeature = data.features
@@ -1138,6 +1150,16 @@ d3.json('/static/instance_134.json').then((data) => {
         type: v.type,
         predicates: v.predicates,
       })),
+  })).map(e => ({
+    ...e,
+    cRulesPredicateMap: Object.fromEntries(CRulesList.map(c => [c, (
+      e.values.map((v) => {
+        if (c in v.predicates) {
+          return v.predicates[c].exp_value > 0;
+        }
+        return false;
+      }).reduce((acc, curr) => acc || curr, false)
+    )])),
   }));
 
   // then manage the counter rules for numerical features
@@ -1177,6 +1199,16 @@ d3.json('/static/instance_134.json').then((data) => {
             .map(pr => [pr[0], reduceUnionIntersection(pr[1])]),
         ),
       })),
+    })).map(e => ({
+      ...e,
+      cRulesPredicateMap: Object.fromEntries(CRulesList.map(c => [c, (
+        e.values.map((v) => {
+          if (c in v.predicates) {
+            return v.predicates[c].length > 0;
+          }
+          return false;
+        }).reduce((acc, curr) => acc || curr, false)
+      )])),
     }));
 
 
