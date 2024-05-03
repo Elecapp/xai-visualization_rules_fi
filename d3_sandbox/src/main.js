@@ -657,7 +657,7 @@ function FIPERCRuleGrid() {
       .on('click', (d) => {
         console.log('clicked', d);
         console.log('coso', d3.select(d.target).datum());
-      })
+      });
   }
 
   // eslint-disable-next-line
@@ -798,6 +798,27 @@ function FIPERView() {
         }));
         me(selection);
       });
+    gcRuleGrid.selectAll('line.gridLine')
+      .data(d => d.counterRules)
+      .join('line')
+      .classed('gridLine', true)
+      .attr('x1', d => fcrg.bandScale()(d) + ((fcrg.bandScale().bandwidth()) / 2))
+      .attr('x2', d => fcrg.bandScale()(d) + ((fcrg.bandScale().bandwidth()) / 2))
+      .attr('y1', 0)
+      .attr('y2', (SINGLE_FEATURE_HEIGHT * 20)) // TODO: substitute 20 by the number of rows taken by the feature length
+      .attr('stroke', 'grey')
+      .attr('stroke-width', 0.5)
+      .attr('stroke-dasharray', ('3, 3'));
+
+    // Add a new line with the same characteristics and at the same distance
+    gcRuleGrid.append('line')
+      .attr('x1', d => (d.counterRules.length + 1) * fcrg.bandScale().bandwidth())
+      .attr('x2', d => (d.counterRules.length + 1) * fcrg.bandScale().bandwidth())
+      .attr('y1', 0)
+      .attr('y2', d => (d.features.length) * SINGLE_FEATURE_HEIGHT * 20) // TODO: substitute 20 by the number of rows taken by the feature length
+      .attr('stroke', 'grey')
+      .attr('stroke-width', 0.5)
+      .attr('stroke-dasharray', ('3, 3'));
 
     // create a group for each feature row
     const gFeatures = selection.selectAll('g.feature')
