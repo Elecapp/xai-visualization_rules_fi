@@ -630,9 +630,11 @@ function FIPERCRuleGrid() {
   let width = FI_COLUMN_WIDTH;
   let height = 50;
   let cruleList = [];
+  let selectedCounterRule = 'C0';
   const bandScale = d3.scaleBand()
     .range([0, width])
     .padding(0.1);
+
 
   /**
    * This function receives one single ```g``` element and visualizes its
@@ -643,6 +645,7 @@ function FIPERCRuleGrid() {
   function me(selection) {
     // we need to scan all the values elements, to extract the exp_value from the dictionary
     // predicates...
+
     selection.selectAll('circle.predicate')
       .data(bandScale.domain().filter(d => selection.datum().cRulesPredicateMap[d]))
       .join('circle')
@@ -650,7 +653,11 @@ function FIPERCRuleGrid() {
       .attr('cx', d => bandScale(d) + (bandScale.bandwidth() / 2))
       .attr('cy', height / 2)
       .attr('r', 6)
-      .attr('fill', FTTemplate.MAIN_COLOR);
+      .attr('fill', d => ((d === selectedCounterRule) ? FTTemplate.MAIN_COLOR : FTTemplate.BASE_COLOR))
+      .on('click', (d) => {
+        console.log('clicked', d);
+        console.log('coso', d3.select(d.target).datum());
+      })
   }
 
   // eslint-disable-next-line
@@ -673,6 +680,19 @@ function FIPERCRuleGrid() {
     if (!arguments.length) return cruleList;
     cruleList = _;
     bandScale.domain(cruleList);
+    return me;
+  };
+
+  // eslint-disable-next-line func-names
+  me.selectedCounterRule = function (_) {
+    if (!arguments.length) return selectedCounterRule;
+    selectedCounterRule = _;
+    return me;
+  };
+
+  // eslint-disable-next-line func-names
+  me.bandScale = function (_) {
+    if (!arguments.length) return bandScale;
     return me;
   };
 
@@ -717,14 +737,13 @@ function FIPERView() {
       .color(FTTemplate.THIRD_COLOR)
       .isFactualRule(true);
     // Component to visualize the layer for the counter rules
-    const CounterRuleId = 'C0'; // TODO: to make it dynamic
     const crpv = FIPERRulePredicateView()
       .width(RULES_COLUMN_WIDTH)
       .height(SINGLE_FEATURE_HEIGHT / 6)
       .subHeight(SINGLE_FEATURE_HEIGHT / 6)
       .color(FTTemplate.MAIN_COLOR)
       .isFactualRule(false)
-      .selectedCounterRule(CounterRuleId);
+      .selectedCounterRule(origDatum.selectedCounterRule);
     // Component to visualize the instance value for each row.
     const fivv = FIPERFeatureInstanceValueView()
       .width(RULES_COLUMN_WIDTH)
@@ -737,7 +756,8 @@ function FIPERView() {
     const fcrg = FIPERCRuleGrid()
       .width(CRULES_GRID_COLUMN_WIDTH)
       .height(SINGLE_FEATURE_HEIGHT)
-      .cruleList(origDatum.counterRules);
+      .cruleList(origDatum.counterRules)
+      .selectedCounterRule(origDatum.selectedCounterRule);
 
 
     // colorscale to be used to highlight the selected feature
@@ -750,6 +770,36 @@ function FIPERView() {
     //   .range([SINGLE_FEATURE_HEIGHT, 5 * SINGLE_FEATURE_HEIGHT, SINGLE_FEATURE_HEIGHT]);
     yScale.domain([0, features.length])
       .range([0, features.length * SINGLE_FEATURE_HEIGHT]);
+
+    const gcRuleGrid = selection.selectAll('g.cRuleGrid')
+      .data(d => [d])
+      .join('g')
+      .classed('cRuleGrid', true)
+      .attr('transform', `translate(${LABELS_COLUMN_WIDTH +
+        FI_COLUMN_WIDTH + RULES_COLUMN_WIDTH + (3 * GUTTER)}, 0)`);
+
+    gcRuleGrid.selectAll('text.label')
+      .data(d => d.counterRules)
+      .join('text')
+      .classed('label', true)
+      .attr('x', d => fcrg.bandScale()(d) + (fcrg.bandScale().bandwidth()))
+      .attr('y', SINGLE_FEATURE_HEIGHT / 2)
+      .attr('text-anchor', 'middle')
+      .attr('dy', -SINGLE_FEATURE_HEIGHT / 2)
+      .attr('alignment-baseline', 'bottom')
+      .attr('font-size', 11)
+      .text(d => d)
+      .on('click', (d) => {
+        console.log('clicked', d);
+        console.log('coso', d3.select(d.target).datum());
+        selection.datum(({
+          ...origDatum,
+          selectedCounterRule: d3.select(d.target).datum(),
+        }));
+        me(selection);
+      });
+
+    // create a group for each feature row
     const gFeatures = selection.selectAll('g.feature')
       .data(features)
       .join('g')
@@ -1242,6 +1292,7 @@ d3.json('/static/instance_180.json').then((data) => {
     counterRules: CRulesList,
     bb_pred: data.bb_pred,
     dt_pred: data.dt_pred,
+    selectedCounterRule: 'C0',
   };
 
 
