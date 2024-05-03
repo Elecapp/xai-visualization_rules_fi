@@ -431,7 +431,7 @@ function FIPERRulePredicateView() {
         .attr('width', d => barLength(d.value))
         .attr('height', height)
         .attr('fill', color)
-        .attr('fill-opacity', 0.7)
+        .attr('fill-opacity', 0.5)
         .attr('stroke', color);
     } else {
       // Here we have a numerical feature
@@ -439,7 +439,7 @@ function FIPERRulePredicateView() {
 
       // create a tranformation of the data to create additional fields for ranges
       // of rule predicate
-      const ranges = selection.datum().values[0].predicates[selectedCounterRule];
+      const ranges = selection.datum().values[0].predicates[selectedCounterRule] || [];
 
       gPredicateBar.selectAll('rect.single-predicate-box')
         .data(ranges)
@@ -625,6 +625,54 @@ function FIPERFeatureImportanceView() {
   return me;
 }
 
+function FIPERCRuleGrid() {
+  let width = FI_COLUMN_WIDTH;
+  let height = 50;
+  let cruleList = [];
+  const bandScale = d3.scaleBand()
+    .range([0, width])
+    .padding(0.1);
+
+  /**
+   * This function receives one single ```g``` element and visualizes its
+   * content using the associated data.
+   * @param selection the element containing a single datum with the
+   *  metadata of the feature to be visualized.
+   */
+  function me(selection) {
+    console.log('grid', selection.datum());
+
+    // TODO: to be implemented
+    // we need to scan all the values elements, to extract the exp_value from the dictionary
+    // predicates...
+  }
+
+  // eslint-disable-next-line
+  me.width = function (_) {
+    if (!arguments.length) return width;
+    width = _;
+    bandScale.range([0, width]);
+    return me;
+  };
+
+  // eslint-disable-next-line
+  me.height = function (_) {
+    if (!arguments.length) return height;
+    height = _;
+    return me;
+  };
+
+  // eslint-disable-next-line
+  me.cruleList = function (_) {
+    if (!arguments.length) return cruleList;
+    cruleList = _;
+    bandScale.domain(cruleList);
+    return me;
+  };
+
+  return me;
+}
+
 const GLOBAL_WIDTH = 900;
 
 function FIPERView() {
@@ -637,6 +685,7 @@ function FIPERView() {
 
   function me(selection) {
     const origDatum = selection.datum();
+    console.log('origDatum', origDatum);
     const features = selection.datum().features;
     // determine the maximum value of Feature Importance to fit the scale. We use absolute value
     // to ignore the sign of the feature importance
@@ -662,7 +711,7 @@ function FIPERView() {
       .color(FTTemplate.THIRD_COLOR)
       .isFactualRule(true);
     // Component to visualize the layer for the counter rules
-    const CounterRuleId = 'C3'; // TODO: to make it dynamic
+    const CounterRuleId = 'C0'; // TODO: to make it dynamic
     const crpv = FIPERRulePredicateView()
       .width(RULES_COLUMN_WIDTH)
       .height(SINGLE_FEATURE_HEIGHT / 6)
@@ -678,6 +727,12 @@ function FIPERView() {
     const flv = FIPERFeatureLabelsView()
       .width(LABELS_COLUMN_WIDTH)
       .height(SINGLE_FEATURE_HEIGHT);
+    // component to visualize the grid of available counter rules
+    const fcrg = FIPERCRuleGrid()
+      .width(RULES_COLUMN_WIDTH)
+      .height(SINGLE_FEATURE_HEIGHT);
+
+
     // colorscale to be used to highlight the selected feature
     const highlightScale = d3.scaleOrdinal()
       .domain([false, true])
@@ -726,7 +781,11 @@ function FIPERView() {
         .join('g')
         .classed('distribution', true)
         .call(fdv);
-
+      gValueStack.selectAll('g.instance-value')
+        .data(d => [d])
+        .join('g')
+        .classed('instance-value', true)
+        .call(fivv);
       gValueStack.selectAll('g.rule')
         .data(d => [d])
         .join('g')
@@ -739,11 +798,13 @@ function FIPERView() {
         .classed('crules', true)
         .attr('transform', `translate(0, ${(2 * SINGLE_FEATURE_HEIGHT) / 3})`)
         .call(crpv);
-      gValueStack.selectAll('g.instance-value')
+      gValueStack.selectAll('g.crule-grid')
         .data(d => [d])
         .join('g')
-        .classed('instance-value', true)
-        .call(fivv);
+        .classed('crule-grid', true)
+        .attr('transform', `translate(0, ${SINGLE_FEATURE_HEIGHT})`)
+        .call(fcrg);
+
 
       const gLabels = d3.select(n[j]).selectAll('g.feature-labels')
         .data(d => [d])
@@ -903,18 +964,19 @@ function resolveInterval(pred, min, max) {
   // this function receives a predicate and the minimum and maximum values of the feature.
   // The predicate has the following form: {att: 'att_name', op: '>', thr: 0.5}
   // The function returns the interval that the predicate represents.
+  // we enforce that the interval is within the bounds of the feature
 
   if (pred.op === '>') {
-    return [pred.thr, max];
+    return [Math.max(pred.thr, min), max];
   }
   if (pred.op === '>=') {
-    return [pred.thr, max];
+    return [Math.max(pred.thr, min), max];
   }
   if (pred.op === '<') {
-    return [min, pred.thr];
+    return [min, Math.min(pred.thr, max)];
   }
   if (pred.op === '<=') {
-    return [min, pred.thr];
+    return [min, Math.min(pred.thr, max)];
   }
   return [min, max];
 }
@@ -984,7 +1046,7 @@ function reduceUnionIntersection(predicatesWithIntervals) {
 }
 
 
-d3.json('/static/instance_180.json').then((data) => {
+d3.json('/static/instance_134.json').then((data) => {
   // console.log('data', data);
   // preprocess each entry to copmute the expected value for the categorical counterrules
   const tfeature = data.features
