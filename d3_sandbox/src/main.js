@@ -641,18 +641,13 @@ function FIPERCRuleGrid() {
    *  metadata of the feature to be visualized.
    */
   function me(selection) {
-    console.log('grid', selection.datum());
-
-    // TODO: to be implemented
     // we need to scan all the values elements, to extract the exp_value from the dictionary
     // predicates...
     selection.selectAll('circle.predicate')
-      .data(bandScale.domain().filter((d) => {
-        return selection.datum().cRulesPredicateMap[d];
-      }))
+      .data(bandScale.domain().filter(d => selection.datum().cRulesPredicateMap[d]))
       .join('circle')
       .classed('predicate', true)
-      .attr('cx', d => bandScale(d) + bandScale.bandwidth() / 2)
+      .attr('cx', d => bandScale(d) + (bandScale.bandwidth() / 2))
       .attr('cy', height / 2)
       .attr('r', 6)
       .attr('fill', FTTemplate.MAIN_COLOR);
@@ -696,7 +691,7 @@ function FIPERView() {
 
   function me(selection) {
     const origDatum = selection.datum();
-    console.log('origDatum', origDatum);
+    // console.log('origDatum', origDatum);
     const features = selection.datum().features;
     // determine the maximum value of Feature Importance to fit the scale. We use absolute value
     // to ignore the sign of the feature importance
@@ -1234,12 +1229,12 @@ d3.json('/static/instance_180.json').then((data) => {
   // aEntries.sort((a, b) => (b.feature_importance) - (a.feature_importance));
 
   // sort the entries by the number of true values in cRulesPredicateMap
-  // aEntries.sort((a, b) =>
-  //   (d3.sum(Object.values(b.cRulesPredicateMap)) - d3.sum(Object.values(a.cRulesPredicateMap))));
+  aEntries.sort((a, b) =>
+    (d3.sum(Object.values(b.cRulesPredicateMap)) - d3.sum(Object.values(a.cRulesPredicateMap))));
 
   // sort the entries by the number of true values in rulePredicateMap
-  aEntries.sort((a, b) =>
-    (d3.sum(Object.values(b.rulePredicateMap)) - d3.sum(Object.values(a.rulePredicateMap))));
+  // aEntries.sort((a, b) =>
+  //   (d3.sum(Object.values(b.rulePredicateMap)) - d3.sum(Object.values(a.rulePredicateMap))));
 
 
   const explanationDescriptor = {
