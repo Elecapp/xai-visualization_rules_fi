@@ -1160,6 +1160,14 @@ d3.json('/static/instance_180.json').then((data) => {
         return false;
       }).reduce((acc, curr) => acc || curr, false)
     )])),
+    rulePredicateMap: Object.fromEntries(['R0'].map(c => [c, (
+      e.values.map((v) => {
+        if (c in v.predicates) {
+          return v.predicates[c].exp_value > 0;
+        }
+        return false;
+      }).reduce((acc, curr) => acc || curr, false)
+    )])),
   }));
 
   // then manage the counter rules for numerical features
@@ -1209,12 +1217,30 @@ d3.json('/static/instance_180.json').then((data) => {
           return false;
         }).reduce((acc, curr) => acc || curr, false)
       )])),
+      rulePredicateMap: Object.fromEntries(['R0'].map(c => [c, (
+        e.values.map((v) => {
+          if (c in v.predicates) {
+            return v.predicates[c].length > 0;
+          }
+          return false;
+        }).reduce((acc, curr) => acc || curr, false)
+      )])),
     }));
 
 
   // concatenate cEntries and nEntries into a single array
   const aEntries = cEntries.concat(nEntries);
-  aEntries.sort((a, b) => (b.feature_importance) - (a.feature_importance));
+  // sort the entries by feature importance
+  // aEntries.sort((a, b) => (b.feature_importance) - (a.feature_importance));
+
+  // sort the entries by the number of true values in cRulesPredicateMap
+  // aEntries.sort((a, b) =>
+  //   (d3.sum(Object.values(b.cRulesPredicateMap)) - d3.sum(Object.values(a.cRulesPredicateMap))));
+
+  // sort the entries by the number of true values in rulePredicateMap
+  aEntries.sort((a, b) =>
+    (d3.sum(Object.values(b.rulePredicateMap)) - d3.sum(Object.values(a.rulePredicateMap))));
+
 
   const explanationDescriptor = {
     features: aEntries,
