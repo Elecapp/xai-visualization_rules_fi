@@ -11,7 +11,8 @@ const GUTTER = 10;
 
 // create a dict for a color template
 const FTTemplate = {
-  MAIN_COLOR: '#9e2f50',
+  // MAIN_COLOR: '#9e2f50',
+  MAIN_COLOR: '#2f9e50',
   SECOND_COLOR: '#45578D',
   THIRD_COLOR: '#f2c14e',
   BASE_COLOR: '#dcc',
