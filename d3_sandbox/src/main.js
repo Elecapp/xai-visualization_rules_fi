@@ -646,6 +646,19 @@ function FIPERCRuleGrid() {
     // we need to scan all the values elements, to extract the exp_value from the dictionary
     // predicates...
 
+    selection.selectAll('line.gridLine')
+      .data(Object.keys(selection.datum().cRulesPredicateMap))
+      .join('line')
+      .classed('gridLine', true)
+      .attr('x1', d => bandScale(d) + (bandScale.bandwidth() / 2))
+      .attr('x2', d => bandScale(d) + (bandScale.bandwidth() / 2))
+      .attr('y1', 0)
+      .attr('y2', height)
+      .attr('stroke', 'grey')
+      .attr('stroke-width', 0.5)
+      .attr('stroke-dasharray', ('3, 3'));
+
+    //
     selection.selectAll('circle.predicate')
       .data(bandScale.domain().filter(d => selection.datum().cRulesPredicateMap[d]))
       .join('circle')
@@ -798,27 +811,27 @@ function FIPERView() {
         }));
         me(selection);
       });
-    gcRuleGrid.selectAll('line.gridLine')
-      .data(d => d.counterRules)
-      .join('line')
-      .classed('gridLine', true)
-      .attr('x1', d => fcrg.bandScale()(d) + ((fcrg.bandScale().bandwidth()) / 2))
-      .attr('x2', d => fcrg.bandScale()(d) + ((fcrg.bandScale().bandwidth()) / 2))
-      .attr('y1', 0)
-      .attr('y2', (SINGLE_FEATURE_HEIGHT * 20)) // TODO: substitute 20 by the number of rows taken by the feature length
-      .attr('stroke', 'grey')
-      .attr('stroke-width', 0.5)
-      .attr('stroke-dasharray', ('3, 3'));
-
-    // Add a new line with the same characteristics and at the same distance
-    gcRuleGrid.append('line')
-      .attr('x1', d => (d.counterRules.length + 1) * fcrg.bandScale().bandwidth())
-      .attr('x2', d => (d.counterRules.length + 1) * fcrg.bandScale().bandwidth())
-      .attr('y1', 0)
-      .attr('y2', d => (d.features.length) * SINGLE_FEATURE_HEIGHT * 20) // TODO: substitute 20 by the number of rows taken by the feature length
-      .attr('stroke', 'grey')
-      .attr('stroke-width', 0.5)
-      .attr('stroke-dasharray', ('3, 3'));
+    // gcRuleGrid.selectAll('line.gridLine')
+    //   .data(d => d.counterRules)
+    //   .join('line')
+    //   .classed('gridLine', true)
+    //   .attr('x1', d => fcrg.bandScale()(d) + ((fcrg.bandScale().bandwidth()) / 2))
+    //   .attr('x2', d => fcrg.bandScale()(d) + ((fcrg.bandScale().bandwidth()) / 2))
+    //   .attr('y1', 0)
+    //   .attr('y2', (SINGLE_FEATURE_HEIGHT * 20)) // TODO: substitute 20 by the number of rows taken by the feature length
+    //   .attr('stroke', 'grey')
+    //   .attr('stroke-width', 0.5)
+    //   .attr('stroke-dasharray', ('3, 3'));
+    //
+    // // Add a new line with the same characteristics and at the same distance
+    // gcRuleGrid.append('line')
+    //   .attr('x1', d => (d.counterRules.length + 1) * fcrg.bandScale().bandwidth())
+    //   .attr('x2', d => (d.counterRules.length + 1) * fcrg.bandScale().bandwidth())
+    //   .attr('y1', 0)
+    //   .attr('y2', d => (d.features.length) * SINGLE_FEATURE_HEIGHT * 20) // TODO: substitute 20 by the number of rows taken by the feature length
+    //   .attr('stroke', 'grey')
+    //   .attr('stroke-width', 0.5)
+    //   .attr('stroke-dasharray', ('3, 3'));
 
     // create a group for each feature row
     const gFeatures = selection.selectAll('g.feature')
@@ -1297,11 +1310,11 @@ d3.json('/static/instance_180.json').then((data) => {
   // concatenate cEntries and nEntries into a single array
   const aEntries = cEntries.concat(nEntries);
   // sort the entries by feature importance
-  // aEntries.sort((a, b) => (b.feature_importance) - (a.feature_importance));
+  aEntries.sort((a, b) => (b.feature_importance) - (a.feature_importance));
 
   // sort the entries by the number of true values in cRulesPredicateMap
-  aEntries.sort((a, b) =>
-    (d3.sum(Object.values(b.cRulesPredicateMap)) - d3.sum(Object.values(a.cRulesPredicateMap))));
+  // aEntries.sort((a, b) =>
+  //   (d3.sum(Object.values(b.cRulesPredicateMap)) - d3.sum(Object.values(a.cRulesPredicateMap))));
 
   // sort the entries by the number of true values in rulePredicateMap
   // aEntries.sort((a, b) =>
