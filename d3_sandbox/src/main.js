@@ -22,7 +22,7 @@ const colorSet = {
     BASE_COLOR: '#dcc',
     BASE_STROKE_COLOR: '#BFB0B0',
     SECONDARY_BACKGROUND_COLOR: '#fdfdfd',
-    TEXT_COLOR: '#000',
+    TEXT_COLOR: '#333333',
     INSTANCE_COLOR: '#000',
     DISTRIBUTION_COLOR: '#dcc',
     DISTRIBUTION_STROKE_COLOR: '#BFB0B0',
@@ -30,6 +30,25 @@ const colorSet = {
     CATEGORICAL_INSTANCE_STROKE_COLOR: '#999999',
     NEGATIVE_FI_COLOR: '#f2aaaa',
     GRID_COLOR: '#000',
+  },
+  darkModeColorPalette: {
+    BACKGROUND_COLOR: '#333', // Sfondo scuro
+    CRULES_COLOR: '#F95F7B', // Colore dei crules modificato per una migliore visibilità sullo sfondo scuro
+    CRULES_STROKE_COLOR: '#D94C68', // Colore del contorno dei crules modificato per una migliore visibilità
+    FI_POSITIVE_COLOR: '#7384A4', // Colore dei FI positivi modificato per una migliore visibilità
+    RULE_COLOR: '#F9C862', // Colore delle regole
+    RULE_STROKE_COLOR: '#E2B65E', // Colore del contorno delle regole modificato per una migliore visibilità
+    BASE_COLOR: '#888', // Un grigio più chiaro come base
+    BASE_STROKE_COLOR: '#777', // Colore del contorno base
+    SECONDARY_BACKGROUND_COLOR: '#444', // Sfondo secondario più scuro
+    TEXT_COLOR: '#FFF', // Testo bianco per il contrasto
+    INSTANCE_COLOR: '#FFF', // Colore delle istanze in bianco per il contrasto
+    DISTRIBUTION_COLOR: '#888', // Un grigio più chiaro per il colore di distribuzione
+    DISTRIBUTION_STROKE_COLOR: '#777', // Colore del contorno della distribuzione
+    CATEGORICAL_INSTANCE_COLOR: '#B3B3B3', // Colore delle istanze categoriche
+    CATEGORICAL_INSTANCE_STROKE_COLOR: '#999999', // Colore del contorno delle istanze categoriche
+    NEGATIVE_FI_COLOR: '#F9A8A8', // Colore FI negativi
+    GRID_COLOR: '#666', // Colore della griglia
   },
 };
 const FTTemplate = colorSet.default;
@@ -346,6 +365,7 @@ function FIPERFeatureDistributionView() {
           .attr('text-anchor', 'end')
           .attr('alignment-baseline', 'middle')
           .attr('font-size', 10)
+          .attr('fill', FTTemplate.TEXT_COLOR)
           .text(d => `${d.label}`);
         // text for the values for each value of the feature
         gDetails.selectAll('text.single-bar-value')
@@ -357,6 +377,7 @@ function FIPERFeatureDistributionView() {
           .attr('text-anchor', 'start')
           .attr('alignment-baseline', 'middle')
           .attr('font-size', 10)
+          .attr('fill', FTTemplate.TEXT_COLOR)
           .text(d => `${d.value} (${d.percent.toFixed(2)}%)`);
       }
     } else {
@@ -562,6 +583,7 @@ function FIPERFeatureLabelsView() {
       .attr('text-anchor', 'end')
       .attr('alignment-baseline', 'middle')
       .attr('font-size', 11)
+      .attr('fill', FTTemplate.TEXT_COLOR)
       .text(d => `${d.rname}`);
     return me;
   }
@@ -838,6 +860,7 @@ function FIPERView() {
       .attr('dy', -SINGLE_FEATURE_HEIGHT / 1.5)
       .attr('alignment-baseline', 'bottom')
       .attr('font-size', 11)
+      .attr('fill', FTTemplate.TEXT_COLOR)
       .text(d => d)
       .on('click', (d) => {
         console.log('clicked', d);
