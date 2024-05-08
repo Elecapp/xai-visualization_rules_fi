@@ -2,17 +2,17 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 const d3 = require('d3');
 
+const GLOBAL_WIDTH = 900;
 const SINGLE_FEATURE_HEIGHT = 30;
 const FI_COLUMN_WIDTH = 50;
 const RULES_COLUMN_WIDTH = 300;
 const LABELS_COLUMN_WIDTH = 250;
-const CRULES_GRID_COLUMN_WIDTH = 100;
+const CRULES_GRID_COLUMN_WIDTH = 20;
 const GUTTER = 10;
 
 // create a dict for a color template
 const FTTemplate = {
-  // MAIN_COLOR: '#9e2f50',
-  MAIN_COLOR: '#2f9e50',
+  MAIN_COLOR: '#9e2f50',
   SECOND_COLOR: '#45578D',
   THIRD_COLOR: '#f2c14e',
   BASE_COLOR: '#dcc',
@@ -636,7 +636,6 @@ function FIPERCRuleGrid() {
     .range([0, width])
     .padding(0.1);
 
-
   /**
    * This function receives one single ```g``` element and visualizes its
    * content using the associated data.
@@ -713,7 +712,6 @@ function FIPERCRuleGrid() {
   return me;
 }
 
-const GLOBAL_WIDTH = 900;
 
 function FIPERView() {
   // global width of the whole visualization
@@ -766,9 +764,11 @@ function FIPERView() {
     const flv = FIPERFeatureLabelsView()
       .width(LABELS_COLUMN_WIDTH)
       .height(SINGLE_FEATURE_HEIGHT);
+    // create variable width for the column of the counter rules
+    const crWidth = origDatum.counterRules.length * CRULES_GRID_COLUMN_WIDTH;
     // component to visualize the grid of available counter rules
     const fcrg = FIPERCRuleGrid()
-      .width(CRULES_GRID_COLUMN_WIDTH)
+      .width(crWidth)
       .height(SINGLE_FEATURE_HEIGHT)
       .cruleList(origDatum.counterRules)
       .selectedCounterRule(origDatum.selectedCounterRule);
@@ -785,21 +785,22 @@ function FIPERView() {
     yScale.domain([0, features.length])
       .range([0, features.length * SINGLE_FEATURE_HEIGHT]);
 
+
     const gcRuleGrid = selection.selectAll('g.cRuleGrid')
       .data(d => [d])
       .join('g')
       .classed('cRuleGrid', true)
-      .attr('transform', `translate(${LABELS_COLUMN_WIDTH +
-        FI_COLUMN_WIDTH + RULES_COLUMN_WIDTH + (3 * GUTTER)}, 0)`);
+      .attr('transform', `translate(${LABELS_COLUMN_WIDTH + GUTTER +
+        RULES_COLUMN_WIDTH + GUTTER}, 0)`);
 
     gcRuleGrid.selectAll('text.label')
       .data(d => d.counterRules)
       .join('text')
       .classed('label', true)
-      .attr('x', d => fcrg.bandScale()(d) + (fcrg.bandScale().bandwidth()))
+      .attr('x', d => fcrg.bandScale()(d) + GUTTER)
       .attr('y', SINGLE_FEATURE_HEIGHT / 2)
       .attr('text-anchor', 'middle')
-      .attr('dy', -SINGLE_FEATURE_HEIGHT / 2)
+      .attr('dy', -SINGLE_FEATURE_HEIGHT / 1.5)
       .attr('alignment-baseline', 'bottom')
       .attr('font-size', 11)
       .text(d => d)
@@ -812,27 +813,6 @@ function FIPERView() {
         }));
         me(selection);
       });
-    // gcRuleGrid.selectAll('line.gridLine')
-    //   .data(d => d.counterRules)
-    //   .join('line')
-    //   .classed('gridLine', true)
-    //   .attr('x1', d => fcrg.bandScale()(d) + ((fcrg.bandScale().bandwidth()) / 2))
-    //   .attr('x2', d => fcrg.bandScale()(d) + ((fcrg.bandScale().bandwidth()) / 2))
-    //   .attr('y1', 0)
-    //   .attr('y2', (SINGLE_FEATURE_HEIGHT * 20)) // TODO: substitute 20 by the number of rows taken by the feature length
-    //   .attr('stroke', 'grey')
-    //   .attr('stroke-width', 0.5)
-    //   .attr('stroke-dasharray', ('3, 3'));
-    //
-    // // Add a new line with the same characteristics and at the same distance
-    // gcRuleGrid.append('line')
-    //   .attr('x1', d => (d.counterRules.length + 1) * fcrg.bandScale().bandwidth())
-    //   .attr('x2', d => (d.counterRules.length + 1) * fcrg.bandScale().bandwidth())
-    //   .attr('y1', 0)
-    //   .attr('y2', d => (d.features.length) * SINGLE_FEATURE_HEIGHT * 20) // TODO: substitute 20 by the number of rows taken by the feature length
-    //   .attr('stroke', 'grey')
-    //   .attr('stroke-width', 0.5)
-    //   .attr('stroke-dasharray', ('3, 3'));
 
     // create a group for each feature row
     const gFeatures = selection.selectAll('g.feature')
@@ -856,18 +836,19 @@ function FIPERView() {
     // 3. the labels
     // We call separate components to handle each group. Each groups is located accordingly
     // to the size of the corresponsing COLUMN.
+
     gFeatures.each((_, j, n) => {
       const gFeatureImportance = d3.select(n[j]).selectAll('g.feature-importance')
         .data(d => [d])
         .join('g')
         .classed('feature-importance', true)
-        .attr('transform', `translate(${LABELS_COLUMN_WIDTH + GUTTER}, 0)`);
+        .attr('transform', `translate(${LABELS_COLUMN_WIDTH + GUTTER + RULES_COLUMN_WIDTH + GUTTER + crWidth + GUTTER}, 0)`);
       gFeatureImportance.call(ffv);
       const gValueStack = d3.select(n[j]).selectAll('g.feature-values')
         .data(d => [d])
         .join('g')
         .classed('feature-values', true)
-        .attr('transform', `translate(${LABELS_COLUMN_WIDTH + FI_COLUMN_WIDTH + (2 * GUTTER)}, 0)`);
+        .attr('transform', `translate(${LABELS_COLUMN_WIDTH + GUTTER}, 0)`);
       gValueStack.selectAll('g.distribution')
         .data(d => [d])
         .join('g')
@@ -894,7 +875,7 @@ function FIPERView() {
         .data(d => [d])
         .join('g')
         .classed('crule-grid', true)
-        .attr('transform', `translate(${LABELS_COLUMN_WIDTH + FI_COLUMN_WIDTH + (2 * GUTTER)}, 0)`)
+        .attr('transform', `translate(${RULES_COLUMN_WIDTH + GUTTER}, 0)`)
         .call(fcrg);
 
 
