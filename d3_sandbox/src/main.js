@@ -10,9 +10,32 @@ const LABELS_COLUMN_WIDTH = 250;
 const CRULES_GRID_COLUMN_WIDTH = 20;
 const GUTTER = 10;
 
+// create a function to darken a color using d3
+function darkenColor(color, amount) {
+  return d3.hsl(color).darker(amount).toString();
+}
 // create a dict for a color template
 const colorSet = {
   default: {
+    BACKGROUND_COLOR: '#fff1e0',
+    CRULES_COLOR: 'rgba(158,79,103,0.7)',
+    CRULES_STROKE_COLOR: 'rgba(133,66,86,0.7)',
+    RULE_COLOR: 'rgba(230,174,85,0.7)',
+    RULE_STROKE_COLOR: darkenColor('#E6AE55B3', 1),
+    BASE_COLOR: '#dcc',
+    BASE_STROKE_COLOR: '#BFB0B0',
+    SECONDARY_BACKGROUND_COLOR: '#fdfdfd',
+    TEXT_COLOR: '#333333',
+    INSTANCE_COLOR: '#000',
+    DISTRIBUTION_COLOR: '#f7f7f7',
+    DISTRIBUTION_STROKE_COLOR: '#BFB0B0',
+    CATEGORICAL_INSTANCE_COLOR: '#cccccc',
+    CATEGORICAL_INSTANCE_STROKE_COLOR: '#999999',
+    FI_POSITIVE_COLOR: '#4F6A73',
+    NEGATIVE_FI_COLOR: '#A27691',
+    GRID_COLOR: '#000',
+  },
+  darkModeColorPalette: {
     BACKGROUND_COLOR: '#fff1e0',
     CRULES_COLOR: '#9e4f67',
     CRULES_STROKE_COLOR: '#854256',
@@ -30,25 +53,6 @@ const colorSet = {
     CATEGORICAL_INSTANCE_STROKE_COLOR: '#999999',
     NEGATIVE_FI_COLOR: '#f2aaaa',
     GRID_COLOR: '#000',
-  },
-  darkModeColorPalette: {
-    BACKGROUND_COLOR: '#333', // Sfondo scuro
-    CRULES_COLOR: '#F95F7B', // Colore dei crules modificato per una migliore visibilità sullo sfondo scuro
-    CRULES_STROKE_COLOR: '#D94C68', // Colore del contorno dei crules modificato per una migliore visibilità
-    FI_POSITIVE_COLOR: '#7384A4', // Colore dei FI positivi modificato per una migliore visibilità
-    RULE_COLOR: '#F9C862', // Colore delle regole
-    RULE_STROKE_COLOR: '#E2B65E', // Colore del contorno delle regole modificato per una migliore visibilità
-    BASE_COLOR: '#888', // Un grigio più chiaro come base
-    BASE_STROKE_COLOR: '#777', // Colore del contorno base
-    SECONDARY_BACKGROUND_COLOR: '#444', // Sfondo secondario più scuro
-    TEXT_COLOR: '#FFF', // Testo bianco per il contrasto
-    INSTANCE_COLOR: '#FFF', // Colore delle istanze in bianco per il contrasto
-    DISTRIBUTION_COLOR: '#888', // Un grigio più chiaro per il colore di distribuzione
-    DISTRIBUTION_STROKE_COLOR: '#777', // Colore del contorno della distribuzione
-    CATEGORICAL_INSTANCE_COLOR: '#B3B3B3', // Colore delle istanze categoriche
-    CATEGORICAL_INSTANCE_STROKE_COLOR: '#999999', // Colore del contorno delle istanze categoriche
-    NEGATIVE_FI_COLOR: '#F9A8A8', // Colore FI negativi
-    GRID_COLOR: '#666', // Colore della griglia
   },
 };
 const FTTemplate = colorSet.default;
@@ -106,20 +110,32 @@ function FIPERFeatureInstanceValueView() {
         .attr('fill-opacity', 0.9)
         .attr('stroke', FTTemplate.DISTRIBUTION_STROKE_COLOR);
     } else {
+      selection.selectAll('rect.bck-instance-value')
+        .data(d => d.values)
+        .join('rect')
+        .classed('bck-instance-value', true)
+        .attr('x', 0)
+        .attr('y', SINGLE_FEATURE_HEIGHT / 1.5)
+        .attr('width', RULES_COLUMN_WIDTH)
+        .attr('height', height / 6)
+        .attr('fill', FTTemplate.DISTRIBUTION_COLOR)
+        .attr('fill-opacity', 0.9)
+        .attr('stroke', null);
       barLength.domain([selection.datum().values[0].eda.min, selection.datum().values[0].eda.max]);
       selection.selectAll('rect.instance-value')
         .data(d => d.values)
         .join('rect')
         .classed('instance-value', true)
         .attr('x', d => (barLength(d.instance_value) - 2))
-        .attr('y', height / 3)
-        .attr('width', 2)
-        .attr('height', height / 2)
+        .attr('y', height / 5)
+        .attr('width', 1.5)
+        .attr('height', height / 1.5)
         .attr('fill', FTTemplate.INSTANCE_COLOR);
     }
 
     return me;
   }
+
   // eslint-disable-next-line
   me.width = function (_) {
     if (!arguments.length) return width;
@@ -257,6 +273,7 @@ function FIPERNumericDistributionLineChartView() {
       .attr('d', d => line(d))
       .attr('fill', color)
       .attr('fill-opacity', 1)
+      .attr('transform', `translate(0, -${SINGLE_FEATURE_HEIGHT / 6})`)
       .attr('stroke', strokeColor);
 
     return me;
@@ -480,6 +497,7 @@ function FIPERRulePredicateView() {
         .attr('width', d => barLength(d.value))
         .attr('height', height)
         .attr('fill', color)
+        // .attr('fill', `url(#p_RULE_COLOR)`)
         .attr('fill-opacity', 1)
         .attr('stroke', strokeColor);
     } else {
@@ -801,7 +819,7 @@ function FIPERView() {
       .width(RULES_COLUMN_WIDTH)
       .height(2 * (SINGLE_FEATURE_HEIGHT / 3))
       .subHeight(SINGLE_FEATURE_HEIGHT / 6)
-      .color(FTTemplate.RULE_COLOR)
+      .color('url(#p_RULE_COLOR)') // .color(FTTemplate.RULE_COLOR) for solid color
       .strokeColor(FTTemplate.RULE_STROKE_COLOR)
       .isFactualRule(true);
     // Component to visualize the layer for the counter rules
@@ -809,7 +827,7 @@ function FIPERView() {
       .width(RULES_COLUMN_WIDTH)
       .height(SINGLE_FEATURE_HEIGHT / 6)
       .subHeight(SINGLE_FEATURE_HEIGHT / 6)
-      .color(FTTemplate.CRULES_COLOR)
+      .color('url(#p_CRULES_COLOR)') // .color(FTTemplate.CRULES_COLOR) for solid color
       .strokeColor(FTTemplate.CRULES_STROKE_COLOR)
       .isFactualRule(false)
       .selectedCounterRule(origDatum.selectedCounterRule);
@@ -848,7 +866,7 @@ function FIPERView() {
       .join('g')
       .classed('cRuleGrid', true)
       .attr('transform', `translate(${LABELS_COLUMN_WIDTH + GUTTER +
-        RULES_COLUMN_WIDTH + GUTTER}, 0)`);
+      RULES_COLUMN_WIDTH + GUTTER}, 0)`);
 
     gcRuleGrid.selectAll('text.label')
       .data(d => d.counterRules)
@@ -1074,16 +1092,16 @@ function adjustCounterRuleMatrix(matrix) {
 function rewritePredicatesCategorical(c, e, ruleSelector) { // for each CounterRule,
   // for each value in the current Feature
   return e.values.map(v =>
-  // check if the current CR id is present in the crules of the current value
+    // check if the current CR id is present in the crules of the current value
     (v[ruleSelector] ? v[ruleSelector][c] : []),
   )
-  // in case of categorical features, we have a list of possible predicates
-  // of the form {exp_value: false, conquent_class: 0}
+    // in case of categorical features, we have a list of possible predicates
+    // of the form {exp_value: false, conquent_class: 0}
     .map(v => ((v) ? v[0] : ({ exp_value: -1, consequent_class: 27 })))
-  // for those entries where there is an array, we take the expected value
-  // of the first element
-  // .map(v => [v[0].exp_value, v[1]])
-  //  we convert the boolean values as 0 or 1. We leave -1 values as they are
+    // for those entries where there is an array, we take the expected value
+    // of the first element
+    // .map(v => [v[0].exp_value, v[1]])
+    //  we convert the boolean values as 0 or 1. We leave -1 values as they are
     .map(d => ({
       // eslint-disable-next-line no-nested-ternary
       exp_value: d.exp_value === -1 ? -1 : (d.exp_value ? 1 : 0),
@@ -1229,9 +1247,9 @@ d3.json('/static/instance_180.json').then((data) => {
       // rvalues: [], // to be removed
       // crvalues: [], // to be removed
     }));
-    // since each value as references to a rule or counterrules, we select only those values
-    // that have a rule, i.e. the corresponding v.rule array is not empty and the value is the
-    // instance value
+  // since each value as references to a rule or counterrules, we select only those values
+  // that have a rule, i.e. the corresponding v.rule array is not empty and the value is the
+  // instance value
   // console.log('rEntries', rEntries);
 
   // this list contains the set of all the counterRules that are present in the explanation
@@ -1379,9 +1397,35 @@ d3.json('/static/instance_180.json').then((data) => {
     .attr('style', `background-color: ${FTTemplate.BACKGROUND_COLOR};`)
     .append('g')
     .attr('transform', `translate(${2 * GUTTER}, ${2 * GUTTER})`)
-    ;
+  ;
 
 
   const fv = FIPERView().width(GLOBAL_WIDTH).height(height);
+  const defs = svg.selectAll('defs')
+    .data([null]) // Usa un array con un singolo elemento come dati
+    .join('defs');
+
+
+  const spacing = 2;
+  const thickness = 3;
+  const rotation = 45;
+
+
+  // create a pattern for each color in the template to be used in the visualization
+  Object.keys(FTTemplate).forEach((key) => {
+    defs.append('pattern')
+      .attr('id', `p_${key}`)
+      .attr('patternUnits', 'userSpaceOnUse')
+      .attr('width', spacing + (thickness / 2))
+      .attr('height', spacing + (thickness / 2))
+      .attr('patternTransform', (key==='CRULES_COLOR'?`rotate(${rotation})`:`rotate(${-rotation})` ))
+      .append('line')
+      .attr('x1', 0)
+      .attr('y1', 0)
+      .attr('x2', 0)
+      .attr('y2', spacing + (thickness / 2))
+      .attr('stroke', FTTemplate[key])
+      .attr('stroke-width', thickness);
+  });
   svg.datum(explanationDescriptor).call(fv);
 });
