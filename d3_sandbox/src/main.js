@@ -11,20 +11,28 @@ const CRULES_GRID_COLUMN_WIDTH = 20;
 const GUTTER = 10;
 
 // create a dict for a color template
-const FTTemplate = {
-  MAIN_COLOR: '#9e2f50',
-  SECOND_COLOR: '#45578D',
-  THIRD_COLOR: '#f2c14e',
-  BASE_COLOR: '#dcc',
-  BACKGROUND_COLOR: '#fff1e0',
-  SECONDARY_BACKGROUND_COLOR: '#fdfdfd',
-  TEXT_COLOR: '#000',
-  STROKE_COLOR: '#000',
-  DISTRIBUTION_COLOR: 'grey',
-  CATEGORICAL_VALUE_COLOR: '#999999',
-  NEGATIVE_FI_COLOR: '#f37744',
+const colorSet = {
+  default: {
+    BACKGROUND_COLOR: '#fff1e0',
+    CRULES_COLOR: '#9e4f67',
+    CRULES_STROKE_COLOR: '#854256',
+    FI_POSITIVE_COLOR: '#626d8c',
+    RULE_COLOR: '#f2c14e',
+    RULE_STROKE_COLOR: '#d9a743',
+    BASE_COLOR: '#dcc',
+    BASE_STROKE_COLOR: '#BFB0B0',
+    SECONDARY_BACKGROUND_COLOR: '#fdfdfd',
+    TEXT_COLOR: '#000',
+    INSTANCE_COLOR: '#000',
+    DISTRIBUTION_COLOR: '#dcc',
+    DISTRIBUTION_STROKE_COLOR: '#BFB0B0',
+    CATEGORICAL_INSTANCE_COLOR: '#B3B3B3',
+    CATEGORICAL_INSTANCE_STROKE_COLOR: '#999999',
+    NEGATIVE_FI_COLOR: '#f2aaaa',
+    GRID_COLOR: '#000',
+  },
 };
-
+const FTTemplate = colorSet.default;
 // Format the data (instead of using d3.stack()) and
 // filter out 0 values:
 // extracted from: https://observablehq.com/@eesur/d3-single-stacked-bar
@@ -75,9 +83,9 @@ function FIPERFeatureInstanceValueView() {
         .attr('y', SINGLE_FEATURE_HEIGHT / 6)
         .attr('width', d => barLength(d.value))
         .attr('height', (SINGLE_FEATURE_HEIGHT * 2) / 3)
-        .attr('fill', FTTemplate.CATEGORICAL_VALUE_COLOR)
+        .attr('fill', FTTemplate.CATEGORICAL_INSTANCE_COLOR)
         .attr('fill-opacity', 0.9)
-        .attr('stroke', FTTemplate.STROKE_COLOR);
+        .attr('stroke', FTTemplate.DISTRIBUTION_STROKE_COLOR);
     } else {
       barLength.domain([selection.datum().values[0].eda.min, selection.datum().values[0].eda.max]);
       selection.selectAll('rect.instance-value')
@@ -88,7 +96,7 @@ function FIPERFeatureInstanceValueView() {
         .attr('y', height / 3)
         .attr('width', 2)
         .attr('height', height / 2)
-        .attr('fill', FTTemplate.STROKE_COLOR);
+        .attr('fill', FTTemplate.INSTANCE_COLOR);
     }
 
     return me;
@@ -158,8 +166,8 @@ function FIPERNumericDistributionBoxPlotView() {
       .attr('width', d => xScale(d.value1) - xScale(d.value0))
       .attr('height', (SINGLE_FEATURE_HEIGHT * 2) / 3)
       .attr('fill', FTTemplate.DISTRIBUTION_COLOR)
-      .attr('fill-opacity', 0.2)
-      .attr('stroke', FTTemplate.DISTRIBUTION_COLOR);
+      .attr('fill-opacity', 1)
+      .attr('stroke', FTTemplate.DISTRIBUTION_STROKE_COLOR);
     selection.selectAll('line')
       .data(d => prepareNumericalValues(d.values).filter(v => v.type === 'line'))
       .join('line')
@@ -167,7 +175,7 @@ function FIPERNumericDistributionBoxPlotView() {
       .attr('x2', d => xScale(d.value1))
       .attr('y1', SINGLE_FEATURE_HEIGHT / 2)
       .attr('y2', SINGLE_FEATURE_HEIGHT / 2)
-      .attr('stroke', FTTemplate.DISTRIBUTION_COLOR)
+      .attr('stroke', FTTemplate.DISTRIBUTION_STROKE_COLOR)
       .attr('stroke-width', 1.3);
 
     return me;
@@ -202,6 +210,7 @@ function FIPERNumericDistributionLineChartView() {
   let width = RULES_COLUMN_WIDTH;
   let height = 50;
   let color = FTTemplate.DISTRIBUTION_COLOR;
+  let strokeColor = FTTemplate.DISTRIBUTION_STROKE_COLOR;
   let xScale = d3.scaleLinear();
   const yScale = d3.scaleLinear()
     .domain([0, 1])
@@ -228,8 +237,8 @@ function FIPERNumericDistributionLineChartView() {
       .classed('single-linechart-value', true)
       .attr('d', d => line(d))
       .attr('fill', color)
-      .attr('fill-opacity', 0.2)
-      .attr('stroke', color);
+      .attr('fill-opacity', 1)
+      .attr('stroke', strokeColor);
 
     return me;
   }
@@ -258,6 +267,13 @@ function FIPERNumericDistributionLineChartView() {
   };
 
   // eslint-disable-next-line func-names
+  me.strokeColor = function (_) {
+    if (!arguments.length) return strokeColor;
+    strokeColor = _;
+    return me;
+  };
+
+  // eslint-disable-next-line func-names
   me.xScale = function (_) {
     if (!arguments.length) return xScale;
     xScale = _;
@@ -274,6 +290,7 @@ function FIPERFeatureDistributionView() {
     .range([0, width])
     .domain([0, 1]);
   let color = FTTemplate.DISTRIBUTION_COLOR;
+  let strokeColor = FTTemplate.DISTRIBUTION_STROKE_COLOR;
   let fFilterRule = () => true;
 
   function me(selection) {
@@ -302,8 +319,8 @@ function FIPERFeatureDistributionView() {
         .attr('width', d => barLength(d.value))
         .attr('height', (SINGLE_FEATURE_HEIGHT * 2) / 3)
         .attr('fill', color)
-        .attr('fill-opacity', 0.2)
-        .attr('stroke', color);
+        .attr('fill-opacity', 1)
+        .attr('stroke', strokeColor);
 
       if (selection.datum().status === 1) {
         // draw the symbol for the actual value of the instance
@@ -315,9 +332,9 @@ function FIPERFeatureDistributionView() {
           .attr('y', (d, i) => (i * SINGLE_FEATURE_HEIGHT) + (SINGLE_FEATURE_HEIGHT / 4))
           .attr('width', d => barLength(d.value))
           .attr('height', (SINGLE_FEATURE_HEIGHT / 2))
-          .attr('fill', d => (d.instance_value ? FTTemplate.CATEGORICAL_VALUE_COLOR : color))
+          .attr('fill', d => (d.instance_value ? FTTemplate.CATEGORICAL_INSTANCE_COLOR : color))
           .attr('fill-opacity', d => (d.instance_value ? 1 : 0.2))
-          .attr('stroke', d => (d.instance_value ? FTTemplate.STROKE_COLOR : color));
+          .attr('stroke', d => (d.instance_value ? FTTemplate.CATEGORICAL_INSTANCE_STROKE_COLOR : strokeColor));
         // text for the labels for each value of the feature
         // TODO: constrain the text to the width of the column
         gDetails.selectAll('text.single-bar')
@@ -328,7 +345,7 @@ function FIPERFeatureDistributionView() {
           .attr('y', (d, i) => (i * SINGLE_FEATURE_HEIGHT) + (SINGLE_FEATURE_HEIGHT / 2))
           .attr('text-anchor', 'end')
           .attr('alignment-baseline', 'middle')
-          .attr('font-size', 12)
+          .attr('font-size', 10)
           .text(d => `${d.label}`);
         // text for the values for each value of the feature
         gDetails.selectAll('text.single-bar-value')
@@ -339,7 +356,7 @@ function FIPERFeatureDistributionView() {
           .attr('y', (d, i) => (i * SINGLE_FEATURE_HEIGHT) + (SINGLE_FEATURE_HEIGHT / 2))
           .attr('text-anchor', 'start')
           .attr('alignment-baseline', 'middle')
-          .attr('font-size', 12)
+          .attr('font-size', 10)
           .text(d => `${d.value} (${d.percent.toFixed(2)}%)`);
       }
     } else {
@@ -349,7 +366,8 @@ function FIPERFeatureDistributionView() {
         .xScale(barLength)
         .width(width)
         .height(SINGLE_FEATURE_HEIGHT)
-        .color(color);
+        .color(color)
+        .strokeColor(strokeColor);
       selection.call(ndbpv);
 
       if (selection.datum().status === 1) {
@@ -387,6 +405,13 @@ function FIPERFeatureDistributionView() {
   };
 
   // eslint-disable-next-line func-names
+  me.strokeColor = function (_) {
+    if (!arguments.length) return strokeColor;
+    strokeColor = _;
+    return me;
+  };
+
+  // eslint-disable-next-line func-names
   me.fFilterRule = function (_) {
     if (!arguments.length) return fFilterRule;
     fFilterRule = _;
@@ -404,6 +429,7 @@ function FIPERRulePredicateView() {
     .range([0, width])
     .domain([0, 1]);
   let color = FTTemplate.DISTRIBUTION_COLOR;
+  let strokeColor = FTTemplate.DISTRIBUTION_STROKE_COLOR;
   let isFactualRule = true;
   let selectedCounterRule = 'R0';
 
@@ -433,8 +459,8 @@ function FIPERRulePredicateView() {
         .attr('width', d => barLength(d.value))
         .attr('height', height)
         .attr('fill', color)
-        .attr('fill-opacity', 0.5)
-        .attr('stroke', color);
+        .attr('fill-opacity', 1)
+        .attr('stroke', strokeColor);
     } else {
       // Here we have a numerical feature
       barLength.domain([selection.datum().values[0].eda.min, selection.datum().values[0].eda.max]);
@@ -452,8 +478,8 @@ function FIPERRulePredicateView() {
         .attr('width', d => barLength(d.interval[1]) - barLength(d.interval[0]))
         .attr('height', subHeight)
         .attr('fill', color)
-        .attr('fill-opacity', 0.7)
-        .attr('stroke', color);
+        .attr('fill-opacity', 1)
+        .attr('stroke', strokeColor);
     }
     return me;
   }
@@ -487,6 +513,11 @@ function FIPERRulePredicateView() {
     return me;
   };
 
+  me.strokeColor = function (_) {
+    if (!arguments.length) return strokeColor;
+    strokeColor = _;
+    return me;
+  };
   // eslint-disable-next-line func-names
   me.isFactualRule = function (_) {
     if (!arguments.length) return isFactualRule;
@@ -519,7 +550,7 @@ function FIPERFeatureLabelsView() {
       .attr('x2', d => Math.max(cLenght(d.rname.length) - 5, 0))
       .attr('y1', height / 2)
       .attr('y2', height / 2)
-      .attr('stroke', 'black')
+      .attr('stroke', FTTemplate.GRID_COLOR)
       .style('stroke-dasharray', ('3, 3'))
       .attr('stroke-width', 0.25);
 
@@ -575,7 +606,7 @@ function FIPERFeatureImportanceView() {
       .attr('x2', width)
       .attr('y1', height / 2)
       .attr('y2', height / 2)
-      .attr('stroke', 'black')
+      .attr('stroke', FTTemplate.GRID_COLOR)
       .style('stroke-dasharray', ('3, 3'))
       .attr('stroke-width', 0.25);
     selection.selectAll('line.axis')
@@ -586,7 +617,7 @@ function FIPERFeatureImportanceView() {
       // .attr('x2', 0)
       .attr('y1', 0)
       .attr('y2', SINGLE_FEATURE_HEIGHT)
-      .attr('stroke', 'black')
+      .attr('stroke', FTTemplate.GRID_COLOR)
       .attr('stroke-width', 0.3);
     selection.selectAll('rect')
       .data(d => [d])
@@ -595,7 +626,7 @@ function FIPERFeatureImportanceView() {
       .attr('y', SINGLE_FEATURE_HEIGHT / 4)
       .attr('width', d => barLength(Math.abs(d.feature_importance)))
       .attr('height', SINGLE_FEATURE_HEIGHT / 2)
-      .attr('fill', d => (d.feature_importance < 0 ? FTTemplate.NEGATIVE_FI_COLOR : FTTemplate.SECOND_COLOR));
+      .attr('fill', d => (d.feature_importance < 0 ? FTTemplate.NEGATIVE_FI_COLOR : FTTemplate.FI_POSITIVE_COLOR));
     // selection.selectAll('rect')
     //   .filter(d => d.feature_importance < 0)
     //   .attr('x', d => (width / 2) - barLength(Math.abs(d.feature_importance)));
@@ -654,8 +685,8 @@ function FIPERCRuleGrid() {
       .attr('x2', d => bandScale(d) + (bandScale.bandwidth() / 2))
       .attr('y1', 0)
       .attr('y2', height)
-      .attr('stroke', 'grey')
-      .attr('stroke-width', 0.5)
+      .attr('stroke', FTTemplate.GRID_COLOR)
+      .attr('stroke-width', 0.3)
       .attr('stroke-dasharray', ('3, 3'));
 
     //
@@ -666,7 +697,8 @@ function FIPERCRuleGrid() {
       .attr('cx', d => bandScale(d) + (bandScale.bandwidth() / 2))
       .attr('cy', height / 2)
       .attr('r', 6)
-      .attr('fill', d => ((d === selectedCounterRule) ? FTTemplate.MAIN_COLOR : FTTemplate.BASE_COLOR))
+      .attr('fill', d => ((d === selectedCounterRule) ? FTTemplate.CRULES_COLOR : FTTemplate.BASE_COLOR))
+      .attr('stroke', d => ((d === selectedCounterRule) ? FTTemplate.CRULES_STROKE_COLOR : FTTemplate.BASE_STROKE_COLOR))
       .on('click', (d) => {
         console.log('clicked', d);
         console.log('coso', d3.select(d.target).datum());
@@ -740,20 +772,23 @@ function FIPERView() {
       .width(RULES_COLUMN_WIDTH)
       .height(SINGLE_FEATURE_HEIGHT)
       .color(FTTemplate.DISTRIBUTION_COLOR)
+      .strokeColor(FTTemplate.DISTRIBUTION_STROKE_COLOR)
       .fFilterRule(() => true);
     // Component to visualize the layer for the rules
     const rpv = FIPERRulePredicateView()
       .width(RULES_COLUMN_WIDTH)
       .height(2 * (SINGLE_FEATURE_HEIGHT / 3))
       .subHeight(SINGLE_FEATURE_HEIGHT / 6)
-      .color(FTTemplate.THIRD_COLOR)
+      .color(FTTemplate.RULE_COLOR)
+      .strokeColor(FTTemplate.RULE_STROKE_COLOR)
       .isFactualRule(true);
     // Component to visualize the layer for the counter rules
     const crpv = FIPERRulePredicateView()
       .width(RULES_COLUMN_WIDTH)
       .height(SINGLE_FEATURE_HEIGHT / 6)
       .subHeight(SINGLE_FEATURE_HEIGHT / 6)
-      .color(FTTemplate.MAIN_COLOR)
+      .color(FTTemplate.CRULES_COLOR)
+      .strokeColor(FTTemplate.CRULES_STROKE_COLOR)
       .isFactualRule(false)
       .selectedCounterRule(origDatum.selectedCounterRule);
     // Component to visualize the instance value for each row.
@@ -1316,8 +1351,8 @@ d3.json('/static/instance_180.json').then((data) => {
   const height = (aEntries.length + maxValues) * SINGLE_FEATURE_HEIGHT;
   const svg = d3.select('#app')
     .append('svg')
-    .attr('width', GLOBAL_WIDTH + (4 * GUTTER))
-    .attr('height', height + (4 * GUTTER))
+    .attr('width', GLOBAL_WIDTH)
+    .attr('height', height)
     .attr('style', `background-color: ${FTTemplate.BACKGROUND_COLOR};`)
     .append('g')
     .attr('transform', `translate(${2 * GUTTER}, ${2 * GUTTER})`)
