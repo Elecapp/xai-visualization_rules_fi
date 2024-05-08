@@ -17,20 +17,20 @@ function darkenColor(color, amount) {
 // create a dict for a color template
 const colorSet = {
   default: {
-    BACKGROUND_COLOR: '#fff1e0',
+    BACKGROUND_COLOR: '#ffeee0',
     CRULES_COLOR: 'rgba(158,79,103,0.7)',
     CRULES_STROKE_COLOR: 'rgba(133,66,86,0.7)',
     RULE_COLOR: 'rgba(230,174,85,0.7)',
     RULE_STROKE_COLOR: darkenColor('#E6AE55B3', 1),
     BASE_COLOR: '#dcc',
     BASE_STROKE_COLOR: '#BFB0B0',
-    SECONDARY_BACKGROUND_COLOR: '#fdfdfd',
+    SECONDARY_BACKGROUND_COLOR: '#f8eadc',
     TEXT_COLOR: '#333333',
     INSTANCE_COLOR: '#000',
-    DISTRIBUTION_COLOR: '#f7f7f7',
+    DISTRIBUTION_COLOR: '#f2e6e6',
     DISTRIBUTION_STROKE_COLOR: '#BFB0B0',
-    CATEGORICAL_INSTANCE_COLOR: '#cccccc',
-    CATEGORICAL_INSTANCE_STROKE_COLOR: '#999999',
+    CATEGORICAL_INSTANCE_COLOR: '#f7f7f7',
+    CATEGORICAL_INSTANCE_STROKE_COLOR: '#808080',
     FI_POSITIVE_COLOR: '#4F6A73',
     NEGATIVE_FI_COLOR: '#A27691',
     GRID_COLOR: '#000',
@@ -108,7 +108,7 @@ function FIPERFeatureInstanceValueView() {
         .attr('height', (SINGLE_FEATURE_HEIGHT * 2) / 3)
         .attr('fill', FTTemplate.CATEGORICAL_INSTANCE_COLOR)
         .attr('fill-opacity', 0.9)
-        .attr('stroke', FTTemplate.DISTRIBUTION_STROKE_COLOR);
+        .attr('stroke', FTTemplate.CATEGORICAL_INSTANCE_STROKE_COLOR);
     } else {
       selection.selectAll('rect.bck-instance-value')
         .data(d => d.values)
