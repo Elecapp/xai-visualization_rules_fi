@@ -2,7 +2,7 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 const d3 = require('d3');
 
-const GLOBAL_WIDTH = 900;
+const GLOBAL_WIDTH = 720;
 const SINGLE_FEATURE_HEIGHT = 30;
 const FI_COLUMN_WIDTH = 50;
 const RULES_COLUMN_WIDTH = 300;
