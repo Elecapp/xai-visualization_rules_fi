@@ -9,6 +9,7 @@ const RULES_COLUMN_WIDTH = 300;
 const LABELS_COLUMN_WIDTH = 250;
 const CRULES_GRID_COLUMN_WIDTH = 20;
 const GUTTER = 10;
+const VERTICAL_GUTTER = 5;
 
 // create a function to darken a color using d3
 function darkenColor(color, amount) {
@@ -26,6 +27,7 @@ const colorSet = {
     BASE_STROKE_COLOR: '#BFB0B0',
     SECONDARY_BACKGROUND_COLOR: '#f8eadc',
     TEXT_COLOR: '#333333',
+    VALUE_TEXT_COLOR: '#666666',
     INSTANCE_COLOR: '#000',
     DISTRIBUTION_COLOR: '#f2e6e6',
     DISTRIBUTION_STROKE_COLOR: '#BFB0B0',
@@ -609,7 +611,7 @@ function FIPERRulePredicateView() {
 function FIPERFeatureLabelsView() {
   let width = LABELS_COLUMN_WIDTH;
   let height = 50;
-  const fontSize = 10;
+  const fontSize = 12;
   const cLenght = d3.scaleLinear()
     .range([width, 0])
     .domain([0, 50]); // using a fixed length for labels
@@ -620,8 +622,8 @@ function FIPERFeatureLabelsView() {
       .classed('background', true)
       .attr('x1', 0)
       .attr('x2', d => Math.max(cLenght(d.rname.length) - 5, 0)) // TODO: fix this
-      // .attr('y1', height / 2)
-      // .attr('y2', height / 2)
+      .attr('y1', height / 4)
+      .attr('y2', height / 4)
       .attr('stroke', FTTemplate.GRID_COLOR)
       .style('stroke-dasharray', ('3, 3'))
       .attr('stroke-width', 0.25);
@@ -648,14 +650,15 @@ function FIPERFeatureLabelsView() {
       .attr('text-anchor', 'end')
       .attr('alignment-baseline', 'hanging')
       .attr('font-size', fontSize)
-      .attr('fill', FTTemplate.TEXT_COLOR)
-      .text(d => {
+      .attr('fill', FTTemplate.VALUE_TEXT_COLOR)
+      .text((d) => {
         if (d.type === 'categorical') {
           return d.values.filter(v => v.instance_value === 1).map(v => v.eda.category).join(', ');
         }
         return `${d.values[0].instance_value}`;
+      })
+      .attr('opacity', d => (d.highlighted ? 0 : 1));
 
-      });
 
 
     return me;
@@ -913,7 +916,7 @@ function FIPERView() {
     //   .domain([0, 1, 2])
     //   .range([SINGLE_FEATURE_HEIGHT, 5 * SINGLE_FEATURE_HEIGHT, SINGLE_FEATURE_HEIGHT]);
     yScale.domain([0, features.length])
-      .range([0, features.length * SINGLE_FEATURE_HEIGHT]);
+      .range([0, features.length * (SINGLE_FEATURE_HEIGHT + VERTICAL_GUTTER)]);
 
 
     const gcRuleGrid = selection.selectAll('g.cRuleGrid')
