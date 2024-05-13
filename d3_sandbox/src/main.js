@@ -341,15 +341,15 @@ function FIPERFeatureDistributionView() {
       const total = d3.sum(selection.datum().values, d => d.eda.count);
       barLength.domain([0, total]);
 
-      selection.selectAll('rect.background')
-        .data(d => [d])
-        .join('rect')
-        .classed('background', true)
-        .attr('y', SINGLE_FEATURE_HEIGHT - height - 3)
-        .attr('width', width)
-        .attr('height', height)
-        .attr('fill', 'white')
-        .attr('fill-opacity', 0.4);
+      // selection.selectAll('rect.background')
+      //   .data(d => [d])
+      //   .join('rect')
+      //   .classed('background', true)
+      //   .attr('y', SINGLE_FEATURE_HEIGHT - height - 3)
+      //   .attr('width', width)
+      //   .attr('height', height)
+      //   .attr('fill', 'white')
+      //   .attr('fill-opacity', 0.4);
 
       const gSingleBar = selection.selectAll('g.single-bar')
         .data(d => [d])
@@ -370,13 +370,19 @@ function FIPERFeatureDistributionView() {
         .attr('stroke', strokeColor);
 
       if (selection.datum().status === 1) {
-        // draw the symbol for the actual value of the instance
-        gDetails.selectAll('rect.single-bar')
+        // create an element g that will contain each single value of the feature
+
+        const gFeatureValue = gDetails.selectAll('g.feature-value')
           .data(d => prepareCategoricalValues(d.values))
+          .join('g')
+          .classed('feature-value', true)
+          .attr('transform', (d, i) => `translate(0, ${(i * height * 2) + (height / 2)})`);
+
+        // draw the symbol for the actual value of the instance
+        gFeatureValue.selectAll('rect.single-bar')
+          .data(d => [d])
           .join('rect')
           .classed('single-bar', true)
-          .attr('x', 0)
-          .attr('y', (d, i) => (i * height * 2) + (height / 2))
           .attr('width', d => barLength(d.value))
           .attr('height', (height))
           .attr('fill', d => (d.instance_value ? FTTemplate.CATEGORICAL_INSTANCE_COLOR : color))
@@ -384,24 +390,24 @@ function FIPERFeatureDistributionView() {
           .attr('stroke', d => (d.instance_value ? FTTemplate.CATEGORICAL_INSTANCE_STROKE_COLOR : strokeColor));
         // text for the labels for each value of the feature
         // TODO: constrain the text to the width of the column
-        gDetails.selectAll('text.single-bar')
-          .data(d => prepareCategoricalValues(d.values))
+        gFeatureValue.selectAll('text.single-bar')
+          .data(d => [d])
           .join('text')
           .classed('single-bar', true)
           .attr('x', -GUTTER)
-          .attr('y', (d, i) => (i * height) + (height / 2))
+          .attr('dy', height / 2)
           .attr('text-anchor', 'end')
           .attr('alignment-baseline', 'middle')
           .attr('font-size', 10)
           .attr('fill', FTTemplate.TEXT_COLOR)
           .text(d => `${d.label}`);
         // text for the values for each value of the feature
-        gDetails.selectAll('text.single-bar-value')
-          .data(d => prepareCategoricalValues(d.values))
+        gFeatureValue.selectAll('text.single-bar-value')
+          .data(d => [d])
           .join('text')
           .classed('single-bar-value', true)
           .attr('x', d => barLength(d.value) + GUTTER)
-          .attr('y', (d, i) => (i * height) + (height / 2))
+          .attr('dy', height / 2)
           .attr('text-anchor', 'start')
           .attr('alignment-baseline', 'middle')
           .attr('font-size', 10)
@@ -508,6 +514,10 @@ function FIPERRulePredicateView() {
         .attr('width', d => barLength(d.value))
         .attr('height', height)
         .attr('fill', color)
+        // set y attribute to height if isFactualRule is true and
+        // predicates[selectedCounterRule].exp_value  == predicate['R0´].exp_value
+        .attr('y', d => (!isFactualRule && (d.predicates['R0']) && d.predicates[selectedCounterRule].exp_value === d.predicates['R0'].exp_value ? height : 0))
+
         // .attr('fill', `url(#p_RULE_COLOR)`)
         .attr('fill-opacity', 1)
         .attr('stroke', strokeColor);
@@ -518,12 +528,24 @@ function FIPERRulePredicateView() {
       // create a tranformation of the data to create additional fields for ranges
       // of rule predicate
       const ranges = selection.datum().values[0].predicates[selectedCounterRule] || [];
+      // check if any of the intervals in ranges intersects the interval in selection.datum().values[0].predicates['R0']
+      let intersects = false;
+      if(!isFactualRule && ranges.length && selection.datum().values[0].predicates['R0'] && selection.datum().values[0].predicates['R0'].length) {
+        // there is at least a predicate for the rule
+        const r0 = selection.datum().values[0].predicates['R0'];
+        console.log('r0', r0.map(d => d.interval));
+        console.log('ranges', ranges.map(d => d.interval));
+        // check if r0 intersercts one of the intervals in ranges
+        intersects = ranges.some(d => (d.interval[0] <= r0[0].interval[1]
+          && d.interval[1] >= r0[0].interval[0]));
+      }
 
       gPredicateBar.selectAll('rect.single-predicate-box')
         .data(ranges)
         .join('rect')
         .classed('single-predicate-box', true)
         .attr('x', d => barLength(d.interval[0]))
+        .attr('y', d => (!isFactualRule && intersects ? height : 0))
         .attr('width', d => barLength(d.interval[1]) - barLength(d.interval[0]))
         .attr('height', subHeight)
         .attr('fill', color)
@@ -958,7 +980,7 @@ function FIPERView() {
         .data(d => [d])
         .join('g')
         .classed('crules', true)
-        .attr('transform', `translate(0, ${(4 * SINGLE_FEATURE_HEIGHT) / 6})`)
+        .attr('transform', `translate(0, ${(3 * SINGLE_FEATURE_HEIGHT) / 6})`)
         .call(crpv);
       gValueStack.selectAll('g.crule-grid')
         .data(d => [d])
@@ -1208,7 +1230,7 @@ function reduceUnionIntersection(predicatesWithIntervals) {
 }
 
 
-d3.json('/static/instance_134.json').then((data) => {
+d3.json('/static/instance_34.json').then((data) => {
   // console.log('data', data);
   // preprocess each entry to copmute the expected value for the categorical counterrules
   const tfeature = data.features
