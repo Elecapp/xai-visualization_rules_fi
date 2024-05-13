@@ -348,8 +348,8 @@ function FIPERFeatureDistributionView() {
         .attr('y', SINGLE_FEATURE_HEIGHT - height - 3)
         .attr('width', width)
         .attr('height', height)
-        .attr('fill', "white")
-        .attr('fill-opacity', 0.4)
+        .attr('fill', 'white')
+        .attr('fill-opacity', 0.4);
 
       const gSingleBar = selection.selectAll('g.single-bar')
         .data(d => [d])
@@ -376,9 +376,9 @@ function FIPERFeatureDistributionView() {
           .join('rect')
           .classed('single-bar', true)
           .attr('x', 0)
-          .attr('y', (d, i) => (i * height) + (height / 4))
+          .attr('y', (d, i) => (i * height * 2) + (height / 2))
           .attr('width', d => barLength(d.value))
-          .attr('height', (height / 2))
+          .attr('height', (height))
           .attr('fill', d => (d.instance_value ? FTTemplate.CATEGORICAL_INSTANCE_COLOR : color))
           .attr('fill-opacity', d => (d.instance_value ? 1 : 0.2))
           .attr('stroke', d => (d.instance_value ? FTTemplate.CATEGORICAL_INSTANCE_STROKE_COLOR : strokeColor));
