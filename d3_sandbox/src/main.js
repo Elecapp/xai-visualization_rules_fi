@@ -9,7 +9,8 @@ const RULES_COLUMN_WIDTH = 300;
 const LABELS_COLUMN_WIDTH = 250;
 const CRULES_GRID_COLUMN_WIDTH = 20;
 const GUTTER = 10;
-const VERTICAL_GUTTER = 5;
+const VERTICAL_GUTTER = 6;
+const FONT_SIZE = 11;
 
 // create a function to darken a color using d3
 function darkenColor(color, amount) {
@@ -27,11 +28,11 @@ const colorSet = {
     BASE_STROKE_COLOR: '#BFB0B0',
     SECONDARY_BACKGROUND_COLOR: '#f8eadc',
     TEXT_COLOR: '#333333',
-    VALUE_TEXT_COLOR: '#666666',
+    VALUE_TEXT_COLOR: 'rgba(133,66,86,0.7)',
     INSTANCE_COLOR: '#000',
     DISTRIBUTION_COLOR: '#f2e6e6',
     DISTRIBUTION_STROKE_COLOR: '#BFB0B0',
-    CATEGORICAL_INSTANCE_COLOR: '#f7f7f7',
+    CATEGORICAL_INSTANCE_COLOR: '#ccc2c2',
     CATEGORICAL_INSTANCE_STROKE_COLOR: '#808080',
     FI_POSITIVE_COLOR: '#4F6A73',
     NEGATIVE_FI_COLOR: '#A27691',
@@ -388,7 +389,7 @@ function FIPERFeatureDistributionView() {
           .attr('width', d => barLength(d.value))
           .attr('height', (height))
           .attr('fill', d => (d.instance_value ? FTTemplate.CATEGORICAL_INSTANCE_COLOR : color))
-          .attr('fill-opacity', d => (d.instance_value ? 1 : 0.2))
+          // .attr('fill-opacity', d => (d.instance_value ? 1 : 0.2))
           .attr('stroke', d => (d.instance_value ? FTTemplate.CATEGORICAL_INSTANCE_STROKE_COLOR : strokeColor));
         // text for the labels for each value of the feature
         // TODO: constrain the text to the width of the column
@@ -400,7 +401,7 @@ function FIPERFeatureDistributionView() {
           .attr('dy', height / 2)
           .attr('text-anchor', 'end')
           .attr('alignment-baseline', 'middle')
-          .attr('font-size', 10)
+          .attr('font-size', FONT_SIZE)
           .attr('fill', FTTemplate.TEXT_COLOR)
           .text(d => `${d.label}`);
         // text for the values for each value of the feature
@@ -412,7 +413,7 @@ function FIPERFeatureDistributionView() {
           .attr('dy', height / 2)
           .attr('text-anchor', 'start')
           .attr('alignment-baseline', 'middle')
-          .attr('font-size', 10)
+          .attr('font-size', FONT_SIZE)
           .attr('fill', FTTemplate.TEXT_COLOR)
           .text(d => `${d.value} (${d.percent.toFixed(2)}%)`);
       }
@@ -611,7 +612,7 @@ function FIPERRulePredicateView() {
 function FIPERFeatureLabelsView() {
   let width = LABELS_COLUMN_WIDTH;
   let height = 50;
-  const fontSize = 12;
+  const fontSize = FONT_SIZE;
   const cLenght = d3.scaleLinear()
     .range([width, 0])
     .domain([0, 50]); // using a fixed length for labels
@@ -657,7 +658,7 @@ function FIPERFeatureLabelsView() {
         }
         return `${d.values[0].instance_value}`;
       })
-      .attr('opacity', d => (d.highlighted ? 0 : 1));
+      .attr('opacity', d => ((d.highlighted && d.type === 'categorical') ? 0 : 1));
 
 
 
@@ -935,7 +936,7 @@ function FIPERView() {
       .attr('text-anchor', 'middle')
       .attr('dy', -SINGLE_FEATURE_HEIGHT / 1.5)
       .attr('alignment-baseline', 'bottom')
-      .attr('font-size', 11)
+      .attr('font-size', FONT_SIZE)
       .attr('fill', FTTemplate.TEXT_COLOR)
       .text(d => d)
       .on('click', (d) => {
