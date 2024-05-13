@@ -956,13 +956,13 @@ function FIPERView() {
       .data(features)
       .join('g')
       .classed('feature', true)
-      .attr('transform', (d, i) => `translate(0, ${yScale(i) + (d.status > 1 ? (d.rows + 1) * SINGLE_FEATURE_HEIGHT : 0)})`);
+      .attr('transform', (d, i) => `translate(0, ${yScale(i) + (d.status > 1 ? (d.rows) * SINGLE_FEATURE_HEIGHT : 0)})`);
     // a rectangle to set the widht and height of the feature row.
     gFeatures.selectAll('rect.background')
       .data(d => [d])
       .join('rect')
       .classed('background', true)
-      .attr('y', 0)
+      .attr('y', -6)
       .attr('width', width)
       .attr('height', d => (d.status === 1 ? (d.rows + 1) * SINGLE_FEATURE_HEIGHT : SINGLE_FEATURE_HEIGHT))
       .attr('fill', d => highlightScale(d.highlighted));
