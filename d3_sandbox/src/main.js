@@ -88,7 +88,7 @@ function prepareCategoricalValues(data) {
 
 function FIPERFeatureInstanceValueView() {
   let width = RULES_COLUMN_WIDTH;
-  let height = 50;
+  let height = 51110;
   const barLength = d3.scaleLinear()
     .range([0, width])
     .domain([0, 1]);
@@ -103,33 +103,33 @@ function FIPERFeatureInstanceValueView() {
         .join('rect')
         .classed('instance-value', true)
         .attr('x', d => barLength(d.cumulative))
-        .attr('y', SINGLE_FEATURE_HEIGHT / 6)
+        // .attr('y', height / 6)
         .attr('width', d => barLength(d.value))
-        .attr('height', (SINGLE_FEATURE_HEIGHT * 2) / 3)
+        .attr('height', height)
         .attr('fill', FTTemplate.CATEGORICAL_INSTANCE_COLOR)
-        .attr('fill-opacity', 0.9)
+        // .attr('fill-opacity', 0.9)
         .attr('stroke', FTTemplate.CATEGORICAL_INSTANCE_STROKE_COLOR);
     } else {
-      selection.selectAll('rect.bck-instance-value')
-        .data(d => d.values)
-        .join('rect')
-        .classed('bck-instance-value', true)
-        .attr('x', 0)
-        .attr('y', SINGLE_FEATURE_HEIGHT / 1.5)
-        .attr('width', RULES_COLUMN_WIDTH)
-        .attr('height', height / 6)
-        .attr('fill', FTTemplate.DISTRIBUTION_COLOR)
-        .attr('fill-opacity', 0.9)
-        .attr('stroke', null);
+      // selection.selectAll('rect.bck-instance-value')
+      //   .data(d => d.values)
+      //   .join('rect')
+      //   .classed('bck-instance-value', true)
+      //   .attr('x', 0)
+      //   .attr('y', SINGLE_FEATURE_HEIGHT / 1.5)
+      //   .attr('width', RULES_COLUMN_WIDTH)
+      //   .attr('height', height / 6)
+      //   .attr('fill', FTTemplate.DISTRIBUTION_COLOR)
+      //   .attr('fill-opacity', 0.9)
+      //   .attr('stroke', null);
       barLength.domain([selection.datum().values[0].eda.min, selection.datum().values[0].eda.max]);
       selection.selectAll('rect.instance-value')
         .data(d => d.values)
         .join('rect')
         .classed('instance-value', true)
         .attr('x', d => (barLength(d.instance_value) - 2))
-        .attr('y', height / 5)
+        // .attr('y', height / 5)
         .attr('width', 1.5)
-        .attr('height', height / 1.5)
+        .attr('height', height)
         .attr('fill', FTTemplate.INSTANCE_COLOR);
     }
 
@@ -270,7 +270,7 @@ function FIPERNumericDistributionLineChartView() {
       .data(d => [prepareNumericalValues(d.values)])
       .join('path')
       .classed('single-linechart-value', true)
-      .attr('d', d => line(d))
+      .attr('d', d => `${line(d)}Z`)
       .attr('fill', color)
       .attr('fill-opacity', 1)
       .attr('transform', `translate(0, -${SINGLE_FEATURE_HEIGHT / 6})`)
@@ -291,7 +291,7 @@ function FIPERNumericDistributionLineChartView() {
   me.height = function (_) {
     if (!arguments.length) return height;
     height = _;
-    yScale.range([(height * 5) / 6, height / 6]);
+    yScale.range([height, height / 6]);
     return me;
   };
 
@@ -321,7 +321,7 @@ function FIPERNumericDistributionLineChartView() {
 
 function FIPERFeatureDistributionView() {
   let width = RULES_COLUMN_WIDTH;
-  let height = 50;
+  let height = 5022222;
   const barLength = d3.scaleLinear()
     .range([0, width])
     .domain([0, 1]);
@@ -334,26 +334,37 @@ function FIPERFeatureDistributionView() {
       .data(d => [d])
       .join('g')
       .classed('details', true)
-      .attr('transform', `translate(0, ${1.5 * SINGLE_FEATURE_HEIGHT})`)
+      .attr('transform', `translate(0, ${1.5 * height})`)
       .attr('visibility', d => (d.status === 1 ? 'visible' : 'hidden'));
 
     if (selection.datum().type === 'categorical') {
       const total = d3.sum(selection.datum().values, d => d.eda.count);
       barLength.domain([0, total]);
 
+      selection.selectAll('rect.background')
+        .data(d => [d])
+        .join('rect')
+        .classed('background', true)
+        .attr('y', SINGLE_FEATURE_HEIGHT - height - 3)
+        .attr('width', width)
+        .attr('height', height)
+        .attr('fill', "white")
+        .attr('fill-opacity', 0.4)
+
       const gSingleBar = selection.selectAll('g.single-bar')
         .data(d => [d])
         .join('g')
         .classed('single-bar', true);
+
 
       gSingleBar.selectAll('rect.single-bar')
         .data(d => prepareCategoricalValues(d.values))
         .join('rect')
         .classed('single-bar', true)
         .attr('x', d => barLength(d.cumulative))
-        .attr('y', SINGLE_FEATURE_HEIGHT / 6)
+        // .attr('y', height / 6)
         .attr('width', d => barLength(d.value))
-        .attr('height', (SINGLE_FEATURE_HEIGHT * 2) / 3)
+        .attr('height', height)
         .attr('fill', color)
         .attr('fill-opacity', 1)
         .attr('stroke', strokeColor);
@@ -365,9 +376,9 @@ function FIPERFeatureDistributionView() {
           .join('rect')
           .classed('single-bar', true)
           .attr('x', 0)
-          .attr('y', (d, i) => (i * SINGLE_FEATURE_HEIGHT) + (SINGLE_FEATURE_HEIGHT / 4))
+          .attr('y', (d, i) => (i * height) + (height / 4))
           .attr('width', d => barLength(d.value))
-          .attr('height', (SINGLE_FEATURE_HEIGHT / 2))
+          .attr('height', (height / 2))
           .attr('fill', d => (d.instance_value ? FTTemplate.CATEGORICAL_INSTANCE_COLOR : color))
           .attr('fill-opacity', d => (d.instance_value ? 1 : 0.2))
           .attr('stroke', d => (d.instance_value ? FTTemplate.CATEGORICAL_INSTANCE_STROKE_COLOR : strokeColor));
@@ -378,7 +389,7 @@ function FIPERFeatureDistributionView() {
           .join('text')
           .classed('single-bar', true)
           .attr('x', -GUTTER)
-          .attr('y', (d, i) => (i * SINGLE_FEATURE_HEIGHT) + (SINGLE_FEATURE_HEIGHT / 2))
+          .attr('y', (d, i) => (i * height) + (height / 2))
           .attr('text-anchor', 'end')
           .attr('alignment-baseline', 'middle')
           .attr('font-size', 10)
@@ -390,7 +401,7 @@ function FIPERFeatureDistributionView() {
           .join('text')
           .classed('single-bar-value', true)
           .attr('x', d => barLength(d.value) + GUTTER)
-          .attr('y', (d, i) => (i * SINGLE_FEATURE_HEIGHT) + (SINGLE_FEATURE_HEIGHT / 2))
+          .attr('y', (d, i) => (i * height) + (height / 2))
           .attr('text-anchor', 'start')
           .attr('alignment-baseline', 'middle')
           .attr('font-size', 10)
@@ -403,7 +414,7 @@ function FIPERFeatureDistributionView() {
       const ndbpv = FIPERNumericDistributionLineChartView()
         .xScale(barLength)
         .width(width)
-        .height(SINGLE_FEATURE_HEIGHT)
+        .height((SINGLE_FEATURE_HEIGHT * 2) / 3)
         .color(color)
         .strokeColor(strokeColor);
       selection.call(ndbpv);
@@ -513,7 +524,6 @@ function FIPERRulePredicateView() {
         .join('rect')
         .classed('single-predicate-box', true)
         .attr('x', d => barLength(d.interval[0]))
-        .attr('y', height - subHeight)
         .attr('width', d => barLength(d.interval[1]) - barLength(d.interval[0]))
         .attr('height', subHeight)
         .attr('fill', color)
@@ -776,7 +786,7 @@ function FIPERCRuleGrid() {
   };
 
   // eslint-disable-next-line func-names
-  me.bandScale = function (_) {
+  me.bandScale = function () {
     if (!arguments.length) return bandScale;
     return me;
   };
@@ -810,14 +820,14 @@ function FIPERView() {
     // Component to handle the distribution of the values of the descriptor of each feature
     const fdv = FIPERFeatureDistributionView()
       .width(RULES_COLUMN_WIDTH)
-      .height(SINGLE_FEATURE_HEIGHT)
+      .height((SINGLE_FEATURE_HEIGHT * 3) / 6)
       .color(FTTemplate.DISTRIBUTION_COLOR)
       .strokeColor(FTTemplate.DISTRIBUTION_STROKE_COLOR)
       .fFilterRule(() => true);
     // Component to visualize the layer for the rules
     const rpv = FIPERRulePredicateView()
       .width(RULES_COLUMN_WIDTH)
-      .height(2 * (SINGLE_FEATURE_HEIGHT / 3))
+      .height(SINGLE_FEATURE_HEIGHT / 6)
       .subHeight(SINGLE_FEATURE_HEIGHT / 6)
       .color('url(#p_RULE_COLOR)') // .color(FTTemplate.RULE_COLOR) for solid color
       .strokeColor(FTTemplate.RULE_STROKE_COLOR)
@@ -834,7 +844,7 @@ function FIPERView() {
     // Component to visualize the instance value for each row.
     const fivv = FIPERFeatureInstanceValueView()
       .width(RULES_COLUMN_WIDTH)
-      .height(SINGLE_FEATURE_HEIGHT);
+      .height((SINGLE_FEATURE_HEIGHT * 3) / 6);
     // Component to visualize the labels of the features at the beginning of each row
     const flv = FIPERFeatureLabelsView()
       .width(LABELS_COLUMN_WIDTH)
@@ -881,8 +891,6 @@ function FIPERView() {
       .attr('fill', FTTemplate.TEXT_COLOR)
       .text(d => d)
       .on('click', (d) => {
-        console.log('clicked', d);
-        console.log('coso', d3.select(d.target).datum());
         selection.datum(({
           ...origDatum,
           selectedCounterRule: d3.select(d.target).datum(),
@@ -935,17 +943,22 @@ function FIPERView() {
         .join('g')
         .classed('instance-value', true)
         .call(fivv);
+      // The element g.rule is translated to the bottom part of the feature row
+      // it is computed as 1 - 1/6 of the height of the feature row
+      // thus it is 4/6
       gValueStack.selectAll('g.rule')
         .data(d => [d])
         .join('g')
         .classed('rule', true)
-        .attr('transform', `translate(0, ${SINGLE_FEATURE_HEIGHT / 6})`)
+        .attr('transform', `translate(0, ${(3 * SINGLE_FEATURE_HEIGHT) / 6})`)
         .call(rpv);
+      // The element g.crules is translated to the bottom part of the feature row
+      // below the element g.rule. Thus it is 4/6 + 1/6 = 5/6
       gValueStack.selectAll('g.crules')
         .data(d => [d])
         .join('g')
         .classed('crules', true)
-        .attr('transform', `translate(0, ${(2 * SINGLE_FEATURE_HEIGHT) / 3})`)
+        .attr('transform', `translate(0, ${(4 * SINGLE_FEATURE_HEIGHT) / 6})`)
         .call(crpv);
       gValueStack.selectAll('g.crule-grid')
         .data(d => [d])
@@ -1195,7 +1208,7 @@ function reduceUnionIntersection(predicatesWithIntervals) {
 }
 
 
-d3.json('/static/instance_180.json').then((data) => {
+d3.json('/static/instance_134.json').then((data) => {
   // console.log('data', data);
   // preprocess each entry to copmute the expected value for the categorical counterrules
   const tfeature = data.features
@@ -1418,7 +1431,7 @@ d3.json('/static/instance_180.json').then((data) => {
       .attr('patternUnits', 'userSpaceOnUse')
       .attr('width', spacing + (thickness / 2))
       .attr('height', spacing + (thickness / 2))
-      .attr('patternTransform', (key==='CRULES_COLOR'?`rotate(${rotation})`:`rotate(${-rotation})` ))
+      .attr('patternTransform', (key === 'CRULES_COLOR' ? `rotate(${rotation})` : `rotate(${-rotation})`))
       .append('line')
       .attr('x1', 0)
       .attr('y1', 0)
