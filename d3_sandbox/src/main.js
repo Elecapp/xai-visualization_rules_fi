@@ -516,7 +516,7 @@ function FIPERRulePredicateView() {
         .attr('fill', color)
         // set y attribute to height if isFactualRule is true and
         // predicates[selectedCounterRule].exp_value  == predicate['R0´].exp_value
-        .attr('y', d => (!isFactualRule && (d.predicates['R0']) && d.predicates[selectedCounterRule].exp_value === d.predicates['R0'].exp_value ? height : 0))
+        .attr('y', d => (!isFactualRule && (d.predicates.R0) && d.predicates[selectedCounterRule].exp_value === d.predicates.R0.exp_value ? height : 0))
 
         // .attr('fill', `url(#p_RULE_COLOR)`)
         .attr('fill-opacity', 1)
@@ -528,16 +528,16 @@ function FIPERRulePredicateView() {
       // create a tranformation of the data to create additional fields for ranges
       // of rule predicate
       const ranges = selection.datum().values[0].predicates[selectedCounterRule] || [];
-      // check if any of the intervals in ranges intersects the interval in selection.datum().values[0].predicates['R0']
+      // check if any of the intervals in ranges intersects the interval in
+      // selection.datum().values[0].predicates['R0']
       let intersects = false;
-      if(!isFactualRule && ranges.length && selection.datum().values[0].predicates['R0'] && selection.datum().values[0].predicates['R0'].length) {
+      if (!isFactualRule && ranges.length && selection.datum().values[0].predicates.R0
+        && selection.datum().values[0].predicates.R0.length) {
         // there is at least a predicate for the rule
-        const r0 = selection.datum().values[0].predicates['R0'];
-        console.log('r0', r0.map(d => d.interval));
-        console.log('ranges', ranges.map(d => d.interval));
+        const r0 = selection.datum().values[0].predicates.R0[0];
         // check if r0 intersercts one of the intervals in ranges
-        intersects = ranges.some(d => (d.interval[0] <= r0[0].interval[1]
-          && d.interval[1] >= r0[0].interval[0]));
+        intersects = ranges.some(d => (d.interval[0] <= r0.interval[1]
+          && d.interval[1] >= r0.interval[0]));
       }
 
       gPredicateBar.selectAll('rect.single-predicate-box')
@@ -607,34 +607,57 @@ function FIPERRulePredicateView() {
 }
 
 function FIPERFeatureLabelsView() {
-  let width = FI_COLUMN_WIDTH;
+  let width = LABELS_COLUMN_WIDTH;
   let height = 50;
+  const fontSize = 10;
   const cLenght = d3.scaleLinear()
     .range([width, 0])
-    .domain([0, 26]); // using a fixed length for labels
+    .domain([0, 50]); // using a fixed length for labels
   function me(selection) {
     selection.selectAll('line.background')
       .data(d => [d])
       .join('line')
       .classed('background', true)
       .attr('x1', 0)
-      .attr('x2', d => Math.max(cLenght(d.rname.length) - 5, 0))
-      .attr('y1', height / 2)
-      .attr('y2', height / 2)
+      .attr('x2', d => Math.max(cLenght(d.rname.length) - 5, 0)) // TODO: fix this
+      // .attr('y1', height / 2)
+      // .attr('y2', height / 2)
       .attr('stroke', FTTemplate.GRID_COLOR)
       .style('stroke-dasharray', ('3, 3'))
       .attr('stroke-width', 0.25);
 
-    selection.selectAll('text')
+    selection.selectAll('text.feature-name')
       .data(d => [d])
       .join('text')
+      .classed('feature-name', true)
       .attr('x', width)
-      .attr('y', SINGLE_FEATURE_HEIGHT / 2)
+      .attr('y', height / 4)
       .attr('text-anchor', 'end')
       .attr('alignment-baseline', 'middle')
-      .attr('font-size', 11)
+      .attr('font-size', fontSize)
+      .attr('font-weight', 'bold')
       .attr('fill', FTTemplate.TEXT_COLOR)
       .text(d => `${d.rname}`);
+
+    selection.selectAll('text.feature-value')
+      .data(d => [d])
+      .join('text')
+      .classed('feature-value', true)
+      .attr('x', width)
+      .attr('y', height / 2)
+      .attr('text-anchor', 'end')
+      .attr('alignment-baseline', 'hanging')
+      .attr('font-size', fontSize)
+      .attr('fill', FTTemplate.TEXT_COLOR)
+      .text(d => {
+        if (d.type === 'categorical') {
+          return d.values.filter(v => v.instance_value === 1).map(v => v.eda.category).join(', ');
+        }
+        return `${d.values[0].instance_value}`;
+
+      });
+
+
     return me;
   }
 
@@ -1230,7 +1253,7 @@ function reduceUnionIntersection(predicatesWithIntervals) {
 }
 
 
-d3.json('/static/instance_34.json').then((data) => {
+d3.json('/static/instance_180.json').then((data) => {
   // console.log('data', data);
   // preprocess each entry to copmute the expected value for the categorical counterrules
   const tfeature = data.features
