@@ -26,7 +26,7 @@ const colorSet = {
     RULE_STROKE_COLOR: darkenColor('#E6AE55B3', 1),
     BASE_COLOR: '#dcc',
     BASE_STROKE_COLOR: '#BFB0B0',
-    SECONDARY_BACKGROUND_COLOR: '#f8eadc',
+    SECONDARY_BACKGROUND_COLOR: '#fff8f2',
     TEXT_COLOR: '#333333',
     VALUE_TEXT_COLOR: 'rgba(133,66,86,0.8)',
     OTHER_TEXT_COLOR: 'rgba(51,51,51,0.8)',
@@ -964,7 +964,7 @@ function FIPERView() {
       .classed('background', true)
       .attr('y', 0)
       .attr('width', width)
-      .attr('height', d => (d.status === 1 ? (d.rows + 2) * SINGLE_FEATURE_HEIGHT : SINGLE_FEATURE_HEIGHT))
+      .attr('height', d => (d.status === 1 ? (d.rows + 1) * SINGLE_FEATURE_HEIGHT : SINGLE_FEATURE_HEIGHT))
       .attr('fill', d => highlightScale(d.highlighted));
 
     // for each feature row, we have 3 groups:
