@@ -3,9 +3,10 @@
 const d3 = require('d3');
 
 const SINGLE_FEATURE_HEIGHT = 30;
-const FI_COLUMN_WIDTH = 100;
+const FI_COLUMN_WIDTH = 50;
 const RULES_COLUMN_WIDTH = 300;
 const LABELS_COLUMN_WIDTH = 250;
+const CRULES_GRID_COLUMN_WIDTH = 100;
 const GUTTER = 10;
 
 // create a dict for a color template
@@ -19,6 +20,8 @@ const FTTemplate = {
   TEXT_COLOR: '#000',
   STROKE_COLOR: '#000',
   DISTRIBUTION_COLOR: 'grey',
+  CATEGORICAL_VALUE_COLOR: '#999999',
+  NEGATIVE_FI_COLOR: '#f37744',
 };
 
 // Format the data (instead of using d3.stack()) and
@@ -45,8 +48,8 @@ function prepareCategoricalValues(data) {
       label: d.eda.category,
       percent: percent(d.eda.count),
       instance_value: d.instance_value,
-      rule: d.rule,
-      crules: d.crules,
+      predicates: d.predicates,
+      name: d.name,
     };
   }).filter(d => d.value > 0);
 }
@@ -67,11 +70,13 @@ function FIPERFeatureInstanceValueView() {
         .data(d => prepareCategoricalValues(d.values).filter(v => v.instance_value > 0))
         .join('rect')
         .classed('instance-value', true)
-        .attr('x', d => (barLength(d.cumulative) + (barLength(d.value) / 2)) - 2)
-        .attr('y', height / 3)
-        .attr('width', 2)
-        .attr('height', (height / 3))
-        .attr('fill', FTTemplate.STROKE_COLOR);
+        .attr('x', d => barLength(d.cumulative))
+        .attr('y', SINGLE_FEATURE_HEIGHT / 6)
+        .attr('width', d => barLength(d.value))
+        .attr('height', (SINGLE_FEATURE_HEIGHT * 2) / 3)
+        .attr('fill', FTTemplate.CATEGORICAL_VALUE_COLOR)
+        .attr('fill-opacity', 0.9)
+        .attr('stroke', FTTemplate.STROKE_COLOR);
     } else {
       barLength.domain([selection.datum().values[0].eda.min, selection.datum().values[0].eda.max]);
       selection.selectAll('rect.instance-value')
@@ -300,6 +305,7 @@ function FIPERFeatureDistributionView() {
         .attr('stroke', color);
 
       if (selection.datum().status === 1) {
+        // draw the symbol for the actual value of the instance
         gDetails.selectAll('rect.single-bar')
           .data(d => prepareCategoricalValues(d.values))
           .join('rect')
@@ -308,9 +314,11 @@ function FIPERFeatureDistributionView() {
           .attr('y', (d, i) => (i * SINGLE_FEATURE_HEIGHT) + (SINGLE_FEATURE_HEIGHT / 4))
           .attr('width', d => barLength(d.value))
           .attr('height', (SINGLE_FEATURE_HEIGHT / 2))
-          .attr('fill', color)
-          .attr('fill-opacity', d => (d.instance_value ? 0.5 : 0.2))
-          .attr('stroke', color);
+          .attr('fill', d => (d.instance_value ? FTTemplate.CATEGORICAL_VALUE_COLOR : color))
+          .attr('fill-opacity', d => (d.instance_value ? 1 : 0.2))
+          .attr('stroke', d => (d.instance_value ? FTTemplate.STROKE_COLOR : color));
+        // text for the labels for each value of the feature
+        // TODO: constrain the text to the width of the column
         gDetails.selectAll('text.single-bar')
           .data(d => prepareCategoricalValues(d.values))
           .join('text')
@@ -321,6 +329,7 @@ function FIPERFeatureDistributionView() {
           .attr('alignment-baseline', 'middle')
           .attr('font-size', 12)
           .text(d => `${d.label}`);
+        // text for the values for each value of the feature
         gDetails.selectAll('text.single-bar-value')
           .data(d => prepareCategoricalValues(d.values))
           .join('text')
@@ -395,9 +404,8 @@ function FIPERRulePredicateView() {
     .domain([0, 1]);
   let color = FTTemplate.DISTRIBUTION_COLOR;
   let isFactualRule = true;
-  let selectedCounterRule = 'C0';
+  let selectedCounterRule = 'R0';
 
-  let fFilterRule = d => (d.rule.length > 0 && d.instance_value > 0);
 
   function me(selection) {
     const gPredicateBar = selection.selectAll('g.single-predicate')
@@ -415,14 +423,16 @@ function FIPERRulePredicateView() {
         .classed('single-predicate-bar', true);
 
       gSingleBar.selectAll('rect.single-predicate-bar')
-        .data(d => prepareCategoricalValues(d.values).filter(fFilterRule))
+        .data(d => prepareCategoricalValues(d.values)
+          .filter(v => v.predicates[selectedCounterRule] &&
+            (v.predicates[selectedCounterRule].exp_value > 0)))
         .join('rect')
         .classed('single-predicate-bar', true)
         .attr('x', d => barLength(d.cumulative))
         .attr('width', d => barLength(d.value))
         .attr('height', height)
         .attr('fill', color)
-        .attr('fill-opacity', 0.7)
+        .attr('fill-opacity', 0.5)
         .attr('stroke', color);
     } else {
       // Here we have a numerical feature
@@ -430,58 +440,15 @@ function FIPERRulePredicateView() {
 
       // create a tranformation of the data to create additional fields for ranges
       // of rule predicate
-      const ranges = [];
-      if (isFactualRule) {
-        selection.datum().values.filter(fFilterRule).forEach((rv) => {
-          rv.rule.forEach((r) => {
-            // r[0] contains the predicate descriptor
-            // r[1] contains the predicted class of the black box model
-            const pred = r[0];
-            if (pred.op.indexOf('>') > -1) {
-              // the predicate is greater than a threshold
-              ranges.push({
-                low: Math.max(pred.thr, selection.datum().values[0].eda.min),
-                high: selection.datum().values[0].eda.max,
-              });
-            } else if (pred.op.indexOf('<') > -1) {
-              // the predicate is lower than a threshold
-              ranges.push({
-                low: selection.datum().values[0].eda.min,
-                high: Math.min(pred.thr, selection.datum().values[0].eda.max),
-              });
-            }
-          });
-        });
-      } else {
-        selection.datum().values.filter(fFilterRule).forEach((rv) => {
-          rv.crules[selectedCounterRule].forEach((r) => {
-            // r[0] contains the predicate descriptor
-            // r[1] contains the predicted class of the black box model
-            const pred = r[0];
-            // check if it intersects the rule
-            if (pred.op.indexOf('>') > -1) {
-              // the predicate is greater than a threshold
-              ranges.push({
-                low: Math.max(pred.thr, selection.datum().values[0].eda.min),
-                high: selection.datum().values[0].eda.max,
-              });
-            } else if (pred.op.indexOf('<') > -1) {
-              // the predicate is lower than a threshold
-              ranges.push({
-                low: selection.datum().values[0].eda.min,
-                high: Math.min(pred.thr, selection.datum().values[0].eda.max),
-              });
-            }
-          });
-        });
-      }
+      const ranges = selection.datum().values[0].predicates[selectedCounterRule] || [];
+
       gPredicateBar.selectAll('rect.single-predicate-box')
         .data(ranges)
         .join('rect')
         .classed('single-predicate-box', true)
-        .attr('x', d => barLength(d.low))
+        .attr('x', d => barLength(d.interval[0]))
         .attr('y', height - subHeight)
-        .attr('width', d => barLength(d.high) - barLength(d.low))
+        .attr('width', d => barLength(d.interval[1]) - barLength(d.interval[0]))
         .attr('height', subHeight)
         .attr('fill', color)
         .attr('fill-opacity', 0.7)
@@ -523,13 +490,6 @@ function FIPERRulePredicateView() {
   me.isFactualRule = function (_) {
     if (!arguments.length) return isFactualRule;
     isFactualRule = _;
-    return me;
-  };
-
-  // eslint-disable-next-line func-names
-  me.fFilterRule = function (_) {
-    if (!arguments.length) return fFilterRule;
-    fFilterRule = _;
     return me;
   };
 
@@ -596,7 +556,7 @@ function FIPERFeatureImportanceView() {
   let height = 50;
   let fiExtent = [0, 1];
   const barLength = d3.scaleLinear()
-    .range([0, width / 2])
+    .range([0, width])
     .domain(fiExtent);
 
   /**
@@ -621,8 +581,8 @@ function FIPERFeatureImportanceView() {
       .data(d => [d])
       .join('line')
       .classed('axis', true)
-      .attr('x1', width / 2)
-      .attr('x2', width / 2)
+      // .attr('x1', 0)
+      // .attr('x2', 0)
       .attr('y1', 0)
       .attr('y2', SINGLE_FEATURE_HEIGHT)
       .attr('stroke', 'black')
@@ -630,21 +590,21 @@ function FIPERFeatureImportanceView() {
     selection.selectAll('rect')
       .data(d => [d])
       .join('rect')
-      .attr('x', (width / 2))
+      // .attr('x', (width / 2))
       .attr('y', SINGLE_FEATURE_HEIGHT / 4)
       .attr('width', d => barLength(Math.abs(d.feature_importance)))
       .attr('height', SINGLE_FEATURE_HEIGHT / 2)
-      .attr('fill', d => (d.feature_importance < 0 ? FTTemplate.DISTRIBUTION_COLOR : FTTemplate.SECOND_COLOR));
-    selection.selectAll('rect')
-      .filter(d => d.feature_importance < 0)
-      .attr('x', d => (width / 2) - barLength(Math.abs(d.feature_importance)));
+      .attr('fill', d => (d.feature_importance < 0 ? FTTemplate.NEGATIVE_FI_COLOR : FTTemplate.SECOND_COLOR));
+    // selection.selectAll('rect')
+    //   .filter(d => d.feature_importance < 0)
+    //   .attr('x', d => (width / 2) - barLength(Math.abs(d.feature_importance)));
   }
 
   // eslint-disable-next-line
   me.width = function (_) {
     if (!arguments.length) return width;
     width = _;
-    barLength.range([0, width / 2]);
+    barLength.range([0, width]);
     return me;
   };
 
@@ -666,26 +626,93 @@ function FIPERFeatureImportanceView() {
   return me;
 }
 
-const GLOBAL_WIDTH = 700;
+function FIPERCRuleGrid() {
+  let width = FI_COLUMN_WIDTH;
+  let height = 50;
+  let cruleList = [];
+  let selectedCounterRule = 'C0';
+  const bandScale = d3.scaleBand()
+    .range([0, width])
+    .padding(0.1);
 
-function EvaluatePredicate(val1, op, val2) {
-  switch (op) {
-    case '>':
-      return val1 > val2;
-    case '<':
-      return val1 < val2;
-    case '>=':
-      return val1 >= val2;
-    case '<=':
-      return val1 <= val2;
-    case '==':
-      return val1 === val2;
-    case '!=':
-      return val1 !== val2;
-    default:
-      return false;
+
+  /**
+   * This function receives one single ```g``` element and visualizes its
+   * content using the associated data.
+   * @param selection the element containing a single datum with the
+   *  metadata of the feature to be visualized.
+   */
+  function me(selection) {
+    // we need to scan all the values elements, to extract the exp_value from the dictionary
+    // predicates...
+
+    selection.selectAll('line.gridLine')
+      .data(Object.keys(selection.datum().cRulesPredicateMap))
+      .join('line')
+      .classed('gridLine', true)
+      .attr('x1', d => bandScale(d) + (bandScale.bandwidth() / 2))
+      .attr('x2', d => bandScale(d) + (bandScale.bandwidth() / 2))
+      .attr('y1', 0)
+      .attr('y2', height)
+      .attr('stroke', 'grey')
+      .attr('stroke-width', 0.5)
+      .attr('stroke-dasharray', ('3, 3'));
+
+    //
+    selection.selectAll('circle.predicate')
+      .data(bandScale.domain().filter(d => selection.datum().cRulesPredicateMap[d]))
+      .join('circle')
+      .classed('predicate', true)
+      .attr('cx', d => bandScale(d) + (bandScale.bandwidth() / 2))
+      .attr('cy', height / 2)
+      .attr('r', 6)
+      .attr('fill', d => ((d === selectedCounterRule) ? FTTemplate.MAIN_COLOR : FTTemplate.BASE_COLOR))
+      .on('click', (d) => {
+        console.log('clicked', d);
+        console.log('coso', d3.select(d.target).datum());
+      });
   }
+
+  // eslint-disable-next-line
+  me.width = function (_) {
+    if (!arguments.length) return width;
+    width = _;
+    bandScale.range([0, width]);
+    return me;
+  };
+
+  // eslint-disable-next-line
+  me.height = function (_) {
+    if (!arguments.length) return height;
+    height = _;
+    return me;
+  };
+
+  // eslint-disable-next-line
+  me.cruleList = function (_) {
+    if (!arguments.length) return cruleList;
+    cruleList = _;
+    bandScale.domain(cruleList);
+    return me;
+  };
+
+  // eslint-disable-next-line func-names
+  me.selectedCounterRule = function (_) {
+    if (!arguments.length) return selectedCounterRule;
+    selectedCounterRule = _;
+    return me;
+  };
+
+  // eslint-disable-next-line func-names
+  me.bandScale = function (_) {
+    if (!arguments.length) return bandScale;
+    return me;
+  };
+
+  return me;
 }
+
+const GLOBAL_WIDTH = 900;
 
 function FIPERView() {
   // global width of the whole visualization
@@ -695,19 +722,10 @@ function FIPERView() {
   // scale to position each feature row. HINT: maybe a d3.scaleBand() is better?
   const yScale = d3.scaleLinear();
 
-  function filterFalsifiedConditions(fv, cruleSelector) {
-    if (cruleSelector in fv.crules) {
-      const pred = EvaluatePredicate(fv.instance_value, fv.crules[cruleSelector][0][0].op, fv.crules[cruleSelector][0][0].thr);
-      console.log('fv', fv, fv.instance_value, fv.crules[cruleSelector][0][0].op, fv.crules[cruleSelector][0][0].thr);
-      console.log('check', pred);
-      return !pred;
-    }
-    return false;
-  }
-
   function me(selection) {
-    console.log('features', selection.datum());
-    const features = selection.datum();
+    const origDatum = selection.datum();
+    // console.log('origDatum', origDatum);
+    const features = selection.datum().features;
     // determine the maximum value of Feature Importance to fit the scale. We use absolute value
     // to ignore the sign of the feature importance
     const fiMax = d3.max(features, d => Math.abs(d.feature_importance));
@@ -732,15 +750,13 @@ function FIPERView() {
       .color(FTTemplate.THIRD_COLOR)
       .isFactualRule(true);
     // Component to visualize the layer for the counter rules
-    const CounterRuleId = 'C1'; // TODO: to make it dynamic
     const crpv = FIPERRulePredicateView()
       .width(RULES_COLUMN_WIDTH)
       .height(SINGLE_FEATURE_HEIGHT / 6)
       .subHeight(SINGLE_FEATURE_HEIGHT / 6)
       .color(FTTemplate.MAIN_COLOR)
       .isFactualRule(false)
-      .selectedCounterRule(CounterRuleId)
-      .fFilterRule(f => filterFalsifiedConditions(f, CounterRuleId));
+      .selectedCounterRule(origDatum.selectedCounterRule);
     // Component to visualize the instance value for each row.
     const fivv = FIPERFeatureInstanceValueView()
       .width(RULES_COLUMN_WIDTH)
@@ -749,6 +765,14 @@ function FIPERView() {
     const flv = FIPERFeatureLabelsView()
       .width(LABELS_COLUMN_WIDTH)
       .height(SINGLE_FEATURE_HEIGHT);
+    // component to visualize the grid of available counter rules
+    const fcrg = FIPERCRuleGrid()
+      .width(CRULES_GRID_COLUMN_WIDTH)
+      .height(SINGLE_FEATURE_HEIGHT)
+      .cruleList(origDatum.counterRules)
+      .selectedCounterRule(origDatum.selectedCounterRule);
+
+
     // colorscale to be used to highlight the selected feature
     const highlightScale = d3.scaleOrdinal()
       .domain([false, true])
@@ -759,6 +783,57 @@ function FIPERView() {
     //   .range([SINGLE_FEATURE_HEIGHT, 5 * SINGLE_FEATURE_HEIGHT, SINGLE_FEATURE_HEIGHT]);
     yScale.domain([0, features.length])
       .range([0, features.length * SINGLE_FEATURE_HEIGHT]);
+
+    const gcRuleGrid = selection.selectAll('g.cRuleGrid')
+      .data(d => [d])
+      .join('g')
+      .classed('cRuleGrid', true)
+      .attr('transform', `translate(${LABELS_COLUMN_WIDTH +
+        FI_COLUMN_WIDTH + RULES_COLUMN_WIDTH + (3 * GUTTER)}, 0)`);
+
+    gcRuleGrid.selectAll('text.label')
+      .data(d => d.counterRules)
+      .join('text')
+      .classed('label', true)
+      .attr('x', d => fcrg.bandScale()(d) + (fcrg.bandScale().bandwidth()))
+      .attr('y', SINGLE_FEATURE_HEIGHT / 2)
+      .attr('text-anchor', 'middle')
+      .attr('dy', -SINGLE_FEATURE_HEIGHT / 2)
+      .attr('alignment-baseline', 'bottom')
+      .attr('font-size', 11)
+      .text(d => d)
+      .on('click', (d) => {
+        console.log('clicked', d);
+        console.log('coso', d3.select(d.target).datum());
+        selection.datum(({
+          ...origDatum,
+          selectedCounterRule: d3.select(d.target).datum(),
+        }));
+        me(selection);
+      });
+    // gcRuleGrid.selectAll('line.gridLine')
+    //   .data(d => d.counterRules)
+    //   .join('line')
+    //   .classed('gridLine', true)
+    //   .attr('x1', d => fcrg.bandScale()(d) + ((fcrg.bandScale().bandwidth()) / 2))
+    //   .attr('x2', d => fcrg.bandScale()(d) + ((fcrg.bandScale().bandwidth()) / 2))
+    //   .attr('y1', 0)
+    //   .attr('y2', (SINGLE_FEATURE_HEIGHT * 20)) // TODO: substitute 20 by the number of rows taken by the feature length
+    //   .attr('stroke', 'grey')
+    //   .attr('stroke-width', 0.5)
+    //   .attr('stroke-dasharray', ('3, 3'));
+    //
+    // // Add a new line with the same characteristics and at the same distance
+    // gcRuleGrid.append('line')
+    //   .attr('x1', d => (d.counterRules.length + 1) * fcrg.bandScale().bandwidth())
+    //   .attr('x2', d => (d.counterRules.length + 1) * fcrg.bandScale().bandwidth())
+    //   .attr('y1', 0)
+    //   .attr('y2', d => (d.features.length) * SINGLE_FEATURE_HEIGHT * 20) // TODO: substitute 20 by the number of rows taken by the feature length
+    //   .attr('stroke', 'grey')
+    //   .attr('stroke-width', 0.5)
+    //   .attr('stroke-dasharray', ('3, 3'));
+
+    // create a group for each feature row
     const gFeatures = selection.selectAll('g.feature')
       .data(features)
       .join('g')
@@ -785,19 +860,23 @@ function FIPERView() {
         .data(d => [d])
         .join('g')
         .classed('feature-importance', true)
-        .attr('transform', `translate(${LABELS_COLUMN_WIDTH + RULES_COLUMN_WIDTH + (2 * GUTTER)}, 0)`);
+        .attr('transform', `translate(${LABELS_COLUMN_WIDTH + GUTTER}, 0)`);
       gFeatureImportance.call(ffv);
       const gValueStack = d3.select(n[j]).selectAll('g.feature-values')
         .data(d => [d])
         .join('g')
         .classed('feature-values', true)
-        .attr('transform', `translate(${LABELS_COLUMN_WIDTH + GUTTER}, 0)`);
+        .attr('transform', `translate(${LABELS_COLUMN_WIDTH + FI_COLUMN_WIDTH + (2 * GUTTER)}, 0)`);
       gValueStack.selectAll('g.distribution')
         .data(d => [d])
         .join('g')
         .classed('distribution', true)
         .call(fdv);
-
+      gValueStack.selectAll('g.instance-value')
+        .data(d => [d])
+        .join('g')
+        .classed('instance-value', true)
+        .call(fivv);
       gValueStack.selectAll('g.rule')
         .data(d => [d])
         .join('g')
@@ -808,13 +887,15 @@ function FIPERView() {
         .data(d => [d])
         .join('g')
         .classed('crules', true)
-        .attr('transform', `translate(0, ${2 * SINGLE_FEATURE_HEIGHT / 3})`)
+        .attr('transform', `translate(0, ${(2 * SINGLE_FEATURE_HEIGHT) / 3})`)
         .call(crpv);
-      gValueStack.selectAll('g.instance-value')
+      gValueStack.selectAll('g.crule-grid')
         .data(d => [d])
         .join('g')
-        .classed('instance-value', true)
-        .call(fivv);
+        .classed('crule-grid', true)
+        .attr('transform', `translate(${LABELS_COLUMN_WIDTH + FI_COLUMN_WIDTH + (2 * GUTTER)}, 0)`)
+        .call(fcrg);
+
 
       const gLabels = d3.select(n[j]).selectAll('g.feature-labels')
         .data(d => [d])
@@ -873,7 +954,10 @@ function FIPERView() {
         }
         return d;
       });
-      selection.datum(newFeatures);
+      selection.datum(({
+        ...origDatum,
+        features: newFeatures,
+      }));
       me(selection);
     });
   }
@@ -895,43 +979,359 @@ function FIPERView() {
   return me;
 }
 
+function computeBooleanExpectedValue(value) {
+  // Given a dictionary like following, return an expected boolean value for it
+  // {
+  //     "att": "present_emp_since=.. >= 7 years",
+  //     "op": "<=",
+  //     "thr": 0.6689819991588593,
+  //     "is_continuous": true,
+  //     "exp_value": 15
+  // }
+  if (value.op === '<=') {
+    return !(value.thr >= 0);
+  }
+  if (value.op === '<') {
+    return !(value.thr > 0);
+  }
+  if (value.op === '>=') {
+    return (value.thr <= 1);
+  }
+  if (value.op === '>') {
+    return (value.thr < 1);
+  }
 
-d3.json('/static/instance_6_mush.json').then((data) => {
-  const rFeatures = d3.group(data.features, d => d.rname);
+  return false;
+}
+
+function adjustCounterRuleMatrix(matrix) {
+  // For a feature we take the matrix of the form:
+  // crmatrix:
+  //   Array(4)
+  //     0 : (5) [ [0,0], [0,0], [-1, undef], [-1, undef], [-1, undef]]
+  //     1 : (5) [ [-1, undef], [0,0], [-1, undef], [-1, undef], [-1, undef] ]
+  //     2 : (5) [ [-1, undef], [0,0], [-1, undef], [-1, undef], [-1, undef] ]
+  //     3 : (5) [ [-1, undef], [0,0], [-1, undef], [-1, undef], [-1, undef] ]
+  // and we adjust the values to have only 0 or 1 in the first compoent.
+  //  The approach is the following:
+  // 1. If the maximum value of one row is 0, then all the -1 are changed to 1
+  // 2. If the maximum value of one row is 1, then all the -1 are changed to 0
+  // 3. If the maximum value of one row is -1, then we do nothing
+
+  return matrix.map((r) => {
+    const max = d3.max(r, v => v.exp_value);
+    const minV = d3.min(r, v => v.consequent_class);
+    if (max === 0) {
+      return r.map(d => (d.exp_value === -1 ? ({ exp_value: 1, conquent_class: minV }) : d));
+    }
+    if (max === 1) {
+      return r.map(d => (d.exp_value === -1 ? ({ exp_value: 0, conquent_class: minV }) : d));
+    }
+    return r;
+  });
+}
+
+function rewritePredicatesCategorical(c, e, ruleSelector) { // for each CounterRule,
+  // for each value in the current Feature
+  return e.values.map(v =>
+  // check if the current CR id is present in the crules of the current value
+    (v[ruleSelector] ? v[ruleSelector][c] : []),
+  )
+  // in case of categorical features, we have a list of possible predicates
+  // of the form {exp_value: false, conquent_class: 0}
+    .map(v => ((v) ? v[0] : ({ exp_value: -1, consequent_class: 27 })))
+  // for those entries where there is an array, we take the expected value
+  // of the first element
+  // .map(v => [v[0].exp_value, v[1]])
+  //  we convert the boolean values as 0 or 1. We leave -1 values as they are
+    .map(d => ({
+      // eslint-disable-next-line no-nested-ternary
+      exp_value: d.exp_value === -1 ? -1 : (d.exp_value ? 1 : 0),
+      consequent_class: d.consequent_class,
+    }));
+}
+
+function resolveInterval(pred, min, max) {
+  // this function receives a predicate and the minimum and maximum values of the feature.
+  // The predicate has the following form: {att: 'att_name', op: '>', thr: 0.5}
+  // The function returns the interval that the predicate represents.
+  // we enforce that the interval is within the bounds of the feature
+
+  if (pred.op === '>') {
+    return [Math.max(pred.thr, min), max];
+  }
+  if (pred.op === '>=') {
+    return [Math.max(pred.thr, min), max];
+  }
+  if (pred.op === '<') {
+    return [min, Math.min(pred.thr, max)];
+  }
+  if (pred.op === '<=') {
+    return [min, Math.min(pred.thr, max)];
+  }
+  return [min, max];
+}
+
+function intervalUnion(intervals) {
+  // this function receives a list of intervals and returns the union of all the intervals.
+  // Each interval has the form {consequent_class: 0, interval: [0.5, 1]}
+  if (intervals.length === 0) {
+    return [];
+  }
+  intervals.sort((a, b) => a.interval[0] - b.interval[0]);
+  const union = [];
+  let current = intervals[0];
+
+  for (let i = 1; i < intervals.length; i += 1) {
+    if (intervals[i].interval[0] <= current.interval[1]) {
+      current.interval[1] = Math.min(current.interval[1], intervals[i].interval[1]);
+    } else {
+      union.push(current);
+      current = intervals[i];
+    }
+  }
+
+  union.push(current);
+  return union;
+}
+
+function intervalIntersection(intervals) {
+  // this function receives a list of intervals and returns the intersection of all the intervals.
+  // Each interval has the form {consequent_class: 0, interval: [0.5, 1]}
+  if (intervals.length < 2) {
+    return [];
+  }
+
+  intervals.sort((a, b) => a.interval[0] - b.interval[0]);
+  const intersection = [];
+  let current = intervals[0];
+
+  for (let i = 1; i < intervals.length; i += 1) {
+    if (intervals[i].interval[0] <= current.interval[1]) {
+      current.interval[0] = Math.max(current.interval[0], intervals[i].interval[0]);
+      current.interval[1] = Math.min(current.interval[1], intervals[i].interval[1]);
+    } else {
+      intersection.push(current);
+      current = intervals[i];
+    }
+  }
+
+  intersection.push(current);
+  return intersection;
+}
+
+function reduceUnionIntersection(predicatesWithIntervals) {
+  // this function receives a list of predicates with intervals and returns the intersection
+  // of all the intervals.
+  // Each predicate has the form {att: 'att_name', op: '>', thr: 0.5, interval: [0.5, 1]}
+  if (predicatesWithIntervals.length === 0) {
+    return [];
+  }
+
+  let result = intervalIntersection(predicatesWithIntervals);
+  if (result.length === 0) {
+    result = intervalUnion(predicatesWithIntervals);
+  }
+
+  return result;
+}
+
+
+d3.json('/static/instance_31.json').then((data) => {
+  // console.log('data', data);
+  // preprocess each entry to copmute the expected value for the categorical counterrules
+  const tfeature = data.features
+    // .filter(f => f.type === 'categorical')
+    // .filter(f => Object.entries(f.crules).length)
+    .map((f) => {
+      if (f.type === 'categorical') {
+        return {
+          ...f,
+          // transform the original crules into a dictionary where each entry is extended
+          // with the expected value of the rule
+          crules: Object.fromEntries(
+            Object.keys(f.crules)
+              .map(k => [k,
+                f.crules[k].map(p =>
+                  ({
+                    exp_value: computeBooleanExpectedValue(p[0]),
+                    consequent_class: p[1],
+                  }),
+                )])),
+          rules: Object.fromEntries(
+            ['R0'].map(k => [k,
+              f.rule.map(p =>
+                ({
+                  exp_value: computeBooleanExpectedValue(p[0]),
+                  consequent_class: p[1],
+                }),
+              )],
+            ).filter(v => v[1].length > 0),
+          ),
+        };
+      }
+      return f;
+    });
+  // console.log('tfeature', tfeature);
+
+  // all values of a single features are grouped by the name of the feature
+  const rFeatures = d3.group(tfeature, d => d.rname);
+  // after the aggregation, we create a list of objects with the properties of the feature
   const rEntries = Array.from(rFeatures.entries())
     .map(d => ({
       rname: d[0],
-      values: d[1],
+      values: d[1].map(v => ({ ...v, rvalues: [], crvalues: [] })),
       feature_importance: d3.sum(d[1], f => f.feature_importance),
       type: d[1][0].type,
-      highlighted: false,
-      status: 0,
-      rows: 1,
-    }))
-    .map(f => ({ ...f,
-      rvalues: f.values.filter(v =>
-        ((v.rule.length > 0) && (v.instance_value > 0))) }))
-    .map(f => ({ ...f,
-      crvalues: f.values.filter(v =>
-        Object.keys(v.crules).length) }))
-    .map(f => ({
-      ...f,
-      values: f.values.map(v => ({
-        ...v,
-        crvalues: f.crvalues,
-        rvalues: f.rvalues,
-      })),
+      highlighted: false, // flag if a feature is selected
+      status: 0, // flag to indicate the status of the feature. 0: normal, 1: selected
+      rows: d[1].length, // how many distinct values the feature has
+      // rvalues: [], // to be removed
+      // crvalues: [], // to be removed
     }));
-  rEntries.sort((a, b) => (b.feature_importance) - (a.feature_importance));
+    // since each value as references to a rule or counterrules, we select only those values
+    // that have a rule, i.e. the corresponding v.rule array is not empty and the value is the
+    // instance value
+  // console.log('rEntries', rEntries);
 
   // this list contains the set of all the counterRules that are present in the explanation
   // object. This is used to create the legend and selectors of the visualization
-  const CRulesList = Array.from(new Set(rEntries.filter(v => v.crvalues.length)
-    .map(v => v.values.map(d => Object.keys(d.crules))
-      .filter(v2 => v2.length)).flat().flat()));
-  console.log('CRulesList', CRulesList);
-  const maxValues = d3.max(rEntries, d => d.values.length);
-  const height = (rEntries.length + maxValues) * SINGLE_FEATURE_HEIGHT;
+  const CRulesList = Array.from(new Set(rEntries
+    .map(e => e.values.map(v =>
+      (v.crules ? Object.entries(v.crules).map(r => r[0]) : []))).flat().flat()));
+
+  // console.log('CRulesList', CRulesList);
+  // first manage the counter rules for categorical features
+  // =============================================================
+  //            CATEGORICAL FEATURES
+  // =============================================================
+  const cEntries = rEntries.filter(e => e.type === 'categorical').map(e => ({
+    ...e,
+    crmatrix: adjustCounterRuleMatrix(CRulesList.map(c => rewritePredicatesCategorical(c, e, 'crules'))),
+    rmatrix: adjustCounterRuleMatrix(['R0'].map(c => rewritePredicatesCategorical(c, e, 'rules'))),
+  })).map(e => ({
+    ...e,
+    values: e.values.map((v, i) => ({
+      ...v,
+      // we add the bitmap to decide if this value is visible for a specific counter rule.
+      predicates: Object.fromEntries(
+        CRulesList.map((_, j) => [_, e.crmatrix[j][i]])
+          .concat([['R0', e.rmatrix[0][i]]])
+          .filter(vv => vv[1].exp_value >= 0),
+      ),
+    }))
+      .map(v => ({
+        eda: v.eda,
+        feature_importance: v.feature_importance,
+        instance_value: v.instance_value,
+        name: v.name,
+        rname: v.rname,
+        type: v.type,
+        predicates: v.predicates,
+      })),
+  })).map(e => ({
+    ...e,
+    cRulesPredicateMap: Object.fromEntries(CRulesList.map(c => [c, (
+      e.values.map((v) => {
+        if (c in v.predicates) {
+          return v.predicates[c].exp_value > 0;
+        }
+        return false;
+      }).reduce((acc, curr) => acc || curr, false)
+    )])),
+    rulePredicateMap: Object.fromEntries(['R0'].map(c => [c, (
+      e.values.map((v) => {
+        if (c in v.predicates) {
+          return v.predicates[c].exp_value > 0;
+        }
+        return false;
+      }).reduce((acc, curr) => acc || curr, false)
+    )])),
+  }));
+
+  // then manage the counter rules for numerical features
+  // =============================================================
+  //            NUMERICAL FEATURES
+  // =============================================================
+  const nEntries = rEntries.filter(e => e.type === 'numeric')
+    // transform each predicate into a dictionary with the consequent class
+    .map(e => ({
+      ...e,
+      values: e.values.map(v => ({
+        ...v,
+        rule: v.rule.map(r => ({
+          attr: r[0].att,
+          op: r[0].op,
+          thr: r[0].thr,
+          consequent_class: r[1],
+        })),
+        predicates: Object.fromEntries(
+          CRulesList.map(c => [c, v.crules[c] ? v.crules[c].map(r => ({
+            attr: r[0].att,
+            op: r[0].op,
+            thr: r[0].thr,
+            consequent_class: r[1],
+          })) : []])
+            .concat([['R0', v.rule.map(r => ({
+              attr: r[0].att,
+              op: r[0].op,
+              thr: r[0].thr,
+              consequent_class: r[1],
+            }))]])
+            .map(pr => [pr[0], pr[1].map(pl => ({
+              ...pl,
+              // find the actual interval of the predicate
+              interval: resolveInterval(pl, v.eda.min, v.eda.max),
+            }))])
+            .map(pr => [pr[0], reduceUnionIntersection(pr[1])]),
+        ),
+      })),
+    })).map(e => ({
+      ...e,
+      cRulesPredicateMap: Object.fromEntries(CRulesList.map(c => [c, (
+        e.values.map((v) => {
+          if (c in v.predicates) {
+            return v.predicates[c].length > 0;
+          }
+          return false;
+        }).reduce((acc, curr) => acc || curr, false)
+      )])),
+      rulePredicateMap: Object.fromEntries(['R0'].map(c => [c, (
+        e.values.map((v) => {
+          if (c in v.predicates) {
+            return v.predicates[c].length > 0;
+          }
+          return false;
+        }).reduce((acc, curr) => acc || curr, false)
+      )])),
+    }));
+
+
+  // concatenate cEntries and nEntries into a single array
+  const aEntries = cEntries.concat(nEntries);
+  // sort the entries by feature importance
+  aEntries.sort((a, b) => (b.feature_importance) - (a.feature_importance));
+
+  // sort the entries by the number of true values in cRulesPredicateMap
+  // aEntries.sort((a, b) =>
+  //   (d3.sum(Object.values(b.cRulesPredicateMap)) - d3.sum(Object.values(a.cRulesPredicateMap))));
+
+  // sort the entries by the number of true values in rulePredicateMap
+  // aEntries.sort((a, b) =>
+  //   (d3.sum(Object.values(b.rulePredicateMap)) - d3.sum(Object.values(a.rulePredicateMap))));
+
+
+  const explanationDescriptor = {
+    features: aEntries,
+    counterRules: CRulesList,
+    bb_pred: data.bb_pred,
+    dt_pred: data.dt_pred,
+    selectedCounterRule: 'C0',
+  };
+
+
+  const maxValues = d3.max(aEntries, d => d.values.length);
+  const height = (aEntries.length + maxValues) * SINGLE_FEATURE_HEIGHT;
   const svg = d3.select('#app')
     .append('svg')
     .attr('width', GLOBAL_WIDTH + (4 * GUTTER))
@@ -943,5 +1343,5 @@ d3.json('/static/instance_6_mush.json').then((data) => {
 
 
   const fv = FIPERView().width(GLOBAL_WIDTH).height(height);
-  svg.datum(rEntries).call(fv);
+  svg.datum(explanationDescriptor).call(fv);
 });
