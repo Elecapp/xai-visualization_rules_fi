@@ -20,15 +20,16 @@ function darkenColor(color, amount) {
 const colorSet = {
   default: {
     BACKGROUND_COLOR: '#ffeee0',
-    CRULES_COLOR: 'rgba(158,79,103,0.7)',
-    CRULES_STROKE_COLOR: 'rgba(133,66,86,0.7)',
-    RULE_COLOR: 'rgba(230,174,85,0.7)',
+    CRULES_COLOR: 'rgba(158,79,103,1)',
+    CRULES_STROKE_COLOR: 'rgba(133,66,86,1)',
+    RULE_COLOR: 'rgba(230,174,85,1)',
     RULE_STROKE_COLOR: darkenColor('#E6AE55B3', 1),
     BASE_COLOR: '#dcc',
     BASE_STROKE_COLOR: '#BFB0B0',
     SECONDARY_BACKGROUND_COLOR: '#f8eadc',
     TEXT_COLOR: '#333333',
-    VALUE_TEXT_COLOR: 'rgba(133,66,86,0.7)',
+    VALUE_TEXT_COLOR: 'rgba(133,66,86,0.8)',
+    OTHER_TEXT_COLOR: 'rgba(51,51,51,0.8)',
     INSTANCE_COLOR: '#000',
     DISTRIBUTION_COLOR: '#f2e6e6',
     DISTRIBUTION_STROKE_COLOR: '#BFB0B0',
@@ -374,7 +375,9 @@ function FIPERFeatureDistributionView() {
 
       if (selection.datum().status === 1) {
         // create an element g that will contain each single value of the feature
-
+        // calculate the maximum length of the label to fit the text in the space,
+        // considering the font size and the monospace font
+        const maxLabelLength = Math.floor(LABELS_COLUMN_WIDTH / 5.5);
         const gFeatureValue = gDetails.selectAll('g.feature-value')
           .data(d => prepareCategoricalValues(d.values))
           .join('g')
@@ -392,7 +395,6 @@ function FIPERFeatureDistributionView() {
           // .attr('fill-opacity', d => (d.instance_value ? 1 : 0.2))
           .attr('stroke', d => (d.instance_value ? FTTemplate.CATEGORICAL_INSTANCE_STROKE_COLOR : strokeColor));
         // text for the labels for each value of the feature
-        // TODO: constrain the text to the width of the column
         gFeatureValue.selectAll('text.single-bar')
           .data(d => [d])
           .join('text')
@@ -402,8 +404,9 @@ function FIPERFeatureDistributionView() {
           .attr('text-anchor', 'end')
           .attr('alignment-baseline', 'middle')
           .attr('font-size', FONT_SIZE)
-          .attr('fill', FTTemplate.TEXT_COLOR)
-          .text(d => `${d.label}`);
+          .attr('font-weight', d => ((d.instance_value === 1) ? 'bold' : 'normal'))
+          .attr('fill', d => ((d.instance_value === 1) ? FTTemplate.VALUE_TEXT_COLOR : FTTemplate.OTHER_TEXT_COLOR))
+          .text(d => (d.label.length > maxLabelLength ? `${d.label.substring(0, maxLabelLength - 2)}…` : d.label));
         // text for the values for each value of the feature
         gFeatureValue.selectAll('text.single-bar-value')
           .data(d => [d])
@@ -414,7 +417,7 @@ function FIPERFeatureDistributionView() {
           .attr('text-anchor', 'start')
           .attr('alignment-baseline', 'middle')
           .attr('font-size', FONT_SIZE)
-          .attr('fill', FTTemplate.TEXT_COLOR)
+          .attr('fill', d => ((d.instance_value === 1) ? FTTemplate.VALUE_TEXT_COLOR : FTTemplate.OTHER_TEXT_COLOR))
           .text(d => `${d.value} (${d.percent.toFixed(2)}%)`);
       }
     } else {
@@ -611,18 +614,20 @@ function FIPERRulePredicateView() {
 
 function FIPERFeatureLabelsView() {
   let width = LABELS_COLUMN_WIDTH;
+  const maxLabelLength = Math.floor(LABELS_COLUMN_WIDTH / 5.5);
   let height = 50;
   const fontSize = FONT_SIZE;
+  // create a scale to fit the length of the feature name
   const cLenght = d3.scaleLinear()
-    .range([width, 0])
-    .domain([0, 50]); // using a fixed length for labels
+    .domain([0, maxLabelLength])
+    .range([0, width]);
   function me(selection) {
     selection.selectAll('line.background')
       .data(d => [d])
       .join('line')
       .classed('background', true)
-      .attr('x1', 0)
-      .attr('x2', d => Math.max(cLenght(d.rname.length) - 5, 0)) // TODO: fix this
+      .attr('x1', GUTTER)
+      .attr('x2', d => (cLenght(d.rname.length) - GUTTER))
       .attr('y1', height / 4)
       .attr('y2', height / 4)
       .attr('stroke', FTTemplate.GRID_COLOR)
@@ -640,7 +645,7 @@ function FIPERFeatureLabelsView() {
       .attr('font-size', fontSize)
       .attr('font-weight', 'bold')
       .attr('fill', FTTemplate.TEXT_COLOR)
-      .text(d => `${d.rname}`);
+      .text(d => (d.rname.length > maxLabelLength ? `${d.rname.substring(0, maxLabelLength - 2)}…` : d.rname));
 
     selection.selectAll('text.feature-value')
       .data(d => [d])
@@ -659,7 +664,6 @@ function FIPERFeatureLabelsView() {
         return `${d.values[0].instance_value}`;
       })
       .attr('opacity', d => ((d.highlighted && d.type === 'categorical') ? 0 : 1));
-
 
 
     return me;
@@ -1458,7 +1462,7 @@ d3.json('/static/instance_180.json').then((data) => {
     .attr('height', height)
     .attr('style', `background-color: ${FTTemplate.BACKGROUND_COLOR};`)
     .append('g')
-    .attr('transform', `translate(${2 * GUTTER}, ${2 * GUTTER})`)
+    .attr('transform', `translate(0, ${2 * GUTTER})`)
   ;
 
 
