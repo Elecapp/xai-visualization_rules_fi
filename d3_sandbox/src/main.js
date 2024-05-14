@@ -9,8 +9,20 @@ const RULES_COLUMN_WIDTH = 300;
 const LABELS_COLUMN_WIDTH = 250;
 const CRULES_GRID_COLUMN_WIDTH = 20;
 const GUTTER = 10;
-const VERTICAL_GUTTER = 6;
+const VERTICAL_GUTTER = 5;
+const MENU_HEIGHT = 80;
 const FONT_SIZE = 11;
+
+function fontScaleFactor(fontSize) {
+  const cWidthFactor = d3.scaleLinear()
+    .domain([8, 13])
+    .range([2, 2.6]);
+  const fontScale = d3.scaleLinear()
+    .domain([0, 10])
+    .range([0, fontSize]);
+  return Math.floor((LABELS_COLUMN_WIDTH * cWidthFactor(fontSize)) / (fontScale(fontSize)));
+}
+const maxLabelLength = fontScaleFactor(FONT_SIZE);
 
 // create a function to darken a color using d3
 function darkenColor(color, amount) {
@@ -377,7 +389,8 @@ function FIPERFeatureDistributionView() {
         // create an element g that will contain each single value of the feature
         // calculate the maximum length of the label to fit the text in the space,
         // considering the font size and the monospace font
-        const maxLabelLength = Math.floor(LABELS_COLUMN_WIDTH / 5.5);
+
+
         const gFeatureValue = gDetails.selectAll('g.feature-value')
           .data(d => prepareCategoricalValues(d.values))
           .join('g')
@@ -614,13 +627,12 @@ function FIPERRulePredicateView() {
 
 function FIPERFeatureLabelsView() {
   let width = LABELS_COLUMN_WIDTH;
-  const maxLabelLength = Math.floor(LABELS_COLUMN_WIDTH / 5.5);
   let height = 50;
-  const fontSize = FONT_SIZE;
   // create a scale to fit the length of the feature name
   const cLenght = d3.scaleLinear()
     .domain([0, maxLabelLength])
     .range([0, width]);
+
   function me(selection) {
     selection.selectAll('line.background')
       .data(d => [d])
@@ -628,6 +640,7 @@ function FIPERFeatureLabelsView() {
       .classed('background', true)
       .attr('x1', GUTTER)
       .attr('x2', d => (cLenght(d.rname.length) - GUTTER))
+      .attr('x2', d => cLenght(Math.floor(maxLabelLength - d.rname.length)) - (2 * GUTTER))
       .attr('y1', height / 4)
       .attr('y2', height / 4)
       .attr('stroke', FTTemplate.GRID_COLOR)
@@ -642,7 +655,7 @@ function FIPERFeatureLabelsView() {
       .attr('y', height / 4)
       .attr('text-anchor', 'end')
       .attr('alignment-baseline', 'middle')
-      .attr('font-size', fontSize)
+      .attr('font-size', FONT_SIZE)
       .attr('font-weight', 'bold')
       .attr('fill', FTTemplate.TEXT_COLOR)
       .text(d => (d.rname.length > maxLabelLength ? `${d.rname.substring(0, maxLabelLength - 2)}…` : d.rname));
@@ -655,11 +668,12 @@ function FIPERFeatureLabelsView() {
       .attr('y', height / 2)
       .attr('text-anchor', 'end')
       .attr('alignment-baseline', 'hanging')
-      .attr('font-size', fontSize)
+      .attr('font-size', FONT_SIZE)
       .attr('fill', FTTemplate.VALUE_TEXT_COLOR)
       .text((d) => {
         if (d.type === 'categorical') {
-          return d.values.filter(v => v.instance_value === 1).map(v => v.eda.category).join(', ');
+          const label = d.values.filter(v => v.instance_value === 1).map(v => v.eda.category).join(', ');
+          return (label.length > maxLabelLength ? `${label.substring(0, maxLabelLength - 2)}…` : label);
         }
         return `${d.values[0].instance_value}`;
       })
@@ -673,7 +687,7 @@ function FIPERFeatureLabelsView() {
   me.width = function (_) {
     if (!arguments.length) return width;
     width = _;
-    cLenght.range([width, 0]);
+    cLenght.range([0, width]);
     return me;
   };
 
@@ -921,20 +935,29 @@ function FIPERView() {
     yScale.domain([0, features.length])
       .range([0, features.length * (SINGLE_FEATURE_HEIGHT + VERTICAL_GUTTER)]);
 
+    // create a group to contain the menu elements:
+    // 1. the feature importance
+    // 2. the distribution of the values
+    // 3. the labels
+    const gMenu = selection.selectAll('g.menu')
+      .data(d => [d])
+      .join('g')
+      .classed('menu', true)
+      .attr('transform', 'translate(0, 0)');
 
-    const gcRuleGrid = selection.selectAll('g.cRuleGrid')
+    const gcRuleGrid = gMenu.selectAll('g.cRuleGrid')
       .data(d => [d])
       .join('g')
       .classed('cRuleGrid', true)
       .attr('transform', `translate(${LABELS_COLUMN_WIDTH + GUTTER +
       RULES_COLUMN_WIDTH + GUTTER}, 0)`);
-
+    // TODO: move the following code to the "g" menu section
     gcRuleGrid.selectAll('text.label')
       .data(d => d.counterRules)
       .join('text')
       .classed('label', true)
       .attr('x', d => fcrg.bandScale()(d) + GUTTER)
-      .attr('y', SINGLE_FEATURE_HEIGHT / 2)
+      .attr('y', (SINGLE_FEATURE_HEIGHT * 2) / 6)
       .attr('text-anchor', 'middle')
       .attr('dy', -SINGLE_FEATURE_HEIGHT / 1.5)
       .attr('alignment-baseline', 'bottom')
@@ -1453,14 +1476,18 @@ d3.json('/static/instance_180.json').then((data) => {
 
 
   const maxValues = d3.max(aEntries, d => d.values.length);
-  const height = (aEntries.length + maxValues) * SINGLE_FEATURE_HEIGHT;
+  // eslint-disable-next-line max-len
+  const height = ((aEntries.length + maxValues) * SINGLE_FEATURE_HEIGHT) + MENU_HEIGHT + VERTICAL_GUTTER;
+  // TODO: fix the height of the visualization
+  //  (it should be computed based on the number of max values of the features,
+  //  test with "purpose" feature)
   const svg = d3.select('#app')
     .append('svg')
     .attr('width', GLOBAL_WIDTH)
     .attr('height', height)
     .attr('style', `background-color: ${FTTemplate.BACKGROUND_COLOR};`)
     .append('g')
-    .attr('transform', `translate(0, ${2 * GUTTER})`)
+    .attr('transform', `translate(0, ${VERTICAL_GUTTER + MENU_HEIGHT})`)
   ;
 
 
