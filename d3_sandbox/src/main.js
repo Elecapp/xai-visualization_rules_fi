@@ -564,7 +564,7 @@ function FIPERRulePredicateView() {
         .join('rect')
         .classed('single-predicate-box', true)
         .attr('x', d => barLength(d.interval[0]))
-        .attr('y', d => (!isFactualRule && intersects ? height : 0))
+        .attr('y', () => (!isFactualRule && intersects ? height : 0))
         .attr('width', d => barLength(d.interval[1]) - barLength(d.interval[0]))
         .attr('height', subHeight)
         .attr('fill', color)
@@ -944,33 +944,6 @@ function FIPERView() {
       .join('g')
       .classed('menu', true)
       .attr('transform', 'translate(0, 0)');
-
-    const gcRuleGrid = gMenu.selectAll('g.cRuleGrid')
-      .data(d => [d])
-      .join('g')
-      .classed('cRuleGrid', true)
-      .attr('transform', `translate(${LABELS_COLUMN_WIDTH + GUTTER +
-      RULES_COLUMN_WIDTH + GUTTER}, 0)`);
-    // TODO: move the following code to the "g" menu section
-    gcRuleGrid.selectAll('text.label')
-      .data(d => d.counterRules)
-      .join('text')
-      .classed('label', true)
-      .attr('x', d => fcrg.bandScale()(d) + GUTTER)
-      .attr('y', (SINGLE_FEATURE_HEIGHT * 2) / 6)
-      .attr('text-anchor', 'middle')
-      .attr('dy', -SINGLE_FEATURE_HEIGHT / 1.5)
-      .attr('alignment-baseline', 'bottom')
-      .attr('font-size', FONT_SIZE)
-      .attr('fill', FTTemplate.TEXT_COLOR)
-      .text(d => d)
-      .on('click', (d) => {
-        selection.datum(({
-          ...origDatum,
-          selectedCounterRule: d3.select(d.target).datum(),
-        }));
-        me(selection);
-      });
 
     // create a group for each feature row
     const gFeatures = selection.selectAll('g.feature')
@@ -1478,6 +1451,87 @@ d3.json('/static/instance_180.json').then((data) => {
   const maxValues = d3.max(aEntries, d => d.values.length);
   // eslint-disable-next-line max-len
   const height = ((aEntries.length + maxValues) * SINGLE_FEATURE_HEIGHT) + MENU_HEIGHT + VERTICAL_GUTTER;
+
+
+  const menuSVG = d3.select('#app')
+    .append('svg')
+    .classed('menu', true)
+    .attr('width', GLOBAL_WIDTH)
+    .attr('height', MENU_HEIGHT)
+    .attr('style', `background-color: ${FTTemplate.BACKGROUND_COLOR};`)
+    .selectAll('g.menu')
+    .data([explanationDescriptor])
+    .join('g')
+    .classed('menu', true)
+    .attr('transform', 'translate(0, 0)');
+
+  menuSVG.selectAll('rect.classification')
+    .data(d => [d])
+    .join('rect')
+    .attr('x', GUTTER)
+    .attr('y', GUTTER)
+    .attr('width', LABELS_COLUMN_WIDTH - GUTTER)
+    .attr('height', MENU_HEIGHT - (2 * GUTTER))
+    .attr('stroke', FTTemplate.TEXT_COLOR)
+    .attr('stroke-width', 0.5)
+    .attr('fill', 'none');
+
+  menuSVG.selectAll('rect.distribution')
+    .data(d => [d])
+    .join('rect')
+    .attr('x', LABELS_COLUMN_WIDTH + GUTTER)
+    .attr('y', GUTTER)
+    .attr('width', RULES_COLUMN_WIDTH)
+    .attr('height', MENU_HEIGHT - (2 * GUTTER))
+    .attr('stroke', FTTemplate.TEXT_COLOR)
+    .attr('stroke-width', 0.5)
+    .attr('fill', 'none');
+
+  const menuCRules = menuSVG.selectAll('g.cRuleGrid')
+    .data(d => [d])
+    .join('g')
+    .classed('cRuleGrid', true)
+    .attr('transform', `translate(${LABELS_COLUMN_WIDTH + GUTTER + RULES_COLUMN_WIDTH + GUTTER}, ${GUTTER})`);
+  menuCRules
+    .selectAll('rect.counterRules')
+    .data(d => [d])
+    .join('rect')
+    .attr('width', CRULES_GRID_COLUMN_WIDTH * CRulesList.length)
+    .attr('height', MENU_HEIGHT - (2 * GUTTER))
+    .attr('stroke', FTTemplate.TEXT_COLOR)
+    .attr('stroke-width', 0.5)
+    .attr('fill', 'none');
+
+  menuSVG.selectAll('rect.featureImportance')
+    .data([null])
+    .join('rect')
+    .attr('x', LABELS_COLUMN_WIDTH + GUTTER + RULES_COLUMN_WIDTH + GUTTER + CRULES_GRID_COLUMN_WIDTH * CRulesList.length + GUTTER)
+    .attr('y', GUTTER)
+    .attr('width', FI_COLUMN_WIDTH)
+    .attr('height', MENU_HEIGHT - (2 * GUTTER))
+    .attr('stroke', FTTemplate.TEXT_COLOR)
+    .attr('stroke-width', 0.5)
+    .attr('fill', 'none');
+
+const gcRuleGrid = menuCRules;
+  // TODO: move the following code to the "g" menu section
+  gcRuleGrid.selectAll('text.label')
+    .data(d => d.counterRules)
+    .join('text')
+    .classed('label', true)
+    //.attr('x', d => fcrg.bandScale()(d) + GUTTER)
+    .attr('y', (SINGLE_FEATURE_HEIGHT * 2) / 6)
+    .attr('text-anchor', 'top')
+    .attr('alignment-baseline', 'bottom')
+    .attr('font-size', FONT_SIZE)
+    .attr('fill', FTTemplate.TEXT_COLOR)
+    .text(d => d)
+    .on('click', (d) => {
+      console.log('clicked', d);
+    })
+  ;
+
+
   // TODO: fix the height of the visualization
   //  (it should be computed based on the number of max values of the features,
   //  test with "purpose" feature)
@@ -1487,7 +1541,7 @@ d3.json('/static/instance_180.json').then((data) => {
     .attr('height', height)
     .attr('style', `background-color: ${FTTemplate.BACKGROUND_COLOR};`)
     .append('g')
-    .attr('transform', `translate(0, ${VERTICAL_GUTTER + MENU_HEIGHT})`)
+    .attr('transform', `translate(0, ${VERTICAL_GUTTER+100})`)
   ;
 
 
