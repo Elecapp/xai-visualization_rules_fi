@@ -19,7 +19,7 @@
                     {
                         "att": "duration_in_month",
                         "op": ">",
-                        "thr": 19.5,
+                        "thr": 17.0,
                         "is_continuous": true
                     },
                     1
@@ -30,8 +30,19 @@
                     [
                         {
                             "att": "duration_in_month",
+                            "op": ">",
+                            "thr": 17.0,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ],
+                "C1": [
+                    [
+                        {
+                            "att": "duration_in_month",
                             "op": "<=",
-                            "thr": 6.5,
+                            "thr": 17.0,
                             "is_continuous": true
                         },
                         0
@@ -58,14 +69,44 @@
                 [
                     {
                         "att": "credit_amount",
+                        "op": "<=",
+                        "thr": 3407.0,
+                        "is_continuous": true
+                    },
+                    1
+                ],
+                [
+                    {
+                        "att": "credit_amount",
                         "op": ">",
-                        "thr": 708.5,
+                        "thr": 443.5,
                         "is_continuous": true
                     },
                     1
                 ]
             ],
-            "crules": {},
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "credit_amount",
+                            "op": "<=",
+                            "thr": 3407.0,
+                            "is_continuous": true
+                        },
+                        0
+                    ],
+                    [
+                        {
+                            "att": "credit_amount",
+                            "op": ">",
+                            "thr": 443.5,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ]
+            },
             "instance_value": 5771
         },
         {
@@ -87,13 +128,25 @@
                     {
                         "att": "installment_as_income_perc",
                         "op": ">",
-                        "thr": 2.5405222177505493,
+                        "thr": 1.7880228161811829,
                         "is_continuous": true
                     },
                     1
                 ]
             ],
-            "crules": {},
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "installment_as_income_perc",
+                            "op": ">",
+                            "thr": 1.7880228161811829,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ]
+            },
             "instance_value": 4
         },
         {
@@ -195,7 +248,7 @@
                     {
                         "att": "account_check_status=< 0 DM",
                         "op": ">",
-                        "thr": 0.916198343038559,
+                        "thr": 0.940069705247879,
                         "is_continuous": true
                     },
                     1
@@ -207,7 +260,18 @@
                         {
                             "att": "account_check_status=< 0 DM",
                             "op": ">",
-                            "thr": 0.916198343038559,
+                            "thr": 0.940069705247879,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ],
+                "C1": [
+                    [
+                        {
+                            "att": "account_check_status=< 0 DM",
+                            "op": ">",
+                            "thr": 0.940069705247879,
                             "is_continuous": true
                         },
                         0
@@ -249,7 +313,19 @@
                     1
                 ]
             ],
-            "crules": {},
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "account_check_status=no checking account",
+                            "op": "<=",
+                            "thr": 0.5,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ]
+            },
             "instance_value": true
         },
         {
@@ -279,13 +355,36 @@
                     {
                         "att": "credit_history=critical account/ other credits existing (not at this bank)",
                         "op": "<=",
-                        "thr": 0.5,
+                        "thr": 0.26269811391830444,
                         "is_continuous": true
                     },
                     1
                 ]
             ],
-            "crules": {},
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "credit_history=critical account/ other credits existing (not at this bank)",
+                            "op": "<=",
+                            "thr": 0.26269811391830444,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ],
+                "C1": [
+                    [
+                        {
+                            "att": "credit_history=critical account/ other credits existing (not at this bank)",
+                            "op": ">",
+                            "thr": 0.5,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ]
+            },
             "instance_value": true
         },
         {
@@ -297,8 +396,30 @@
                 "category": "delay in paying off in the past",
                 "count": 67
             },
-            "rule": [],
-            "crules": {},
+            "rule": [
+                [
+                    {
+                        "att": "credit_history=delay in paying off in the past",
+                        "op": "<=",
+                        "thr": 0.5,
+                        "is_continuous": true
+                    },
+                    1
+                ]
+            ],
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "credit_history=delay in paying off in the past",
+                            "op": "<=",
+                            "thr": 0.5,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ]
+            },
             "instance_value": false
         },
         {
@@ -311,7 +432,19 @@
                 "count": 362
             },
             "rule": [],
-            "crules": {},
+            "crules": {
+                "C1": [
+                    [
+                        {
+                            "att": "credit_history=existing credits paid back duly till now",
+                            "op": ">",
+                            "thr": 0.5,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ]
+            },
             "instance_value": false
         },
         {
@@ -480,7 +613,19 @@
                 "count": 417
             },
             "rule": [],
-            "crules": {},
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "savings=... < 100 DM",
+                            "op": "<=",
+                            "thr": 0.5,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ]
+            },
             "instance_value": true
         },
         {
@@ -713,8 +858,30 @@
                 "category": "real estate",
                 "count": 199
             },
-            "rule": [],
-            "crules": {},
+            "rule": [
+                [
+                    {
+                        "att": "property=real estate",
+                        "op": "<=",
+                        "thr": 0.5,
+                        "is_continuous": true
+                    },
+                    1
+                ]
+            ],
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "property=real estate",
+                            "op": ">",
+                            "thr": 0.5,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ]
+            },
             "instance_value": false
         },
         {
@@ -804,24 +971,14 @@
                 "category": "rent",
                 "count": 123
             },
-            "rule": [
-                [
-                    {
-                        "att": "housing=rent",
-                        "op": ">",
-                        "thr": 0.5,
-                        "is_continuous": true
-                    },
-                    1
-                ]
-            ],
+            "rule": [],
             "crules": {
-                "C0": [
+                "C1": [
                     [
                         {
                             "att": "housing=rent",
                             "op": ">",
-                            "thr": 0.5794945657253265,
+                            "thr": 0.5,
                             "is_continuous": true
                         },
                         0
@@ -905,19 +1062,7 @@
                 "count": 283
             },
             "rule": [],
-            "crules": {
-                "C0": [
-                    [
-                        {
-                            "att": "telephone=yes, registered under the customers name ",
-                            "op": "<=",
-                            "thr": 0.5,
-                            "is_continuous": true
-                        },
-                        0
-                    ]
-                ]
-            },
+            "crules": {},
             "instance_value": false
         },
         {

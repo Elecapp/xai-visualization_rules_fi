@@ -19,58 +19,13 @@
                     {
                         "att": "duration_in_month",
                         "op": ">",
-                        "thr": 11.5,
+                        "thr": 10.5,
                         "is_continuous": true
                     },
                     1
                 ]
             ],
-            "crules": {
-                "C0": [
-                    [
-                        {
-                            "att": "duration_in_month",
-                            "op": "<=",
-                            "thr": 30.0,
-                            "is_continuous": true
-                        },
-                        0
-                    ]
-                ],
-                "C1": [
-                    [
-                        {
-                            "att": "duration_in_month",
-                            "op": ">",
-                            "thr": 11.5,
-                            "is_continuous": true
-                        },
-                        0
-                    ]
-                ],
-                "C2": [
-                    [
-                        {
-                            "att": "duration_in_month",
-                            "op": ">",
-                            "thr": 11.5,
-                            "is_continuous": true
-                        },
-                        0
-                    ]
-                ],
-                "C3": [
-                    [
-                        {
-                            "att": "duration_in_month",
-                            "op": ">",
-                            "thr": 11.5,
-                            "is_continuous": true
-                        },
-                        0
-                    ]
-                ]
-            },
+            "crules": {},
             "instance_value": 12
         },
         {
@@ -92,7 +47,16 @@
                     {
                         "att": "credit_amount",
                         "op": "<=",
-                        "thr": 1042.5,
+                        "thr": 1105.5,
+                        "is_continuous": true
+                    },
+                    1
+                ],
+                [
+                    {
+                        "att": "credit_amount",
+                        "op": ">",
+                        "thr": 728.5,
                         "is_continuous": true
                     },
                     1
@@ -104,7 +68,16 @@
                         {
                             "att": "credit_amount",
                             "op": "<=",
-                            "thr": 1042.5,
+                            "thr": 1105.5,
+                            "is_continuous": true
+                        },
+                        0
+                    ],
+                    [
+                        {
+                            "att": "credit_amount",
+                            "op": ">",
+                            "thr": 728.5,
                             "is_continuous": true
                         },
                         0
@@ -115,7 +88,7 @@
                         {
                             "att": "credit_amount",
                             "op": "<=",
-                            "thr": 1042.5,
+                            "thr": 1105.5,
                             "is_continuous": true
                         },
                         0
@@ -126,7 +99,16 @@
                         {
                             "att": "credit_amount",
                             "op": "<=",
-                            "thr": 1042.5,
+                            "thr": 1105.5,
+                            "is_continuous": true
+                        },
+                        0
+                    ],
+                    [
+                        {
+                            "att": "credit_amount",
+                            "op": ">",
+                            "thr": 728.5,
                             "is_continuous": true
                         },
                         0
@@ -137,7 +119,7 @@
                         {
                             "att": "credit_amount",
                             "op": "<=",
-                            "thr": 1042.5,
+                            "thr": 728.5,
                             "is_continuous": true
                         },
                         0
@@ -172,33 +154,11 @@
                 ]
             ],
             "crules": {
-                "C1": [
+                "C0": [
                     [
                         {
                             "att": "installment_as_income_perc",
                             "op": "<=",
-                            "thr": 2.5,
-                            "is_continuous": true
-                        },
-                        0
-                    ]
-                ],
-                "C2": [
-                    [
-                        {
-                            "att": "installment_as_income_perc",
-                            "op": ">",
-                            "thr": 2.5,
-                            "is_continuous": true
-                        },
-                        0
-                    ]
-                ],
-                "C3": [
-                    [
-                        {
-                            "att": "installment_as_income_perc",
-                            "op": ">",
                             "thr": 2.5,
                             "is_continuous": true
                         },
@@ -227,19 +187,19 @@
                     {
                         "att": "present_res_since",
                         "op": ">",
-                        "thr": 3.5,
+                        "thr": -0.5,
                         "is_continuous": true
                     },
                     1
                 ]
             ],
             "crules": {
-                "C1": [
+                "C0": [
                     [
                         {
                             "att": "present_res_since",
                             "op": ">",
-                            "thr": 3.5,
+                            "thr": 0.5,
                             "is_continuous": true
                         },
                         0
@@ -249,19 +209,8 @@
                     [
                         {
                             "att": "present_res_since",
-                            "op": ">",
-                            "thr": 3.5,
-                            "is_continuous": true
-                        },
-                        0
-                    ]
-                ],
-                "C3": [
-                    [
-                        {
-                            "att": "present_res_since",
-                            "op": ">",
-                            "thr": 3.5,
+                            "op": "<=",
+                            "thr": -0.5,
                             "is_continuous": true
                         },
                         0
@@ -284,8 +233,72 @@
                 "mean": 35.46857142857143,
                 "std": 10.95407950290566
             },
-            "rule": [],
-            "crules": {},
+            "rule": [
+                [
+                    {
+                        "att": "age",
+                        "op": ">",
+                        "thr": 27.0,
+                        "is_continuous": true
+                    },
+                    1
+                ]
+            ],
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "age",
+                            "op": "<=",
+                            "thr": 53.5,
+                            "is_continuous": true
+                        },
+                        0
+                    ],
+                    [
+                        {
+                            "att": "age",
+                            "op": ">",
+                            "thr": 27.0,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ],
+                "C1": [
+                    [
+                        {
+                            "att": "age",
+                            "op": ">",
+                            "thr": 27.0,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ],
+                "C2": [
+                    [
+                        {
+                            "att": "age",
+                            "op": ">",
+                            "thr": 27.0,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ],
+                "C3": [
+                    [
+                        {
+                            "att": "age",
+                            "op": ">",
+                            "thr": 27.0,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ]
+            },
             "instance_value": 22
         },
         {
@@ -320,30 +333,8 @@
                 "mean": 1.1585714285714286,
                 "std": 0.36553715629233674
             },
-            "rule": [
-                [
-                    {
-                        "att": "people_under_maintenance",
-                        "op": ">",
-                        "thr": 0.5,
-                        "is_continuous": true
-                    },
-                    1
-                ]
-            ],
-            "crules": {
-                "C3": [
-                    [
-                        {
-                            "att": "people_under_maintenance",
-                            "op": ">",
-                            "thr": 0.5,
-                            "is_continuous": true
-                        },
-                        0
-                    ]
-                ]
-            },
+            "rule": [],
+            "crules": {},
             "instance_value": 1
         },
         {
@@ -373,7 +364,7 @@
                     {
                         "att": "account_check_status=< 0 DM",
                         "op": ">",
-                        "thr": 0.868280827999115,
+                        "thr": 0.7690557241439819,
                         "is_continuous": true
                     },
                     1
@@ -385,7 +376,7 @@
                         {
                             "att": "account_check_status=< 0 DM",
                             "op": ">",
-                            "thr": 0.868280827999115,
+                            "thr": 0.7690557241439819,
                             "is_continuous": true
                         },
                         0
@@ -396,7 +387,7 @@
                         {
                             "att": "account_check_status=< 0 DM",
                             "op": ">",
-                            "thr": 0.868280827999115,
+                            "thr": 0.7690557241439819,
                             "is_continuous": true
                         },
                         0
@@ -407,7 +398,7 @@
                         {
                             "att": "account_check_status=< 0 DM",
                             "op": ">",
-                            "thr": 0.868280827999115,
+                            "thr": 0.7690557241439819,
                             "is_continuous": true
                         },
                         0
@@ -418,7 +409,7 @@
                         {
                             "att": "account_check_status=< 0 DM",
                             "op": ">",
-                            "thr": 0.868280827999115,
+                            "thr": 0.7690557241439819,
                             "is_continuous": true
                         },
                         0
@@ -449,30 +440,9 @@
                 "category": "no checking account",
                 "count": 276
             },
-            "rule": [
-                [
-                    {
-                        "att": "account_check_status=no checking account",
-                        "op": "<=",
-                        "thr": 0.5,
-                        "is_continuous": true
-                    },
-                    1
-                ]
-            ],
+            "rule": [],
             "crules": {
-                "C2": [
-                    [
-                        {
-                            "att": "account_check_status=no checking account",
-                            "op": ">",
-                            "thr": 0.5,
-                            "is_continuous": true
-                        },
-                        0
-                    ]
-                ],
-                "C3": [
+                "C0": [
                     [
                         {
                             "att": "account_check_status=no checking account",
@@ -508,8 +478,63 @@
                 "category": "critical account/ other credits existing (not at this bank)",
                 "count": 205
             },
-            "rule": [],
-            "crules": {},
+            "rule": [
+                [
+                    {
+                        "att": "credit_history=critical account/ other credits existing (not at this bank)",
+                        "op": "<=",
+                        "thr": 0.5,
+                        "is_continuous": true
+                    },
+                    1
+                ]
+            ],
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "credit_history=critical account/ other credits existing (not at this bank)",
+                            "op": "<=",
+                            "thr": 0.5,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ],
+                "C1": [
+                    [
+                        {
+                            "att": "credit_history=critical account/ other credits existing (not at this bank)",
+                            "op": ">",
+                            "thr": 0.5,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ],
+                "C2": [
+                    [
+                        {
+                            "att": "credit_history=critical account/ other credits existing (not at this bank)",
+                            "op": "<=",
+                            "thr": 0.5,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ],
+                "C3": [
+                    [
+                        {
+                            "att": "credit_history=critical account/ other credits existing (not at this bank)",
+                            "op": "<=",
+                            "thr": 0.5,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ]
+            },
             "instance_value": true
         },
         {
@@ -535,19 +560,7 @@
                 "count": 362
             },
             "rule": [],
-            "crules": {
-                "C3": [
-                    [
-                        {
-                            "att": "credit_history=existing credits paid back duly till now",
-                            "op": ">",
-                            "thr": 0.5,
-                            "is_continuous": true
-                        },
-                        0
-                    ]
-                ]
-            },
+            "crules": {},
             "instance_value": false
         },
         {
@@ -572,7 +585,17 @@
                 "category": "(vacation - does not exist?)",
                 "count": 35
             },
-            "rule": [],
+            "rule": [
+                [
+                    {
+                        "att": "purpose=(vacation - does not exist?)",
+                        "op": ">",
+                        "thr": 0.5,
+                        "is_continuous": true
+                    },
+                    1
+                ]
+            ],
             "crules": {},
             "instance_value": false
         },
@@ -716,19 +739,7 @@
                 "count": 417
             },
             "rule": [],
-            "crules": {
-                "C3": [
-                    [
-                        {
-                            "att": "savings=... < 100 DM",
-                            "op": ">",
-                            "thr": 0.5,
-                            "is_continuous": true
-                        },
-                        0
-                    ]
-                ]
-            },
+            "crules": {},
             "instance_value": true
         },
         {
@@ -793,7 +804,19 @@
                 "count": 120
             },
             "rule": [],
-            "crules": {},
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "present_emp_since=... < 1 year ",
+                            "op": ">",
+                            "thr": 0.5,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ]
+            },
             "instance_value": true
         },
         {
@@ -806,7 +829,19 @@
                 "count": 246
             },
             "rule": [],
-            "crules": {},
+            "crules": {
+                "C1": [
+                    [
+                        {
+                            "att": "present_emp_since=1 <= ... < 4 years",
+                            "op": "<=",
+                            "thr": 0.5,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ]
+            },
             "instance_value": false
         },
         {
@@ -818,8 +853,41 @@
                 "category": "4 <= ... < 7 years",
                 "count": 113
             },
-            "rule": [],
-            "crules": {},
+            "rule": [
+                [
+                    {
+                        "att": "present_emp_since=4 <= ... < 7 years",
+                        "op": "<=",
+                        "thr": 0.5,
+                        "is_continuous": true
+                    },
+                    1
+                ]
+            ],
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "present_emp_since=4 <= ... < 7 years",
+                            "op": "<=",
+                            "thr": 0.5,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ],
+                "C2": [
+                    [
+                        {
+                            "att": "present_emp_since=4 <= ... < 7 years",
+                            "op": "<=",
+                            "thr": 0.5,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ]
+            },
             "instance_value": false
         },
         {
@@ -948,7 +1016,17 @@
                 "category": "if not A121/A122 : car or other, not in attribute 6",
                 "count": 231
             },
-            "rule": [],
+            "rule": [
+                [
+                    {
+                        "att": "property=if not A121/A122 : car or other, not in attribute 6",
+                        "op": "<=",
+                        "thr": 0.5,
+                        "is_continuous": true
+                    },
+                    1
+                ]
+            ],
             "crules": {},
             "instance_value": false
         },
@@ -977,7 +1055,7 @@
                     [
                         {
                             "att": "property=real estate",
-                            "op": ">",
+                            "op": "<=",
                             "thr": 0.5,
                             "is_continuous": true
                         },
@@ -1043,7 +1121,19 @@
                 "count": 99
             },
             "rule": [],
-            "crules": {},
+            "crules": {
+                "C1": [
+                    [
+                        {
+                            "att": "other_installment_plans=bank",
+                            "op": "<=",
+                            "thr": 0.5,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ]
+            },
             "instance_value": false
         },
         {
@@ -1056,7 +1146,19 @@
                 "count": 563
             },
             "rule": [],
-            "crules": {},
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "other_installment_plans=none",
+                            "op": ">",
+                            "thr": 0.5,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ]
+            },
             "instance_value": true
         },
         {
@@ -1107,30 +1209,8 @@
                 "category": "rent",
                 "count": 123
             },
-            "rule": [
-                [
-                    {
-                        "att": "housing=rent",
-                        "op": "<=",
-                        "thr": 0.5,
-                        "is_continuous": true
-                    },
-                    1
-                ]
-            ],
-            "crules": {
-                "C3": [
-                    [
-                        {
-                            "att": "housing=rent",
-                            "op": ">",
-                            "thr": 0.5,
-                            "is_continuous": true
-                        },
-                        0
-                    ]
-                ]
-            },
+            "rule": [],
+            "crules": {},
             "instance_value": true
         },
         {
@@ -1155,41 +1235,8 @@
                 "category": "skilled employee / official",
                 "count": 449
             },
-            "rule": [
-                [
-                    {
-                        "att": "job=skilled employee / official",
-                        "op": ">",
-                        "thr": 0.5,
-                        "is_continuous": true
-                    },
-                    1
-                ]
-            ],
-            "crules": {
-                "C2": [
-                    [
-                        {
-                            "att": "job=skilled employee / official",
-                            "op": ">",
-                            "thr": 0.5,
-                            "is_continuous": true
-                        },
-                        0
-                    ]
-                ],
-                "C3": [
-                    [
-                        {
-                            "att": "job=skilled employee / official",
-                            "op": ">",
-                            "thr": 0.5,
-                            "is_continuous": true
-                        },
-                        0
-                    ]
-                ]
-            },
+            "rule": [],
+            "crules": {},
             "instance_value": false
         },
         {
@@ -1228,19 +1275,7 @@
                 "count": 417
             },
             "rule": [],
-            "crules": {
-                "C1": [
-                    [
-                        {
-                            "att": "telephone=none",
-                            "op": ">",
-                            "thr": 0.5,
-                            "is_continuous": true
-                        },
-                        0
-                    ]
-                ]
-            },
+            "crules": {},
             "instance_value": true
         },
         {
@@ -1279,19 +1314,7 @@
                 "count": 672
             },
             "rule": [],
-            "crules": {
-                "C2": [
-                    [
-                        {
-                            "att": "foreign_worker=yes",
-                            "op": ">",
-                            "thr": 0.5,
-                            "is_continuous": true
-                        },
-                        0
-                    ]
-                ]
-            },
+            "crules": {},
             "instance_value": true
         }
     ],

@@ -19,7 +19,7 @@
                     {
                         "att": "duration_in_month",
                         "op": "<=",
-                        "thr": 29.5,
+                        "thr": 17.5,
                         "is_continuous": true
                     },
                     0
@@ -31,7 +31,7 @@
                         {
                             "att": "duration_in_month",
                             "op": ">",
-                            "thr": 49.5,
+                            "thr": 47.0,
                             "is_continuous": true
                         },
                         1
@@ -54,24 +54,14 @@
                 "mean": 3200.8728571428574,
                 "std": 2674.9420417248225
             },
-            "rule": [
-                [
-                    {
-                        "att": "credit_amount",
-                        "op": "<=",
-                        "thr": 8653.5,
-                        "is_continuous": true
-                    },
-                    0
-                ]
-            ],
+            "rule": [],
             "crules": {
                 "C0": [
                     [
                         {
                             "att": "credit_amount",
-                            "op": ">",
-                            "thr": 710.5,
+                            "op": "<=",
+                            "thr": 3115.0,
                             "is_continuous": true
                         },
                         1
@@ -112,30 +102,8 @@
                 "mean": 2.82,
                 "std": 1.0970893993720805
             },
-            "rule": [
-                [
-                    {
-                        "att": "present_res_since",
-                        "op": ">",
-                        "thr": 2.5,
-                        "is_continuous": true
-                    },
-                    0
-                ]
-            ],
-            "crules": {
-                "C0": [
-                    [
-                        {
-                            "att": "present_res_since",
-                            "op": ">",
-                            "thr": 1.5,
-                            "is_continuous": true
-                        },
-                        1
-                    ]
-                ]
-            },
+            "rule": [],
+            "crules": {},
             "instance_value": 4
         },
         {
@@ -219,7 +187,7 @@
                     {
                         "att": "account_check_status=< 0 DM",
                         "op": "<=",
-                        "thr": 0.2019074261188507,
+                        "thr": 0.03258824720978737,
                         "is_continuous": true
                     },
                     0
@@ -231,7 +199,7 @@
                         {
                             "att": "account_check_status=< 0 DM",
                             "op": "<=",
-                            "thr": 0.2019074261188507,
+                            "thr": 0.03258824720978737,
                             "is_continuous": true
                         },
                         1
@@ -327,30 +295,8 @@
                 "category": "no credits taken/ all credits paid back duly",
                 "count": 28
             },
-            "rule": [
-                [
-                    {
-                        "att": "credit_history=no credits taken/ all credits paid back duly",
-                        "op": "<=",
-                        "thr": 0.04512190818786621,
-                        "is_continuous": true
-                    },
-                    0
-                ]
-            ],
-            "crules": {
-                "C0": [
-                    [
-                        {
-                            "att": "credit_history=no credits taken/ all credits paid back duly",
-                            "op": "<=",
-                            "thr": 0.04512190818786621,
-                            "is_continuous": true
-                        },
-                        1
-                    ]
-                ]
-            },
+            "rule": [],
+            "crules": {},
             "instance_value": false
         },
         {
@@ -362,7 +308,17 @@
                 "category": "(vacation - does not exist?)",
                 "count": 35
             },
-            "rule": [],
+            "rule": [
+                [
+                    {
+                        "att": "purpose=(vacation - does not exist?)",
+                        "op": "<=",
+                        "thr": 0.0034386119805276394,
+                        "is_continuous": true
+                    },
+                    0
+                ]
+            ],
             "crules": {},
             "instance_value": false
         },
@@ -388,17 +344,7 @@
                 "category": "car (new)",
                 "count": 171
             },
-            "rule": [
-                [
-                    {
-                        "att": "purpose=car (new)",
-                        "op": "<=",
-                        "thr": 0.5,
-                        "is_continuous": true
-                    },
-                    0
-                ]
-            ],
+            "rule": [],
             "crules": {},
             "instance_value": false
         },
@@ -476,17 +422,7 @@
                 "category": "repairs",
                 "count": 10
             },
-            "rule": [
-                [
-                    {
-                        "att": "purpose=repairs",
-                        "op": "<=",
-                        "thr": 0.5,
-                        "is_continuous": true
-                    },
-                    0
-                ]
-            ],
+            "rule": [],
             "crules": {},
             "instance_value": false
         },
@@ -512,7 +448,17 @@
                 "category": ".. >= 1000 DM ",
                 "count": 37
             },
-            "rule": [],
+            "rule": [
+                [
+                    {
+                        "att": "savings=.. >= 1000 DM ",
+                        "op": "<=",
+                        "thr": 0.5,
+                        "is_continuous": true
+                    },
+                    0
+                ]
+            ],
             "crules": {},
             "instance_value": false
         },
@@ -526,19 +472,7 @@
                 "count": 417
             },
             "rule": [],
-            "crules": {
-                "C0": [
-                    [
-                        {
-                            "att": "savings=... < 100 DM",
-                            "op": "<=",
-                            "thr": 0.5,
-                            "is_continuous": true
-                        },
-                        1
-                    ]
-                ]
-            },
+            "crules": {},
             "instance_value": false
         },
         {
@@ -641,7 +575,17 @@
                 "category": "unemployed",
                 "count": 37
             },
-            "rule": [],
+            "rule": [
+                [
+                    {
+                        "att": "present_emp_since=unemployed",
+                        "op": "<=",
+                        "thr": 0.11918628960847855,
+                        "is_continuous": true
+                    },
+                    0
+                ]
+            ],
             "crules": {},
             "instance_value": false
         },
@@ -655,7 +599,19 @@
                 "count": 209
             },
             "rule": [],
-            "crules": {},
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "personal_status_sex=female : divorced/separated/married",
+                            "op": "<=",
+                            "thr": 0.5,
+                            "is_continuous": true
+                        },
+                        1
+                    ]
+                ]
+            },
             "instance_value": true
         },
         {
@@ -680,17 +636,7 @@
                 "category": "male : married/widowed",
                 "count": 67
             },
-            "rule": [
-                [
-                    {
-                        "att": "personal_status_sex=male : married/widowed",
-                        "op": "<=",
-                        "thr": 0.5,
-                        "is_continuous": true
-                    },
-                    0
-                ]
-            ],
+            "rule": [],
             "crules": {},
             "instance_value": false
         },
@@ -846,7 +792,17 @@
                 "category": "for free",
                 "count": 75
             },
-            "rule": [],
+            "rule": [
+                [
+                    {
+                        "att": "housing=for free",
+                        "op": "<=",
+                        "thr": 0.5,
+                        "is_continuous": true
+                    },
+                    0
+                ]
+            ],
             "crules": {},
             "instance_value": false
         },
@@ -860,19 +816,7 @@
                 "count": 502
             },
             "rule": [],
-            "crules": {
-                "C0": [
-                    [
-                        {
-                            "att": "housing=own",
-                            "op": "<=",
-                            "thr": 0.5,
-                            "is_continuous": true
-                        },
-                        1
-                    ]
-                ]
-            },
+            "crules": {},
             "instance_value": false
         },
         {
@@ -884,30 +828,8 @@
                 "category": "rent",
                 "count": 123
             },
-            "rule": [
-                [
-                    {
-                        "att": "housing=rent",
-                        "op": "<=",
-                        "thr": 0.5,
-                        "is_continuous": true
-                    },
-                    0
-                ]
-            ],
-            "crules": {
-                "C0": [
-                    [
-                        {
-                            "att": "housing=rent",
-                            "op": ">",
-                            "thr": 0.5,
-                            "is_continuous": true
-                        },
-                        1
-                    ]
-                ]
-            },
+            "rule": [],
+            "crules": {},
             "instance_value": true
         },
         {

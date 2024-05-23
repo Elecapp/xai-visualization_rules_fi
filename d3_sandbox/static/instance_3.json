@@ -19,7 +19,7 @@
                     {
                         "att": "duration_in_month",
                         "op": "<=",
-                        "thr": 34.5,
+                        "thr": 39.25031089782715,
                         "is_continuous": true
                     },
                     0
@@ -42,7 +42,17 @@
                 "mean": 3200.8728571428574,
                 "std": 2674.9420417248225
             },
-            "rule": [],
+            "rule": [
+                [
+                    {
+                        "att": "credit_amount",
+                        "op": "<=",
+                        "thr": 5735.0,
+                        "is_continuous": true
+                    },
+                    0
+                ]
+            ],
             "crules": {},
             "instance_value": 1967
         },
@@ -163,7 +173,7 @@
                     {
                         "att": "account_check_status=< 0 DM",
                         "op": "<=",
-                        "thr": 0.06061412766575813,
+                        "thr": 0.04239346832036972,
                         "is_continuous": true
                     },
                     0
@@ -199,7 +209,7 @@
                     {
                         "att": "account_check_status=no checking account",
                         "op": ">",
-                        "thr": 0.7082492858171463,
+                        "thr": 0.6595826596021652,
                         "is_continuous": true
                     },
                     0
@@ -360,7 +370,17 @@
                 "category": "furniture/equipment",
                 "count": 6
             },
-            "rule": [],
+            "rule": [
+                [
+                    {
+                        "att": "purpose=furniture/equipment",
+                        "op": ">",
+                        "thr": -0.06666283309459686,
+                        "is_continuous": true
+                    },
+                    0
+                ]
+            ],
             "crules": {},
             "instance_value": false
         },
@@ -620,7 +640,17 @@
                 "category": "none",
                 "count": 636
             },
-            "rule": [],
+            "rule": [
+                [
+                    {
+                        "att": "other_debtors=none",
+                        "op": "<=",
+                        "thr": 1.0019816160202026,
+                        "is_continuous": true
+                    },
+                    0
+                ]
+            ],
             "crules": {},
             "instance_value": true
         },
@@ -854,17 +884,7 @@
                 "category": "yes",
                 "count": 672
             },
-            "rule": [
-                [
-                    {
-                        "att": "foreign_worker=yes",
-                        "op": "<=",
-                        "thr": 1.0128650665283203,
-                        "is_continuous": true
-                    },
-                    0
-                ]
-            ],
+            "rule": [],
             "crules": {},
             "instance_value": true
         }

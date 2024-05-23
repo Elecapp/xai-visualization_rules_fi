@@ -18,14 +18,35 @@
                 [
                     {
                         "att": "duration_in_month",
+                        "op": "<=",
+                        "thr": 54.0,
+                        "is_continuous": true
+                    },
+                    1
+                ],
+                [
+                    {
+                        "att": "duration_in_month",
                         "op": ">",
-                        "thr": 21.649218559265137,
+                        "thr": 23.5,
                         "is_continuous": true
                     },
                     1
                 ]
             ],
-            "crules": {},
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "duration_in_month",
+                            "op": "<=",
+                            "thr": 3.5,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ]
+            },
             "instance_value": 18
         },
         {
@@ -47,7 +68,16 @@
                     {
                         "att": "credit_amount",
                         "op": "<=",
-                        "thr": 2738.0,
+                        "thr": 2880.5,
+                        "is_continuous": true
+                    },
+                    1
+                ],
+                [
+                    {
+                        "att": "credit_amount",
+                        "op": ">",
+                        "thr": 1255.5,
                         "is_continuous": true
                     },
                     1
@@ -88,17 +118,7 @@
                 "mean": 2.82,
                 "std": 1.0970893993720805
             },
-            "rule": [
-                [
-                    {
-                        "att": "present_res_since",
-                        "op": ">",
-                        "thr": 1.5,
-                        "is_continuous": true
-                    },
-                    1
-                ]
-            ],
+            "rule": [],
             "crules": {},
             "instance_value": 1
         },
@@ -134,17 +154,7 @@
                 "mean": 1.4028571428571428,
                 "std": 0.5563963934628726
             },
-            "rule": [
-                [
-                    {
-                        "att": "credits_this_bank",
-                        "op": ">",
-                        "thr": 0.5,
-                        "is_continuous": true
-                    },
-                    1
-                ]
-            ],
+            "rule": [],
             "crules": {},
             "instance_value": 1
         },
@@ -193,13 +203,25 @@
                     {
                         "att": "account_check_status=< 0 DM",
                         "op": ">",
-                        "thr": 0.8347428739070892,
+                        "thr": 0.8187862634658813,
                         "is_continuous": true
                     },
                     1
                 ]
             ],
-            "crules": {},
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "account_check_status=< 0 DM",
+                            "op": ">",
+                            "thr": 0.8187862634658813,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ]
+            },
             "instance_value": false
         },
         {
@@ -296,17 +318,7 @@
                 "category": "existing credits paid back duly till now",
                 "count": 362
             },
-            "rule": [
-                [
-                    {
-                        "att": "credit_history=existing credits paid back duly till now",
-                        "op": "<=",
-                        "thr": 1.5,
-                        "is_continuous": true
-                    },
-                    1
-                ]
-            ],
+            "rule": [],
             "crules": {},
             "instance_value": true
         },
@@ -371,7 +383,17 @@
                 "category": "car (used)",
                 "count": 76
             },
-            "rule": [],
+            "rule": [
+                [
+                    {
+                        "att": "purpose=car (used)",
+                        "op": "<=",
+                        "thr": 0.5,
+                        "is_continuous": true
+                    },
+                    1
+                ]
+            ],
             "crules": {},
             "instance_value": false
         },
@@ -410,7 +432,17 @@
                 "category": "furniture/equipment",
                 "count": 6
             },
-            "rule": [],
+            "rule": [
+                [
+                    {
+                        "att": "purpose=furniture/equipment",
+                        "op": "<=",
+                        "thr": 0.5,
+                        "is_continuous": true
+                    },
+                    1
+                ]
+            ],
             "crules": {},
             "instance_value": false
         },
@@ -475,7 +507,17 @@
                 "category": "... < 100 DM",
                 "count": 417
             },
-            "rule": [],
+            "rule": [
+                [
+                    {
+                        "att": "savings=... < 100 DM",
+                        "op": ">",
+                        "thr": 0.5,
+                        "is_continuous": true
+                    },
+                    1
+                ]
+            ],
             "crules": {},
             "instance_value": true
         },
@@ -644,17 +686,7 @@
                 "category": "co-applicant",
                 "count": 30
             },
-            "rule": [
-                [
-                    {
-                        "att": "other_debtors=co-applicant",
-                        "op": "<=",
-                        "thr": 0.059130482375621796,
-                        "is_continuous": true
-                    },
-                    1
-                ]
-            ],
+            "rule": [],
             "crules": {},
             "instance_value": false
         },
@@ -733,7 +765,19 @@
                 "count": 111
             },
             "rule": [],
-            "crules": {},
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "property=unknown / no property",
+                            "op": "<=",
+                            "thr": 0.5,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ]
+            },
             "instance_value": false
         },
         {
@@ -746,7 +790,19 @@
                 "count": 99
             },
             "rule": [],
-            "crules": {},
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "other_installment_plans=bank",
+                            "op": ">",
+                            "thr": 0.5,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ]
+            },
             "instance_value": false
         },
         {
@@ -810,18 +866,20 @@
                 "category": "rent",
                 "count": 123
             },
-            "rule": [
-                [
-                    {
-                        "att": "housing=rent",
-                        "op": ">",
-                        "thr": 0.5,
-                        "is_continuous": true
-                    },
-                    1
+            "rule": [],
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "housing=rent",
+                            "op": ">",
+                            "thr": 0.5,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
                 ]
-            ],
-            "crules": {},
+            },
             "instance_value": false
         },
         {
@@ -898,8 +956,30 @@
                 "category": "yes, registered under the customers name ",
                 "count": 283
             },
-            "rule": [],
-            "crules": {},
+            "rule": [
+                [
+                    {
+                        "att": "telephone=yes, registered under the customers name ",
+                        "op": "<=",
+                        "thr": 0.5,
+                        "is_continuous": true
+                    },
+                    1
+                ]
+            ],
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "telephone=yes, registered under the customers name ",
+                            "op": "<=",
+                            "thr": 0.5,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ]
+            },
             "instance_value": false
         },
         {
@@ -911,17 +991,7 @@
                 "category": "no",
                 "count": 28
             },
-            "rule": [
-                [
-                    {
-                        "att": "foreign_worker=no",
-                        "op": "<=",
-                        "thr": 0.5,
-                        "is_continuous": true
-                    },
-                    1
-                ]
-            ],
+            "rule": [],
             "crules": {},
             "instance_value": false
         },
