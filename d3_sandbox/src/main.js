@@ -1541,15 +1541,6 @@ d3.json('/static/instance_180.json').then((data) => {
     .join('g')
     .classed('cRuleGrid', true)
     .attr('transform', `translate(${LABELS_COLUMN_WIDTH + GUTTER + RULES_COLUMN_WIDTH + GUTTER}, ${GUTTER})`);
-  menuCRules
-    .selectAll('rect.counterRules')
-    .data(d => [d])
-    .join('rect')
-    .attr('width', CRULES_GRID_COLUMN_WIDTH * CRulesList.length)
-    .attr('height', MENU_HEIGHT - (2 * GUTTER))
-    .attr('stroke', FTTemplate.TEXT_COLOR)
-    .attr('stroke-width', 0.5)
-    .attr('fill', 'none');
 
   menuSVG.selectAll('rect.featureImportance')
     .data([null])
