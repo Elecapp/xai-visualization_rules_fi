@@ -1106,6 +1106,134 @@ function FIPERView() {
   return me;
 }
 
+function FiperMenu() {
+  let width = 200;
+  let height = 500;
+  let bandScale = d3.scaleBand();
+
+  function me(selection) {
+    // create a group to contain the menu elements:
+    // 1. the feature importance
+    // 2. the distribution of the values
+    // 3. the labels
+    const gMenu = selection.selectAll('g.menu')
+      .data(d => [d])
+      .join('g')
+      .classed('menu', true)
+      .attr('transform', 'translate(0, 0)');
+
+    console.log('selection.datum()', selection.datum());
+    const CRulesList = selection.datum().counterRules;
+    const explanationDescriptor = selection.datum();
+
+    gMenu.selectAll('rect.classification')
+      .data(d => [d])
+      .join('rect')
+      .classed('classification', true)
+      .attr('x', GUTTER)
+      .attr('y', GUTTER)
+      .attr('width', LABELS_COLUMN_WIDTH - GUTTER)
+      .attr('height', MENU_HEIGHT - (2 * GUTTER))
+      .attr('stroke', FTTemplate.TEXT_COLOR)
+      .attr('stroke-width', 0.5)
+      .attr('fill', 'none');
+
+    gMenu.selectAll('rect.distribution')
+      .data(d => [d])
+      .join('rect')
+      .classed('distribution', true)
+      .attr('x', LABELS_COLUMN_WIDTH + GUTTER)
+      .attr('y', GUTTER)
+      .attr('width', RULES_COLUMN_WIDTH)
+      .attr('height', MENU_HEIGHT - (2 * GUTTER))
+      .attr('stroke', FTTemplate.TEXT_COLOR)
+      .attr('stroke-width', 0.5)
+      .attr('fill', 'none');
+
+    const menuCRules = gMenu.selectAll('g.cRuleGrid')
+      .data(d => [d])
+      .join('g')
+      .classed('cRuleGrid', true)
+      .attr('transform', `translate(${LABELS_COLUMN_WIDTH + GUTTER + RULES_COLUMN_WIDTH + GUTTER}, ${GUTTER})`);
+
+    gMenu.selectAll('rect.featureImportance')
+      .data([null])
+      .join('rect')
+      .classed('featureImportance', true)
+      .attr('x', LABELS_COLUMN_WIDTH + GUTTER + RULES_COLUMN_WIDTH + GUTTER + CRULES_GRID_COLUMN_WIDTH * CRulesList.length + GUTTER)
+      .attr('y', GUTTER)
+      .attr('width', FI_COLUMN_WIDTH)
+      .attr('height', MENU_HEIGHT - (2 * GUTTER))
+      .attr('stroke', FTTemplate.TEXT_COLOR)
+      .attr('stroke-width', 0.5)
+      .attr('fill', 'none');
+
+    const gcRuleGrid = menuCRules;
+    const gcRuleButtons = gcRuleGrid.selectAll('g.counterRule')
+      .data(d => d.counterRules)
+      .join('g')
+      .classed('counterRule', true)
+      .attr('transform', (d, i) =>
+        `translate(${bandScale(d)}, 0)`)
+      .on('click', (d) => {
+        let selectedCounterRule = d3.select(d.target).datum();
+        if (explanationDescriptor.selectedCounterRule === selectedCounterRule) {
+          selectedCounterRule = 'R9999999';
+        }else {
+          selectedCounterRule = d3.select(d.target).datum();
+        }
+
+        dispatcher.call('changeCounterRule', null, selectedCounterRule);
+      });
+
+    gcRuleButtons.selectAll('rect.counterRule')
+      .data(d => [d])
+      .join('rect')
+      .classed('counterRule', true)
+      .attr('width', CRULES_GRID_COLUMN_WIDTH)
+      .attr('height', MENU_HEIGHT - (2 * GUTTER))
+      .attr('stroke', FTTemplate.TEXT_COLOR)
+      .attr('stroke-width', 0.5)
+      .attr('fill-opacity', 0.5)
+      .attr('fill', d => (d === explanationDescriptor.selectedCounterRule ? FTTemplate.CRULES_COLOR : FTTemplate.BASE_COLOR))
+      .attr('stroke', d => (d === explanationDescriptor.selectedCounterRule ? FTTemplate.CRULES_STROKE_COLOR : FTTemplate.BASE_STROKE_COLOR));
+
+    gcRuleButtons.selectAll('text.label')
+      .data(d => [d])
+      .join('text')
+      .classed('label', true)
+      .attr('x', CRULES_GRID_COLUMN_WIDTH / 2)
+      .attr('y', MENU_HEIGHT / 2)
+      .attr('text-anchor', 'middle')
+      .attr('alignment-baseline', 'middle')
+      .attr('font-size', FONT_SIZE)
+      .attr('fill', FTTemplate.TEXT_COLOR)
+      .text(d => d);
+  }
+
+  // eslint-disable-next-line
+  me.width = function (_) {
+    if (!arguments.length) return width;
+    width = _;
+    return me;
+  };
+
+  me.height = function (_) {
+    if (!arguments.length) return height;
+    height = _;
+    return me;
+  };
+
+  me.bandScale = function (_) {
+    if (!arguments.length) return bandScale;
+    bandScale = _;
+    return me;
+  };
+
+  return me;
+}
+
+
 function computeBooleanExpectedValue(value) {
   // Given a dictionary like following, return an expected boolean value for it
   // {
@@ -1455,45 +1583,19 @@ d3.json('/static/instance_180.json').then((data) => {
     selectedCounterRule: 'C0',
   };
   const fv = FIPERView().width(GLOBAL_WIDTH).height(height);
+  const fm = FiperMenu().width(GLOBAL_WIDTH).height(MENU_HEIGHT);
 
   const maxValues = d3.max(aEntries, d => d.values.length);
   // eslint-disable-next-line max-len
   const height = ((aEntries.length + maxValues) * SINGLE_FEATURE_HEIGHT) + MENU_HEIGHT + VERTICAL_GUTTER;
 
-
-  const menuSVG = d3.select('#app')
+  const menuSvg = d3.select('#app')
     .append('svg')
     .classed('menu', true)
     .attr('width', GLOBAL_WIDTH)
     .attr('height', MENU_HEIGHT)
-    .attr('style', `background-color: ${FTTemplate.BACKGROUND_COLOR};`)
-    .selectAll('g.menu')
-    .data([explanationDescriptor])
-    .join('g')
-    .classed('menu', true)
-    .attr('transform', 'translate(0, 0)');
+    .attr('style', `background-color: ${FTTemplate.BACKGROUND_COLOR};`);
 
-  menuSVG.selectAll('rect.classification')
-    .data(d => [d])
-    .join('rect')
-    .attr('x', GUTTER)
-    .attr('y', GUTTER)
-    .attr('width', LABELS_COLUMN_WIDTH - GUTTER)
-    .attr('height', MENU_HEIGHT - (2 * GUTTER))
-    .attr('stroke', FTTemplate.TEXT_COLOR)
-    .attr('stroke-width', 0.5)
-    .attr('fill', 'none');
-
-  menuSVG.selectAll('rect.distribution')
-    .data(d => [d])
-    .join('rect')
-    .attr('x', LABELS_COLUMN_WIDTH + GUTTER)
-    .attr('y', GUTTER)
-    .attr('width', RULES_COLUMN_WIDTH)
-    .attr('height', MENU_HEIGHT - (2 * GUTTER))
-    .attr('stroke', FTTemplate.TEXT_COLOR)
-    .attr('stroke-width', 0.5)
-    .attr('fill', 'none');
 
   // TODO: fix the height of the visualization
   //  (it should be computed based on the number of max values of the features,
@@ -1534,62 +1636,16 @@ d3.json('/static/instance_180.json').then((data) => {
       .attr('stroke', FTTemplate[key])
       .attr('stroke-width', thickness);
   });
+
+  // it is important that fm component is called after fv has been called the first time
+  // to ensure that the bandScale is correctly initialized
   svg.datum(explanationDescriptor).call(fv);
+  fm.bandScale(fv.cRulesGridBandScale());
+  menuSvg.datum(explanationDescriptor).call(fm);
 
   dispatcher.on('changeCounterRule', (d) => {
-    console.log('changeCounterRule', d);
     explanationDescriptor.selectedCounterRule = d;
     svg.datum(explanationDescriptor).call(fv);
+    menuSvg.datum(explanationDescriptor).call(fm);
   });
-
-  const menuCRules = menuSVG.selectAll('g.cRuleGrid')
-    .data(d => [d])
-    .join('g')
-    .classed('cRuleGrid', true)
-    .attr('transform', `translate(${LABELS_COLUMN_WIDTH + GUTTER + RULES_COLUMN_WIDTH + GUTTER}, ${GUTTER})`);
-
-  menuSVG.selectAll('rect.featureImportance')
-    .data([null])
-    .join('rect')
-    .attr('x', LABELS_COLUMN_WIDTH + GUTTER + RULES_COLUMN_WIDTH + GUTTER + CRULES_GRID_COLUMN_WIDTH * CRulesList.length + GUTTER)
-    .attr('y', GUTTER)
-    .attr('width', FI_COLUMN_WIDTH)
-    .attr('height', MENU_HEIGHT - (2 * GUTTER))
-    .attr('stroke', FTTemplate.TEXT_COLOR)
-    .attr('stroke-width', 0.5)
-    .attr('fill', 'none');
-
-  const gcRuleGrid = menuCRules;
-  const gcRuleButtons = gcRuleGrid.selectAll('g.counterRule')
-    .data(d => d.counterRules)
-    .join('g')
-    .classed('counterRule', true)
-    .attr('transform', (d, i) =>
-      `translate(${fv.cRulesGridBandScale()(d)}, 0)`)
-    .on('click', (d) => {
-      dispatcher.call('changeCounterRule', null, d3.select(d.target).datum());
-    });
-
-  gcRuleButtons.selectAll('rect.counterRule')
-    .data(d => [d])
-    .join('rect')
-    .attr('width', CRULES_GRID_COLUMN_WIDTH)
-    .attr('height', MENU_HEIGHT - (2 * GUTTER))
-    .attr('stroke', FTTemplate.TEXT_COLOR)
-    .attr('stroke-width', 0.5)
-    .attr('fill-opacity', 0.5)
-    .attr('fill', d => (d === explanationDescriptor.selectedCounterRule ? FTTemplate.CRULES_COLOR : FTTemplate.BASE_COLOR))
-    .attr('stroke', d => (d === explanationDescriptor.selectedCounterRule ? FTTemplate.CRULES_STROKE_COLOR : FTTemplate.BASE_STROKE_COLOR));
-
-  gcRuleButtons.selectAll('text.label')
-    .data(d => [d])
-    .join('text')
-    .classed('label', true)
-    .attr('x', CRULES_GRID_COLUMN_WIDTH / 2)
-    .attr('y', MENU_HEIGHT / 2)
-    .attr('text-anchor', 'middle')
-    .attr('alignment-baseline', 'middle')
-    .attr('font-size', FONT_SIZE)
-    .attr('fill', FTTemplate.TEXT_COLOR)
-    .text(d => d);
 });
