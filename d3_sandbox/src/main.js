@@ -868,6 +868,8 @@ function FIPERView() {
   // scale to position each feature row. HINT: maybe a d3.scaleBand() is better?
   const yScale = d3.scaleLinear();
 
+  let fcrg = FIPERCRuleGrid();
+
   function me(selection) {
     const origDatum = selection.datum();
     // console.log('origDatum', origDatum);
@@ -917,7 +919,7 @@ function FIPERView() {
     // create variable width for the column of the counter rules
     const crWidth = origDatum.counterRules.length * CRULES_GRID_COLUMN_WIDTH;
     // component to visualize the grid of available counter rules
-    const fcrg = FIPERCRuleGrid()
+    fcrg = FIPERCRuleGrid()
       .width(crWidth)
       .height(SINGLE_FEATURE_HEIGHT)
       .cruleList(origDatum.counterRules)
@@ -1079,6 +1081,12 @@ function FIPERView() {
       me(selection);
     });
   }
+
+  // eslint-disable-next-line
+  me.cRulesGridBandScale = function() {
+    if (!arguments.length) return fcrg.bandScale();
+    return me;
+  };
 
   // eslint-disable-next-line
   me.width = function (_) {
@@ -1446,7 +1454,7 @@ d3.json('/static/instance_180.json').then((data) => {
     dt_pred: data.dt_pred,
     selectedCounterRule: 'C0',
   };
-
+  const fv = FIPERView().width(GLOBAL_WIDTH).height(height);
 
   const maxValues = d3.max(aEntries, d => d.values.length);
   // eslint-disable-next-line max-len
@@ -1487,51 +1495,6 @@ d3.json('/static/instance_180.json').then((data) => {
     .attr('stroke-width', 0.5)
     .attr('fill', 'none');
 
-  const menuCRules = menuSVG.selectAll('g.cRuleGrid')
-    .data(d => [d])
-    .join('g')
-    .classed('cRuleGrid', true)
-    .attr('transform', `translate(${LABELS_COLUMN_WIDTH + GUTTER + RULES_COLUMN_WIDTH + GUTTER}, ${GUTTER})`);
-  menuCRules
-    .selectAll('rect.counterRules')
-    .data(d => [d])
-    .join('rect')
-    .attr('width', CRULES_GRID_COLUMN_WIDTH * CRulesList.length)
-    .attr('height', MENU_HEIGHT - (2 * GUTTER))
-    .attr('stroke', FTTemplate.TEXT_COLOR)
-    .attr('stroke-width', 0.5)
-    .attr('fill', 'none');
-
-  menuSVG.selectAll('rect.featureImportance')
-    .data([null])
-    .join('rect')
-    .attr('x', LABELS_COLUMN_WIDTH + GUTTER + RULES_COLUMN_WIDTH + GUTTER + CRULES_GRID_COLUMN_WIDTH * CRulesList.length + GUTTER)
-    .attr('y', GUTTER)
-    .attr('width', FI_COLUMN_WIDTH)
-    .attr('height', MENU_HEIGHT - (2 * GUTTER))
-    .attr('stroke', FTTemplate.TEXT_COLOR)
-    .attr('stroke-width', 0.5)
-    .attr('fill', 'none');
-
-const gcRuleGrid = menuCRules;
-  // TODO: move the following code to the "g" menu section
-  gcRuleGrid.selectAll('text.label')
-    .data(d => d.counterRules)
-    .join('text')
-    .classed('label', true)
-    //.attr('x', d => fcrg.bandScale()(d) + GUTTER)
-    .attr('y', (SINGLE_FEATURE_HEIGHT * 2) / 6)
-    .attr('text-anchor', 'top')
-    .attr('alignment-baseline', 'bottom')
-    .attr('font-size', FONT_SIZE)
-    .attr('fill', FTTemplate.TEXT_COLOR)
-    .text(d => d)
-    .on('click', (d) => {
-      console.log('clicked', d);
-    })
-  ;
-
-
   // TODO: fix the height of the visualization
   //  (it should be computed based on the number of max values of the features,
   //  test with "purpose" feature)
@@ -1541,11 +1504,10 @@ const gcRuleGrid = menuCRules;
     .attr('height', height)
     .attr('style', `background-color: ${FTTemplate.BACKGROUND_COLOR};`)
     .append('g')
-    .attr('transform', `translate(0, ${VERTICAL_GUTTER+100})`)
+    .attr('transform', `translate(0, ${GUTTER})`)
   ;
 
 
-  const fv = FIPERView().width(GLOBAL_WIDTH).height(height);
   const defs = svg.selectAll('defs')
     .data([null]) // Usa un array con un singolo elemento come dati
     .join('defs');
@@ -1573,4 +1535,63 @@ const gcRuleGrid = menuCRules;
       .attr('stroke-width', thickness);
   });
   svg.datum(explanationDescriptor).call(fv);
+
+  const menuCRules = menuSVG.selectAll('g.cRuleGrid')
+    .data(d => [d])
+    .join('g')
+    .classed('cRuleGrid', true)
+    .attr('transform', `translate(${LABELS_COLUMN_WIDTH + GUTTER + RULES_COLUMN_WIDTH + GUTTER}, ${GUTTER})`);
+  menuCRules
+    .selectAll('rect.counterRules')
+    .data(d => [d])
+    .join('rect')
+    .attr('width', CRULES_GRID_COLUMN_WIDTH * CRulesList.length)
+    .attr('height', MENU_HEIGHT - (2 * GUTTER))
+    .attr('stroke', FTTemplate.TEXT_COLOR)
+    .attr('stroke-width', 0.5)
+    .attr('fill', 'none');
+
+  menuSVG.selectAll('rect.featureImportance')
+    .data([null])
+    .join('rect')
+    .attr('x', LABELS_COLUMN_WIDTH + GUTTER + RULES_COLUMN_WIDTH + GUTTER + CRULES_GRID_COLUMN_WIDTH * CRulesList.length + GUTTER)
+    .attr('y', GUTTER)
+    .attr('width', FI_COLUMN_WIDTH)
+    .attr('height', MENU_HEIGHT - (2 * GUTTER))
+    .attr('stroke', FTTemplate.TEXT_COLOR)
+    .attr('stroke-width', 0.5)
+    .attr('fill', 'none');
+
+  const gcRuleGrid = menuCRules;
+  const gcRuleButtons = gcRuleGrid.selectAll('g.counterRule')
+    .data(d => d.counterRules)
+    .join('g')
+    .classed('counterRule', true)
+    .attr('transform', (d, i) =>
+      `translate(${fv.cRulesGridBandScale()(d)}, 0)`)
+    .on('click', (d) => {
+      console.log('coso rect', d3.select(d.target).datum());
+    });
+
+  gcRuleButtons.selectAll('rect.counterRule')
+    .data(d => [d])
+    .join('rect')
+    .attr('width', CRULES_GRID_COLUMN_WIDTH)
+    .attr('height', MENU_HEIGHT - (2 * GUTTER))
+    .attr('stroke', FTTemplate.TEXT_COLOR)
+    .attr('stroke-width', 0.5)
+    .attr('fill', d => (d === explanationDescriptor.selectedCounterRule ? FTTemplate.CRULES_COLOR : FTTemplate.BASE_COLOR))
+    .attr('stroke', d => (d === explanationDescriptor.selectedCounterRule ? FTTemplate.CRULES_STROKE_COLOR : FTTemplate.BASE_STROKE_COLOR));
+
+  gcRuleButtons.selectAll('text.label')
+    .data(d => [d])
+    .join('text')
+    .classed('label', true)
+    .attr('x', CRULES_GRID_COLUMN_WIDTH / 2)
+    .attr('y', MENU_HEIGHT / 2)
+    .attr('text-anchor', 'middle')
+    .attr('alignment-baseline', 'middle')
+    .attr('font-size', FONT_SIZE)
+    .attr('fill', FTTemplate.TEXT_COLOR)
+    .text(d => d);
 });
