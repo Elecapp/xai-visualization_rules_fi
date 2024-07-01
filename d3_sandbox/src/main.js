@@ -71,6 +71,8 @@ const colorSet = {
     GRID_COLOR: '#000',
   },
 };
+
+const dispatcher = d3.dispatch('changeCounterRule');
 const FTTemplate = colorSet.default;
 // Format the data (instead of using d3.stack()) and
 // filter out 0 values:
@@ -815,8 +817,7 @@ function FIPERCRuleGrid() {
       .attr('fill', d => ((d === selectedCounterRule) ? FTTemplate.CRULES_COLOR : FTTemplate.BASE_COLOR))
       .attr('stroke', d => ((d === selectedCounterRule) ? FTTemplate.CRULES_STROKE_COLOR : FTTemplate.BASE_STROKE_COLOR))
       .on('click', (d) => {
-        console.log('clicked', d);
-        console.log('coso', d3.select(d.target).datum());
+        dispatcher.call('changeCounterRule', this, d3.select(d.target).datum());
       });
   }
 
@@ -1262,7 +1263,6 @@ function reduceUnionIntersection(predicatesWithIntervals) {
   return result;
 }
 
-
 d3.json('/static/instance_180.json').then((data) => {
   // console.log('data', data);
   // preprocess each entry to copmute the expected value for the categorical counterrules
@@ -1536,6 +1536,12 @@ d3.json('/static/instance_180.json').then((data) => {
   });
   svg.datum(explanationDescriptor).call(fv);
 
+  dispatcher.on('changeCounterRule', (d) => {
+    console.log('changeCounterRule', d);
+    explanationDescriptor.selectedCounterRule = d;
+    svg.datum(explanationDescriptor).call(fv);
+  });
+
   const menuCRules = menuSVG.selectAll('g.cRuleGrid')
     .data(d => [d])
     .join('g')
@@ -1561,7 +1567,7 @@ d3.json('/static/instance_180.json').then((data) => {
     .attr('transform', (d, i) =>
       `translate(${fv.cRulesGridBandScale()(d)}, 0)`)
     .on('click', (d) => {
-      console.log('coso rect', d3.select(d.target).datum());
+      dispatcher.call('changeCounterRule', null, d3.select(d.target).datum());
     });
 
   gcRuleButtons.selectAll('rect.counterRule')
