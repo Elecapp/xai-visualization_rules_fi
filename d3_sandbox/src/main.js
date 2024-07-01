@@ -1580,6 +1580,7 @@ d3.json('/static/instance_180.json').then((data) => {
     .attr('height', MENU_HEIGHT - (2 * GUTTER))
     .attr('stroke', FTTemplate.TEXT_COLOR)
     .attr('stroke-width', 0.5)
+    .attr('fill-opacity', 0.5)
     .attr('fill', d => (d === explanationDescriptor.selectedCounterRule ? FTTemplate.CRULES_COLOR : FTTemplate.BASE_COLOR))
     .attr('stroke', d => (d === explanationDescriptor.selectedCounterRule ? FTTemplate.CRULES_STROKE_COLOR : FTTemplate.BASE_STROKE_COLOR));
 
