@@ -1,5 +1,3 @@
-const d3 = require('d3');
-
 import {
   FI_COLUMN_WIDTH,
   RULES_COLUMN_WIDTH,
@@ -8,7 +6,10 @@ import {
   MENU_HEIGHT,
   CRULES_GRID_COLUMN_WIDTH,
   FONT_SIZE, colorSet,
-} from './constants.js';
+  dispatcher,
+} from './constants';
+
+const d3 = require('d3');
 
 const FTTemplate = colorSet.default;
 

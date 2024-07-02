@@ -1,6 +1,5 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
-const d3 = require('d3');
 import FiperMenu from './fiper_menu';
 import {
   GLOBAL_WIDTH,
@@ -12,8 +11,12 @@ import {
   VERTICAL_GUTTER,
   MENU_HEIGHT,
   FONT_SIZE,
-  CRULES_GRID_COLUMN_WIDTH, colorSet,
+  CRULES_GRID_COLUMN_WIDTH,
+  colorSet,
+  dispatcher,
 } from './constants';
+
+const d3 = require('d3');
 
 
 function fontScaleFactor(fontSize) {
@@ -29,8 +32,6 @@ const maxLabelLength = fontScaleFactor(FONT_SIZE);
 
 // create a function to darken a color using d3
 
-
-const dispatcher = d3.dispatch('changeCounterRule');
 const FTTemplate = colorSet.default;
 // Format the data (instead of using d3.stack()) and
 // filter out 0 values:
