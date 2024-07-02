@@ -1080,6 +1080,8 @@ function FIPERView() {
         features: newFeatures,
       }));
       me(selection);
+      const bbox = selection.node().getBBox();
+      selection.node().parentNode.setAttribute('height', bbox.height + GUTTER);
     });
   }
 
@@ -1603,7 +1605,7 @@ d3.json('/static/instance_180.json').then((data) => {
   const svg = d3.select('#app')
     .append('svg')
     .attr('width', GLOBAL_WIDTH)
-    .attr('height', height)
+    .attr('height', 200)
     .attr('style', `background-color: ${FTTemplate.BACKGROUND_COLOR};`)
     .append('g')
     .attr('transform', `translate(0, ${GUTTER})`)
@@ -1642,6 +1644,15 @@ d3.json('/static/instance_180.json').then((data) => {
   svg.datum(explanationDescriptor).call(fv);
   fm.bandScale(fv.cRulesGridBandScale());
   menuSvg.datum(explanationDescriptor).call(fm);
+
+  const bbox = svg.node().getBBox();
+  // Adjust the SVG dimensions to fit the content
+  // svg.attr('height', bbox.height + bbox.y * 2);
+  // svg.attr('viewBox', `${bbox.x} ${bbox.y} ${bbox.width} ${bbox.height}`)
+  //  .attr('preserveAspectRatio', 'xMinYMin meet');
+  svg.node().parentNode.setAttribute('height', bbox.height +GUTTER);
+
+
 
   dispatcher.on('changeCounterRule', (d) => {
     explanationDescriptor.selectedCounterRule = d;
