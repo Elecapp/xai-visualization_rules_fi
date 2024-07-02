@@ -605,6 +605,7 @@ function FIPERRulePredicateView() {
     return me;
   };
 
+  // eslint-disable-next-line func-names
   me.strokeColor = function (_) {
     if (!arguments.length) return strokeColor;
     strokeColor = _;
@@ -938,16 +939,6 @@ function FIPERView() {
     yScale.domain([0, features.length])
       .range([0, features.length * (SINGLE_FEATURE_HEIGHT + VERTICAL_GUTTER)]);
 
-    // create a group to contain the menu elements:
-    // 1. the feature importance
-    // 2. the distribution of the values
-    // 3. the labels
-    const gMenu = selection.selectAll('g.menu')
-      .data(d => [d])
-      .join('g')
-      .classed('menu', true)
-      .attr('transform', 'translate(0, 0)');
-
     // create a group for each feature row
     const gFeatures = selection.selectAll('g.feature')
       .data(features)
@@ -1124,7 +1115,6 @@ function FiperMenu() {
       .classed('menu', true)
       .attr('transform', 'translate(0, 0)');
 
-    console.log('selection.datum()', selection.datum());
     const CRulesList = selection.datum().counterRules;
     const explanationDescriptor = selection.datum();
 
@@ -1162,7 +1152,8 @@ function FiperMenu() {
       .data([null])
       .join('rect')
       .classed('featureImportance', true)
-      .attr('x', LABELS_COLUMN_WIDTH + GUTTER + RULES_COLUMN_WIDTH + GUTTER + CRULES_GRID_COLUMN_WIDTH * CRulesList.length + GUTTER)
+      .attr('x', ((CRULES_GRID_COLUMN_WIDTH * CRulesList.length) + GUTTER) + (LABELS_COLUMN_WIDTH + GUTTER) +
+                  (RULES_COLUMN_WIDTH + GUTTER))
       .attr('y', GUTTER)
       .attr('width', FI_COLUMN_WIDTH)
       .attr('height', MENU_HEIGHT - (2 * GUTTER))
@@ -1175,13 +1166,13 @@ function FiperMenu() {
       .data(d => d.counterRules)
       .join('g')
       .classed('counterRule', true)
-      .attr('transform', (d, i) =>
+      .attr('transform', d =>
         `translate(${bandScale(d)}, 0)`)
       .on('click', (d) => {
         let selectedCounterRule = d3.select(d.target).datum();
         if (explanationDescriptor.selectedCounterRule === selectedCounterRule) {
           selectedCounterRule = 'R9999999';
-        }else {
+        } else {
           selectedCounterRule = d3.select(d.target).datum();
         }
 
@@ -1220,12 +1211,14 @@ function FiperMenu() {
     return me;
   };
 
+  // eslint-disable-next-line
   me.height = function (_) {
     if (!arguments.length) return height;
     height = _;
     return me;
   };
 
+  // eslint-disable-next-line
   me.bandScale = function (_) {
     if (!arguments.length) return bandScale;
     bandScale = _;
@@ -1584,12 +1577,8 @@ d3.json('/static/instance_180.json').then((data) => {
     dt_pred: data.dt_pred,
     selectedCounterRule: 'C0',
   };
-  const fv = FIPERView().width(GLOBAL_WIDTH).height(height);
+  const fv = FIPERView().width(GLOBAL_WIDTH);
   const fm = FiperMenu().width(GLOBAL_WIDTH).height(MENU_HEIGHT);
-
-  const maxValues = d3.max(aEntries, d => d.values.length);
-  // eslint-disable-next-line max-len
-  const height = ((aEntries.length + maxValues) * SINGLE_FEATURE_HEIGHT) + MENU_HEIGHT + VERTICAL_GUTTER;
 
   const menuSvg = d3.select('#app')
     .append('svg')
@@ -1645,14 +1634,11 @@ d3.json('/static/instance_180.json').then((data) => {
   fm.bandScale(fv.cRulesGridBandScale());
   menuSvg.datum(explanationDescriptor).call(fm);
 
+  // compute the resulting bounding box to set the height of the svg
+  // recall: `svg` variable is the group `g` that contains the visualization
+  //        so we refer to the parent node to set the height correctly
   const bbox = svg.node().getBBox();
-  // Adjust the SVG dimensions to fit the content
-  // svg.attr('height', bbox.height + bbox.y * 2);
-  // svg.attr('viewBox', `${bbox.x} ${bbox.y} ${bbox.width} ${bbox.height}`)
-  //  .attr('preserveAspectRatio', 'xMinYMin meet');
-  svg.node().parentNode.setAttribute('height', bbox.height +GUTTER);
-
-
+  svg.node().parentNode.setAttribute('height', bbox.height + GUTTER);
 
   dispatcher.on('changeCounterRule', (d) => {
     explanationDescriptor.selectedCounterRule = d;
