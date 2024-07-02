@@ -1,17 +1,20 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 const d3 = require('d3');
+import FiperMenu from './fiper_menu';
+import {
+  GLOBAL_WIDTH,
+  SINGLE_FEATURE_HEIGHT,
+  FI_COLUMN_WIDTH,
+  RULES_COLUMN_WIDTH,
+  LABELS_COLUMN_WIDTH,
+  GUTTER,
+  VERTICAL_GUTTER,
+  MENU_HEIGHT,
+  FONT_SIZE,
+  CRULES_GRID_COLUMN_WIDTH, colorSet,
+} from './constants';
 
-const GLOBAL_WIDTH = 720;
-const SINGLE_FEATURE_HEIGHT = 30;
-const FI_COLUMN_WIDTH = 50;
-const RULES_COLUMN_WIDTH = 300;
-const LABELS_COLUMN_WIDTH = 250;
-const CRULES_GRID_COLUMN_WIDTH = 20;
-const GUTTER = 10;
-const VERTICAL_GUTTER = 5;
-const MENU_HEIGHT = 80;
-const FONT_SIZE = 11;
 
 function fontScaleFactor(fontSize) {
   const cWidthFactor = d3.scaleLinear()
@@ -25,52 +28,7 @@ function fontScaleFactor(fontSize) {
 const maxLabelLength = fontScaleFactor(FONT_SIZE);
 
 // create a function to darken a color using d3
-function darkenColor(color, amount) {
-  return d3.hsl(color).darker(amount).toString();
-}
-// create a dict for a color template
-const colorSet = {
-  default: {
-    BACKGROUND_COLOR: '#ffeee0',
-    CRULES_COLOR: 'rgba(158,79,103,1)',
-    CRULES_STROKE_COLOR: 'rgba(133,66,86,1)',
-    RULE_COLOR: 'rgba(230,174,85,1)',
-    RULE_STROKE_COLOR: darkenColor('#E6AE55B3', 1),
-    BASE_COLOR: '#dcc',
-    BASE_STROKE_COLOR: '#BFB0B0',
-    SECONDARY_BACKGROUND_COLOR: '#fff8f2',
-    TEXT_COLOR: '#333333',
-    VALUE_TEXT_COLOR: 'rgba(133,66,86,0.8)',
-    OTHER_TEXT_COLOR: 'rgba(51,51,51,0.8)',
-    INSTANCE_COLOR: '#000',
-    DISTRIBUTION_COLOR: '#f2e6e6',
-    DISTRIBUTION_STROKE_COLOR: '#BFB0B0',
-    CATEGORICAL_INSTANCE_COLOR: '#ccc2c2',
-    CATEGORICAL_INSTANCE_STROKE_COLOR: '#808080',
-    FI_POSITIVE_COLOR: '#4F6A73',
-    NEGATIVE_FI_COLOR: '#A27691',
-    GRID_COLOR: '#000',
-  },
-  darkModeColorPalette: {
-    BACKGROUND_COLOR: '#fff1e0',
-    CRULES_COLOR: '#9e4f67',
-    CRULES_STROKE_COLOR: '#854256',
-    FI_POSITIVE_COLOR: '#626d8c',
-    RULE_COLOR: '#f2c14e',
-    RULE_STROKE_COLOR: '#d9a743',
-    BASE_COLOR: '#dcc',
-    BASE_STROKE_COLOR: '#BFB0B0',
-    SECONDARY_BACKGROUND_COLOR: '#fdfdfd',
-    TEXT_COLOR: '#333333',
-    INSTANCE_COLOR: '#000',
-    DISTRIBUTION_COLOR: '#dcc',
-    DISTRIBUTION_STROKE_COLOR: '#BFB0B0',
-    CATEGORICAL_INSTANCE_COLOR: '#B3B3B3',
-    CATEGORICAL_INSTANCE_STROKE_COLOR: '#999999',
-    NEGATIVE_FI_COLOR: '#f2aaaa',
-    GRID_COLOR: '#000',
-  },
-};
+
 
 const dispatcher = d3.dispatch('changeCounterRule');
 const FTTemplate = colorSet.default;
@@ -1098,136 +1056,6 @@ function FIPERView() {
 
   return me;
 }
-
-function FiperMenu() {
-  let width = 200;
-  let height = 500;
-  let bandScale = d3.scaleBand();
-
-  function me(selection) {
-    // create a group to contain the menu elements:
-    // 1. the feature importance
-    // 2. the distribution of the values
-    // 3. the labels
-    const gMenu = selection.selectAll('g.menu')
-      .data(d => [d])
-      .join('g')
-      .classed('menu', true)
-      .attr('transform', 'translate(0, 0)');
-
-    const CRulesList = selection.datum().counterRules;
-    const explanationDescriptor = selection.datum();
-
-    gMenu.selectAll('rect.classification')
-      .data(d => [d])
-      .join('rect')
-      .classed('classification', true)
-      .attr('x', GUTTER)
-      .attr('y', GUTTER)
-      .attr('width', LABELS_COLUMN_WIDTH - GUTTER)
-      .attr('height', MENU_HEIGHT - (2 * GUTTER))
-      .attr('stroke', FTTemplate.TEXT_COLOR)
-      .attr('stroke-width', 0.5)
-      .attr('fill', 'none');
-
-    gMenu.selectAll('rect.distribution')
-      .data(d => [d])
-      .join('rect')
-      .classed('distribution', true)
-      .attr('x', LABELS_COLUMN_WIDTH + GUTTER)
-      .attr('y', GUTTER)
-      .attr('width', RULES_COLUMN_WIDTH)
-      .attr('height', MENU_HEIGHT - (2 * GUTTER))
-      .attr('stroke', FTTemplate.TEXT_COLOR)
-      .attr('stroke-width', 0.5)
-      .attr('fill', 'none');
-
-    const menuCRules = gMenu.selectAll('g.cRuleGrid')
-      .data(d => [d])
-      .join('g')
-      .classed('cRuleGrid', true)
-      .attr('transform', `translate(${LABELS_COLUMN_WIDTH + GUTTER + RULES_COLUMN_WIDTH + GUTTER}, ${GUTTER})`);
-
-    gMenu.selectAll('rect.featureImportance')
-      .data([null])
-      .join('rect')
-      .classed('featureImportance', true)
-      .attr('x', ((CRULES_GRID_COLUMN_WIDTH * CRulesList.length) + GUTTER) + (LABELS_COLUMN_WIDTH + GUTTER) +
-                  (RULES_COLUMN_WIDTH + GUTTER))
-      .attr('y', GUTTER)
-      .attr('width', FI_COLUMN_WIDTH)
-      .attr('height', MENU_HEIGHT - (2 * GUTTER))
-      .attr('stroke', FTTemplate.TEXT_COLOR)
-      .attr('stroke-width', 0.5)
-      .attr('fill', 'none');
-
-    const gcRuleGrid = menuCRules;
-    const gcRuleButtons = gcRuleGrid.selectAll('g.counterRule')
-      .data(d => d.counterRules)
-      .join('g')
-      .classed('counterRule', true)
-      .attr('transform', d =>
-        `translate(${bandScale(d)}, 0)`)
-      .on('click', (d) => {
-        let selectedCounterRule = d3.select(d.target).datum();
-        if (explanationDescriptor.selectedCounterRule === selectedCounterRule) {
-          selectedCounterRule = 'R9999999';
-        } else {
-          selectedCounterRule = d3.select(d.target).datum();
-        }
-
-        dispatcher.call('changeCounterRule', null, selectedCounterRule);
-      });
-
-    gcRuleButtons.selectAll('rect.counterRule')
-      .data(d => [d])
-      .join('rect')
-      .classed('counterRule', true)
-      .attr('width', CRULES_GRID_COLUMN_WIDTH)
-      .attr('height', MENU_HEIGHT - (2 * GUTTER))
-      .attr('stroke', FTTemplate.TEXT_COLOR)
-      .attr('stroke-width', 0.5)
-      .attr('fill-opacity', 0.5)
-      .attr('fill', d => (d === explanationDescriptor.selectedCounterRule ? FTTemplate.CRULES_COLOR : FTTemplate.BASE_COLOR))
-      .attr('stroke', d => (d === explanationDescriptor.selectedCounterRule ? FTTemplate.CRULES_STROKE_COLOR : FTTemplate.BASE_STROKE_COLOR));
-
-    gcRuleButtons.selectAll('text.label')
-      .data(d => [d])
-      .join('text')
-      .classed('label', true)
-      .attr('x', CRULES_GRID_COLUMN_WIDTH / 2)
-      .attr('y', MENU_HEIGHT / 2)
-      .attr('text-anchor', 'middle')
-      .attr('alignment-baseline', 'middle')
-      .attr('font-size', FONT_SIZE)
-      .attr('fill', FTTemplate.TEXT_COLOR)
-      .text(d => d);
-  }
-
-  // eslint-disable-next-line
-  me.width = function (_) {
-    if (!arguments.length) return width;
-    width = _;
-    return me;
-  };
-
-  // eslint-disable-next-line
-  me.height = function (_) {
-    if (!arguments.length) return height;
-    height = _;
-    return me;
-  };
-
-  // eslint-disable-next-line
-  me.bandScale = function (_) {
-    if (!arguments.length) return bandScale;
-    bandScale = _;
-    return me;
-  };
-
-  return me;
-}
-
 
 function computeBooleanExpectedValue(value) {
   // Given a dictionary like following, return an expected boolean value for it
