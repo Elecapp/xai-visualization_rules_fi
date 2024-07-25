@@ -103,6 +103,7 @@ function FiperMenuOrderBy() {
       .attr('fill', FTTemplate.TEXT_COLOR)
       .attr('font-weight', d => (orderByOptions[d] ? 900 : 400))
       .text(d => d)
+      .style('cursor', 'pointer')
       .on('click', (d) => {
         const selectedKey = d3.select(d.target).datum();
         Object.keys(orderByOptions).forEach((key) => {
