@@ -904,7 +904,7 @@ function FIPERView() {
       .on('end', () => {
         // console.log('Transition ended');
         const bbox = selection.node().getBBox();
-        selection.node().parentNode.setAttribute('height', bbox.height + GUTTER);
+        selection.node().parentNode.setAttribute('height', bbox.height + (2 * GUTTER));
       });
 
 
@@ -1410,7 +1410,7 @@ d3.json('/static/instance_180.json').then((data) => {
     selectedCounterRule: 'C0',
   };
   const fv = FIPERView().width(GLOBAL_WIDTH);
-  const fm = FiperMenu().width(GLOBAL_WIDTH).height(MENU_HEIGHT);
+  const fm = FiperMenu().height(MENU_HEIGHT);
 
   const menuSvg = d3.select('#app')
     .append('svg')
@@ -1471,6 +1471,9 @@ d3.json('/static/instance_180.json').then((data) => {
   //        so we refer to the parent node to set the height correctly
   const bbox = svg.node().getBBox();
   svg.node().parentNode.setAttribute('height', bbox.height + GUTTER);
+  svg.node().parentNode.setAttribute('width', bbox.width + GUTTER);
+  menuSvg.node().setAttribute('width', bbox.width + GUTTER);
+
 
   dispatcher.on('changeCounterRule', (d) => {
     explanationDescriptor.selectedCounterRule = d;
@@ -1498,5 +1501,27 @@ d3.json('/static/instance_180.json').then((data) => {
     }
     svg.datum(explanationDescriptor).call(fv);
     menuSvg.datum(explanationDescriptor).call(fm);
+  });
+  dispatcher.on('changeFilter', (d) => {
+    const filterFunctionRule = f => d3.sum(Object.values(f.rulePredicateMap)) > 0;
+    const filterFunctionCRule = f => d3.sum(Object.values(f.cRulesPredicateMap)) > 0;
+    const noFilter = () => true;
+
+    let currentFilter = noFilter;
+
+    if (d === 'Rules') {
+      currentFilter = filterFunctionRule;
+    }
+    if (d === 'CRules') {
+      currentFilter = filterFunctionCRule;
+    }
+
+    const filteredDescriptor = {
+      ...explanationDescriptor,
+      features: explanationDescriptor.features.filter(currentFilter),
+    };
+
+    svg.datum(filteredDescriptor).call(fv);
+    menuSvg.datum(filteredDescriptor).call(fm);
   });
 });

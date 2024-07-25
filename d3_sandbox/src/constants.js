@@ -1,8 +1,8 @@
 const d3 = require('d3');
 
-export const GLOBAL_WIDTH = 720;
+
 export const SINGLE_FEATURE_HEIGHT = 30;
-export const FI_COLUMN_WIDTH = 50;
+export const FI_COLUMN_WIDTH = 75;
 export const RULES_COLUMN_WIDTH = 300;
 export const LABELS_COLUMN_WIDTH = 250;
 export const CRULES_GRID_COLUMN_WIDTH = 20;
@@ -10,7 +10,9 @@ export const GUTTER = 10;
 export const VERTICAL_GUTTER = 5;
 export const MENU_HEIGHT = 80;
 export const FONT_SIZE = 11;
-export const dispatcher = d3.dispatch('changeCounterRule', 'changeOrder');
+
+export const GLOBAL_WIDTH = 700;
+export const dispatcher = d3.dispatch('changeCounterRule', 'changeOrder', 'changeFilter');
 
 
 function darkenColor(color, amount) {
