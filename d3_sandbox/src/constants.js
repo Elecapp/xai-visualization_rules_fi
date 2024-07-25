@@ -10,7 +10,7 @@ export const GUTTER = 10;
 export const VERTICAL_GUTTER = 5;
 export const MENU_HEIGHT = 80;
 export const FONT_SIZE = 11;
-export const dispatcher = d3.dispatch('changeCounterRule');
+export const dispatcher = d3.dispatch('changeCounterRule', 'changeOrder');
 
 
 function darkenColor(color, amount) {
