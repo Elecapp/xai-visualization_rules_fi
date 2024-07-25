@@ -1479,14 +1479,14 @@ d3.json('/static/instance_180.json').then((data) => {
   });
 
   dispatcher.on('changeOrder', (d) => {
-    console.log('changeOrder', d);
     if (d === 'Feature Importance') {
       explanationDescriptor.features.sort((a, b) =>
         (b.feature_importance) - (a.feature_importance));
     }
     if (d === 'Counter Rules first') {
       explanationDescriptor.features.sort((a, b) =>
-      (d3.sum(Object.values(b.cRulesPredicateMap)) - d3.sum(Object.values(a.cRulesPredicateMap))));
+        (d3.sum(Object.values(b.cRulesPredicateMap)) -
+          d3.sum(Object.values(a.cRulesPredicateMap))));
     }
     if (d === 'Rules first') {
       explanationDescriptor.features.sort((a, b) =>
