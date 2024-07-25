@@ -75,7 +75,7 @@ function FiperMenuOrderBy() {
     'Feature Importance': true,
     'Rules first': false,
     'Counter Rules first': false,
-    'Alphabetical': false,
+    Alphabetical: false,
   };
 
   function me(selection) {
@@ -92,26 +92,33 @@ function FiperMenuOrderBy() {
       .text('ORDER BY:');
 
     selection.selectAll('text.orderBy')
-      .data(d => Object.keys(orderByOptions))
+      .data(Object.keys(orderByOptions))
       .join('text')
       .classed('orderBy', true)
-      .attr('x', (d, i) => Math.floor(i / 2) * RULES_COLUMN_WIDTH / 2)
+      .attr('x', (d, i) => (Math.floor(i / 2) * RULES_COLUMN_WIDTH) / 2)
       .attr('y', (d, i) => ((i % 2) * FONT_SIZE * 1.5) + SINGLE_FEATURE_HEIGHT)
       .attr('font-size', FONT_SIZE)
       .attr('dy', '-0.25em')
       .attr('dx', '0.5em')
       .attr('fill', FTTemplate.TEXT_COLOR)
       .attr('font-weight', d => (orderByOptions[d] ? 900 : 400))
-      .text(d => d);
+      .text(d => d)
+      .on('click', (d) => {
+        const selectedKey = d3.select(d.target).datum();
+        Object.keys(orderByOptions).forEach((key) => {
+          orderByOptions[key] = key === selectedKey;
+        });
+        dispatcher.call('changeOrder', null, selectedKey);
+      });
 
     selection.selectAll('line.horizontalLine')
       .data([0, 1, 2, 3])
       .join('line')
       .classed('horizontalLine', true)
       .attr('x1', 0)
-      .attr('y1', (d) => (d * FONT_SIZE * 1.5) )
+      .attr('y1', d => (d * FONT_SIZE * 1.5))
       .attr('x2', RULES_COLUMN_WIDTH)
-      .attr('y2', (d) => (d * FONT_SIZE * 1.5) )
+      .attr('y2', d => (d * FONT_SIZE * 1.5))
       .attr('stroke', FTTemplate.TEXT_COLOR)
       .attr('stroke-width', 0.5);
 
@@ -135,6 +142,8 @@ function FiperMenu() {
   let width = 200;
   let height = 500;
   let bandScale = d3.scaleBand();
+  const menuOrderBy = FiperMenuOrderBy();
+  const menuCRulesCall = FiperMenuCRule().bandScale(bandScale);
 
   function me(selection) {
     // create a group to contain the menu elements:
@@ -167,12 +176,11 @@ function FiperMenu() {
     // =========================================================
     //                  Labels
     // =========================================================
-    const gOrder = gMenu.selectAll('rect.distribution')
+    const gOrder = gMenu.selectAll('g.distribution')
       .data(d => [d])
       .join('g')
       .classed('distribution', true)
       .attr('transform', `translate(${LABELS_COLUMN_WIDTH + GUTTER}, ${2 * GUTTER})`);
-    const menuOrderBy = FiperMenuOrderBy();
     gOrder.call(menuOrderBy);
     // =========================================================
 
@@ -185,7 +193,7 @@ function FiperMenu() {
       .classed('cRuleGrid', true)
       .attr('transform', `translate(${LABELS_COLUMN_WIDTH + GUTTER + RULES_COLUMN_WIDTH + GUTTER}, ${GUTTER})`);
 
-    const menuCRulesCall = FiperMenuCRule().bandScale(bandScale);
+    menuCRulesCall.bandScale(bandScale);
     menuCRules.call(menuCRulesCall);
     // =========================================================
 

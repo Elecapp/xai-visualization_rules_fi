@@ -898,11 +898,23 @@ function FIPERView() {
     yScale.domain([0, features.length])
       .range([0, features.length * (SINGLE_FEATURE_HEIGHT + VERTICAL_GUTTER)]);
 
+    const t = d3.transition()
+      .duration(500)
+      .ease(d3.easeLinear)
+      .on('end', () => {
+        // console.log('Transition ended');
+        const bbox = selection.node().getBBox();
+        selection.node().parentNode.setAttribute('height', bbox.height + GUTTER);
+      });
+
+
     // create a group for each feature row
     const gFeatures = selection.selectAll('g.feature')
-      .data(features)
+      .data(features, d => d.rname)
       .join('g')
-      .classed('feature', true)
+      .classed('feature', true);
+
+    gFeatures.transition(t)
       .attr('transform', (d, i) => `translate(0, ${yScale(i) + (d.status > 1 ? (d.rows) * SINGLE_FEATURE_HEIGHT : 0)})`);
     // a rectangle to set the widht and height of the feature row.
     gFeatures.selectAll('rect.background')
@@ -1390,15 +1402,6 @@ d3.json('/static/instance_180.json').then((data) => {
   // sort the entries by feature importance
   aEntries.sort((a, b) => (b.feature_importance) - (a.feature_importance));
 
-  // sort the entries by the number of true values in cRulesPredicateMap
-  // aEntries.sort((a, b) =>
-  //   (d3.sum(Object.values(b.cRulesPredicateMap)) - d3.sum(Object.values(a.cRulesPredicateMap))));
-
-  // sort the entries by the number of true values in rulePredicateMap
-  // aEntries.sort((a, b) =>
-  //   (d3.sum(Object.values(b.rulePredicateMap)) - d3.sum(Object.values(a.rulePredicateMap))));
-
-
   const explanationDescriptor = {
     features: aEntries,
     counterRules: CRulesList,
@@ -1471,6 +1474,28 @@ d3.json('/static/instance_180.json').then((data) => {
 
   dispatcher.on('changeCounterRule', (d) => {
     explanationDescriptor.selectedCounterRule = d;
+    svg.datum(explanationDescriptor).call(fv);
+    menuSvg.datum(explanationDescriptor).call(fm);
+  });
+
+  dispatcher.on('changeOrder', (d) => {
+    console.log('changeOrder', d);
+    if (d === 'Feature Importance') {
+      explanationDescriptor.features.sort((a, b) =>
+        (b.feature_importance) - (a.feature_importance));
+    }
+    if (d === 'Counter Rules first') {
+      explanationDescriptor.features.sort((a, b) =>
+      (d3.sum(Object.values(b.cRulesPredicateMap)) - d3.sum(Object.values(a.cRulesPredicateMap))));
+    }
+    if (d === 'Rules first') {
+      explanationDescriptor.features.sort((a, b) =>
+        (d3.sum(Object.values(b.rulePredicateMap)) - d3.sum(Object.values(a.rulePredicateMap))));
+    }
+    if (d === 'Alphabetical') {
+      explanationDescriptor.features.sort((a, b) =>
+        a.rname.localeCompare(b.rname));
+    }
     svg.datum(explanationDescriptor).call(fv);
     menuSvg.datum(explanationDescriptor).call(fm);
   });
