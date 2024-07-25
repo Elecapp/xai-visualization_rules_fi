@@ -91,6 +91,14 @@ function FiperMenuOrderBy() {
       .attr('fill', FTTemplate.TEXT_COLOR)
       .text('ORDER BY:');
 
+    const generateEvent = (d) => {
+      const selectedKey = d3.select(d.target).datum();
+      Object.keys(orderByOptions).forEach((key) => {
+        orderByOptions[key] = key === selectedKey;
+      });
+      dispatcher.call('changeOrder', null, selectedKey);
+    };
+
     selection.selectAll('text.orderBy')
       .data(Object.keys(orderByOptions))
       .join('text')
@@ -99,18 +107,27 @@ function FiperMenuOrderBy() {
       .attr('y', (d, i) => ((i % 2) * FONT_SIZE * 1.5) + SINGLE_FEATURE_HEIGHT)
       .attr('font-size', FONT_SIZE)
       .attr('dy', '-0.25em')
-      .attr('dx', '0.5em')
+      .attr('dx', '2em') // we leave some space for the checkbox
       .attr('fill', FTTemplate.TEXT_COLOR)
       .attr('font-weight', d => (orderByOptions[d] ? 900 : 400))
       .text(d => d)
       .style('cursor', 'pointer')
-      .on('click', (d) => {
-        const selectedKey = d3.select(d.target).datum();
-        Object.keys(orderByOptions).forEach((key) => {
-          orderByOptions[key] = key === selectedKey;
-        });
-        dispatcher.call('changeOrder', null, selectedKey);
-      });
+      .on('click', generateEvent);
+
+    selection.selectAll('rect.checkbox')
+      .data(Object.keys(orderByOptions))
+      .join('rect')
+      .classed('checkbox', true)
+      .attr('x', (d, i) => 2 + (Math.floor(i / 2) * RULES_COLUMN_WIDTH) / 2)
+      .attr('y', (d, i) => ((i % 2) * FONT_SIZE * 1.5) + SINGLE_FEATURE_HEIGHT - FONT_SIZE)
+      .attr('width', FONT_SIZE)
+      .attr('height', FONT_SIZE)
+      .attr('fill', FTTemplate.TEXT_COLOR)
+      .attr('fill-opacity', d => (orderByOptions[d] ? 0.8 : 0.2))
+      .attr('stroke', FTTemplate.TEXT_COLOR)
+      .attr('stroke-width', 0.5)
+      .style('cursor', 'pointer')
+      .on('click', generateEvent);
 
     selection.selectAll('line.horizontalLine')
       .data([0, 1, 2, 3])
@@ -158,6 +175,17 @@ function FiperMenuFilterBy() {
       .attr('fill', FTTemplate.TEXT_COLOR)
       .text('FILTER BY:');
 
+    const generateEvent = (d) => {
+      const selectedKey = d3.select(d.target).datum();
+      Object.keys(filterByOptions).forEach((key) => {
+        if (key !== selectedKey) {
+          filterByOptions[key] = false;
+        }
+      });
+      filterByOptions[selectedKey] = !filterByOptions[selectedKey];
+      dispatcher.call('changeFilter', null, filterByOptions[selectedKey] ? selectedKey : null);
+    };
+
     selection.selectAll('text.filterBy')
       .data(Object.keys(filterByOptions))
       .join('text')
@@ -166,23 +194,26 @@ function FiperMenuFilterBy() {
       .attr('y', (d, i) => ((i % 2) * FONT_SIZE * 1.5) + SINGLE_FEATURE_HEIGHT)
       .attr('font-size', FONT_SIZE)
       .attr('dy', '-0.25em')
-      .attr('dx', '0.5em')
+      .attr('dx', '2em') // we leave some space for the checkbox
       .attr('fill', FTTemplate.TEXT_COLOR)
-      .attr('font-weight', d => (filterByOptions[d] ? 900 : 400))
       .text(d => d)
       .style('cursor', 'pointer')
-      .on('click', (d) => {
-        const selectedKey = d3.select(d.target).datum();
-        Object.keys(filterByOptions).forEach((key) => {
-          if (key !== selectedKey) {
-            filterByOptions[key] = false;
-          }
-        });
+      .on('click', generateEvent);
 
-        filterByOptions[selectedKey] = !filterByOptions[selectedKey];
-
-        dispatcher.call('changeFilter', null, filterByOptions[selectedKey] ? selectedKey : null);
-      });
+    selection.selectAll('rect.checkbox')
+      .data(Object.keys(filterByOptions))
+      .join('rect')
+      .classed('checkbox', true)
+      .attr('x', 2)
+      .attr('y', (d, i) => ((i % 2) * FONT_SIZE * 1.5) + SINGLE_FEATURE_HEIGHT - FONT_SIZE)
+      .attr('width', FONT_SIZE)
+      .attr('height', FONT_SIZE)
+      .attr('fill', d => (d === 'Rules' ? FTTemplate.RULE_COLOR : FTTemplate.CRULES_COLOR))
+      .attr('fill-opacity', d => (filterByOptions[d] ? 0.8 : 0.2))
+      .attr('stroke', FTTemplate.TEXT_COLOR)
+      .attr('stroke-width', 0.5)
+      .style('cursor', 'pointer')
+      .on('click', generateEvent);
 
     selection.selectAll('line.horizontalLine')
       .data([0, 1, 2, 3])
