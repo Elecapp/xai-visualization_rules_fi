@@ -136,58 +136,38 @@ function FIPERNumericDistributionBoxPlotView() {
 
   function prepareNumericalValues(data) {
     const eda = data[0].eda;
-    const newdata = [];
-    newdata.push({
-      value0: eda.min,
-      value1: eda.q1,
-      y0: 0,
-      y1: 0.1,
-      type: 'line',
-    });
-    newdata.push({
-      value0: eda.q1,
-      value1: eda.median,
-      y0: 0.1,
-      y1: 1,
-      type: 'box',
-    });
-    newdata.push({
-      value0: eda.median,
-      value1: eda.q3,
-      y0: 1,
-      y1: 0.1,
-      type: 'box',
-    });
-    newdata.push({
-      value0: eda.q3,
-      value1: eda.max,
-      y0: 0.1,
-      y1: 0,
-      type: 'line',
-    });
-    return newdata;
+    return [eda.min, eda.q1, eda.median, eda.q3, eda.max];
   }
 
   function me(selection) {
-    selection.selectAll('rect')
-      .data(d => prepareNumericalValues(d.values).filter(v => v.type === 'box'))
-      .join('rect')
-      .attr('x', d => xScale(d.value0))
-      .attr('y', SINGLE_FEATURE_HEIGHT / 6)
-      .attr('width', d => xScale(d.value1) - xScale(d.value0))
-      .attr('height', (SINGLE_FEATURE_HEIGHT * 2) / 3)
-      .attr('fill', FTTemplate.DISTRIBUTION_COLOR)
-      .attr('fill-opacity', 1)
-      .attr('stroke', FTTemplate.DISTRIBUTION_STROKE_COLOR);
-    selection.selectAll('line')
-      .data(d => prepareNumericalValues(d.values).filter(v => v.type === 'line'))
-      .join('line')
-      .attr('x1', d => xScale(d.value0))
-      .attr('x2', d => xScale(d.value1))
-      .attr('y1', SINGLE_FEATURE_HEIGHT / 2)
-      .attr('y2', SINGLE_FEATURE_HEIGHT / 2)
-      .attr('stroke', FTTemplate.DISTRIBUTION_STROKE_COLOR)
-      .attr('stroke-width', 1.3);
+    const feature = selection.datum();
+    const g = selection.selectAll('g.axis')
+      .data(d => [d])
+      .join('g')
+      .classed('axis', true)
+      .attr('transform', `translate(0, ${SINGLE_FEATURE_HEIGHT / 2})`);
+
+    g.call(d3.axisBottom(xScale)
+      .tickValues(prepareNumericalValues(feature.values)),
+    );
+    // avoid overlapping labels using vertical offset
+    g.selectAll('.tick text')
+      .attr('transform', (d, i, nodes) => {
+        if ((i > 0)) {
+          const prev = nodes[i - 1];
+          if (d3.select(prev).attr('transform') === 'translate(0, 0)') {
+            const prevBox = prev.getBBox();
+            const curr = nodes[i];
+            const currBox = curr.getBBox();
+            if (currBox.x < (prevBox.x + prevBox.width)) {
+              const offset = prevBox.y + prevBox.height - currBox.y;
+              return `translate(0, ${offset})`;
+            }
+          }
+        }
+        return 'translate(0, 0)';
+
+      });
 
     return me;
   }
@@ -1224,7 +1204,7 @@ function reduceUnionIntersection(predicatesWithIntervals) {
   return result;
 }
 
-d3.json('/static/instance_170.json').then((data) => {
+d3.json('/static/instance_180.json').then((data) => {
   // preprocess each entry to copmute the expected value for the categorical counterrules
   const tfeature = data.features
     // .filter(f => f.type === 'categorical')
