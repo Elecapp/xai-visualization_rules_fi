@@ -145,8 +145,7 @@ function FIPERNumericDistributionBoxPlotView() {
       .data(d => [d])
       .join('g')
       .classed('axis', true)
-      .attr('transform', `translate(0, ${SINGLE_FEATURE_HEIGHT / 2})`);
-
+      .attr('transform', `translate(0, ${height / 6})`);
     g.call(d3.axisBottom(xScale)
       .tickValues(prepareNumericalValues(feature.values)),
     );
@@ -709,7 +708,7 @@ function FIPERFeatureImportanceView() {
         .data(d => [d])
         .join('g')
         .classed('fi-axis', true)
-        .attr('transform', `translate(0, ${1.5 * height})`)
+        .attr('transform', `translate(0, ${(height * 11) / 6})`)
         .call(axis);
     } else {
       selection.selectAll('g.fi-axis').remove();
@@ -875,7 +874,7 @@ function FIPERView() {
     // Component to handle the FI visualization for each feature
     const ffv = FIPERFeatureImportanceView()
       .width(FI_COLUMN_WIDTH)
-      .height((SINGLE_FEATURE_HEIGHT * 3 )/ 6)
+      .height((SINGLE_FEATURE_HEIGHT * 3) / 6)
       .fitExtent(fiExtent);
     // Component to handle the distribution of the values of the descriptor of each feature
     const fdv = FIPERFeatureDistributionView()
