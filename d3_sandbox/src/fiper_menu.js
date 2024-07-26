@@ -295,18 +295,7 @@ function FiperMenu() {
     // =========================================================
     //                   Feature Importance
     // =========================================================
-    gMenu.selectAll('rect.featureImportance')
-      .data([null])
-      .join('rect')
-      .classed('featureImportance', true)
-      .attr('x', ((CRULES_GRID_COLUMN_WIDTH * CRulesList.length) + GUTTER) + (LABELS_COLUMN_WIDTH + GUTTER) +
-                  (RULES_COLUMN_WIDTH + GUTTER))
-      .attr('y', GUTTER)
-      .attr('width', FI_COLUMN_WIDTH)
-      .attr('height', MENU_HEIGHT - (2 * GUTTER))
-      .attr('stroke', FTTemplate.TEXT_COLOR)
-      .attr('stroke-width', 0.5)
-      .attr('fill', 'none');
+
 
     const gFilter = gMenu.selectAll('g.filter')
       .data(d => [d])
