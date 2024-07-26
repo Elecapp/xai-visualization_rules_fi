@@ -305,13 +305,21 @@ function FIPERFeatureDistributionView() {
   let strokeColor = FTTemplate.DISTRIBUTION_STROKE_COLOR;
   let fFilterRule = () => true;
 
+  const t = d3.transition()
+    .duration(500)
+    .ease(d3.easeLinear);
+
   function me(selection) {
     const gDetails = selection.selectAll('g.details')
       .data(d => [d])
       .join('g')
       .classed('details', true)
-      .attr('transform', `translate(0, ${1.5 * height})`)
-      .attr('visibility', d => (d.status === 1 ? 'visible' : 'hidden'));
+      .attr('transform', `translate(0, ${1.5 * height})`);
+
+    gDetails
+      .transition(t).duration(d => (d.status === 1 ? 500 : 100))
+      .attr('opacity', d => (d.status === 1 ? 1 : 0));
+
 
     if (selection.datum().type === 'categorical') {
       const total = d3.sum(selection.datum().values, d => d.eda.count);
@@ -905,7 +913,7 @@ function FIPERView() {
         setTimeout(() => {
           const bbox = selection.node().getBBox();
           selection.node().parentNode.setAttribute('height', bbox.height + (2 * GUTTER));
-        }, 10);
+        }, 100);
       });
 
 
@@ -915,7 +923,7 @@ function FIPERView() {
       .join('g')
       .classed('feature', true);
 
-    gFeatures.transition(t)
+    gFeatures
       .attr('transform', (d, i) => `translate(0, ${yScale(i) + (d.status > 1 ? (d.rows) * SINGLE_FEATURE_HEIGHT : 0)})`);
     // a rectangle to set the widht and height of the feature row.
     gFeatures.selectAll('rect.background')
@@ -925,6 +933,7 @@ function FIPERView() {
       .attr('y', -6)
       .attr('width', width)
       .attr('height', d => (d.status === 1 ? (d.rows + 1) * SINGLE_FEATURE_HEIGHT : SINGLE_FEATURE_HEIGHT))
+      .transition(t)
       .attr('fill', d => highlightScale(d.highlighted));
 
     // for each feature row, we have 3 groups:
@@ -1473,7 +1482,8 @@ d3.json('/static/instance_180.json').then((data) => {
   const bbox = svg.node().getBBox();
   svg.node().parentNode.setAttribute('height', bbox.height + GUTTER);
   svg.node().parentNode.setAttribute('width', bbox.width + GUTTER);
-  menuSvg.node().setAttribute('width', bbox.width + GUTTER);
+  fv.width(bbox.width + GUTTER);
+  menuSvg.node().setAttribute('width', bbox.width);
 
 
   dispatcher.on('changeCounterRule', (d) => {
