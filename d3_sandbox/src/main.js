@@ -400,6 +400,8 @@ function FIPERFeatureDistributionView() {
           .attr('font-size', FONT_SIZE)
           .attr('fill', d => ((d.instance_value === 1) ? FTTemplate.VALUE_TEXT_COLOR : FTTemplate.OTHER_TEXT_COLOR))
           .text(d => `${d.value} (${d.percent.toFixed(2)}%)`);
+      } else {
+        gDetails.selectAll('g.feature-value').transition(t).remove();
       }
     } else {
       // Here we have a numerical feature
@@ -939,8 +941,8 @@ function FIPERView() {
         // console.log('Transition ended');
         setTimeout(() => {
           const bbox = selection.node().getBBox();
-          selection.node().parentNode.setAttribute('height', bbox.height + (2 * GUTTER));
-        }, 100);
+          selection.node().parentNode.setAttribute('height', bbox.height + (2 * VERTICAL_GUTTER));
+        }, 300);
       });
 
 
