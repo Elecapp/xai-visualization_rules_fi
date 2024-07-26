@@ -646,7 +646,7 @@ function FIPERFeatureLabelsView() {
         }
         return `${d.values[0].instance_value}`;
       })
-      .attr('opacity', d => ((d.highlighted && d.type === 'categorical') ? 0 : 1));
+      .attr('opacity', d => ((d.status === 1 && d.type === 'categorical') ? 0 : 1));
 
 
     return me;
@@ -840,13 +840,40 @@ function FIPERView() {
 
   function me(selection) {
     const origDatum = selection.datum();
-    // console.log('origDatum', origDatum);
-    const features = selection.datum().features;
+    console.log('origDatum', origDatum);
+    const oFeatures = selection.datum().features;
     // determine the maximum value of Feature Importance to fit the scale. We use absolute value
     // to ignore the sign of the feature importance
-    const fiMax = d3.max(features, d => Math.abs(d.feature_importance));
+    const fiMax = d3.max(oFeatures, d => Math.abs(d.feature_importance));
     // create a scale to fit the feature importance values in absolute value
     const fiExtent = [0, fiMax];
+
+    // prepare the features for visualization
+    // given the order of the features, we scan all of them, to find that
+    // feature that has the property status equal to 1. This feature will be
+    // the selected one and will be displayes expanded.
+    // The preceeding features will be displayed in a collapsed way and they
+    // are marked with the property status equal to 0.
+    // The following features will be displayed in a collapsed way and they
+    // are marked with the property status equal to 2. For these features, we
+    // need to calculate an offset to position them correctly. This offset is given
+    // by the sum of the number of rows of the selected feature.
+
+    let offsetRows = 0;
+    const features = oFeatures.map((d) => {
+      const f = {
+        ...d,
+        rows: d.values.length,
+      };
+      if (d.type === 'numeric') { f.rows = 2; } // default values for numeric features.
+      f.offsetRows = offsetRows;
+      if (d.status === 1) { offsetRows = f.rows; }
+
+      return f;
+    });
+    console.log('features', features);
+
+
     // Component to handle the FI visualization for each feature
     const ffv = FIPERFeatureImportanceView()
       .width(FI_COLUMN_WIDTH)
@@ -896,7 +923,7 @@ function FIPERView() {
 
     // colorscale to be used to highlight the selected feature
     const highlightScale = d3.scaleOrdinal()
-      .domain([false, true])
+      .domain([0, 1])
       .range(['transparent', FTTemplate.SECONDARY_BACKGROUND_COLOR]);
 
     // const backgroundHeight = d3.scaleOrdinal()
@@ -924,7 +951,8 @@ function FIPERView() {
       .classed('feature', true);
 
     gFeatures
-      .attr('transform', (d, i) => `translate(0, ${yScale(i) + (d.status > 1 ? (d.rows) * SINGLE_FEATURE_HEIGHT : 0)})`);
+      .transition(t)
+      .attr('transform', (d, i) => `translate(0, ${yScale(i) + (d.offsetRows * SINGLE_FEATURE_HEIGHT)})`);
     // a rectangle to set the widht and height of the feature row.
     gFeatures.selectAll('rect.background')
       .data(d => [d])
@@ -934,7 +962,7 @@ function FIPERView() {
       .attr('width', width)
       .attr('height', d => (d.status === 1 ? (d.rows + 1) * SINGLE_FEATURE_HEIGHT : SINGLE_FEATURE_HEIGHT))
       .transition(t)
-      .attr('fill', d => highlightScale(d.highlighted));
+      .attr('fill', d => highlightScale(d.status));
 
     // for each feature row, we have 3 groups:
     // 1. the feature importance
@@ -999,58 +1027,17 @@ function FIPERView() {
     });
     // eslint-disable-next-line func-names
     gFeatures.on('click', function () {
-      // mark the current selection as highlighted
-      const currSelection = d3.select(this).datum().highlighted;
-      // reset all the other selections
-      gFeatures.data().forEach((d) => {
-        // eslint-disable-next-line no-param-reassign
-        d.highlighted = false;
-      });
-      // toggle the current selection (if it was selected, the selection is removed)
-      if (!currSelection) {
-        d3.select(this).datum().highlighted = true;
-      }
-      // search for the index of the selected element. All previous elements will be
-      // marked with a 0, the selected element with a 1 and the following elements with a 2
-      let selectedIdx = 9999999999;
-      // rows is the number of rows that the current selection will occupy. For categorical
-      // features, this is the number of distinct values. For numerical features, this is set to 5.
-      let rows = 1;
-      const prevFeatures = gFeatures.data();
-      const newFeatures = prevFeatures.map((d, i) => {
-        const current = { ...d };
-        if (d.highlighted) {
-          selectedIdx = i;
-          current.status = 1;
-          // categorical features have a different number of rows, depending on the number
-          // of distinct values
-          rows = prevFeatures[selectedIdx].values.length;
-          if (d.type === 'numeric') {
-            // for numerical features, we want to show the distribution of the values
-            // in the instance. This is why we set the number of rows to 5.
-            rows = 2;
-          }
-          current.rows = rows;
+      const clickedFeature = d3.select(this).datum();
+      gFeatures.data().forEach((d, i) => {
+        if (d.rname === clickedFeature.rname) {
+          // eslint-disable-next-line no-param-reassign
+          selection.datum().features[i].status = (d.status === 1) ? 0 : 1;
         } else {
-          current.status = 0;
-          if (i > selectedIdx) {
-            current.status = 2;
-          }
+          // eslint-disable-next-line no-param-reassign
+          selection.datum().features[i].status = 0;
         }
-        return current;
-      }).map((d, i) => {
-        if (i >= selectedIdx) {
-          return {
-            ...d,
-            rows,
-          };
-        }
-        return d;
       });
-      selection.datum(({
-        ...origDatum,
-        features: newFeatures,
-      }));
+
       me(selection);
       const bbox = selection.node().getBBox();
       selection.node().parentNode.setAttribute('height', bbox.height + GUTTER);
@@ -1283,7 +1270,6 @@ d3.json('/static/instance_180.json').then((data) => {
       values: d[1].map(v => ({ ...v, rvalues: [], crvalues: [] })),
       feature_importance: d3.sum(d[1], f => f.feature_importance),
       type: d[1][0].type,
-      highlighted: false, // flag if a feature is selected
       status: 0, // flag to indicate the status of the feature. 0: normal, 1: selected
       rows: d[1].length, // how many distinct values the feature has
       // rvalues: [], // to be removed
@@ -1483,7 +1469,7 @@ d3.json('/static/instance_180.json').then((data) => {
   svg.node().parentNode.setAttribute('height', bbox.height + GUTTER);
   svg.node().parentNode.setAttribute('width', bbox.width + GUTTER);
   fv.width(bbox.width + GUTTER);
-  menuSvg.node().setAttribute('width', bbox.width);
+  menuSvg.node().setAttribute('width', bbox.width + GUTTER);
 
 
   dispatcher.on('changeCounterRule', (d) => {
