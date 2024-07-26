@@ -18,7 +18,6 @@ import {
 
 const d3 = require('d3');
 
-
 function fontScaleFactor(fontSize) {
   const cWidthFactor = d3.scaleLinear()
     .domain([8, 13])
@@ -903,8 +902,10 @@ function FIPERView() {
       .ease(d3.easeLinear)
       .on('end', () => {
         // console.log('Transition ended');
-        const bbox = selection.node().getBBox();
-        selection.node().parentNode.setAttribute('height', bbox.height + (2 * GUTTER));
+        setTimeout(() => {
+          const bbox = selection.node().getBBox();
+          selection.node().parentNode.setAttribute('height', bbox.height + (2 * GUTTER));
+        }, 10);
       });
 
 
