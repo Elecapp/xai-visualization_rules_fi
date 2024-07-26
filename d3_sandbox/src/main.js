@@ -166,7 +166,6 @@ function FIPERNumericDistributionBoxPlotView() {
           }
         }
         return 'translate(0, 0)';
-
       });
 
     return me;
@@ -653,7 +652,7 @@ function FIPERFeatureLabelsView() {
 
 function FIPERFeatureImportanceView() {
   let width = FI_COLUMN_WIDTH;
-  let height = 50;
+  let height = 50000;
   let fiExtent = [0, 1];
   const barLength = d3.scaleLinear()
     .range([0, width])
@@ -672,8 +671,8 @@ function FIPERFeatureImportanceView() {
       .classed('background', true)
       .attr('x1', 0)
       .attr('x2', width)
-      .attr('y1', ((SINGLE_FEATURE_HEIGHT * 3) / 6) / 2)
-      .attr('y2', ((SINGLE_FEATURE_HEIGHT * 3) / 6) / 2)
+      .attr('y1', (height / 2))
+      .attr('y2', (height / 2))
       .attr('stroke', FTTemplate.GRID_COLOR)
       .style('stroke-dasharray', ('3, 3'))
       .attr('stroke-width', 0.25);
@@ -682,7 +681,7 @@ function FIPERFeatureImportanceView() {
       .join('line')
       .classed('axis', true)
       .attr('y1', 0)
-      .attr('y2', (SINGLE_FEATURE_HEIGHT * 3) / 6)
+      .attr('y2', height)
       .attr('stroke', FTTemplate.GRID_COLOR)
       .attr('stroke-width', 0.3);
     selection.selectAll('rect')
@@ -691,11 +690,30 @@ function FIPERFeatureImportanceView() {
       // .attr('x', (width / 2))
       .attr('y', 0)
       .attr('width', d => barLength(Math.abs(d.feature_importance)))
-      .attr('height', (SINGLE_FEATURE_HEIGHT * 3) / 6)
+      .attr('height', height)
       .attr('fill', d => (d.feature_importance < 0 ? FTTemplate.NEGATIVE_FI_COLOR : FTTemplate.FI_POSITIVE_COLOR));
     // selection.selectAll('rect')
     //   .filter(d => d.feature_importance < 0)
     //   .attr('x', d => (width / 2) - barLength(Math.abs(d.feature_importance)));
+
+    if (selection.datum().status === 1) {
+      const axis = d3.axisBottom(barLength)
+        .tickValues([...fiExtent, Math.abs(selection.datum().feature_importance)])
+        .tickFormat(d3.format('.2f'));
+
+      if (selection.datum().feature_importance < 0) {
+        axis.tickFormat(d => `-${d3.format('.2f')(d)}`);
+      }
+
+      selection.selectAll('g.fi-axis')
+        .data(d => [d])
+        .join('g')
+        .classed('fi-axis', true)
+        .attr('transform', `translate(0, ${1.5 * height})`)
+        .call(axis);
+    } else {
+      selection.selectAll('g.fi-axis').remove();
+    }
   }
 
   // eslint-disable-next-line
@@ -857,7 +875,7 @@ function FIPERView() {
     // Component to handle the FI visualization for each feature
     const ffv = FIPERFeatureImportanceView()
       .width(FI_COLUMN_WIDTH)
-      .height(SINGLE_FEATURE_HEIGHT)
+      .height((SINGLE_FEATURE_HEIGHT * 3 )/ 6)
       .fitExtent(fiExtent);
     // Component to handle the distribution of the values of the descriptor of each feature
     const fdv = FIPERFeatureDistributionView()
@@ -1204,7 +1222,7 @@ function reduceUnionIntersection(predicatesWithIntervals) {
   return result;
 }
 
-d3.json('/static/instance_180.json').then((data) => {
+d3.json('/static/instance_170.json').then((data) => {
   // preprocess each entry to copmute the expected value for the categorical counterrules
   const tfeature = data.features
     // .filter(f => f.type === 'categorical')
