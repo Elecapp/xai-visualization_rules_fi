@@ -842,7 +842,7 @@ function FIPERView() {
 
   function me(selection) {
     const origDatum = selection.datum();
-    console.log('origDatum', origDatum);
+    // console.log('origDatum', origDatum);
     const oFeatures = selection.datum().features;
     // determine the maximum value of Feature Importance to fit the scale. We use absolute value
     // to ignore the sign of the feature importance
@@ -873,8 +873,6 @@ function FIPERView() {
 
       return f;
     });
-    console.log('features', features);
-
 
     // Component to handle the FI visualization for each feature
     const ffv = FIPERFeatureImportanceView()
@@ -1226,8 +1224,7 @@ function reduceUnionIntersection(predicatesWithIntervals) {
   return result;
 }
 
-d3.json('/static/instance_180.json').then((data) => {
-  // console.log('data', data);
+d3.json('/static/instance_170.json').then((data) => {
   // preprocess each entry to copmute the expected value for the categorical counterrules
   const tfeature = data.features
     // .filter(f => f.type === 'categorical')

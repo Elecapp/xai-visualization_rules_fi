@@ -58,6 +58,7 @@ function FiperMenuCRule() {
       .attr('alignment-baseline', 'middle')
       .attr('font-size', FONT_SIZE)
       .attr('fill', FTTemplate.TEXT_COLOR)
+      .attr('cursor', 'pointer')
       .text(d => d);
   }
   // eslint-disable-next-line func-names
@@ -118,7 +119,7 @@ function FiperMenuOrderBy() {
       .data(Object.keys(orderByOptions))
       .join('rect')
       .classed('checkbox', true)
-      .attr('x', (d, i) => 2 + (Math.floor(i / 2) * RULES_COLUMN_WIDTH) / 2)
+      .attr('x', (d, i) => 2 + ((Math.floor(i / 2) * RULES_COLUMN_WIDTH) / 2))
       .attr('y', (d, i) => (((i % 2) * FONT_SIZE * 1.5) + SINGLE_FEATURE_HEIGHT) - FONT_SIZE)
       .attr('width', FONT_SIZE)
       .attr('height', FONT_SIZE)
