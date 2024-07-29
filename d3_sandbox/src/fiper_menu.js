@@ -7,6 +7,7 @@ import {
   CRULES_GRID_COLUMN_WIDTH,
   FONT_SIZE, colorSet,
   dispatcher, SINGLE_FEATURE_HEIGHT,
+  VERTICAL_GUTTER,
 } from './constants';
 
 const d3 = require('d3');
@@ -41,10 +42,10 @@ function FiperMenuCRule() {
       .join('rect')
       .classed('counterRule', true)
       .attr('width', CRULES_GRID_COLUMN_WIDTH)
-      .attr('height', MENU_HEIGHT - (2 * GUTTER))
+      .attr('height', MENU_HEIGHT)
       .attr('stroke', FTTemplate.TEXT_COLOR)
       .attr('stroke-width', 0.5)
-      .attr('fill-opacity', 0.5)
+      .attr('fill-opacity', 0.8)
       .attr('fill', d => (d === explanationDescriptor.selectedCounterRule ? FTTemplate.CRULES_COLOR : FTTemplate.BASE_COLOR))
       .attr('stroke', d => (d === explanationDescriptor.selectedCounterRule ? FTTemplate.CRULES_STROKE_COLOR : FTTemplate.BASE_STROKE_COLOR));
 
@@ -57,10 +58,12 @@ function FiperMenuCRule() {
       .attr('text-anchor', 'middle')
       .attr('alignment-baseline', 'middle')
       .attr('font-size', FONT_SIZE)
-      .attr('fill', FTTemplate.TEXT_COLOR)
+      .attr('font-weight', d => (d === explanationDescriptor.selectedCounterRule ? 900 : 400))
+      .attr('fill', d => (d === explanationDescriptor.selectedCounterRule ? '#eee' : FTTemplate.TEXT_COLOR))
       .attr('cursor', 'pointer')
       .text(d => d);
   }
+
   // eslint-disable-next-line func-names
   me.bandScale = function (_) {
     if (!arguments.length) return bandScale;
@@ -85,12 +88,13 @@ function FiperMenuOrderBy() {
       .join('text')
       .classed('label', true)
       .attr('x', 0)
-      .attr('y', 0)
+      .attr('y', (SINGLE_FEATURE_HEIGHT / 2) - (FONT_SIZE / 2))
       .attr('font-size', FONT_SIZE)
+      .attr('font-weight', 900)
       .attr('dy', '1em')
       .attr('dx', '0.5em')
       .attr('fill', FTTemplate.TEXT_COLOR)
-      .text('ORDER BY:');
+      .text('ORDER BY');
 
     const generateEvent = (d) => {
       const selectedKey = d3.select(d.target).datum();
@@ -105,9 +109,9 @@ function FiperMenuOrderBy() {
       .join('text')
       .classed('orderBy', true)
       .attr('x', (d, i) => (Math.floor(i / 2) * RULES_COLUMN_WIDTH) / 2)
-      .attr('y', (d, i) => ((i % 2) * FONT_SIZE * 1.5) + SINGLE_FEATURE_HEIGHT)
+      .attr('y', (d, i) => ((i % 2) * (SINGLE_FEATURE_HEIGHT)) + SINGLE_FEATURE_HEIGHT + GUTTER)
       .attr('font-size', FONT_SIZE)
-      .attr('dy', '-0.25em')
+      .attr('dy', (SINGLE_FEATURE_HEIGHT / 2) - (FONT_SIZE / 2))
       .attr('dx', '2em') // we leave some space for the checkbox
       .attr('fill', FTTemplate.TEXT_COLOR)
       .attr('font-weight', d => (orderByOptions[d] ? 900 : 400))
@@ -119,8 +123,8 @@ function FiperMenuOrderBy() {
       .data(Object.keys(orderByOptions))
       .join('rect')
       .classed('checkbox', true)
-      .attr('x', (d, i) => 2 + ((Math.floor(i / 2) * RULES_COLUMN_WIDTH) / 2))
-      .attr('y', (d, i) => (((i % 2) * FONT_SIZE * 1.5) + SINGLE_FEATURE_HEIGHT) - FONT_SIZE)
+      .attr('x', (d, i) => 2 + ((Math.floor(i / 2) * RULES_COLUMN_WIDTH) / 2) + VERTICAL_GUTTER)
+      .attr('y', (d, i) => ((i % 2) * SINGLE_FEATURE_HEIGHT) + SINGLE_FEATURE_HEIGHT + ((SINGLE_FEATURE_HEIGHT / 2) - (FONT_SIZE / 2)))
       .attr('width', FONT_SIZE)
       .attr('height', FONT_SIZE)
       .attr('fill', FTTemplate.TEXT_COLOR)
@@ -135,9 +139,9 @@ function FiperMenuOrderBy() {
       .join('line')
       .classed('horizontalLine', true)
       .attr('x1', 0)
-      .attr('y1', d => (d * FONT_SIZE * 1.5))
+      .attr('y1', d => (d * SINGLE_FEATURE_HEIGHT))
       .attr('x2', RULES_COLUMN_WIDTH)
-      .attr('y2', d => (d * FONT_SIZE * 1.5))
+      .attr('y2', d => (d * SINGLE_FEATURE_HEIGHT))
       .attr('stroke', FTTemplate.TEXT_COLOR)
       .attr('stroke-width', 0.5);
 
@@ -146,9 +150,9 @@ function FiperMenuOrderBy() {
       .join('line')
       .classed('verticalLine', true)
       .attr('x1', RULES_COLUMN_WIDTH / 2)
-      .attr('y1', FONT_SIZE * 1.5)
+      .attr('y1', SINGLE_FEATURE_HEIGHT)
       .attr('x2', RULES_COLUMN_WIDTH / 2)
-      .attr('y2', FONT_SIZE * 3 * 1.5)
+      .attr('y2', SINGLE_FEATURE_HEIGHT * 3)
       .attr('stroke', FTTemplate.TEXT_COLOR)
       .attr('stroke-width', 0.5);
   }
@@ -169,12 +173,13 @@ function FiperMenuFilterBy() {
       .join('text')
       .classed('label', true)
       .attr('x', 0)
-      .attr('y', 0)
+      .attr('y', (SINGLE_FEATURE_HEIGHT / 2) - (FONT_SIZE / 2))
       .attr('font-size', FONT_SIZE)
+      .attr('font-weight', 900)
       .attr('dy', '1em')
       .attr('dx', '0.5em')
       .attr('fill', FTTemplate.TEXT_COLOR)
-      .text('FILTER BY:');
+      .text('FILTER BY');
 
     const generateEvent = (d) => {
       const selectedKey = d3.select(d.target).datum();
@@ -192,9 +197,9 @@ function FiperMenuFilterBy() {
       .join('text')
       .classed('filterBy', true)
       .attr('x', (d, i) => (Math.floor(i / 2) * RULES_COLUMN_WIDTH) / 2)
-      .attr('y', (d, i) => ((i % 2) * FONT_SIZE * 1.5) + SINGLE_FEATURE_HEIGHT)
+      .attr('y', (d, i) => ((i % 2) * (SINGLE_FEATURE_HEIGHT)) + SINGLE_FEATURE_HEIGHT + GUTTER)
       .attr('font-size', FONT_SIZE)
-      .attr('dy', '-0.25em')
+      .attr('dy', (SINGLE_FEATURE_HEIGHT / 2) - (FONT_SIZE / 2))
       .attr('dx', '2em') // we leave some space for the checkbox
       .attr('fill', FTTemplate.TEXT_COLOR)
       .text(d => d)
@@ -205,8 +210,8 @@ function FiperMenuFilterBy() {
       .data(Object.keys(filterByOptions))
       .join('rect')
       .classed('checkbox', true)
-      .attr('x', 2)
-      .attr('y', (d, i) => (((i % 2) * FONT_SIZE * 1.5) + SINGLE_FEATURE_HEIGHT) - FONT_SIZE)
+      .attr('x', (d, i) => 2 + ((Math.floor(i / 2) * RULES_COLUMN_WIDTH) / 2) + VERTICAL_GUTTER)
+      .attr('y', (d, i) => ((i % 2) * (SINGLE_FEATURE_HEIGHT)) + SINGLE_FEATURE_HEIGHT + GUTTER)
       .attr('width', FONT_SIZE)
       .attr('height', FONT_SIZE)
       .attr('fill', d => (d === 'Rules' ? FTTemplate.RULE_COLOR : FTTemplate.CRULES_COLOR))
@@ -221,9 +226,9 @@ function FiperMenuFilterBy() {
       .join('line')
       .classed('horizontalLine', true)
       .attr('x1', 0)
-      .attr('y1', d => (d * FONT_SIZE * 1.5))
+      .attr('y1', d => (d * SINGLE_FEATURE_HEIGHT))
       .attr('x2', FI_COLUMN_WIDTH)
-      .attr('y2', d => (d * FONT_SIZE * 1.5))
+      .attr('y2', d => (d * SINGLE_FEATURE_HEIGHT))
       .attr('stroke', FTTemplate.TEXT_COLOR)
       .attr('stroke-width', 0.5);
   }
@@ -261,20 +266,20 @@ function FiperMenu() {
       .attr('x', GUTTER)
       .attr('y', GUTTER)
       .attr('width', LABELS_COLUMN_WIDTH - GUTTER)
-      .attr('height', MENU_HEIGHT - (2 * GUTTER))
+      .attr('height', MENU_HEIGHT)
       .attr('stroke', FTTemplate.TEXT_COLOR)
       .attr('stroke-width', 0.5)
       .attr('fill', 'none');
 
 
     // =========================================================
-    //                  Labels
+    //                  Order By Selector
     // =========================================================
     const gOrder = gMenu.selectAll('g.distribution')
       .data(d => [d])
       .join('g')
       .classed('distribution', true)
-      .attr('transform', `translate(${LABELS_COLUMN_WIDTH + GUTTER}, ${2 * GUTTER})`);
+      .attr('transform', `translate(${LABELS_COLUMN_WIDTH + GUTTER}, ${GUTTER})`);
     gOrder.call(menuOrderBy);
     // =========================================================
 
@@ -302,7 +307,7 @@ function FiperMenu() {
       .join('g')
       .classed('filter', true)
       .attr('transform', `translate(${((CRULES_GRID_COLUMN_WIDTH * CRulesList.length) + GUTTER) + (LABELS_COLUMN_WIDTH + GUTTER) +
-                  (RULES_COLUMN_WIDTH + GUTTER)}, ${2 * GUTTER})`);
+      (RULES_COLUMN_WIDTH + GUTTER)}, ${GUTTER})`);
     gFilter.call(menuFilterBy);
     // =========================================================
   }
