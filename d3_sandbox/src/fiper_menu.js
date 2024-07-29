@@ -135,7 +135,7 @@ function FiperMenuOrderBy() {
       .on('click', generateEvent);
 
     selection.selectAll('line.horizontalLine')
-      .data([0, 1, 2, 3])
+      .data([1, 2, 3])
       .join('line')
       .classed('horizontalLine', true)
       .attr('x1', 0)
@@ -222,7 +222,7 @@ function FiperMenuFilterBy() {
       .on('click', generateEvent);
 
     selection.selectAll('line.horizontalLine')
-      .data([0, 1, 2, 3])
+      .data([1, 2, 3])
       .join('line')
       .classed('horizontalLine', true)
       .attr('x1', 0)
