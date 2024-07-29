@@ -45,7 +45,7 @@ function FiperMenuCRule() {
       .attr('height', MENU_HEIGHT)
       .attr('stroke', FTTemplate.TEXT_COLOR)
       .attr('stroke-width', 0.5)
-      .attr('fill-opacity', 0.8)
+      .attr('fill-opacity', 1)
       .attr('fill', d => (d === explanationDescriptor.selectedCounterRule ? FTTemplate.CRULES_COLOR : FTTemplate.BASE_COLOR))
       .attr('stroke', d => (d === explanationDescriptor.selectedCounterRule ? FTTemplate.CRULES_STROKE_COLOR : FTTemplate.BASE_STROKE_COLOR));
 
