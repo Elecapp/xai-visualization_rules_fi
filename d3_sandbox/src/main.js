@@ -159,7 +159,7 @@ function FIPERNumericDistributionBoxPlotView() {
             const curr = nodes[i];
             const currBox = curr.getBBox();
             if (currBox.x < (prevBox.x + prevBox.width)) {
-              const offset = prevBox.y + prevBox.height - currBox.y;
+              const offset = (prevBox.y + prevBox.height) - currBox.y;
               return `translate(0, ${offset})`;
             }
           }
@@ -766,8 +766,8 @@ function FIPERCRuleGrid() {
       .classed('gridLine', true)
       .attr('x1', d => bandScale(d) + (bandScale.bandwidth() / 2))
       .attr('x2', d => bandScale(d) + (bandScale.bandwidth() / 2))
-      .attr('y1', 0)
-      .attr('y2', (SINGLE_FEATURE_HEIGHT * 3) / 6)
+      .attr('y1', -(SINGLE_FEATURE_HEIGHT) / 6)
+      .attr('y2', (SINGLE_FEATURE_HEIGHT))
       .attr('stroke', FTTemplate.GRID_COLOR)
       .attr('stroke-width', 0.3)
       .attr('stroke-dasharray', ('3, 3'));
@@ -1221,7 +1221,7 @@ function reduceUnionIntersection(predicatesWithIntervals) {
   return result;
 }
 
-d3.json('/static/instance_170.json').then((data) => {
+d3.json('/static/instance_180.json').then((data) => {
   // preprocess each entry to copmute the expected value for the categorical counterrules
   const tfeature = data.features
     // .filter(f => f.type === 'categorical')
