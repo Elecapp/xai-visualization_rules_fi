@@ -5,8 +5,10 @@ import {
   GUTTER,
   MENU_HEIGHT,
   CRULES_GRID_COLUMN_WIDTH,
-  FONT_SIZE, colorSet,
-  dispatcher, SINGLE_FEATURE_HEIGHT,
+  FONT_SIZE,
+  colorSet,
+  dispatcher,
+  SINGLE_FEATURE_HEIGHT,
   VERTICAL_GUTTER,
 } from './constants';
 
@@ -24,8 +26,7 @@ function FiperMenuCRule() {
       .data(d => d.counterRules)
       .join('g')
       .classed('counterRule', true)
-      .attr('transform', d =>
-        `translate(${bandScale(d)}, 0)`)
+      .attr('transform', d => `translate(${bandScale(d)}, 0)`)
       .on('click', (d) => {
         let selectedCounterRule = d3.select(d.target).datum();
         if (explanationDescriptor.selectedCounterRule === selectedCounterRule) {
@@ -76,10 +77,7 @@ function FiperMenuCRule() {
 
 function FiperMenuOrderBy() {
   const orderByOptions = {
-    'Feature Importance': true,
-    'Rules first': false,
-    'Counter Rules first': false,
-    Alphabetical: false,
+    'Feature Importance': true, 'Rules first': false, 'Counter Rules first': false, Alphabetical: false,
   };
 
   function me(selection) {
@@ -163,8 +161,7 @@ function FiperMenuOrderBy() {
 
 function FiperMenuFilterBy() {
   const filterByOptions = {
-    Rules: false,
-    CRules: false,
+    Rules: false, CRules: false,
   };
 
   function me(selection) {
@@ -255,21 +252,67 @@ function FiperMenu() {
       .classed('menu', true)
       .attr('transform', 'translate(0, 0)');
 
+    console.log('selection.datum()', selection.datum());
 
     const explanationDescriptor = selection.datum();
     const CRulesList = explanationDescriptor.counterRules;
 
-    gMenu.selectAll('rect.classification')
+    const classificationRect = gMenu.selectAll('g.classification')
+      .data(d => [d])
+      .join('g')
+      .classed('classification', true)
+      .attr('transform', `translate(${GUTTER}, ${GUTTER})`)
+      .attr('width', LABELS_COLUMN_WIDTH - GUTTER)
+      .attr('height', MENU_HEIGHT);
+
+    classificationRect.selectAll('rect.classification')
       .data(d => [d])
       .join('rect')
       .classed('classification', true)
-      .attr('x', GUTTER)
-      .attr('y', GUTTER)
+      .attr('x', 0)
+      .attr('y', 0)
       .attr('width', LABELS_COLUMN_WIDTH - GUTTER)
       .attr('height', MENU_HEIGHT)
+      .attr('fill', FTTemplate.SECONDARY_BACKGROUND_COLOR);
+
+    classificationRect.selectAll('line.horizontalLine')
+      .data([1])
+      .join('line')
+      .classed('horizontalLine', true)
+      .attr('x1', GUTTER)
+      .attr('y1', d => d * SINGLE_FEATURE_HEIGHT)
+      .attr('x2', LABELS_COLUMN_WIDTH - (2 * GUTTER))
+      .attr('y2', d => d * SINGLE_FEATURE_HEIGHT)
       .attr('stroke', FTTemplate.TEXT_COLOR)
-      .attr('stroke-width', 0.5)
-      .attr('fill', 'none');
+      .attr('stroke-width', 0.5);
+
+    classificationRect.selectAll('text.classification')
+      .data(d => [d])
+      .join('text')
+      .classed('classification', true)
+      .attr('x', 0)
+      .attr('y', (FONT_SIZE / 2))
+      .attr('font-size', FONT_SIZE)
+      .attr('alignment-baseline', 'middle')
+      .attr('font-weight', 900)
+      .attr('dy', '1em')
+      .attr('dx', GUTTER)
+      .attr('fill', FTTemplate.TEXT_COLOR)
+      .text(d => `The instance is classified as: ${d.bb_pred}`);
+
+    classificationRect.selectAll('text.pproba')
+      .data(d => [d])
+      .join('text')
+      .classed('pproba', true)
+      .attr('x', 0)
+      .attr('y', SINGLE_FEATURE_HEIGHT + (FONT_SIZE / 2))
+      .attr('font-size', FONT_SIZE)
+      .attr('alignment-baseline', 'middle')
+      .attr('font-weight', 900)
+      .attr('dy', '1em')
+      .attr('dx', GUTTER)
+      .attr('fill', FTTemplate.TEXT_COLOR)
+      .text(d => `The prediction probability is: ${d.bb_pred * 100}%`);
 
 
     // =========================================================
@@ -306,8 +349,7 @@ function FiperMenu() {
       .data(d => [d])
       .join('g')
       .classed('filter', true)
-      .attr('transform', `translate(${((CRULES_GRID_COLUMN_WIDTH * CRulesList.length) + GUTTER) + (LABELS_COLUMN_WIDTH + GUTTER) +
-      (RULES_COLUMN_WIDTH + GUTTER)}, ${GUTTER})`);
+      .attr('transform', `translate(${((CRULES_GRID_COLUMN_WIDTH * CRulesList.length) + GUTTER) + (LABELS_COLUMN_WIDTH + GUTTER) + (RULES_COLUMN_WIDTH + GUTTER)}, ${GUTTER})`);
     gFilter.call(menuFilterBy);
     // =========================================================
   }
