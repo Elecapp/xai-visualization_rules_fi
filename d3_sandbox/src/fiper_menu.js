@@ -59,7 +59,7 @@ function FiperMenuCRule() {
       .attr('text-anchor', 'middle')
       .attr('alignment-baseline', 'middle')
       .attr('font-size', FONT_SIZE)
-      .attr('font-weight', d => (d === explanationDescriptor.selectedCounterRule ? 900 : 400))
+      .attr('font-weight', d => (d === explanationDescriptor.selectedCounterRule ? 500 : 400))
       .attr('fill', d => (d === explanationDescriptor.selectedCounterRule ? '#eee' : FTTemplate.TEXT_COLOR))
       .attr('cursor', 'pointer')
       .text(d => d);
@@ -88,7 +88,7 @@ function FiperMenuOrderBy() {
       .attr('x', 0)
       .attr('y', (SINGLE_FEATURE_HEIGHT / 2) - (FONT_SIZE / 2))
       .attr('font-size', FONT_SIZE)
-      .attr('font-weight', 900)
+      .attr('font-weight', 400)
       .attr('dy', '1em')
       .attr('dx', '0.5em')
       .attr('fill', FTTemplate.TEXT_COLOR)
@@ -112,7 +112,7 @@ function FiperMenuOrderBy() {
       .attr('dy', (SINGLE_FEATURE_HEIGHT / 2) - (FONT_SIZE / 2))
       .attr('dx', '2em') // we leave some space for the checkbox
       .attr('fill', FTTemplate.TEXT_COLOR)
-      .attr('font-weight', d => (orderByOptions[d] ? 900 : 400))
+      .attr('font-weight', d => (orderByOptions[d] ? 500 : 400))
       .text(d => d)
       .style('cursor', 'pointer')
       .on('click', generateEvent);
@@ -172,7 +172,7 @@ function FiperMenuFilterBy() {
       .attr('x', 0)
       .attr('y', (SINGLE_FEATURE_HEIGHT / 2) - (FONT_SIZE / 2))
       .attr('font-size', FONT_SIZE)
-      .attr('font-weight', 900)
+      .attr('font-weight', 400)
       .attr('dy', '1em')
       .attr('dx', '0.5em')
       .attr('fill', FTTemplate.TEXT_COLOR)
@@ -294,11 +294,11 @@ function FiperMenu() {
       .attr('y', (FONT_SIZE / 2))
       .attr('font-size', FONT_SIZE)
       .attr('alignment-baseline', 'middle')
-      .attr('font-weight', 900)
+      .attr('font-weight', 400)
       .attr('dy', '1em')
       .attr('dx', GUTTER)
       .attr('fill', FTTemplate.TEXT_COLOR)
-      .text(d => `The instance is classified as: ${d.bb_pred}`);
+      .html(d => `The instance is classified as <tspan font-weight="500" alignment-baseline="middle">${d.bb_pred}</tspan>`);
 
     classificationRect.selectAll('text.pproba')
       .data(d => [d])
@@ -308,11 +308,11 @@ function FiperMenu() {
       .attr('y', SINGLE_FEATURE_HEIGHT + (FONT_SIZE / 2))
       .attr('font-size', FONT_SIZE)
       .attr('alignment-baseline', 'middle')
-      .attr('font-weight', 900)
+      .attr('font-weight', 400)
       .attr('dy', '1em')
       .attr('dx', GUTTER)
       .attr('fill', FTTemplate.TEXT_COLOR)
-      .text(d => `The prediction probability is: ${d.bb_pred * 100}%`);
+      .html(d => `The prediction probability is <tspan font-weight="500" alignment-baseline="middle">${d.bb_pred * 100}</tspan>`);
 
 
     // =========================================================

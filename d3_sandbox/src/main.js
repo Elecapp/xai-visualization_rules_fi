@@ -363,7 +363,7 @@ function FIPERFeatureDistributionView() {
           .attr('text-anchor', 'end')
           .attr('alignment-baseline', 'middle')
           .attr('font-size', FONT_SIZE)
-          .attr('font-weight', d => ((d.instance_value === 1) ? 'bold' : 'normal'))
+          .attr('font-weight', d => ((d.instance_value === 1) ? '500' : '400'))
           .attr('fill', d => ((d.instance_value === 1) ? FTTemplate.VALUE_TEXT_COLOR : FTTemplate.OTHER_TEXT_COLOR))
           .text(d => (d.label.length > maxLabelLength ? `${d.label.substring(0, maxLabelLength - 2)}…` : d.label));
         // text for the values for each value of the feature
@@ -605,7 +605,7 @@ function FIPERFeatureLabelsView() {
       .attr('text-anchor', 'end')
       .attr('alignment-baseline', 'middle')
       .attr('font-size', FONT_SIZE)
-      .attr('font-weight', 'bold')
+      .attr('font-weight', '500')
       .attr('fill', FTTemplate.TEXT_COLOR)
       .text(d => (d.rname.length > maxLabelLength ? `${d.rname.substring(0, maxLabelLength - 2)}…` : d.rname));
 
