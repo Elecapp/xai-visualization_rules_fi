@@ -312,7 +312,7 @@ function FiperMenu() {
       .attr('dy', '1em')
       .attr('dx', GUTTER)
       .attr('fill', FTTemplate.TEXT_COLOR)
-      .html(d => `The prediction probability is <tspan font-weight="500" alignment-baseline="middle">${d.bb_pred * 100}</tspan>`);
+      .html(d => `The prediction probability is <tspan font-weight="500" alignment-baseline="middle">${d.bb_pred * 100}%</tspan>`);
 
 
     // =========================================================
