@@ -252,8 +252,6 @@ function FiperMenu() {
       .classed('menu', true)
       .attr('transform', 'translate(0, 0)');
 
-    console.log('selection.datum()', selection.datum());
-
     const explanationDescriptor = selection.datum();
     const CRulesList = explanationDescriptor.counterRules;
 
@@ -326,16 +324,87 @@ function FiperMenu() {
       .attr('width', LABELS_COLUMN_WIDTH + GUTTER + RULES_COLUMN_WIDTH + GUTTER + (CRulesList.length * CRULES_GRID_COLUMN_WIDTH) + GUTTER + FI_COLUMN_WIDTH + GUTTER)
       .attr('height', SINGLE_FEATURE_HEIGHT);
 
-    gTitles.selectAll('rect.titles')
-      .data(d => [d])
-      .join('rect')
-      .classed('labels', true)
-      .attr('x', 0)
-      .attr('y', 0)
-      .attr('width', LABELS_COLUMN_WIDTH + GUTTER + RULES_COLUMN_WIDTH + GUTTER + (CRulesList.length * CRULES_GRID_COLUMN_WIDTH) + GUTTER + FI_COLUMN_WIDTH + GUTTER)
-      .attr('height', SINGLE_FEATURE_HEIGHT)
-      .attr('fill', FTTemplate.SECONDARY_BACKGROUND_COLOR);
+    const labels = ['Feature', 'Feature Distribution', 'C.Rules', 'F.I.'];
+    const widthColumn = [
+      LABELS_COLUMN_WIDTH,
+      RULES_COLUMN_WIDTH,
+      ((CRulesList.length) * CRULES_GRID_COLUMN_WIDTH),
+      FI_COLUMN_WIDTH,
+    ];
 
+    gTitles.selectAll('line.horizontalLine')
+      .data(labels)
+      .join('line')
+      .classed('horizontalLine', true)
+      .attr('y1', SINGLE_FEATURE_HEIGHT / 2)
+      .attr('y2', SINGLE_FEATURE_HEIGHT / 2)
+      .attr('x1', (d, i) => {
+        if (i === 0) {
+          return (widthColumn.slice(0, i).reduce((a, b) => a + b, 0) + GUTTER);
+        }
+        return (widthColumn.slice(0, i).reduce((a, b) => a + b, 0) + (GUTTER * i));
+      })
+      .attr('x2', (d, i) => {
+        console.log('widthColumn', widthColumn);
+        return (widthColumn.slice(0, i + 1).reduce((a, b) => a + b, 0) + (GUTTER * i));
+      })
+      .attr('transform', `translate(${-GUTTER}, 0)`)
+      .attr('stroke', FTTemplate.GRID_COLOR)
+      .attr('stroke-width', 1)
+      .attr('visibility', (d) => {
+        if (d === 'C.Rules' && CRulesList.length <= 1) {
+          return 'hidden';
+        }
+        return 'visible';
+      });
+    // add a background rectangle behind the text. The rectangle will be the same size as the text
+    // and will be placed in the middle of the column:
+
+    gTitles.selectAll('rect.label')
+      .data(labels)
+      .join('rect')
+      .classed('label', true)
+      .attr('x', (d, i) =>
+        // eslint-disable-next-line max-len
+        // (widthColumn.slice(0, i).reduce((a, b) => a + b, 0) + (GUTTER * i) + (widthColumn[i] / 2) - (d.length * 4) - GUTTER),
+        (widthColumn.slice(0, i).reduce((a, b) => a + b, 0) + (widthColumn[i] / 2) - ((d.length * 6.5)/2)),
+      )
+      .attr('y', SINGLE_FEATURE_HEIGHT / 4)
+      .attr('width', (d) => {
+        if (d === 'C.Rules' && CRulesList.length === 1) {
+          return 22;
+        } else if (d === 'C.Rules' && CRulesList.length === 0) {
+          return 0;
+        }
+        return (d.length * 6.5);
+      })
+      .attr('height', SINGLE_FEATURE_HEIGHT / 2)
+      .attr('fill', FTTemplate.BACKGROUND_COLOR)
+      .attr('stroke', FTTemplate.GRID_COLOR);
+
+    gTitles.selectAll('text.label')
+      .data(labels)
+      .join('text')
+      .classed('label', true)
+      .attr('x', (d, i) =>
+        // eslint-disable-next-line max-len,no-mixed-operators
+        (widthColumn.slice(0, i).reduce((a, b) => a + b, 0) + (GUTTER * i) + (widthColumn[i] / 2) - GUTTER),
+      )
+      .attr('y', SINGLE_FEATURE_HEIGHT / 2)
+      .attr('font-size', FONT_SIZE)
+      .attr('alignment-baseline', 'middle')
+      .attr('text-anchor', 'middle')
+      .attr('fill', FTTemplate.TEXT_COLOR)
+      .attr('cursor', 'none')
+      .attr('font-weight', 500)
+      .text((d) => {
+        if (d === 'C.Rules' && CRulesList.length === 1) {
+          return 'C.R';
+        } else if (d === 'C.Rules' && CRulesList.length === 0) {
+          return '';
+        }
+        return d;
+      });
 
     // =========================================================
     //                  Order By Selector
