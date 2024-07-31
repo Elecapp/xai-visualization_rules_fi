@@ -25,7 +25,7 @@ function fontScaleFactor(fontSize) {
   const fontScale = d3.scaleLinear()
     .domain([0, 10])
     .range([0, fontSize]);
-  return Math.floor((LABELS_COLUMN_WIDTH * cWidthFactor(fontSize)) / (fontScale(fontSize)));
+  return Math.floor(((LABELS_COLUMN_WIDTH - GUTTER )* cWidthFactor(fontSize)) / (fontScale(fontSize)));
 }
 const maxLabelLength = fontScaleFactor(FONT_SIZE);
 
@@ -341,7 +341,8 @@ function FIPERFeatureDistributionView() {
           .data(d => prepareCategoricalValues(d.values))
           .join('g')
           .classed('feature-value', true)
-          .attr('transform', (d, i) => `translate(0, ${(i * height * 2) + (height / 2)})`);
+          .attr('transform', (d, i) => `translate(0, ${(i * height * 2) + (height / 2)})`)
+          .attr('width', RULES_COLUMN_WIDTH);
 
         // draw the symbol for the actual value of the instance
         gFeatureValue.selectAll('rect.single-bar')
@@ -587,7 +588,7 @@ function FIPERFeatureLabelsView() {
       .data(d => [d])
       .join('line')
       .classed('background', true)
-      .attr('x1', GUTTER)
+      .attr('x1', 0)
       .attr('x2', d => (cLenght(d.rname.length) - GUTTER))
       .attr('x2', d => cLenght(Math.floor(maxLabelLength - d.rname.length)) - (2 * GUTTER))
       .attr('y1', height / 4)
@@ -969,17 +970,17 @@ function FIPERView() {
     // to the size of the corresponsing COLUMN.
 
     gFeatures.each((_, j, n) => {
-      const gFeatureImportance = d3.select(n[j]).selectAll('g.feature-importance')
+      const gLabels = d3.select(n[j]).selectAll('g.feature-labels')
         .data(d => [d])
         .join('g')
-        .classed('feature-importance', true)
-        .attr('transform', `translate(${LABELS_COLUMN_WIDTH + GUTTER + RULES_COLUMN_WIDTH + GUTTER + crWidth + GUTTER}, 0)`);
-      gFeatureImportance.call(ffv);
+        .classed('feature-labels', true)
+        .attr('transform', `translate(${GUTTER}, 0)`);
+      gLabels.call(flv);
       const gValueStack = d3.select(n[j]).selectAll('g.feature-values')
         .data(d => [d])
         .join('g')
         .classed('feature-values', true)
-        .attr('transform', `translate(${LABELS_COLUMN_WIDTH + GUTTER}, 0)`);
+        .attr('transform', `translate(${LABELS_COLUMN_WIDTH + (2 * GUTTER)}, 0)`);
       gValueStack.selectAll('g.distribution')
         .data(d => [d])
         .join('g')
@@ -1013,14 +1014,18 @@ function FIPERView() {
         .classed('crule-grid', true)
         .attr('transform', `translate(${RULES_COLUMN_WIDTH + GUTTER}, 0)`)
         .call(fcrg);
-
-
-      const gLabels = d3.select(n[j]).selectAll('g.feature-labels')
+      const gFeatureImportance = d3.select(n[j]).selectAll('g.feature-importance')
         .data(d => [d])
         .join('g')
-        .classed('feature-labels', true)
-        .attr('transform', 'translate(0, 0)');
-      gLabels.call(flv);
+        .classed('feature-importance', true)
+        .attr('transform', `translate(${LABELS_COLUMN_WIDTH + RULES_COLUMN_WIDTH + crWidth + (4 * GUTTER)}, 0)`);
+      gFeatureImportance.call(ffv);
+
+
+
+
+
+
     });
     // eslint-disable-next-line func-names
     gFeatures.on('click', function () {
@@ -1221,7 +1226,7 @@ function reduceUnionIntersection(predicatesWithIntervals) {
   return result;
 }
 
-d3.json('/static/instance_180.json').then((data) => {
+d3.json('/static/instance_134.json').then((data) => {
   // preprocess each entry to copmute the expected value for the categorical counterrules
   const tfeature = data.features
     // .filter(f => f.type === 'categorical')
@@ -1402,13 +1407,13 @@ d3.json('/static/instance_180.json').then((data) => {
     selectedCounterRule: 'C0',
   };
   const fv = FIPERView().width(GLOBAL_WIDTH);
-  const fm = FiperMenu().height(MENU_HEIGHT);
+  const fm = FiperMenu();
 
   const menuSvg = d3.select('#app')
     .append('svg')
     .classed('menu', true)
     .attr('width', GLOBAL_WIDTH)
-    .attr('height', MENU_HEIGHT + SINGLE_FEATURE_HEIGHT + (2 * GUTTER)) // added height of the menu + chart title here, check if it is correct
+    .attr('height', MENU_HEIGHT + (2 * SINGLE_FEATURE_HEIGHT)) // added height of the menu + chart title here, check if it is correct
     .attr('style', `background-color: ${FTTemplate.BACKGROUND_COLOR};`);
 
 
@@ -1417,11 +1422,12 @@ d3.json('/static/instance_180.json').then((data) => {
   //  test with "purpose" feature)
   const svg = d3.select('#app')
     .append('svg')
+    .classed('viz', true)
     .attr('width', GLOBAL_WIDTH)
     .attr('height', 200)
     .attr('style', `background-color: ${FTTemplate.BACKGROUND_COLOR};`)
     .append('g')
-    .attr('transform', `translate(0, ${GUTTER})`)
+    .attr('transform', 'translate(0, 6)')
   ;
 
 
