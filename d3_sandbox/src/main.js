@@ -1408,7 +1408,7 @@ d3.json('/static/instance_180.json').then((data) => {
     .append('svg')
     .classed('menu', true)
     .attr('width', GLOBAL_WIDTH)
-    .attr('height', MENU_HEIGHT + (2 * GUTTER))
+    .attr('height', MENU_HEIGHT + SINGLE_FEATURE_HEIGHT + (2 * GUTTER)) // added height of the menu + chart title here, check if it is correct
     .attr('style', `background-color: ${FTTemplate.BACKGROUND_COLOR};`);
 
 

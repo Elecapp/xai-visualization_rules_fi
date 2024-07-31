@@ -314,6 +314,28 @@ function FiperMenu() {
       .attr('fill', FTTemplate.TEXT_COLOR)
       .html(d => `The prediction probability is <tspan font-weight="500" alignment-baseline="middle">${d.bb_pred * 100}%</tspan>`);
 
+    // =========================================================
+    //                  Visualization blocks titles
+    // =========================================================
+
+    const gTitles = selection.selectAll('g.titles')
+      .data(d => [d])
+      .join('g')
+      .classed('labels', true)
+      .attr('transform', `translate(${GUTTER}, ${MENU_HEIGHT + (2 * GUTTER)})`)
+      .attr('width', LABELS_COLUMN_WIDTH + GUTTER + RULES_COLUMN_WIDTH + GUTTER + (CRulesList.length * CRULES_GRID_COLUMN_WIDTH) + GUTTER + FI_COLUMN_WIDTH + GUTTER)
+      .attr('height', SINGLE_FEATURE_HEIGHT);
+
+    gTitles.selectAll('rect.titles')
+      .data(d => [d])
+      .join('rect')
+      .classed('labels', true)
+      .attr('x', 0)
+      .attr('y', 0)
+      .attr('width', LABELS_COLUMN_WIDTH + GUTTER + RULES_COLUMN_WIDTH + GUTTER + (CRulesList.length * CRULES_GRID_COLUMN_WIDTH) + GUTTER + FI_COLUMN_WIDTH + GUTTER)
+      .attr('height', SINGLE_FEATURE_HEIGHT)
+      .attr('fill', FTTemplate.SECONDARY_BACKGROUND_COLOR);
+
 
     // =========================================================
     //                  Order By Selector
