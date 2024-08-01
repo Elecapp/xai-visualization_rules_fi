@@ -331,6 +331,18 @@ function FiperMenu() {
       ((CRulesList.length) * CRULES_GRID_COLUMN_WIDTH),
       FI_COLUMN_WIDTH,
     ];
+    // horizontal separator lines
+    gTitles.selectAll('line.separator')
+      .data([1])
+      .join('line')
+      .classed('separator', true)
+      .attr('x1', 0)
+      .attr('y1', -5)
+      .attr('x2', widthColumn.reduce((a, b) => a + b, 0) + (GUTTER * 3))
+      .attr('y2', -5)
+      .attr('stroke', FTTemplate.TEXT_COLOR)
+      .style('stroke-dasharray', ('3, 3'))
+      .attr('stroke-width', 0.5);
 
     gTitles.selectAll('line.horizontalLine')
       .data(labels)
