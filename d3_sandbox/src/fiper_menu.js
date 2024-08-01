@@ -260,7 +260,7 @@ function FiperMenu() {
       .join('g')
       .classed('classification', true)
       .attr('transform', `translate(${GUTTER}, ${GUTTER})`)
-      .attr('width', LABELS_COLUMN_WIDTH)
+      .attr('width', LABELS_COLUMN_WIDTH - SINGLE_FEATURE_HEIGHT - GUTTER)
       .attr('height', MENU_HEIGHT);
 
     classificationRect.selectAll('rect.classification')
@@ -269,7 +269,7 @@ function FiperMenu() {
       .classed('classification', true)
       .attr('x', 0)
       .attr('y', 0)
-      .attr('width', LABELS_COLUMN_WIDTH)
+      .attr('width', LABELS_COLUMN_WIDTH - SINGLE_FEATURE_HEIGHT - GUTTER)
       .attr('height', MENU_HEIGHT)
       .attr('fill', `${FTTemplate.SECONDARY_BACKGROUND_COLOR}`);
 
@@ -279,7 +279,7 @@ function FiperMenu() {
       .classed('horizontalLine', true)
       .attr('x1', GUTTER)
       .attr('y1', d => d * SINGLE_FEATURE_HEIGHT)
-      .attr('x2', LABELS_COLUMN_WIDTH - GUTTER)
+      .attr('x2', LABELS_COLUMN_WIDTH - SINGLE_FEATURE_HEIGHT - (2 *GUTTER))
       .attr('y2', d => d * SINGLE_FEATURE_HEIGHT)
       .attr('stroke', FTTemplate.TEXT_COLOR)
       .attr('stroke-width', 0.5);
