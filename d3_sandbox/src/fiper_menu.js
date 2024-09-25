@@ -279,7 +279,7 @@ function FiperMenu() {
       .classed('horizontalLine', true)
       .attr('x1', GUTTER)
       .attr('y1', d => d * SINGLE_FEATURE_HEIGHT)
-      .attr('x2', LABELS_COLUMN_WIDTH - SINGLE_FEATURE_HEIGHT - (2 *GUTTER))
+      .attr('x2', LABELS_COLUMN_WIDTH - SINGLE_FEATURE_HEIGHT - (2 * GUTTER))
       .attr('y2', d => d * SINGLE_FEATURE_HEIGHT)
       .attr('stroke', FTTemplate.TEXT_COLOR)
       .attr('stroke-width', 0.5);
@@ -296,7 +296,7 @@ function FiperMenu() {
       .attr('dy', '1em')
       .attr('dx', GUTTER)
       .attr('fill', FTTemplate.TEXT_COLOR)
-      .html(d => `The instance is classified as <tspan font-weight="500" alignment-baseline="middle">${d.bb_pred}</tspan>`);
+      .html(d => `The instance is classified as <tspan font-weight="500" alignment-baseline="middle">${d.predicted_class}</tspan>`);
 
     classificationRect.selectAll('text.pproba')
       .data(d => [d])
@@ -310,7 +310,7 @@ function FiperMenu() {
       .attr('dy', '1em')
       .attr('dx', GUTTER)
       .attr('fill', FTTemplate.TEXT_COLOR)
-      .html(d => `with a probability of <tspan font-weight="500" alignment-baseline="middle">${d.bb_pred * 100}%</tspan>`);
+      .html(d => `with a probability of <tspan font-weight="500" alignment-baseline="middle">${d.predicted_proba[d.predicted_class] * 100}%</tspan>`);
 
     // =========================================================
     //                  Visualization blocks titles
@@ -356,10 +356,10 @@ function FiperMenu() {
         }
         return (widthColumn.slice(0, i).reduce((a, b) => a + b, 0) + (GUTTER * i));
       })
-      .attr('x2', (d, i) => {
-        console.log('widthColumn', widthColumn);
-        return (widthColumn.slice(0, i + 1).reduce((a, b) => a + b, 0) + (GUTTER * i));
-      })
+      .attr('x2', (d, i) =>
+        // console.log('widthColumn', widthColumn);
+        (widthColumn.slice(0, i + 1).reduce((a, b) => a + b, 0) + (GUTTER * i)),
+      )
       .attr('stroke', FTTemplate.GRID_COLOR)
       .attr('stroke-width', 1)
       .attr('visibility', (d) => {
@@ -374,10 +374,8 @@ function FiperMenu() {
       .join('rect')
       .classed('padding', true)
       .attr('x', (d, i) =>
-        // eslint-disable-next-line max-len
-        // (widthColumn.slice(0, i).reduce((a, b) => a + b, 0) + (GUTTER * i) + (widthColumn[i] / 2) - (d.length * 4) - GUTTER),
-        // eslint-disable-next-line max-len
-        (widthColumn.slice(0, i).reduce((a, b) => a + b, 0) + (widthColumn[i] / 2) - ((d.length * 6.5) / 2) + (GUTTER * i)),
+        (widthColumn.slice(0, i).reduce((a, b) => a + b, 0) +
+          ((widthColumn[i] / 2) - (((d.length * 6.5) / 2) + (GUTTER * i)))),
       )
       .attr('y', SINGLE_FEATURE_HEIGHT / 4)
       .attr('width', (d) => {

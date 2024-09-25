@@ -25,7 +25,8 @@ function fontScaleFactor(fontSize) {
   const fontScale = d3.scaleLinear()
     .domain([0, 10])
     .range([0, fontSize]);
-  return Math.floor(((LABELS_COLUMN_WIDTH - GUTTER )* cWidthFactor(fontSize)) / (fontScale(fontSize)));
+  return Math.floor(((LABELS_COLUMN_WIDTH - GUTTER) * cWidthFactor(fontSize)) /
+    (fontScale(fontSize)));
 }
 const maxLabelLength = fontScaleFactor(FONT_SIZE);
 
@@ -1020,12 +1021,6 @@ function FIPERView() {
         .classed('feature-importance', true)
         .attr('transform', `translate(${LABELS_COLUMN_WIDTH + RULES_COLUMN_WIDTH + crWidth + (4 * GUTTER)}, 0)`);
       gFeatureImportance.call(ffv);
-
-
-
-
-
-
     });
     // eslint-disable-next-line func-names
     gFeatures.on('click', function () {
@@ -1226,7 +1221,7 @@ function reduceUnionIntersection(predicatesWithIntervals) {
   return result;
 }
 
-d3.json('/static/instance_180.json').then((data) => {
+d3.json('/static/instance_1_new.json').then((data) => {
   // preprocess each entry to copmute the expected value for the categorical counterrules
   const tfeature = data.features
     // .filter(f => f.type === 'categorical')
@@ -1402,8 +1397,8 @@ d3.json('/static/instance_180.json').then((data) => {
   const explanationDescriptor = {
     features: aEntries,
     counterRules: CRulesList,
-    bb_pred: data.bb_pred,
-    dt_pred: data.dt_pred,
+    predicted_class: data.predicted_class,
+    predicted_proba: data.predicted_proba,
     selectedCounterRule: 'C0',
   };
   const fv = FIPERView().width(GLOBAL_WIDTH);
