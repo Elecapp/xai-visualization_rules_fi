@@ -38,7 +38,7 @@ const FTTemplate = colorSet.default;
 function prepareCategoricalValues(data) {
   const total = d3.sum(data, d => d.eda.count);
 
-  // use a scale to get percentage values
+  // use a scale   to get percentage values
   const percent = d3.scaleLinear()
     .domain([0, total])
     .range([0, 100]);

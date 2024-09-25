@@ -18,6 +18,7 @@ export const dispatcher = d3.dispatch('changeCounterRule', 'changeOrder', 'chang
 function darkenColor(color, amount) {
   return d3.hsl(color).darker(amount).toString();
 }
+
 // create a dict for a color template
 export const colorSet = {
   default: {
@@ -59,5 +60,65 @@ export const colorSet = {
     CATEGORICAL_INSTANCE_STROKE_COLOR: '#999999',
     NEGATIVE_FI_COLOR: '#f2aaaa',
     GRID_COLOR: '#000',
+  },
+  alternativeColorPalette: {
+    BACKGROUND_COLOR: '#f2f2f2',
+    CRULES_COLOR: '#4F6A73',
+    CRULES_STROKE_COLOR: '#3F5663',
+    RULE_COLOR: '#f2c14e',
+    RULE_STROKE_COLOR: '#d9a743',
+    BASE_COLOR: '#dcc',
+    BASE_STROKE_COLOR: '#BFB0B0',
+    SECONDARY_BACKGROUND_COLOR: '#fdfdfd',
+    TEXT_COLOR: '#333333',
+    INSTANCE_COLOR: '#000',
+    DISTRIBUTION_COLOR: '#dcc',
+    DISTRIBUTION_STROKE_COLOR: '#BFB0B0',
+    CATEGORICAL_INSTANCE_COLOR: '#B3B3B3',
+    CATEGORICAL_INSTANCE_STROKE_COLOR: '#999999',
+    NEGATIVE_FI_COLOR: '#f2aaaa',
+    GRID_COLOR: '#000',
+  },
+  grayscale: {
+    BACKGROUND_COLOR: '#e0e0e0',
+    CRULES_COLOR: 'rgba(128,128,128,1)',
+    CRULES_STROKE_COLOR: 'rgba(100,100,100,1)',
+    RULE_COLOR: 'rgba(192,192,192,1)',
+    RULE_STROKE_COLOR: 'rgba(160,160,160,1)',
+    BASE_COLOR: '#d0d0d0',
+    BASE_STROKE_COLOR: '#a0a0a0',
+    SECONDARY_BACKGROUND_COLOR: '#f0f0f0',
+    TEXT_COLOR: '#333333',
+    VALUE_TEXT_COLOR: 'rgba(100,100,100,0.8)',
+    OTHER_TEXT_COLOR: 'rgba(51,51,51,0.8)',
+    INSTANCE_COLOR: '#000',
+    DISTRIBUTION_COLOR: '#e6e6e6',
+    DISTRIBUTION_STROKE_COLOR: '#a0a0a0',
+    CATEGORICAL_INSTANCE_COLOR: '#b0b0b0',
+    CATEGORICAL_INSTANCE_STROKE_COLOR: '#808080',
+    FI_POSITIVE_COLOR: '#5a5a5a',
+    NEGATIVE_FI_COLOR: '#808080',
+    GRID_COLOR: '#1a1a1a',
+  },
+  grayscaleHighContrast: {
+    BACKGROUND_COLOR: '#f8f8f8', // Grigio molto chiaro per un leggero contrasto con il bianco
+    CRULES_COLOR: 'rgba(80,80,80,1)', // Grigio scuro per un buon contrasto
+    CRULES_STROKE_COLOR: 'rgba(50,50,50,1)', // Ancora più scuro per il contorno
+    RULE_COLOR: 'rgba(150,150,150,1)', // Grigio medio per differenziare dagli altri elementi
+    RULE_STROKE_COLOR: 'rgba(100,100,100,1)', // Grigio più scuro per evidenziare i bordi
+    BASE_COLOR: '#e0e0e0', // Grigio chiaro per le aree di sfondo
+    BASE_STROKE_COLOR: '#808080', // Grigio medio per bordi e contorni
+    SECONDARY_BACKGROUND_COLOR:'#ffffff', // Bianco puro per il massimo contrasto con il testo
+    TEXT_COLOR: '#000000', // Nero puro per il massimo contrasto e leggibilità
+    VALUE_TEXT_COLOR: 'rgba(60,60,60,0.9)', // Grigio scuro per valori, mantenendo un contrasto elevato
+    OTHER_TEXT_COLOR: 'rgba(30,30,30,0.9)', // Ancora più scuro per differenziare il testo secondario
+    INSTANCE_COLOR: '#000000', // Nero puro per la massima visibilità
+    DISTRIBUTION_COLOR: '#d0d0d0', // Grigio chiaro per evidenziare le distribuzioni
+    DISTRIBUTION_STROKE_COLOR: '#707070', // Grigio scuro per i contorni
+    CATEGORICAL_INSTANCE_COLOR: '#a0a0a0', // Grigio medio per le categorie
+    CATEGORICAL_INSTANCE_STROKE_COLOR: '#505050', // Grigio scuro per i bordi delle categorie
+    FI_POSITIVE_COLOR: '#404040', // Grigio molto scuro per i valori positivi
+    NEGATIVE_FI_COLOR: '#202020', // Grigio quasi nero per i valori negativi
+    GRID_COLOR: '#000000', // Nero puro per una griglia ben definita
   },
 };
