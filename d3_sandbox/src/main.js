@@ -1221,7 +1221,7 @@ function reduceUnionIntersection(predicatesWithIntervals) {
   return result;
 }
 
-d3.json('/static/instance_1_new.json').then((data) => {
+d3.json('/static/instance_16.json').then((data) => {
   // preprocess each entry to copmute the expected value for the categorical counterrules
   const tfeature = data.features
     // .filter(f => f.type === 'categorical')
@@ -1399,7 +1399,7 @@ d3.json('/static/instance_1_new.json').then((data) => {
     counterRules: CRulesList,
     predicted_class: data.predicted_class,
     predicted_proba: data.predicted_proba,
-    selectedCounterRule: 'C0',
+    selectedCounterRule: '',
   };
   const fv = FIPERView().width(GLOBAL_WIDTH);
   const fm = FiperMenu();

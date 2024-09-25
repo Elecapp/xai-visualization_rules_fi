@@ -234,6 +234,60 @@ function FiperMenuFilterBy() {
   return me;
 }
 
+// Format the data (instead of using d3.stack()) and
+// filter out 0 values:
+// extracted from: https://observablehq.com/@eesur/d3-single-stacked-bar
+function prepareCategoricalValues(data, val) {
+  // filter out data that has zero values
+  // also get mapping for next placement
+  // (save having to format data for d3 stack)
+  let cumulative = 0;
+  return data.map((d, i) => {
+    cumulative += d;
+    return {
+      value: d,
+      // want the cumulative to prior value (start of rect)
+      cumulative: cumulative - d,
+      instance_value: (val === i) ? 1 : 0,
+    };
+  }).filter(d => d.value > 0);
+}
+
+function FiperMenuClassesBarChart() {
+  let width = 200;
+  let height = 300;
+  const lengthScale = d3.scaleLinear();
+
+
+  function me(selection) {
+    selection.selectAll('rect.pproba')
+      .data(d => prepareCategoricalValues(d.predicted_proba, d.predicted_class))
+      .join('rect')
+      .classed('pproba', true)
+      .attr('x', d => lengthScale(d.cumulative))
+      .attr('y', 0)
+      .attr('width', d => lengthScale(d.value))
+      .attr('height', height)
+      .attr('fill', d => (d.instance_value === 1 ? FTTemplate.CATEGORICAL_INSTANCE_COLOR : FTTemplate.DISTRIBUTION_COLOR))
+      .attr('stroke', FTTemplate.DISTRIBUTION_STROKE_COLOR);
+  }
+
+  me.width = function (_) {
+    if (!arguments.length) return width;
+    width = _;
+    lengthScale.range([0, width]);
+    return me;
+  };
+
+  me.height = function (_) {
+    if (!arguments.length) return height;
+    height = _;
+    return me;
+  };
+
+  return me;
+}
+
 function FiperMenu() {
   let width = 200;
   let height = 500;
@@ -251,6 +305,8 @@ function FiperMenu() {
       .data(d => [d])
       .join('g')
       .classed('menu', true);
+
+    console.log('selection', selection.datum());
 
     const explanationDescriptor = selection.datum();
     const CRulesList = explanationDescriptor.counterRules;
@@ -298,6 +354,9 @@ function FiperMenu() {
       .attr('fill', FTTemplate.TEXT_COLOR)
       .html(d => `The instance is classified as <tspan font-weight="500" alignment-baseline="middle">${d.predicted_class}</tspan>`);
 
+    const formatValue = d3.format('.2%');
+    const pprobaBars = FiperMenuClassesBarChart().width(width)
+      .height(SINGLE_FEATURE_HEIGHT/2);
     classificationRect.selectAll('text.pproba')
       .data(d => [d])
       .join('text')
@@ -310,7 +369,15 @@ function FiperMenu() {
       .attr('dy', '1em')
       .attr('dx', GUTTER)
       .attr('fill', FTTemplate.TEXT_COLOR)
-      .html(d => `with a probability of <tspan font-weight="500" alignment-baseline="middle">${d.predicted_proba[d.predicted_class] * 100}%</tspan>`);
+      .html(d => `with a probability of <tspan font-weight="500" alignment-baseline="middle">
+            ${formatValue(d.predicted_proba[d.predicted_class])}</tspan>`);
+
+    classificationRect.selectAll('g.pproba')
+      .data(d => [d])
+      .join('g')
+      .classed('pproba', true)
+      .attr('transform', `translate(${GUTTER/2}, ${(SINGLE_FEATURE_HEIGHT * 2)})`)
+      .call(pprobaBars);
 
     // =========================================================
     //                  Visualization blocks titles
