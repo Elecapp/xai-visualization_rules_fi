@@ -159,7 +159,6 @@ function FiperMenuOrderBy() {
   return me;
 }
 
-
 function FiperMenuFilterBy() {
   const filterByOptions = {
     Rules: false, CRules: false,
@@ -292,57 +291,32 @@ function FiperMenuClassesBarChart() {
   return me;
 }
 
-function FiperMenu() {
+function FiperClassificationBox() {
   let width = 200;
-  let height = 500;
-  let bandScale = d3.scaleBand();
-  const menuOrderBy = FiperMenuOrderBy();
-  const menuCRulesCall = FiperMenuCRule().bandScale(bandScale);
-  const menuFilterBy = FiperMenuFilterBy();
 
   function me(selection) {
-    // create a group to contain the menu elements:
-    // 1. the feature importance
-    // 2. the distribution of the values
-    // 3. the labels
-    const gMenu = selection.selectAll('g.menu')
-      .data(d => [d])
-      .join('g')
-      .classed('menu', true);
-
-    const explanationDescriptor = selection.datum();
-    const CRulesList = explanationDescriptor.counterRules;
-
-    const classificationRect = gMenu.selectAll('g.classification')
-      .data(d => [d])
-      .join('g')
-      .classed('classification', true)
-      .attr('transform', `translate(${GUTTER}, ${GUTTER})`)
-      .attr('width', LABELS_COLUMN_WIDTH - SINGLE_FEATURE_HEIGHT - GUTTER)
-      .attr('height', MENU_HEIGHT);
-
-    classificationRect.selectAll('rect.classification')
+    selection.selectAll('rect.classification')
       .data(d => [d])
       .join('rect')
       .classed('classification', true)
       .attr('x', 0)
       .attr('y', 0)
-      .attr('width', LABELS_COLUMN_WIDTH - SINGLE_FEATURE_HEIGHT - GUTTER)
+      .attr('width', width)
       .attr('height', MENU_HEIGHT)
       .attr('fill', `${FTTemplate.SECONDARY_BACKGROUND_COLOR}`);
 
-    classificationRect.selectAll('line.horizontalLine')
+    selection.selectAll('line.horizontalLine')
       .data([1])
       .join('line')
       .classed('horizontalLine', true)
       .attr('x1', GUTTER)
       .attr('y1', d => d * SINGLE_FEATURE_HEIGHT)
-      .attr('x2', LABELS_COLUMN_WIDTH - SINGLE_FEATURE_HEIGHT - (2 * GUTTER))
+      .attr('x2', width - (2 * GUTTER))
       .attr('y2', d => d * SINGLE_FEATURE_HEIGHT)
       .attr('stroke', FTTemplate.TEXT_COLOR)
       .attr('stroke-width', 0.5);
 
-    classificationRect.selectAll('text.classification')
+    selection.selectAll('text.classification')
       .data(d => [d])
       .join('text')
       .classed('classification', true)
@@ -357,9 +331,9 @@ function FiperMenu() {
       .html(d => `The instance is classified as <tspan font-weight="500" alignment-baseline="middle">${d.predicted_class}</tspan>`);
 
     const formatValue = d3.format('.2%');
-    const pprobaBars = FiperMenuClassesBarChart().width(width)
+    const pprobaBars = FiperMenuClassesBarChart().width(width - GUTTER)
       .height(SINGLE_FEATURE_HEIGHT / 2);
-    classificationRect.selectAll('text.pproba')
+    selection.selectAll('text.pproba')
       .data(d => [d])
       .join('text')
       .classed('pproba', true)
@@ -374,34 +348,31 @@ function FiperMenu() {
       .html(d => `with a probability of <tspan font-weight="500" alignment-baseline="middle">
             ${formatValue(d.predicted_proba[d.predicted_class])}</tspan>`);
 
-    classificationRect.selectAll('g.pproba')
+    selection.selectAll('g.pproba')
       .data(d => [d])
       .join('g')
       .classed('pproba', true)
       .attr('transform', `translate(${GUTTER / 2}, ${(SINGLE_FEATURE_HEIGHT * 2)})`)
       .call(pprobaBars);
+  }
 
-    // =========================================================
-    //                  Visualization blocks titles
-    // =========================================================
+  // eslint-disable-next-line func-names
+  me.width = function (_) {
+    if (!arguments.length) return width;
+    width = _;
+    return me;
+  };
 
-    const gTitles = selection.selectAll('g.titles')
-      .data(d => [d])
-      .join('g')
-      .classed('titles', true)
-      .attr('transform', `translate(${GUTTER}, ${MENU_HEIGHT + (SINGLE_FEATURE_HEIGHT)})`)
-      .attr('width', LABELS_COLUMN_WIDTH + GUTTER + RULES_COLUMN_WIDTH + GUTTER + (CRulesList.length * CRULES_GRID_COLUMN_WIDTH) + GUTTER + FI_COLUMN_WIDTH + GUTTER)
-      .attr('height', SINGLE_FEATURE_HEIGHT);
+  return me;
+}
 
-    const labels = ['Feature', 'Feature Distribution', 'C.Rules', 'F.I.'];
-    const widthColumn = [
-      LABELS_COLUMN_WIDTH,
-      RULES_COLUMN_WIDTH,
-      ((CRulesList.length) * CRULES_GRID_COLUMN_WIDTH),
-      FI_COLUMN_WIDTH,
-    ];
+function FiperMenuColumnTitles() {
+  function me(selection) {
     // horizontal separator lines
-    gTitles.selectAll('line.separator')
+    const titleDescriptor = selection.datum();
+    const { labels, widthColumn, CRulesList } = titleDescriptor;
+
+    selection.selectAll('line.separator')
       .data([1])
       .join('line')
       .classed('separator', true)
@@ -413,7 +384,7 @@ function FiperMenu() {
       .style('stroke-dasharray', ('3, 3'))
       .attr('stroke-width', 0.5);
 
-    gTitles.selectAll('line.horizontalLine')
+    selection.selectAll('line.horizontalLine')
       .data(labels)
       .join('line')
       .classed('horizontalLine', true)
@@ -438,7 +409,7 @@ function FiperMenu() {
         return 'visible';
       });
 
-    gTitles.selectAll('rect.padding')
+    selection.selectAll('rect.padding')
       .data(labels)
       .join('rect')
       .classed('padding', true)
@@ -458,7 +429,7 @@ function FiperMenu() {
       })
       .attr('height', SINGLE_FEATURE_HEIGHT / 2)
       .attr('fill', FTTemplate.BACKGROUND_COLOR);
-    gTitles.selectAll('text.label')
+    selection.selectAll('text.label')
       .data(labels)
       .join('text')
       .classed('label', true)
@@ -481,6 +452,70 @@ function FiperMenu() {
         }
         return d;
       });
+  }
+
+  return me;
+}
+
+function FiperMenu() {
+  let width = 200;
+  let height = 500;
+  let bandScale = d3.scaleBand();
+  const menuOrderBy = FiperMenuOrderBy();
+  const menuCRulesCall = FiperMenuCRule().bandScale(bandScale);
+  const menuFilterBy = FiperMenuFilterBy();
+  const menuClassification = FiperClassificationBox()
+    .width(LABELS_COLUMN_WIDTH - SINGLE_FEATURE_HEIGHT - GUTTER);
+  const menuColumnTitles = FiperMenuColumnTitles();
+
+  function me(selection) {
+    // create a group to contain the menu elements:
+    // 1. the feature importance
+    // 2. the distribution of the values
+    // 3. the labels
+    const gMenu = selection.selectAll('g.menu')
+      .data(d => [d])
+      .join('g')
+      .classed('menu', true);
+
+    const explanationDescriptor = selection.datum();
+    const CRulesList = explanationDescriptor.counterRules;
+
+    // =========================================================
+    //                  Classification Box
+    // =========================================================
+    const classificationRect = gMenu.selectAll('g.classification')
+      .data(d => [d])
+      .join('g')
+      .classed('classification', true)
+      .attr('transform', `translate(${GUTTER}, ${GUTTER})`);
+    classificationRect.call(menuClassification);
+    // =========================================================
+
+
+    // =========================================================
+    //                  Visualization blocks titles
+    // =========================================================
+    const labels = ['Feature', 'Feature Distribution', 'C.Rules', 'F.I.'];
+    const widthColumn = [
+      LABELS_COLUMN_WIDTH,
+      RULES_COLUMN_WIDTH,
+      ((CRulesList.length) * CRULES_GRID_COLUMN_WIDTH),
+      FI_COLUMN_WIDTH,
+    ];
+    const titleDescriptor = {
+      labels,
+      widthColumn,
+      CRulesList,
+    };
+
+    const gTitles = selection.selectAll('g.titles')
+      .data(d => [d])
+      .join('g')
+      .classed('titles', true)
+      .attr('transform', `translate(${GUTTER}, ${MENU_HEIGHT + (SINGLE_FEATURE_HEIGHT)})`);
+
+    gTitles.datum(titleDescriptor).call(menuColumnTitles);
 
     // =========================================================
     //                  Order By Selector
