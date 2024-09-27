@@ -104,7 +104,7 @@ export const colorSet = {
     RULE_STROKE_COLOR: 'rgba(100,100,100,1)', // Grigio più scuro per evidenziare i bordi
     BASE_COLOR: '#e0e0e0', // Grigio chiaro per le aree di sfondo
     BASE_STROKE_COLOR: '#808080', // Grigio medio per bordi e contorni
-    SECONDARY_BACKGROUND_COLOR:'#ffffff', // Bianco puro per il massimo contrasto con il testo
+    SECONDARY_BACKGROUND_COLOR: '#ffffff', // Bianco puro per il massimo contrasto con il testo
     TEXT_COLOR: '#000000', // Nero puro per il massimo contrasto e leggibilità
     VALUE_TEXT_COLOR: 'rgba(60,60,60,0.9)', // Grigio scuro per valori, mantenendo un contrasto elevato
     OTHER_TEXT_COLOR: 'rgba(30,30,30,0.9)', // Ancora più scuro per differenziare il testo secondario

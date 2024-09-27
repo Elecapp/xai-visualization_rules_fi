@@ -272,6 +272,7 @@ function FiperMenuClassesBarChart() {
       .attr('stroke', FTTemplate.DISTRIBUTION_STROKE_COLOR);
   }
 
+  // eslint-disable-next-line func-names
   me.width = function (_) {
     if (!arguments.length) return width;
     width = _;
@@ -279,6 +280,7 @@ function FiperMenuClassesBarChart() {
     return me;
   };
 
+  // eslint-disable-next-line func-names
   me.height = function (_) {
     if (!arguments.length) return height;
     height = _;
@@ -305,8 +307,6 @@ function FiperMenu() {
       .data(d => [d])
       .join('g')
       .classed('menu', true);
-
-    console.log('selection', selection.datum());
 
     const explanationDescriptor = selection.datum();
     const CRulesList = explanationDescriptor.counterRules;
@@ -356,7 +356,7 @@ function FiperMenu() {
 
     const formatValue = d3.format('.2%');
     const pprobaBars = FiperMenuClassesBarChart().width(width)
-      .height(SINGLE_FEATURE_HEIGHT/2);
+      .height(SINGLE_FEATURE_HEIGHT / 2);
     classificationRect.selectAll('text.pproba')
       .data(d => [d])
       .join('text')
@@ -376,7 +376,7 @@ function FiperMenu() {
       .data(d => [d])
       .join('g')
       .classed('pproba', true)
-      .attr('transform', `translate(${GUTTER/2}, ${(SINGLE_FEATURE_HEIGHT * 2)})`)
+      .attr('transform', `translate(${GUTTER / 2}, ${(SINGLE_FEATURE_HEIGHT * 2)})`)
       .call(pprobaBars);
 
     // =========================================================
