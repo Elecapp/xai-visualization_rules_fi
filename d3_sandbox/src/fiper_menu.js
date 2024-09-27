@@ -441,8 +441,9 @@ function FiperMenu() {
       .join('rect')
       .classed('padding', true)
       .attr('x', (d, i) =>
-        (widthColumn.slice(0, i).reduce((a, b) => a + b, 0) +
-          ((widthColumn[i] / 2) - (((d.length * 6.5) / 2) + (GUTTER * i)))),
+        ((widthColumn.slice(0, i).reduce((a, b) => a + b, 0))
+          + (((widthColumn[i] / 2) + (GUTTER * i)) - ((d.length * 6.5) / 2))
+        ),
       )
       .attr('y', SINGLE_FEATURE_HEIGHT / 4)
       .attr('width', (d) => {
