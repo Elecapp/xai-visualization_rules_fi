@@ -1522,16 +1522,8 @@ d3.json('/static/instance_16.json').then((data) => {
     refreshVisualization(explanationDescriptor);
   });
   dispatcher.on('changeFilter', (d) => {
-    if (d.Rules) {
-      explanationDescriptor.filterRules = true;
-    } else {
-      explanationDescriptor.filterRules = false;
-    }
-    if (d.CRules) {
-      explanationDescriptor.filterCRules = true;
-    } else {
-      explanationDescriptor.filterCRules = false;
-    }
+    explanationDescriptor.filterRules = d.Rules;
+    explanationDescriptor.filterCRules = d.CRules;
 
     refreshVisualization(explanationDescriptor);
   });
