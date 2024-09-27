@@ -938,7 +938,8 @@ function FIPERView() {
         // console.log('Transition ended');
         setTimeout(() => {
           const bbox = selection.node().getBBox();
-          selection.node().parentNode.setAttribute('height', bbox.height + (2 * VERTICAL_GUTTER));
+          selection.node().parentNode.setAttribute('height', bbox.height +
+            ((2 * VERTICAL_GUTTER) + (MENU_HEIGHT + (2 * SINGLE_FEATURE_HEIGHT))));
         }, 300);
       });
 
@@ -1037,7 +1038,8 @@ function FIPERView() {
 
       me(selection);
       const bbox = selection.node().getBBox();
-      selection.node().parentNode.setAttribute('height', bbox.height + GUTTER);
+      selection.node().parentNode.setAttribute('height', bbox.height +
+        (GUTTER + (MENU_HEIGHT + (2 * SINGLE_FEATURE_HEIGHT))));
     });
   }
 
@@ -1406,26 +1408,27 @@ d3.json('/static/instance_16.json').then((data) => {
   const fv = FIPERView().width(GLOBAL_WIDTH);
   const fm = FiperMenu();
 
-  const menuSvg = d3.select('#app')
-    .append('svg')
-    .classed('menu', true)
-    .attr('width', GLOBAL_WIDTH)
-    .attr('height', MENU_HEIGHT + (2 * SINGLE_FEATURE_HEIGHT)) // added height of the menu + chart title here, check if it is correct
-    .attr('style', `background-color: ${FTTemplate.BACKGROUND_COLOR};`);
-
-
   // TODO: fix the height of the visualization
   //  (it should be computed based on the number of max values of the features,
   //  test with "purpose" feature)
-  const svg = d3.select('#app')
+  const mainSvg = d3.select('#app')
     .append('svg')
     .classed('viz', true)
     .attr('width', GLOBAL_WIDTH)
     .attr('height', 200)
-    .attr('style', `background-color: ${FTTemplate.BACKGROUND_COLOR};`)
+    .attr('style', `background-color: ${FTTemplate.BACKGROUND_COLOR};`);
+
+  const svg = mainSvg
     .append('g')
-    .attr('transform', 'translate(0, 6)')
+    .attr('transform', `translate(0, ${6 + MENU_HEIGHT + (2 * SINGLE_FEATURE_HEIGHT)})`)
   ;
+
+  const menuSvg = mainSvg
+    .append('g').append('svg')
+    .classed('menu', true)
+    .attr('width', GLOBAL_WIDTH)
+    .attr('height', MENU_HEIGHT + (2 * SINGLE_FEATURE_HEIGHT)) // added height of the menu + chart title here, check if it is correct
+    .attr('style', `background-color: ${FTTemplate.BACKGROUND_COLOR};`);
 
 
   const defs = svg.selectAll('defs')
@@ -1489,11 +1492,12 @@ d3.json('/static/instance_16.json').then((data) => {
   // compute the resulting bounding box to set the height of the svg
   // recall: `svg` variable is the group `g` that contains the visualization
   //        so we refer to the parent node to set the height correctly
-  const bbox = svg.node().getBBox();
-  svg.node().parentNode.setAttribute('height', bbox.height + GUTTER);
-  svg.node().parentNode.setAttribute('width', bbox.width + GUTTER);
+  const bbox = mainSvg.node().getBBox();
+  mainSvg.node().parentNode.setAttribute('height', bbox.height +
+    (GUTTER + (MENU_HEIGHT + (2 * SINGLE_FEATURE_HEIGHT))));
+  mainSvg.node().parentNode.setAttribute('width', bbox.width + GUTTER);
   fv.width(bbox.width + GUTTER);
-  menuSvg.node().setAttribute('width', bbox.width + GUTTER);
+  // menuSvg.node().setAttribute('width', bbox.width + GUTTER);
 
 
   dispatcher.on('changeCounterRule', (d) => {
