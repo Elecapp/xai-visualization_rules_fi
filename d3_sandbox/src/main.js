@@ -1400,6 +1400,8 @@ d3.json('/static/instance_16.json').then((data) => {
     predicted_class: data.predicted_class,
     predicted_proba: data.predicted_proba,
     selectedCounterRule: '',
+    filterRules: false,
+    filterCRules: false,
   };
   const fv = FIPERView().width(GLOBAL_WIDTH);
   const fm = FiperMenu();
@@ -1453,11 +1455,36 @@ d3.json('/static/instance_16.json').then((data) => {
       .attr('stroke-width', thickness);
   });
 
+
+  function refreshVisualization(descriptor) {
+    const filterFunctionRule = f => d3.sum(Object.values(f.rulePredicateMap)) > 0;
+    const filterFunctionCRule = f => d3.sum(Object.values(f.cRulesPredicateMap)) > 0;
+    const filterFunctionBoth = f => (d3.sum(Object.values(f.rulePredicateMap)) +
+      d3.sum(Object.values(f.cRulesPredicateMap))) > 0;
+
+    let currentFilter = () => true;
+    if (descriptor.filterRules) {
+      currentFilter = filterFunctionRule;
+    }
+    if (descriptor.filterCRules) {
+      currentFilter = filterFunctionCRule;
+    }
+    if (descriptor.filterRules && descriptor.filterCRules) {
+      currentFilter = filterFunctionBoth;
+    }
+
+    const filteredDescriptor = {
+      ...explanationDescriptor,
+      features: explanationDescriptor.features.filter(currentFilter),
+    };
+    svg.datum(filteredDescriptor).call(fv);
+    menuSvg.datum(filteredDescriptor).call(fm);
+  }
+
   // it is important that fm component is called after fv has been called the first time
   // to ensure that the bandScale is correctly initialized
-  svg.datum(explanationDescriptor).call(fv);
   fm.bandScale(fv.cRulesGridBandScale());
-  menuSvg.datum(explanationDescriptor).call(fm);
+  refreshVisualization(explanationDescriptor);
 
   // compute the resulting bounding box to set the height of the svg
   // recall: `svg` variable is the group `g` that contains the visualization
@@ -1471,8 +1498,7 @@ d3.json('/static/instance_16.json').then((data) => {
 
   dispatcher.on('changeCounterRule', (d) => {
     explanationDescriptor.selectedCounterRule = d;
-    svg.datum(explanationDescriptor).call(fv);
-    menuSvg.datum(explanationDescriptor).call(fm);
+    refreshVisualization(explanationDescriptor);
   });
 
   dispatcher.on('changeOrder', (d) => {
@@ -1493,29 +1519,20 @@ d3.json('/static/instance_16.json').then((data) => {
       explanationDescriptor.features.sort((a, b) =>
         a.rname.localeCompare(b.rname));
     }
-    svg.datum(explanationDescriptor).call(fv);
-    menuSvg.datum(explanationDescriptor).call(fm);
+    refreshVisualization(explanationDescriptor);
   });
   dispatcher.on('changeFilter', (d) => {
-    const filterFunctionRule = f => d3.sum(Object.values(f.rulePredicateMap)) > 0;
-    const filterFunctionCRule = f => d3.sum(Object.values(f.cRulesPredicateMap)) > 0;
-    const noFilter = () => true;
-
-    let currentFilter = noFilter;
-
-    if (d === 'Rules') {
-      currentFilter = filterFunctionRule;
+    if (d.Rules) {
+      explanationDescriptor.filterRules = true;
+    } else {
+      explanationDescriptor.filterRules = false;
     }
-    if (d === 'CRules') {
-      currentFilter = filterFunctionCRule;
+    if (d.CRules) {
+      explanationDescriptor.filterCRules = true;
+    } else {
+      explanationDescriptor.filterCRules = false;
     }
 
-    const filteredDescriptor = {
-      ...explanationDescriptor,
-      features: explanationDescriptor.features.filter(currentFilter),
-    };
-
-    svg.datum(filteredDescriptor).call(fv);
-    menuSvg.datum(filteredDescriptor).call(fm);
+    refreshVisualization(explanationDescriptor);
   });
 });

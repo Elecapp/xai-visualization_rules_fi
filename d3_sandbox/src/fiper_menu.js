@@ -182,12 +182,14 @@ function FiperMenuFilterBy() {
     const generateEvent = (d) => {
       const selectedKey = d3.select(d.target).datum();
       Object.keys(filterByOptions).forEach((key) => {
-        if (key !== selectedKey) {
-          filterByOptions[key] = false;
+        // if (key !== selectedKey) {
+        //   filterByOptions[key] = false;
+        // }
+        if (key === selectedKey) {
+          filterByOptions[key] = !filterByOptions[key];
         }
       });
-      filterByOptions[selectedKey] = !filterByOptions[selectedKey];
-      dispatcher.call('changeFilter', null, filterByOptions[selectedKey] ? selectedKey : null);
+      dispatcher.call('changeFilter', null, filterByOptions);
     };
 
     selection.selectAll('text.filterBy')
