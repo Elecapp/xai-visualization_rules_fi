@@ -12,7 +12,7 @@ export const MENU_HEIGHT = SINGLE_FEATURE_HEIGHT * 3;
 export const FONT_SIZE = 11;
 
 export const GLOBAL_WIDTH = 700;
-export const dispatcher = d3.dispatch('changeCounterRule', 'changeOrder', 'changeFilter');
+export const dispatcher = d3.dispatch('changeCounterRule', 'changeOrder', 'changeFilter', 'changePalette');
 
 
 function darkenColor(color, amount) {
@@ -43,6 +43,7 @@ export const colorSet = {
     GRID_COLOR: '#000',
   },
   darkModeColorPalette: {
+    BACKGROUND_COLOR: '#2a2a2a', // Dark gray for background
     BASE_STROKE_COLOR: '#4e4e4e', // Darker stroke color for base
     SECONDARY_BACKGROUND_COLOR: '#2a2a2a', // Slightly lighter background for secondary elements
     TEXT_COLOR: '#ffffff', // White text for high contrast
@@ -56,45 +57,6 @@ export const colorSet = {
     FI_POSITIVE_COLOR: '#37995e', // Green for positive feature importance
     NEGATIVE_FI_COLOR: '#d1804d', // Red for negative feature importance
     GRID_COLOR: '#3a3a3a', // Dark color for grid lines
-  },
-  alternativeColorPalette: {
-    BACKGROUND_COLOR: '#f2f2f2',
-    CRULES_COLOR: '#4F6A73',
-    CRULES_STROKE_COLOR: '#3F5663',
-    RULE_COLOR: '#f2c14e',
-    RULE_STROKE_COLOR: '#d9a743',
-    BASE_COLOR: '#dcc',
-    BASE_STROKE_COLOR: '#BFB0B0',
-    SECONDARY_BACKGROUND_COLOR: '#fdfdfd',
-    TEXT_COLOR: '#333333',
-    INSTANCE_COLOR: '#000',
-    DISTRIBUTION_COLOR: '#dcc',
-    DISTRIBUTION_STROKE_COLOR: '#BFB0B0',
-    CATEGORICAL_INSTANCE_COLOR: '#B3B3B3',
-    CATEGORICAL_INSTANCE_STROKE_COLOR: '#999999',
-    NEGATIVE_FI_COLOR: '#f2aaaa',
-    GRID_COLOR: '#000',
-  },
-  grayscale: {
-    BACKGROUND_COLOR: '#e0e0e0',
-    CRULES_COLOR: 'rgba(128,128,128,1)',
-    CRULES_STROKE_COLOR: 'rgba(100,100,100,1)',
-    RULE_COLOR: 'rgba(192,192,192,1)',
-    RULE_STROKE_COLOR: 'rgba(160,160,160,1)',
-    BASE_COLOR: '#d0d0d0',
-    BASE_STROKE_COLOR: '#a0a0a0',
-    SECONDARY_BACKGROUND_COLOR: '#f0f0f0',
-    TEXT_COLOR: '#333333',
-    VALUE_TEXT_COLOR: 'rgba(100,100,100,0.8)',
-    OTHER_TEXT_COLOR: 'rgba(51,51,51,0.8)',
-    INSTANCE_COLOR: '#000',
-    DISTRIBUTION_COLOR: '#e6e6e6',
-    DISTRIBUTION_STROKE_COLOR: '#a0a0a0',
-    CATEGORICAL_INSTANCE_COLOR: '#b0b0b0',
-    CATEGORICAL_INSTANCE_STROKE_COLOR: '#808080',
-    FI_POSITIVE_COLOR: '#5a5a5a',
-    NEGATIVE_FI_COLOR: '#808080',
-    GRID_COLOR: '#1a1a1a',
   },
   grayscaleHighContrast: {
     BACKGROUND_COLOR: '#f8f8f8', // Grigio molto chiaro per un leggero contrasto con il bianco

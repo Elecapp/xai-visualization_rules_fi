@@ -14,7 +14,7 @@ import {
 
 const d3 = require('d3');
 
-const FTTemplate = colorSet.default;
+let FTTemplate = colorSet.default;
 
 function FiperMenuCRule() {
   let bandScale = d3.scaleBand();
@@ -457,6 +457,43 @@ function FiperMenuColumnTitles() {
   return me;
 }
 
+function FiperMenuPaletteSelector() {
+  let width = 200;
+  const paletteOptions = [
+    { name: 'Light', value: 'default', color: colorSet.default.RULE_COLOR},
+    { name: 'Dark', value: 'darkModeColorPalette', color: colorSet.darkModeColorPalette.RULE_COLOR },
+    { name: 'ColorBlind', value: 'grayscaleHighContrast', color: colorSet.grayscaleHighContrast.RULE_COLOR },
+  ];
+
+  function me(selection) {
+    selection.selectAll('rect.palette')
+      .data(paletteOptions)
+      .join('rect')
+      .classed('palette', true)
+      .attr('x', GUTTER)
+      .attr('y', (d, i) => (i * SINGLE_FEATURE_HEIGHT) + GUTTER)
+      .attr('width', SINGLE_FEATURE_HEIGHT * 0.75)
+      .attr('height', SINGLE_FEATURE_HEIGHT * 0.75)
+      .attr('fill', d => d.color)
+      .attr('stroke', FTTemplate.TEXT_COLOR)
+      .attr('stroke-width', 0.5)
+      .on('click', (d) => {
+        const selectedPalette = d3.select(d.target).datum();
+        FTTemplate = colorSet[selectedPalette.value];
+        dispatcher.call('changePalette', null, selectedPalette);
+      });
+  }
+
+  // eslint-disable-next-line func-names
+  me.width = function (_) {
+    if (!arguments.length) return width;
+    width = _;
+    return me;
+  };
+
+  return me;
+}
+
 function FiperMenu() {
   let width = 200;
   let height = 500;
@@ -467,6 +504,7 @@ function FiperMenu() {
   const menuClassification = FiperClassificationBox()
     .width(LABELS_COLUMN_WIDTH - SINGLE_FEATURE_HEIGHT - GUTTER);
   const menuColumnTitles = FiperMenuColumnTitles();
+  const menuPaletteSelector = FiperMenuPaletteSelector().width(SINGLE_FEATURE_HEIGHT + GUTTER);
 
   function me(selection) {
     // create a group to contain the menu elements:
@@ -516,6 +554,18 @@ function FiperMenu() {
       .attr('transform', `translate(${GUTTER}, ${MENU_HEIGHT + (SINGLE_FEATURE_HEIGHT)})`);
 
     gTitles.datum(titleDescriptor).call(menuColumnTitles);
+    // =========================================================
+
+    // =========================================================
+    //                  Palette Selector
+    // =========================================================
+    const gPalette = gMenu.selectAll('g.palette')
+      .data(d => [d])
+      .join('g')
+      .classed('palette', true)
+      .attr('transform', `translate(${menuClassification.width() + GUTTER}, ${GUTTER})`);
+    gPalette.call(menuPaletteSelector);
+
 
     // =========================================================
     //                  Order By Selector

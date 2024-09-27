@@ -32,7 +32,7 @@ const maxLabelLength = fontScaleFactor(FONT_SIZE);
 
 // create a function to darken a color using d3
 
-const FTTemplate = colorSet.default;
+let FTTemplate = colorSet.default;
 // Format the data (instead of using d3.stack()) and
 // filter out 0 values:
 // extracted from: https://observablehq.com/@eesur/d3-single-stacked-bar
@@ -1529,6 +1529,15 @@ d3.json('/static/instance_16.json').then((data) => {
     explanationDescriptor.filterRules = d.Rules;
     explanationDescriptor.filterCRules = d.CRules;
 
+    refreshVisualization(explanationDescriptor);
+  });
+
+  dispatcher.on('changePalette', (d) => {
+    const newTemplate = colorSet[d.value];
+    FTTemplate = newTemplate;
+
+    mainSvg
+      .attr('style', `background-color: ${FTTemplate.BACKGROUND_COLOR};`);
     refreshVisualization(explanationDescriptor);
   });
 });
