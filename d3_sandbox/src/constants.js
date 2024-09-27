@@ -43,23 +43,19 @@ export const colorSet = {
     GRID_COLOR: '#000',
   },
   darkModeColorPalette: {
-    BACKGROUND_COLOR: '#fff1e0',
-    CRULES_COLOR: '#9e4f67',
-    CRULES_STROKE_COLOR: '#854256',
-    FI_POSITIVE_COLOR: '#626d8c',
-    RULE_COLOR: '#f2c14e',
-    RULE_STROKE_COLOR: '#d9a743',
-    BASE_COLOR: '#dcc',
-    BASE_STROKE_COLOR: '#BFB0B0',
-    SECONDARY_BACKGROUND_COLOR: '#fdfdfd',
-    TEXT_COLOR: '#333333',
-    INSTANCE_COLOR: '#000',
-    DISTRIBUTION_COLOR: '#dcc',
-    DISTRIBUTION_STROKE_COLOR: '#BFB0B0',
-    CATEGORICAL_INSTANCE_COLOR: '#B3B3B3',
-    CATEGORICAL_INSTANCE_STROKE_COLOR: '#999999',
-    NEGATIVE_FI_COLOR: '#f2aaaa',
-    GRID_COLOR: '#000',
+    BASE_STROKE_COLOR: '#4e4e4e', // Darker stroke color for base
+    SECONDARY_BACKGROUND_COLOR: '#2a2a2a', // Slightly lighter background for secondary elements
+    TEXT_COLOR: '#ffffff', // White text for high contrast
+    VALUE_TEXT_COLOR: '#d1d1d1', // Light gray for value text
+    OTHER_TEXT_COLOR: '#b0b0b0', // Gray for other text
+    INSTANCE_COLOR: '#ff6f61', // Bright color for instances
+    DISTRIBUTION_COLOR: '#4d4d4d', // Dark color for distributions
+    DISTRIBUTION_STROKE_COLOR: '#808080', // Darker stroke color for distributions
+    CATEGORICAL_INSTANCE_COLOR: '#b0b0b0', // Dark gray for categorical instances
+    CATEGORICAL_INSTANCE_STROKE_COLOR: '#d1d1d1', // Darker stroke color for categorical instances
+    FI_POSITIVE_COLOR: '#37995e', // Green for positive feature importance
+    NEGATIVE_FI_COLOR: '#d1804d', // Red for negative feature importance
+    GRID_COLOR: '#3a3a3a', // Dark color for grid lines
   },
   alternativeColorPalette: {
     BACKGROUND_COLOR: '#f2f2f2',
