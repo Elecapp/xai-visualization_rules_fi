@@ -58,7 +58,6 @@ function FiperMenuCRule() {
       .attr('x', CRULES_GRID_COLUMN_WIDTH / 2)
       .attr('y', (MENU_HEIGHT / 3) * 2)
       .attr('text-anchor', 'middle')
-      .attr('alignment-baseline', 'middle')
       .attr('font-size', FONT_SIZE)
       .attr('font-weight', d => (d === explanationDescriptor.selectedCounterRule ? 500 : 400))
       .attr('fill', d => (d === explanationDescriptor.selectedCounterRule ? '#eee' : FTTemplate.TEXT_COLOR))
@@ -439,7 +438,6 @@ function FiperMenuColumnTitles() {
       )
       .attr('y', SINGLE_FEATURE_HEIGHT / 2)
       .attr('font-size', FONT_SIZE)
-      .attr('alignment-baseline', 'middle')
       .attr('text-anchor', 'middle')
       .attr('fill', FTTemplate.TEXT_COLOR)
       .attr('cursor', 'default')
@@ -460,7 +458,7 @@ function FiperMenuColumnTitles() {
 function FiperMenuPaletteSelector() {
   let width = 200;
   const paletteOptions = [
-    { name: 'Light', value: 'default', color: colorSet.default.RULE_COLOR},
+    { name: 'Light', value: 'default', color: colorSet.default.RULE_COLOR },
     { name: 'Dark', value: 'darkModeColorPalette', color: colorSet.darkModeColorPalette.RULE_COLOR },
     { name: 'ColorBlind', value: 'grayscaleHighContrast', color: colorSet.grayscaleHighContrast.RULE_COLOR },
   ];
