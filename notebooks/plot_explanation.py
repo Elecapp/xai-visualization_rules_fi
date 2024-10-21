@@ -81,7 +81,7 @@ class PlotExplanation:
         self.df.sort_values(by=['feature_importance'], key=lambda x: abs(x), ascending=False, inplace=True)
         return self.df
 
-    def prepare_rule_descriptor(self):
+    def prepare_rule_descriptor(self, inst):
         feature_list = []
         if self.feature_importance_type == 'lime':
             lime_dict = {}
@@ -128,7 +128,7 @@ class PlotExplanation:
             feature_dict[f_name]['crules'] = {}
         # Store the value of the instance in the corresponding entry of the dictionary
         if self.instance_number:
-            inst = self.x_train.iloc[self.instance_number].values
+            # inst = self.x_train.iloc[self.instance_number].values
             for i, v in enumerate(inst):
                 feat_name = self.feature_names[i]
                 feature_dict[feat_name]['instance_value'] = v
