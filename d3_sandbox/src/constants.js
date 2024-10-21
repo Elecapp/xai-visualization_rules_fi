@@ -43,7 +43,7 @@ export const colorSet = {
     GRID_COLOR: '#000',
   },
   darkModeColorPalette: {
-    BACKGROUND_COLOR: '#2a2a2a', // Dark gray for background
+    BACKGROUND_COLOR: '#3a3a3a', // Dark gray for background
     BASE_STROKE_COLOR: '#4e4e4e', // Darker stroke color for base
     SECONDARY_BACKGROUND_COLOR: '#2a2a2a', // Slightly lighter background for secondary elements
     TEXT_COLOR: '#ffffff', // White text for high contrast
