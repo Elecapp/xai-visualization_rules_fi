@@ -471,23 +471,51 @@ function FiperMenuColumnTitles() {
 function FiperMenuPaletteSelector() {
   let width = 200;
   const paletteOptions = [
-    { name: 'Light', value: 'default', color: colorSet.default.RULE_COLOR },
-    { name: 'Dark', value: 'darkModeColorPalette', color: colorSet.darkModeColorPalette.RULE_COLOR },
-    { name: 'ColorBlind', value: 'grayscaleHighContrast', color: colorSet.grayscaleHighContrast.RULE_COLOR },
+    {
+      name: 'Light',
+      value: 'default',
+      color: colorSet.default.RULE_COLOR,
+      icon: 'M8 5.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5z' +
+        'M7.25 0h1.5v3h-1.5zM7.25 13h1.5v3h-1.5zM0 7.25h3v1.5H0zM13 7.25h3v1.5h-3z' +
+        'M2.22 2.22l2.12 2.12-1.06 1.06-2.12-2.12zM11.66 11.66l2.12 2.12-1.06 1.06-2.12-2.12z' +
+        'M2.22 13.78l2.12-2.12 1.06 1.06-2.12 2.12zM11.66 4.34l2.12-2.12 1.06 1.06-2.12 2.12z',
+    },
+    {
+      name: 'Dark',
+      value: 'darkModeColorPalette',
+      color: colorSet.darkModeColorPalette.RULE_COLOR,
+      icon: 'M8 0c-4.4 0-8 3.6-8 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zM8 15c-3.9 0-7-3.1-7-7 0-2.4 1.2-4.6 3.2-5.9-0.1 0.6-0.2 1.3-0.2 1.9 0 4.9 4 8.9 8.9 9-1.3 1.3-3 2-4.9 2z',
+    },
+    {
+      name: 'ColorBlind',
+      value: 'grayscaleHighContrast',
+      color: colorSet.grayscaleHighContrast.RULE_COLOR,
+      icon: 'M2.929,1.405l-1.178,1.178,3.26,3.26c-.187.446-.323.918-.383,1.417-1.756.896-2.96,2.717-2.96,4.823,0,2.992,2.425,5.417,5.417,5.417,1.075,0,2.074-.317,2.917-.857.842.54,1.842.857,2.917.857,1.069,0,2.063-.312,2.902-.848l1.841,1.841,1.178-1.178L2.929,1.405ZM9.276,10.109l1.805,1.805c-.347.098-.703.169-1.081.169-.431,0-.838-.084-1.229-.206.032-.64.218-1.235.505-1.768ZM7.083,7.917l1.273,1.273c-.397.624-.677,1.329-.792,2.092-.992-.719-1.647-1.86-1.712-3.16.391-.122.798-.206,1.229-.206h0ZM7.083,16.25c-2.297,0-4.167-1.869-4.167-4.167,0-1.387.687-2.608,1.732-3.367.262,1.761,1.367,3.243,2.895,4.023.142,1.17.657,2.222,1.422,3.04-.567.291-1.202.47-1.882.47h0ZM8.929,13.227c.346.069.704.107,1.071.107s.724-.038,1.071-.107c-.201.699-.565,1.328-1.071,1.825-.505-.497-.869-1.126-1.071-1.825ZM12.917,16.25c-.681,0-1.314-.18-1.882-.47.663-.708,1.121-1.599,1.328-2.583l2.534,2.534c-.588.327-1.26.519-1.981.519ZM10,3.75c1.898,0,3.487,1.284,3.987,3.023-.346-.069-.704-.107-1.071-.107-.702,0-1.365.147-1.979.39l.988.988c.317-.082.648-.128.991-.128.431,0,.838.084,1.229.206-.03.607-.193,1.177-.455,1.687l.922.922c.369-.605.63-1.283.739-2.014,1.045.758,1.733,1.98,1.733,3.367,0,.342-.053.67-.132.988l1,1c.243-.616.382-1.285.382-1.988,0-2.107-1.205-3.927-2.96-4.823-.325-2.681-2.604-4.76-5.373-4.76-1.035,0-2.002.291-2.824.795l.924.924c.569-.297,1.212-.47,1.9-.47h0Z',
+    },
   ];
 
   function me(selection) {
+    selection.selectAll('path.icon')
+      .data(paletteOptions)
+      .join('path')
+      .classed('icon', true)
+      .attr('d', d => d.icon)
+      .attr('transform', (d, i) => `translate(2, ${(i * SINGLE_FEATURE_HEIGHT) + GUTTER + 3})`)
+      .attr('fill', FTTemplate.OTHER_TEXT_COLOR);
+
     selection.selectAll('rect.palette')
       .data(paletteOptions)
       .join('rect')
       .classed('palette', true)
-      .attr('x', GUTTER)
+      .attr('x', 0)
       .attr('y', (d, i) => (i * SINGLE_FEATURE_HEIGHT) + GUTTER)
       .attr('width', SINGLE_FEATURE_HEIGHT * 0.75)
       .attr('height', SINGLE_FEATURE_HEIGHT * 0.75)
       .attr('fill', d => d.color)
+      .attr('fill-opacity', 0.001)
       .attr('stroke', FTTemplate.TEXT_COLOR)
       .attr('stroke-width', 0.5)
+      .attr('cursor', 'pointer')
       .on('click', (d) => {
         const selectedPalette = d3.select(d.target).datum();
         FTTemplate = colorSet[selectedPalette.value];
