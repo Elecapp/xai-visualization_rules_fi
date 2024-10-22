@@ -1,0 +1,275 @@
+{
+    "features": [
+        {
+            "name": "Length",
+            "rname": "Length",
+            "type": "numeric",
+            "feature_importance": -0.032329802572301614,
+            "eda": {
+                "min": 0.075,
+                "max": 0.815,
+                "q1": 0.45,
+                "median": 0.545,
+                "q3": 0.615,
+                "mean": 0.5237464788732394,
+                "std": 0.12115192373727535
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.69
+        },
+        {
+            "name": "Diameter",
+            "rname": "Diameter",
+            "type": "numeric",
+            "feature_importance": 0.08121178576717336,
+            "eda": {
+                "min": 0.055,
+                "max": 0.65,
+                "q1": 0.34624999999999995,
+                "median": 0.425,
+                "q3": 0.48,
+                "mean": 0.40771830985915497,
+                "std": 0.10018139129025262
+            },
+            "rule": [
+                [
+                    {
+                        "att": "Diameter",
+                        "op": ">",
+                        "thr": 0.4694861024618149,
+                        "is_continuous": true
+                    },
+                    1
+                ]
+            ],
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "Diameter",
+                            "op": "<=",
+                            "thr": 0.3541784733533859,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ]
+            },
+            "instance_value": 0.55
+        },
+        {
+            "name": "Height",
+            "rname": "Height",
+            "type": "numeric",
+            "feature_importance": 0.06695410730034272,
+            "eda": {
+                "min": 0.0,
+                "max": 0.515,
+                "q1": 0.11125,
+                "median": 0.145,
+                "q3": 0.165,
+                "mean": 0.13922394366197183,
+                "std": 0.039304989637732976
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0.195
+        },
+        {
+            "name": "Whole weight",
+            "rname": "Whole weight",
+            "type": "numeric",
+            "feature_importance": 0.097030268151125,
+            "eda": {
+                "min": 0.002,
+                "max": 2.8255,
+                "q1": 0.43925000000000003,
+                "median": 0.8085,
+                "q3": 1.156,
+                "mean": 0.8293321126760563,
+                "std": 0.4925487597854399
+            },
+            "rule": [
+                [
+                    {
+                        "att": "Whole weight",
+                        "op": ">",
+                        "thr": 0.7320564687252045,
+                        "is_continuous": true
+                    },
+                    1
+                ]
+            ],
+            "crules": {},
+            "instance_value": 1.777
+        },
+        {
+            "name": "Whole weight.1",
+            "rname": "Whole weight.1",
+            "type": "numeric",
+            "feature_importance": -0.0547370289961512,
+            "eda": {
+                "min": 0.001,
+                "max": 1.488,
+                "q1": 0.1815,
+                "median": 0.339,
+                "q3": 0.5055,
+                "mean": 0.3596229577464788,
+                "std": 0.22277079068913275
+            },
+            "rule": [],
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "Whole weight.1",
+                            "op": ">",
+                            "thr": 0.4630715250968933,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ]
+            },
+            "instance_value": 0.769
+        },
+        {
+            "name": "Whole weight.2",
+            "rname": "Whole weight.2",
+            "type": "numeric",
+            "feature_importance": 0.00962337169372569,
+            "eda": {
+                "min": 0.0005,
+                "max": 0.76,
+                "q1": 0.0925,
+                "median": 0.1715,
+                "q3": 0.254875,
+                "mean": 0.18073957746478875,
+                "std": 0.11001127723304725
+            },
+            "rule": [],
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "Whole weight.2",
+                            "op": ">",
+                            "thr": 0.20072007924318314,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ]
+            },
+            "instance_value": 0.38
+        },
+        {
+            "name": "Shell weight",
+            "rname": "Shell weight",
+            "type": "numeric",
+            "feature_importance": 0.09976077321550324,
+            "eda": {
+                "min": 0.0015,
+                "max": 1.005,
+                "q1": 0.127625,
+                "median": 0.235,
+                "q3": 0.326375,
+                "mean": 0.2389595774647887,
+                "std": 0.14039786625140585
+            },
+            "rule": [
+                [
+                    {
+                        "att": "Shell weight",
+                        "op": ">",
+                        "thr": 0.3438260406255722,
+                        "is_continuous": true
+                    },
+                    1
+                ]
+            ],
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "Shell weight",
+                            "op": "<=",
+                            "thr": 0.5436404943466187,
+                            "is_continuous": true
+                        },
+                        0
+                    ],
+                    [
+                        {
+                            "att": "Shell weight",
+                            "op": ">",
+                            "thr": 0.3438260406255722,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ]
+            },
+            "instance_value": 0.4305
+        },
+        {
+            "name": "Sex=F",
+            "rname": "Sex",
+            "type": "categorical",
+            "feature_importance": -0.004789404722394441,
+            "eda": {
+                "category": "F",
+                "count": 1101
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": false
+        },
+        {
+            "name": "Sex=I",
+            "rname": "Sex",
+            "type": "categorical",
+            "feature_importance": 0.008448408325637032,
+            "eda": {
+                "category": "I",
+                "count": 1134
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": false
+        },
+        {
+            "name": "Sex=M",
+            "rname": "Sex",
+            "type": "categorical",
+            "feature_importance": 0.001376817611986027,
+            "eda": {
+                "category": "M",
+                "count": 1315
+            },
+            "rule": [],
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "Sex=M",
+                            "op": ">",
+                            "thr": 0.9490795731544495,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ]
+            },
+            "instance_value": true
+        }
+    ],
+    "predicted_class": 1,
+    "true_class": 1,
+    "predicted_proba": [
+        0.2,
+        0.62,
+        0.18
+    ]
+}
