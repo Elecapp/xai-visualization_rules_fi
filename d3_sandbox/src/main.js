@@ -372,7 +372,7 @@ function FIPERFeatureDistributionView() {
           .data(d => [d])
           .join('text')
           .classed('single-bar-value', true)
-          .attr('x', d => barLength(d.value) + GUTTER / 2)
+          .attr('x', d => barLength(d.value) + (GUTTER / 2))
           .attr('dy', FONT_SIZE)
           .attr('text-anchor', 'start')
           .attr('font-size', FONT_SIZE)
@@ -613,7 +613,7 @@ function FIPERFeatureLabelsView() {
       .join('text')
       .classed('feature-value', true)
       .attr('x', width)
-      .attr('y',  FONT_SIZE + (FONT_SIZE / 2))
+      .attr('y', FONT_SIZE + (FONT_SIZE / 2))
       .attr('text-anchor', 'end')
       .attr('font-size', FONT_SIZE)
       .attr('fill', FTTemplate.VALUE_TEXT_COLOR)
@@ -1219,7 +1219,7 @@ function reduceUnionIntersection(predicatesWithIntervals) {
   return result;
 }
 
-d3.json('/static/instance_245.json').then((data) => {
+d3.json('/static/instance_2.json').then((data) => {
   // preprocess each entry to copmute the expected value for the categorical counterrules
   const tfeature = data.features
     // .filter(f => f.type === 'categorical')
@@ -1482,7 +1482,6 @@ d3.json('/static/instance_245.json').then((data) => {
 
   // it is important that fm component is called after fv has been called the first time
   // to ensure that the bandScale is correctly initialized
-  fm.bandScale(fv.cRulesGridBandScale());
   refreshVisualization(explanationDescriptor);
 
   // compute the resulting bounding box to set the height of the svg

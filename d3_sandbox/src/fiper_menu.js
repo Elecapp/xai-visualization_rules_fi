@@ -18,9 +18,14 @@ let FTTemplate = colorSet.default;
 
 function FiperMenuCRule() {
   let bandScale = d3.scaleBand();
+  let width = 200;
+  bandScale.padding(0.1);
 
   function me(selection) {
     const explanationDescriptor = selection.datum();
+
+    bandScale.domain(explanationDescriptor.counterRules);
+    bandScale.range([0, explanationDescriptor.counterRules.length * CRULES_GRID_COLUMN_WIDTH]);
 
     const gcRuleButtons = selection.selectAll('g.counterRule')
       .data(d => d.counterRules)
@@ -42,7 +47,7 @@ function FiperMenuCRule() {
       .data(d => [d])
       .join('rect')
       .classed('counterRule', true)
-      .attr('width', CRULES_GRID_COLUMN_WIDTH)
+      .attr('width', bandScale.bandwidth())
       .attr('height', (MENU_HEIGHT / 3) * 2)
       .attr('transform', `translate(0, ${MENU_HEIGHT / 3})`)
       .attr('stroke', FTTemplate.TEXT_COLOR)
@@ -55,7 +60,7 @@ function FiperMenuCRule() {
       .data(d => [d])
       .join('text')
       .classed('label', true)
-      .attr('x', CRULES_GRID_COLUMN_WIDTH / 2)
+      .attr('x', bandScale.bandwidth() / 2)
       .attr('y', (MENU_HEIGHT / 3) * 2)
       .attr('text-anchor', 'middle')
       .attr('font-size', FONT_SIZE)
@@ -69,6 +74,14 @@ function FiperMenuCRule() {
   me.bandScale = function (_) {
     if (!arguments.length) return bandScale;
     bandScale = _;
+    return me;
+  };
+
+  // eslint-disable-next-line func-names
+  me.width = function (_) {
+    if (!arguments.length) return width;
+    width = _;
+    bandScale.range([0, width]);
     return me;
   };
 
@@ -495,9 +508,8 @@ function FiperMenuPaletteSelector() {
 function FiperMenu() {
   let width = 200;
   let height = 500;
-  let bandScale = d3.scaleBand();
   const menuOrderBy = FiperMenuOrderBy();
-  const menuCRulesCall = FiperMenuCRule().bandScale(bandScale);
+  const menuCRulesCall = FiperMenuCRule();
   const menuFilterBy = FiperMenuFilterBy();
   const menuClassification = FiperClassificationBox()
     .width(LABELS_COLUMN_WIDTH - SINGLE_FEATURE_HEIGHT - GUTTER);
@@ -585,7 +597,6 @@ function FiperMenu() {
       .classed('cRuleGrid', true)
       .attr('transform', `translate(${LABELS_COLUMN_WIDTH + RULES_COLUMN_WIDTH + (3 * GUTTER)}, ${GUTTER})`);
 
-    menuCRulesCall.bandScale(bandScale);
     menuCRules.call(menuCRulesCall);
     // =========================================================
 
@@ -615,13 +626,6 @@ function FiperMenu() {
   me.height = function (_) {
     if (!arguments.length) return height;
     height = _;
-    return me;
-  };
-
-  // eslint-disable-next-line func-names
-  me.bandScale = function (_) {
-    if (!arguments.length) return bandScale;
-    bandScale = _;
     return me;
   };
 
