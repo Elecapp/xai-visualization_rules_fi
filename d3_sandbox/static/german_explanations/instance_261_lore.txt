@@ -1,0 +1,2 @@
+r = { savings=... < 100 DM > 0.09, duration_in_month <= 18.19, duration_in_month > 0.50, account_check_status=< 0 DM > 0.42, present_res_since <= 2.50, age <= 41.50 } --> { default: 0 }
+c = { { duration_in_month > 37.27, account_check_status=< 0 DM <= 0.02, foreign_worker=yes <= 0.49, property=if not A121 : building society savings agreement/ life insurance <= 0.50, property=unknown / no property > 0.50 } }

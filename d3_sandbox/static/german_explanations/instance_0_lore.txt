@@ -1,0 +1,2 @@
+r = { savings=... < 100 DM <= 0.01, age > 28.50, purpose=(vacation - does not exist?) <= 0.02 } --> { default: 0 }
+c =  }

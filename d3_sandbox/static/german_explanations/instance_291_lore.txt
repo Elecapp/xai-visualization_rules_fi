@@ -1,0 +1,3 @@
+r = { credit_amount > 12289.00, other_installment_plans=bank > 0.50, duration_in_month > 27.50, installment_as_income_perc <= 2.50, account_check_status=< 0 DM > -0.50, job=skilled employee / official > -0.50, personal_status_sex=male : single > 0.50, property=if not A121 : building society savings agreement/ life insurance <= 0.50, age > 60.50 } --> { default: 1 }
+c = { { other_installment_plans=bank <= 0.50 },
+      { installment_as_income_perc > 3.50 } }

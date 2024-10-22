@@ -1,0 +1,6 @@
+r = { account_check_status=< 0 DM > 0.93, savings=... < 100 DM > 0.96, duration_in_month > 15.50, job=skilled employee / official > 0.50, credit_amount > 2469.00, present_res_since <= 3.50, account_check_status=0 <= ... < 200 DM <= 0.50, installment_as_income_perc <= 3.50 } --> { default: 1 }
+c = { { savings=... < 100 DM <= 0.96, credit_history=existing credits paid back duly till now > 0.94, other_installment_plans=bank <= 0.50 },
+      { duration_in_month > 21.50, job=skilled employee / official <= 0.50, property=real estate > 0.50 },
+      { duration_in_month > 21.50, job=skilled employee / official <= 0.50, credit_history=critical account/ other credits existing (not at this bank) > 0.50 },
+      { duration_in_month <= 15.50, age <= 18.50, job=skilled employee / official <= 0.50 },
+      { job=skilled employee / official <= 0.50, telephone=yes, registered under the customers name  <= 0.50, property=real estate > 0.50 } }

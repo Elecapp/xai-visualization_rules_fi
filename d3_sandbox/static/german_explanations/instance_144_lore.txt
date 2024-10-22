@@ -1,0 +1,3 @@
+r = { savings=100 <= ... < 500 DM <= 0.01, savings=... < 100 DM > 0.03, foreign_worker=yes > 0.46, duration_in_month <= 35.50, duration_in_month > 25.50, present_res_since <= 2.39, account_check_status=< 0 DM <= 0.31, age > 17.50 } --> { default: 0 }
+c = { { duration_in_month <= 25.50, age <= 23.50 },
+      { present_res_since > 2.39, telephone=yes, registered under the customers name  > 0.50 } }

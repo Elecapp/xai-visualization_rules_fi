@@ -1,0 +1,3 @@
+r = { duration_in_month <= 24.50, purpose=repairs <= 0.02, account_check_status=< 0 DM > 0.50, age > 49.50, property=unknown / no property <= 0.50, present_res_since <= 4.50, present_res_since > 1.50, credit_amount <= 6500.00, other_installment_plans=none > 0.50, savings=... < 100 DM > 0.50 } --> { default: 0 }
+c = { { other_installment_plans=none <= 0.50, property=real estate <= 0.50, other_debtors=guarantor <= 0.50, purpose=furniture/equipment <= 0.50 },
+      { age <= 49.50, other_debtors=none > 0.50, present_emp_since=.. >= 7 years <= 0.50, other_debtors=guarantor <= 0.50 } }

@@ -1,0 +1,2 @@
+r = { duration_in_month <= 24.32, account_check_status=< 0 DM <= 0.08, age <= 50.50, age > 21.50, other_installment_plans=stores <= 0.17, present_res_since <= 4.50, property=unknown / no property <= 0.50, present_emp_since=... < 1 year  <= 0.50 } --> { default: 0 }
+c =  }

@@ -1,0 +1,4 @@
+r = { job=unemployed/ unskilled - non-resident <= 0.00, other_debtors=co-applicant <= 0.02, other_installment_plans=bank > 0.50, age <= 46.50, age > 21.50, duration_in_month <= 22.50, job=management/ self-employed/ highly qualified employee/ officer <= 0.50, purpose=domestic appliances > 0.50 } --> { default: 0 }
+c = { { age <= 21.50 },
+      { purpose=domestic appliances <= 0.50 },
+      { age <= 14.00 } }

@@ -1,0 +1,2 @@
+r = { duration_in_month <= 22.50, purpose=car (new) <= 0.05, credit_amount <= 3712.00, credit_amount > 717.50 } --> { default: 0 }
+c =  }

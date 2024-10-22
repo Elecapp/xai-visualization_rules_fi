@@ -1,0 +1,2 @@
+r = { account_check_status=< 0 DM <= 0.04, age > 26.50, account_check_status=>= 200 DM / salary assignments for at least 1 year <= 0.08, savings=... < 100 DM <= 0.50 } --> { default: 0 }
+c =  }

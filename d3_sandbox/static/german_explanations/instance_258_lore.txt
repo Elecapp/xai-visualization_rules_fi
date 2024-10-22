@@ -1,0 +1,2 @@
+r = { account_check_status=< 0 DM <= 0.01, duration_in_month <= 27.50, age > 24.50, credit_history=no credits taken/ all credits paid back duly > -0.04, installment_as_income_perc <= 4.50, purpose=car (new) <= 0.50, housing=rent <= 0.50, savings=... < 100 DM > 0.50, credit_amount <= 2406.50, job=skilled employee / official <= 0.50 } --> { default: 0 }
+c =  }

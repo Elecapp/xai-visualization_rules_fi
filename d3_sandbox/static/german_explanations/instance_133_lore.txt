@@ -1,0 +1,5 @@
+r = { present_emp_since=... < 1 year  > 0.90, age <= 28.50, age > 20.50, installment_as_income_perc > 1.50, people_under_maintenance > 0.50, duration_in_month <= 36.50, duration_in_month > 14.00, account_check_status=no checking account <= 0.50, present_res_since > 1.50, housing=own <= 0.50, account_check_status=0 <= ... < 200 DM <= 0.50, credit_amount > 2713.50, credits_this_bank <= 1.50 } --> { default: 1 }
+c = { { installment_as_income_perc <= 1.50 },
+      { duration_in_month <= 14.00 },
+      { present_res_since <= 0.50 },
+      { account_check_status=no checking account > 0.50 } }

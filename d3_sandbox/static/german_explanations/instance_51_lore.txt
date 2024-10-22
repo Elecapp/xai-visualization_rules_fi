@@ -1,0 +1,4 @@
+r = { duration_in_month > 57.50, age <= 31.00, purpose=car (new) > 0.50, present_res_since <= 2.50, property=real estate <= 0.50 } --> { default: 1 }
+c = { { age > 31.00, job=management/ self-employed/ highly qualified employee/ officer <= 0.50 },
+      { age > 31.00, credit_amount <= 6286.00 },
+      { age > 31.00, account_check_status=no checking account > 0.50 } }

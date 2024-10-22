@@ -1,0 +1,3 @@
+r = { duration_in_month <= 16.50, property=unknown / no property <= 0.50, present_emp_since=4 <= ... < 7 years <= 0.50, credit_amount <= 9899.50, foreign_worker=yes <= 0.50, purpose=radio/television <= 0.50 } --> { default: 0 }
+c = { { duration_in_month > 29.99, account_check_status=< 0 DM <= 0.08, installment_as_income_perc > 2.50, present_emp_since=.. >= 7 years <= 0.53 },
+      { duration_in_month > 29.99, account_check_status=< 0 DM <= 0.08, installment_as_income_perc > 2.50, credits_this_bank > 1.01 } }

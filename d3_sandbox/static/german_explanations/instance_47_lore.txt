@@ -1,0 +1,2 @@
+r = { account_check_status=< 0 DM <= 0.03, duration_in_month <= 33.50, purpose=repairs <= 0.01, age <= 61.00, property=unknown / no property > 0.50, present_res_since > 1.50, credit_amount <= 3305.50 } --> { default: 0 }
+c =  }

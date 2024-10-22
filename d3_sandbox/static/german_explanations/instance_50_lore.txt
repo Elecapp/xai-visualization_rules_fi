@@ -1,0 +1,2 @@
+r = { foreign_worker=no <= 0.00, foreign_worker=no > -0.03, savings=... < 100 DM > 0.50, job=unskilled - resident <= 0.50, account_check_status=< 0 DM <= 0.50, duration_in_month <= 34.50, present_emp_since=1 <= ... < 4 years <= 0.50, purpose=car (new) > 0.50, age <= 38.00, age > 30.50, credit_amount > 2427.50, property=if not A121 : building society savings agreement/ life insurance > 0.50 } --> { default: 0 }
+c = { { account_check_status=< 0 DM > 0.50, purpose=car (new) <= 0.50 } }
