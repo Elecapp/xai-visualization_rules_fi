@@ -1,3 +1,5 @@
+import random
+
 import pandas as pd
 import numpy as np
 import xailib.xailib_base
@@ -186,7 +188,17 @@ def select_and_explain_instance(inst_num, l_explnr, s_explnr, path):
 
 
 if __name__ == '__main__':
-    inst_num = 245
-    inst, num_crules = select_and_explain_instance(inst_num, l_explainer, s_explainer,'../d3_sandbox/static')
-    print(f'Instance {inst_num} explained with {num_crules} counter rules')
-    print(f'Files saved in {path}')
+    # inst_num = 2
+    # inst, num_crules = select_and_explain_instance(inst_num, l_explainer, s_explainer,'../d3_sandbox/static')
+    # print(f'Instance {inst_num} explained with {num_crules} counter rules')
+    # print(f'Files saved in {path}')
+    integer_list = list(range(X_test_g.shape[0]))
+    sample_length = 10
+    insts_to_compute = random.sample(integer_list, len(integer_list))
+    for inst_num in insts_to_compute:
+        print(f'Processing Instance {inst_num}')
+        _, ncr = select_and_explain_instance(inst_num, l_explainer, s_explainer, '../d3_sandbox/static/german_explanations')
+        num_try = 0
+        while (ncr <= 1 and num_try < 5):
+            _, ncr = select_and_explain_instance(inst_num, l_explainer, s_explainer, '../d3_sandbox/static/german_explanations')
+            num_try += 1

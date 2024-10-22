@@ -29,7 +29,7 @@ path = os.getcwd()
 
 column_names= ['Sex','Length','Diameter','Height','Whole weight','Whole weight.1','Whole weight.2',
          'Shell weight','Rings']
-data = pd.read_csv('/Users/eleonoracappuccio/xai-visualization_rules_fi/datasets/abalone/abalone.data', names=column_names)
+data = pd.read_csv('../datasets/abalone/abalone.data', names=column_names)
 for ix in data.index:
     row = data.loc[ix]
     if row.Rings <= 8:
@@ -175,18 +175,18 @@ def select_and_explain_instance(inst_num, l_explnr, s_explnr, path):
         "predicted_proba": predicted_proba[0].tolist()
     }
 
-    with open(f'{path}/instance_{inst_num}_aba.json', "w") as outfile:
+    with open(f'{path}/instance_{inst_num}.json', "w") as outfile:
         json.dump(output_data, outfile, cls=CustomJSONEncoder, indent=4)
 
     # save the output of l_exp.exp to a text file named instance_{inst_num}_lore.txt
-    with open(f'{path}/instance_{inst_num}_lore_aba.txt', "w") as outfile:
+    with open(f'{path}/instance_{inst_num}_lore.txt', "w") as outfile:
         outfile.write(str(l_exp.exp))
 
     return inst, len(crules)
 
 
 if __name__ == '__main__':
-    inst_num = 1
-    inst, num_crules = select_and_explain_instance(inst_num, l_explainer, s_explainer, '../d3_sandbox/static')
+    inst_num = 10
+    inst, num_crules = select_and_explain_instance(inst_num, l_explainer, s_explainer, '../d3_sandbox/static/abalone_explanations')
     print(f'Instance {inst_num} explained with {num_crules} counter rules')
     print(f'Files saved in {path}')
