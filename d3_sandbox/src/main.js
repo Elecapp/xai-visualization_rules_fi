@@ -1219,7 +1219,7 @@ function reduceUnionIntersection(predicatesWithIntervals) {
   return result;
 }
 
-d3.json('/static/instance_2.json').then((data) => {
+d3.json('/static/instance_180.json').then((data) => {
   // preprocess each entry to copmute the expected value for the categorical counterrules
   const tfeature = data.features
     // .filter(f => f.type === 'categorical')
@@ -1401,7 +1401,7 @@ d3.json('/static/instance_2.json').then((data) => {
     filterRules: false,
     filterCRules: false,
   };
-  const fv = FIPERView().width(GLOBAL_WIDTH);
+  const fv = FIPERView().width(GLOBAL_WIDTH + (CRulesList.length * CRULES_GRID_COLUMN_WIDTH));
   const fm = FiperMenu();
 
   // TODO: fix the height of the visualization
@@ -1410,7 +1410,7 @@ d3.json('/static/instance_2.json').then((data) => {
   const mainSvg = d3.select('#app')
     .append('svg')
     .classed('viz', true)
-    .attr('width', GLOBAL_WIDTH)
+    .attr('width', fv.width())
     .attr('height', 200)
     .attr('style', `background-color: ${FTTemplate.BACKGROUND_COLOR};`);
 
@@ -1422,7 +1422,7 @@ d3.json('/static/instance_2.json').then((data) => {
   const menuSvg = mainSvg
     .append('g').append('svg')
     .classed('menu', true)
-    .attr('width', GLOBAL_WIDTH)
+    .attr('width', fv.width())
     .attr('height', MENU_HEIGHT + (2 * SINGLE_FEATURE_HEIGHT)) // added height of the menu + chart title here, check if it is correct
     .attr('style', `background-color: ${FTTemplate.BACKGROUND_COLOR};`);
 

@@ -409,7 +409,6 @@ function FiperMenuColumnTitles() {
         return (widthColumn.slice(0, i).reduce((a, b) => a + b, 0) + (GUTTER * i));
       })
       .attr('x2', (d, i) =>
-        // console.log('widthColumn', widthColumn);
         (widthColumn.slice(0, i + 1).reduce((a, b) => a + b, 0) + (GUTTER * i)),
       )
       .attr('stroke', FTTemplate.GRID_COLOR)
