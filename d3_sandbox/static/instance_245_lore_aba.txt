@@ -1,0 +1,2 @@
+r = { Shell weight > 0.34, Diameter > 0.47, Whole weight > 0.73 } --> { Rings: 1 }
+c = { { Diameter <= 0.35 } }
