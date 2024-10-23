@@ -856,15 +856,31 @@ function FIPERView() {
     // need to calculate an offset to position them correctly. This offset is given
     // by the sum of the number of rows of the selected feature.
 
+
     let offsetRows = 0;
     const features = oFeatures.map((d) => {
+    // We want to leave additional space (a couple of rows) if a rule or counterrule predicates
+    // are present.
+      const hasRule = d.rulePredicateMap.R0;
+      // check if any of the counter-rules is set to true
+      const hasCounterRules = Object.values(d.cRulesPredicateMap).some(v => v);
+      let additionalRows = 0;
+      if (hasRule) {
+        additionalRows += 1;
+      }
+      if (hasCounterRules) {
+        additionalRows += 1;
+      }
+
+
       const f = {
         ...d,
         rows: d.values.length,
       };
-      if (d.type === 'numeric') { f.rows = 2; } // default values for numeric features.
+      if (d.type === 'numeric') { f.rows = 2 + additionalRows; } // default values for numeric features.
       f.offsetRows = offsetRows;
-      if (d.status === 1) { offsetRows = f.rows; }
+      f.additionalRows = additionalRows;
+      if (d.status === 1) { offsetRows = f.rows + additionalRows; }
 
       return f;
     });
@@ -956,7 +972,7 @@ function FIPERView() {
       .classed('background', true)
       .attr('y', -6)
       .attr('width', width)
-      .attr('height', d => (d.status === 1 ? (d.rows + 1) * SINGLE_FEATURE_HEIGHT : SINGLE_FEATURE_HEIGHT))
+      .attr('height', d => (d.status === 1 ? (d.rows + d.additionalRows + 1) * SINGLE_FEATURE_HEIGHT : SINGLE_FEATURE_HEIGHT))
       .transition(t)
       .attr('fill', d => highlightScale(d.status));
 
@@ -1219,7 +1235,7 @@ function reduceUnionIntersection(predicatesWithIntervals) {
   return result;
 }
 
-d3.json('/static/instance_180.json').then((data) => {
+d3.json('/static/german_explanations/instance_14.json').then((data) => {
   // preprocess each entry to copmute the expected value for the categorical counterrules
   const tfeature = data.features
     // .filter(f => f.type === 'categorical')
