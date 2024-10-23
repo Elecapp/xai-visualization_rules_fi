@@ -1,0 +1,2 @@
+r = { duration_in_month <= 16.50, property=unknown / no property <= 0.05, account_check_status=< 0 DM <= 0.50, age > 21.50, purpose=car (new) <= 0.50 } --> { default: 0 }
+c =  }

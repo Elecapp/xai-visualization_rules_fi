@@ -1,0 +1,2 @@
+r = { account_check_status=< 0 DM <= 0.04, age > 22.94, credit_amount <= 8004.00, purpose=(vacation - does not exist?) <= 0.01, duration_in_month <= 51.00, savings=... < 100 DM > 0.50, present_emp_since=... < 1 year  <= 0.50, account_check_status=no checking account > 0.50, property=if not A121/A122 : car or other, not in attribute 6 > 0.50 } --> { default: 0 }
+c =  }

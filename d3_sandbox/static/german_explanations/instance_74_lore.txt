@@ -1,0 +1,9 @@
+r = { savings=... < 100 DM > 0.95, credit_amount <= 4343.50, credit_amount > 4159.00, account_check_status=no checking account <= 0.50, installment_as_income_perc > 3.50, job=skilled employee / official <= 0.50, present_res_since <= 3.50, present_res_since > 1.50, age > 28.50, personal_status_sex=female : divorced/separated/married <= 0.50, job=unskilled - resident <= 0.50, credit_history=critical account/ other credits existing (not at this bank) <= 0.50, housing=own > 0.50, other_installment_plans=none > 0.50, people_under_maintenance > 0.50, property=unknown / no property > 0.50, account_check_status=0 <= ... < 200 DM > 0.50, foreign_worker=yes > 0.50 } --> { default: 1 }
+c = { { present_res_since <= 1.50 },
+      { account_check_status=no checking account > 0.50 },
+      { job=skilled employee / official > 0.50 },
+      { credit_history=critical account/ other credits existing (not at this bank) > 0.50 },
+      { age <= 28.50 },
+      { property=unknown / no property <= 0.50 },
+      { account_check_status=0 <= ... < 200 DM <= 0.50 },
+      { job=unskilled - resident > 0.50 } }

@@ -1,0 +1,2 @@
+r = { duration_in_month <= 22.50, other_debtors=co-applicant <= 0.02, purpose=car (new) <= 0.50, account_check_status=< 0 DM <= 0.50, age > 20.50, people_under_maintenance <= 1.50, present_res_since > 0.50, job=unskilled - resident <= 0.50 } --> { default: 0 }
+c =  }

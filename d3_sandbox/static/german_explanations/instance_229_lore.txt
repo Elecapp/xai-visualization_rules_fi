@@ -1,0 +1,3 @@
+r = { job=management/ self-employed/ highly qualified employee/ officer <= 0.01, other_installment_plans=bank > 0.02, duration_in_month <= 13.50, housing=rent <= 0.50, age > 20.50, property=unknown / no property <= 0.50, present_emp_since=... < 1 year  > -0.50 } --> { default: 0 }
+c = { { property=unknown / no property > 0.50 },
+      { other_installment_plans=bank <= 0.02 } }

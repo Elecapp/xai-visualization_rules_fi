@@ -1,0 +1,7 @@
+r = { duration_in_month > 46.50, savings=... < 100 DM > 0.50, age <= 30.50, present_res_since <= 3.50, present_res_since > 1.50, account_check_status=no checking account <= 0.50, installment_as_income_perc > 1.50, credit_amount <= 6681.50, credit_amount > 3292.00, present_emp_since=4 <= ... < 7 years <= 0.50, credit_history=existing credits paid back duly till now > 0.50, present_emp_since=.. >= 7 years <= 0.50, purpose=domestic appliances > 0.50, property=if not A121/A122 : car or other, not in attribute 6 <= 0.50 } --> { default: 1 }
+c = { { savings=... < 100 DM <= 0.50 },
+      { duration_in_month <= 27.71 },
+      { present_res_since > 3.50 },
+      { present_res_since <= 1.50 },
+      { present_emp_since=.. >= 7 years > 0.50 },
+      { account_check_status=no checking account > 0.50 } }

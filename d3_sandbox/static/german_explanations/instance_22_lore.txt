@@ -1,0 +1,2 @@
+r = { account_check_status=< 0 DM <= 0.17, duration_in_month <= 22.27, foreign_worker=no <= 0.03, age > 19.50 } --> { default: 0 }
+c =  }

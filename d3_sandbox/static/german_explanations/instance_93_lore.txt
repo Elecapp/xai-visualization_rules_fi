@@ -1,0 +1,3 @@
+r = { credit_amount > 10393.00, duration_in_month > 34.00, savings=... < 100 DM > 0.50, property=real estate <= 0.50, account_check_status=no checking account > 0.50 } --> { default: 1 }
+c = { { duration_in_month <= 16.50 },
+      { duration_in_month <= 7.00 } }

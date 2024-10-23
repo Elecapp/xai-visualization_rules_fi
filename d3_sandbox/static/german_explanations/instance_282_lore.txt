@@ -1,0 +1,4 @@
+r = { property=unknown / no property <= 0.01, account_check_status=< 0 DM <= 0.50, account_check_status=< 0 DM > -0.08, credit_amount <= 9115.00, credit_amount > -2584.50, duration_in_month <= 34.50, age <= 51.50, age > 29.50, property=if not A121 : building society savings agreement/ life insurance <= 0.50, installment_as_income_perc > 1.50 } --> { default: 0 }
+c = { { age <= 9.50, people_under_maintenance <= 0.50 },
+      { duration_in_month > 35.50, age <= 23.50 },
+      { age <= 29.50, telephone=yes, registered under the customers name  <= 0.50 } }

@@ -1,0 +1,4 @@
+r = { credit_amount <= 8213.00, credit_amount > 7525.50, age > 30.50, other_installment_plans=bank > 0.76, other_debtors=guarantor > 0.50, duration_in_month > 8.00, housing=own <= 0.50 } --> { default: 1 }
+c = { { other_debtors=guarantor <= 0.50, account_check_status=no checking account <= 0.50 },
+      { other_installment_plans=bank <= 0.76, present_emp_since=... < 1 year  <= 0.50 },
+      { housing=own > 0.50, account_check_status=no checking account <= 0.50 } }

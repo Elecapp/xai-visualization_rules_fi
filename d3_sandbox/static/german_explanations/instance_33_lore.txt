@@ -1,0 +1,2 @@
+r = { account_check_status=< 0 DM <= 0.00, credit_history=all credits at this bank paid back duly <= 0.07, duration_in_month <= 35.50, property=unknown / no property <= 0.50, credit_amount <= 3856.50, purpose=car (new) <= 0.50 } --> { default: 0 }
+c =  }

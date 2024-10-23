@@ -1,0 +1,2 @@
+r = { account_check_status=< 0 DM <= 0.10, duration_in_month <= 22.50, age > 17.50, telephone=none > -0.01 } --> { default: 0 }
+c =  }

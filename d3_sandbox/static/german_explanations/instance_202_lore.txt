@@ -1,0 +1,5 @@
+r = { personal_status_sex=male : married/widowed <= 0.00, age > 25.50, savings=... < 100 DM > 0.50, duration_in_month <= 28.50, savings=100 <= ... < 500 DM <= 0.50, property=if not A121/A122 : car or other, not in attribute 6 <= 0.50, housing=rent <= 0.50, installment_as_income_perc <= 5.50, account_check_status=< 0 DM <= 0.50, other_debtors=co-applicant > 0.50, credit_history=existing credits paid back duly till now <= 0.50, property=unknown / no property > 0.50, housing=own > 0.50 } --> { default: 0 }
+c = { { savings=100 <= ... < 500 DM > 0.50 },
+      { age <= 25.50 },
+      { housing=rent > 0.50 },
+      { account_check_status=< 0 DM > 0.50 } }

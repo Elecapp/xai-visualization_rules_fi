@@ -1,0 +1,2 @@
+r = { credit_history=no credits taken/ all credits paid back duly <= 0.00, savings=500 <= ... < 1000 DM  <= 0.01, duration_in_month <= 27.50, credit_amount <= 1951.00, credit_amount > -1986.00, account_check_status=0 <= ... < 200 DM <= 0.50, present_res_since > 0.50 } --> { default: 0 }
+c = { { credit_amount > 5881.50, account_check_status=< 0 DM > 0.50 } }

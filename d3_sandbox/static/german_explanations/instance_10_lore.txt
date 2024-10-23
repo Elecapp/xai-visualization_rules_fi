@@ -1,0 +1,4 @@
+r = { account_check_status=< 0 DM > 0.01, savings=... < 100 DM > 0.02, duration_in_month > 15.65, purpose=car (used) > -0.75, credit_amount <= 5736.00, account_check_status=no checking account <= 0.97, job=management/ self-employed/ highly qualified employee/ officer > 0.80, people_under_maintenance > 1.50 } --> { default: 0 }
+c = { { account_check_status=< 0 DM <= 0.01, duration_in_month > 25.50, credit_amount > 5320.50 },
+      { account_check_status=< 0 DM <= 0.01, age <= 23.93, personal_status_sex=male : single <= 0.98 },
+      { account_check_status=< 0 DM <= 0.01, age <= 25.50, duration_in_month > 32.50 } }

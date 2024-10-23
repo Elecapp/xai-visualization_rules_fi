@@ -1,0 +1,2 @@
+r = { duration_in_month <= 32.50, account_check_status=< 0 DM <= 0.26, present_emp_since=4 <= ... < 7 years > -0.01, age > 21.50, property=if not A121/A122 : car or other, not in attribute 6 <= 0.50, present_res_since > 0.50 } --> { default: 0 }
+c =  }

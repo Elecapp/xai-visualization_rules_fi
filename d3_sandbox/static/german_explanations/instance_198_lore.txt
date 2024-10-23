@@ -1,0 +1,4 @@
+r = { account_check_status=< 0 DM <= 0.07, account_check_status=< 0 DM > -0.50, duration_in_month > 39.50, credit_amount <= 8449.00, credit_amount > 2299.00, foreign_worker=yes > 0.50, property=if not A121 : building society savings agreement/ life insurance > 0.50, personal_status_sex=male : single > 0.50, telephone=none > 0.50, account_check_status=0 <= ... < 200 DM > 0.50, other_debtors=guarantor > 0.50 } --> { default: 0 }
+c = { { personal_status_sex=male : single <= 0.50 },
+      { credit_amount <= 2299.00 },
+      { credit_amount > 8449.00 } }

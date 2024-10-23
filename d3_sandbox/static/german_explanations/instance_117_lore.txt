@@ -1,0 +1,2 @@
+r = { account_check_status=< 0 DM > 0.00, foreign_worker=yes > 0.24, duration_in_month <= 16.17, duration_in_month > 13.50, property=unknown / no property <= 0.08, housing=rent > 0.50, present_res_since <= 1.50 } --> { default: 0 }
+c = { { account_check_status=< 0 DM <= 0.00, duration_in_month > 19.50, age <= 28.50, telephone=none <= 0.50, credit_amount > 5445.50 } }

@@ -1,0 +1,4 @@
+r = { savings=500 <= ... < 1000 DM  <= 0.02, credit_history=all credits at this bank paid back duly <= 0.04, housing=own > 0.50, duration_in_month <= 18.50, present_emp_since=... < 1 year  > 0.50 } --> { default: 0 }
+c = { { duration_in_month > 18.50, present_res_since <= 1.50 },
+      { duration_in_month > 33.50, age > 45.00 },
+      { housing=own <= 0.50, duration_in_month > 51.50 } }

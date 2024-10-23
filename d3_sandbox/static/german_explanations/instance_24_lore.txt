@@ -1,0 +1,3 @@
+r = { duration_in_month <= 15.50, purpose=car (new) > 0.06, age <= 42.50, age > 17.00, present_emp_since=... < 1 year  <= 0.50 } --> { default: 0 }
+c = { { duration_in_month > 22.50, savings=... < 100 DM <= 0.12 },
+      { duration_in_month > 30.50, savings=... < 100 DM <= 0.12 } }

@@ -1,0 +1,5 @@
+r = { duration_in_month <= 14.49, purpose=business > -0.06, age > 20.50 } --> { default: 0 }
+c = { { duration_in_month > 22.27, age <= 21.50, credit_amount > 10230.00 },
+      { duration_in_month > 22.27, age <= 21.50, credit_amount > 4044.00 },
+      { duration_in_month > 32.50, age <= 21.50, credit_amount > 3387.00 },
+      { duration_in_month > 22.27, age <= 14.00, housing=rent > 0.50 } }

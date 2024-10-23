@@ -1,0 +1,2 @@
+r = { savings=... < 100 DM > 0.03, duration_in_month <= 12.13, personal_status_sex=male : married/widowed <= 0.01, credit_amount > 766.50 } --> { default: 0 }
+c =  }

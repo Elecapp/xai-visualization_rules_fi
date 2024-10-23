@@ -1,0 +1,2 @@
+r = { account_check_status=no checking account > 0.97, installment_as_income_perc <= 4.12 } --> { default: 0 }
+c =  }

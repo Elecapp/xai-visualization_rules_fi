@@ -1,0 +1,2 @@
+r = { account_check_status=< 0 DM <= 0.01, savings=... < 100 DM > 0.03, credit_amount <= 2429.50, duration_in_month <= 31.50, account_check_status=0 <= ... < 200 DM <= 0.50 } --> { default: 0 }
+c =  }

@@ -1,0 +1,2 @@
+r = { duration_in_month <= 12.00, foreign_worker=no > -0.01, purpose=car (new) > 0.50, age > 18.00, other_installment_plans=none > 0.50 } --> { default: 0 }
+c = { { duration_in_month > 21.49, property=real estate <= 0.74, savings=... < 100 DM <= 0.50, job=skilled employee / official > 0.50 } }

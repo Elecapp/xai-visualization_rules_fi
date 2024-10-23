@@ -1,0 +1,3 @@
+r = { account_check_status=< 0 DM > 0.10, duration_in_month <= 18.50, duration_in_month > 12.50, job=unskilled - resident <= 0.21, purpose=retraining <= 0.50, installment_as_income_perc <= 4.50, present_emp_since=.. >= 7 years <= 0.50, age > 18.00, credit_amount <= 4413.50, personal_status_sex=female : divorced/separated/married > 0.50 } --> { default: 0 }
+c = { { account_check_status=< 0 DM <= 0.10, credit_amount > 11480.00 },
+      { duration_in_month > 18.50, credit_history=critical account/ other credits existing (not at this bank) <= 0.50 } }

@@ -1,0 +1,15 @@
+r = { account_check_status=< 0 DM > 0.96, purpose=(vacation - does not exist?) > 0.50, job=skilled employee / official > 0.50, job=unskilled - resident <= 0.50, age > 26.50, telephone=none > 0.50, personal_status_sex=female : divorced/separated/married > 0.50, housing=own > 0.50 } --> { default: 1 }
+c = { { purpose=(vacation - does not exist?) <= 0.50, duration_in_month > 15.50 },
+      { purpose=(vacation - does not exist?) <= 0.50, credit_amount <= 792.00 },
+      { purpose=(vacation - does not exist?) <= 0.50, credits_this_bank <= 0.50 },
+      { purpose=(vacation - does not exist?) <= 0.50, housing=own <= 0.50 },
+      { purpose=(vacation - does not exist?) <= 0.50, duration_in_month <= 8.50 },
+      { job=skilled employee / official <= 0.50, housing=own <= 0.50 },
+      { housing=own <= 0.50, property=if not A121 : building society savings agreement/ life insurance <= 0.50 },
+      { telephone=none <= 0.50, other_installment_plans=none <= 0.50 },
+      { purpose=(vacation - does not exist?) <= 0.50, present_emp_since=.. >= 7 years > 0.50 },
+      { age <= 50.00, telephone=none <= 0.50 },
+      { purpose=(vacation - does not exist?) <= 0.50, installment_as_income_perc <= 3.00 },
+      { purpose=(vacation - does not exist?) <= 0.50, account_check_status=no checking account > 0.50 },
+      { purpose=(vacation - does not exist?) <= 0.50, credit_amount > 1039.00 },
+      { purpose=(vacation - does not exist?) <= 0.50, present_res_since <= 1.50 } }

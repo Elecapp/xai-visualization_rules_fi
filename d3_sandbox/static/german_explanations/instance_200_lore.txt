@@ -1,0 +1,4 @@
+r = { credit_history=delay in paying off in the past <= 0.00, credit_amount > 10359.00, age > 25.50, savings=... < 100 DM > 0.50, installment_as_income_perc > 2.50, credit_history=critical account/ other credits existing (not at this bank) > 0.50, housing=for free > 0.50, other_installment_plans=none > 0.50 } --> { default: 0 }
+c = { { age <= 25.50 },
+      { credit_history=critical account/ other credits existing (not at this bank) <= 0.50 },
+      { housing=for free <= 0.50 } }

@@ -1,0 +1,4 @@
+r = { purpose=business <= 0.00, credit_history=no credits taken/ all credits paid back duly <= 0.02, credit_amount <= 9546.50, duration_in_month <= 20.50, present_emp_since=unemployed > 0.50, housing=rent > 0.50, other_installment_plans=none > 0.50 } --> { default: 0 }
+c = { { duration_in_month > 48.50 },
+      { duration_in_month > 34.50 },
+      { other_installment_plans=none <= 0.50 } }

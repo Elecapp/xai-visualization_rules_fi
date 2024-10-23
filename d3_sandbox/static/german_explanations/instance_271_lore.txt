@@ -1,0 +1,4 @@
+r = { account_check_status=< 0 DM > 0.98, credit_amount <= 1341.00, duration_in_month <= 55.00, duration_in_month > 16.50, present_res_since <= 4.50, housing=rent > 0.50, account_check_status=no checking account <= 0.50 } --> { default: 1 }
+c = { { account_check_status=< 0 DM <= 0.98, telephone=none <= 0.50 },
+      { account_check_status=< 0 DM <= 0.34, job=skilled employee / official <= 0.64 },
+      { duration_in_month <= 22.00, account_check_status=no checking account > 0.50 } }

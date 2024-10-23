@@ -1,0 +1,3 @@
+r = { account_check_status=< 0 DM > 0.99, savings=... < 100 DM > 0.84, duration_in_month > 16.50, account_check_status=no checking account <= 0.50, property=real estate <= 0.50, credit_amount > 3012.00, present_res_since > 0.50, telephone=none <= 0.50 } --> { default: 1 }
+c = { { duration_in_month <= 16.50, present_emp_since=4 <= ... < 7 years <= 0.67 },
+      { duration_in_month <= 16.50, credit_amount <= 5847.00 } }

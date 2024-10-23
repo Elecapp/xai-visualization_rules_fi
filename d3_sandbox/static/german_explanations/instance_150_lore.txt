@@ -1,0 +1,2 @@
+r = { account_check_status=< 0 DM <= 0.01, age > 20.50, purpose=(vacation - does not exist?) <= 0.05, credit_amount <= 8702.50, credit_amount > 1414.50, property=unknown / no property <= 0.50, present_emp_since=... < 1 year  <= 0.50, account_check_status=>= 200 DM / salary assignments for at least 1 year <= 0.50, duration_in_month <= 39.50 } --> { default: 0 }
+c =  }

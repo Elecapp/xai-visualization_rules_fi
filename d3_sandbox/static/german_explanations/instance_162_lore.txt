@@ -1,0 +1,4 @@
+r = { duration_in_month <= 26.50, other_installment_plans=bank <= 0.03, account_check_status=< 0 DM <= 0.50, age > 19.50, credit_amount > -1987.00 } --> { default: 0 }
+c = { { account_check_status=< 0 DM > 0.50, credit_amount > 7618.50 },
+      { duration_in_month > 37.50, age <= 19.50 },
+      { duration_in_month > 39.00, foreign_worker=yes <= 0.50 } }

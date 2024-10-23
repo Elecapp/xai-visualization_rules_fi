@@ -1,0 +1,4 @@
+r = { housing=for free <= 0.05, housing=for free > -0.01, other_installment_plans=bank > 0.50, telephone=none > 0.50, age > 22.00, job=skilled employee / official > 0.50 } --> { default: 0 }
+c = { { telephone=none <= 0.50, age <= 21.00 },
+      { telephone=none <= 0.50, duration_in_month > 44.50 },
+      { telephone=none <= 0.50, present_emp_since=... < 1 year  > 0.50 } }

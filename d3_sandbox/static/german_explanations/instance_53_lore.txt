@@ -1,0 +1,2 @@
+r = { age <= 68.50, age > 24.50, account_check_status=< 0 DM <= 0.10, savings=100 <= ... < 500 DM <= 0.10, duration_in_month <= 21.50, duration_in_month > 3.50, purpose=car (new) <= 0.50, purpose=car (new) > -0.50, credit_amount <= 9675.00, other_installment_plans=bank > 0.50, property=if not A121/A122 : car or other, not in attribute 6 <= 0.50 } --> { default: 0 }
+c = { { age <= 26.00, duration_in_month > 35.50, installment_as_income_perc <= 2.50 } }

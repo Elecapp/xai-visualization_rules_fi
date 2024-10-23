@@ -1,0 +1,2 @@
+r = { duration_in_month <= 11.50, duration_in_month > 6.50, credit_amount <= 9329.00, property=if not A121 : building society savings agreement/ life insurance <= 0.50, installment_as_income_perc <= 4.50, housing=rent > 0.50, purpose=domestic appliances <= 0.50 } --> { default: 0 }
+c =  }

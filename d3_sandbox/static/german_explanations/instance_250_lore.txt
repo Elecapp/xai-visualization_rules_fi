@@ -1,0 +1,3 @@
+r = { credit_amount > 11125.00, savings=... < 100 DM > 0.50, account_check_status=no checking account <= 0.50, duration_in_month > 16.50, present_res_since > 1.50, installment_as_income_perc > 0.50, purpose=car (new) <= 0.50, credits_this_bank > 0.50, age <= 46.50 } --> { default: 1 }
+c = { { duration_in_month <= 16.50 },
+      { age > 46.50 } }

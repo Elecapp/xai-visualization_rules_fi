@@ -1,0 +1,2 @@
+r = { duration_in_month <= 13.50, account_check_status=0 <= ... < 200 DM <= 0.50, property=if not A121 : building society savings agreement/ life insurance <= 0.50, installment_as_income_perc <= 4.50 } --> { default: 0 }
+c =  }

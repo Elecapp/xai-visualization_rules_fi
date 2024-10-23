@@ -1,0 +1,2 @@
+r = { credits_this_bank <= 1.09, account_check_status=< 0 DM <= 0.25, credit_history=no credits taken/ all credits paid back duly <= 0.50, credit_amount <= 7497.00, people_under_maintenance <= 1.50, duration_in_month <= 44.50, age > 23.50, purpose=radio/television <= 0.50, installment_as_income_perc <= 4.50, purpose=domestic appliances > -0.50 } --> { default: 0 }
+c = { { credit_history=no credits taken/ all credits paid back duly > 0.50 } }

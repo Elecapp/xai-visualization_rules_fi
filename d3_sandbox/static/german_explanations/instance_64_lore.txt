@@ -1,0 +1,2 @@
+r = { savings=... < 100 DM <= 0.03, age <= 54.50, age > 26.50, credit_amount <= 7453.00, credit_amount > 4314.00, property=unknown / no property <= 0.14, purpose=car (new) > -0.50, installment_as_income_perc <= 5.50, present_res_since <= 4.50 } --> { default: 0 }
+c =  }

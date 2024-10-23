@@ -1,0 +1,4 @@
+r = { duration_in_month > 30.86, savings=... < 100 DM > 0.92, age <= 32.01, age > 29.50, present_res_since > 1.50, foreign_worker=yes > 0.50, job=unskilled - resident <= 0.50, account_check_status=no checking account <= 0.50, present_emp_since=.. >= 7 years <= 0.50, purpose=car (new) <= 0.50, credit_amount > 3953.50, telephone=none <= 0.50, installment_as_income_perc > 2.50 } --> { default: 1 }
+c = { { present_res_since <= 1.50 },
+      { account_check_status=no checking account > 0.50 },
+      { present_emp_since=.. >= 7 years > 0.50 } }

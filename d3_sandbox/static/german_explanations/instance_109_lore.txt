@@ -1,0 +1,2 @@
+r = { duration_in_month <= 29.50, account_check_status=< 0 DM <= 0.04, savings=500 <= ... < 1000 DM  <= 0.13, credit_amount <= 10069.00, purpose=car (new) <= 0.50, other_installment_plans=bank <= 0.50, age <= 56.50, age > 20.50, property=if not A121 : building society savings agreement/ life insurance <= 0.50, savings=... < 100 DM <= 0.50 } --> { default: 0 }
+c =  }

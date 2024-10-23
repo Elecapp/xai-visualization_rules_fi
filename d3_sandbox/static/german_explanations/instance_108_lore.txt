@@ -1,0 +1,3 @@
+r = { present_emp_since=... < 1 year  > 0.01, housing=rent > 0.08, account_check_status=no checking account > 0.77, job=skilled employee / official > 0.50 } --> { default: 0 }
+c = { { present_emp_since=... < 1 year  <= 0.01, duration_in_month > 34.50, age > 23.57, credits_this_bank <= 1.50, account_check_status=< 0 DM > 0.50 },
+      { present_emp_since=... < 1 year  <= 0.01, duration_in_month > 37.00, age > 23.57, credits_this_bank <= 1.50, telephone=none <= 0.50 } }

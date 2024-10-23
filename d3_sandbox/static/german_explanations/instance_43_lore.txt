@@ -1,0 +1,7 @@
+r = { housing=for free <= 0.00, housing=for free > -0.01, account_check_status=< 0 DM > 0.50, duration_in_month <= 16.50, credits_this_bank <= 1.50, other_debtors=none <= 0.50, other_debtors=guarantor > 0.50 } --> { default: 0 }
+c = { { account_check_status=< 0 DM <= 0.50, purpose=radio/television > 0.50 },
+      { account_check_status=< 0 DM <= 0.50, credit_amount > 8618.00 },
+      { account_check_status=< 0 DM <= 0.50, duration_in_month > 38.50 },
+      { account_check_status=< 0 DM <= 0.50, account_check_status=0 <= ... < 200 DM > 0.50 },
+      { account_check_status=< 0 DM <= 0.50, credits_this_bank <= 0.50 },
+      { account_check_status=< 0 DM <= 0.50, credit_amount <= 914.00 } }

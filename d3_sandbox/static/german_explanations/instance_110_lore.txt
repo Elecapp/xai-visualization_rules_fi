@@ -1,0 +1,2 @@
+r = { account_check_status=< 0 DM <= 0.04, duration_in_month <= 16.50, purpose=car (new) <= 0.07, personal_status_sex=male : married/widowed > -0.11, age > 19.50, purpose=domestic appliances > -0.50 } --> { default: 0 }
+c =  }

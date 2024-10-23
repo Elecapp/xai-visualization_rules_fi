@@ -1,0 +1,2 @@
+r = { savings=... < 100 DM <= 0.15, age > 21.50, credit_amount <= 9568.50, present_emp_since=... < 1 year  <= 0.23, other_installment_plans=bank <= 0.11, account_check_status=< 0 DM <= 0.50, present_res_since <= 4.50, installment_as_income_perc <= 2.50, job=unskilled - resident <= 0.50 } --> { default: 0 }
+c = { { installment_as_income_perc > 2.50, telephone=yes, registered under the customers name  > 0.50, savings=unknown/ no savings account <= 0.50 } }

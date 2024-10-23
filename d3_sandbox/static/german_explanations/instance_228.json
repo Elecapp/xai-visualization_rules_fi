@@ -1,0 +1,1639 @@
+{
+    "features": [
+        {
+            "name": "duration_in_month",
+            "rname": "duration_in_month",
+            "type": "numeric",
+            "feature_importance": 0.06845366572919616,
+            "eda": {
+                "min": 4,
+                "max": 60,
+                "q1": 12.0,
+                "median": 18.0,
+                "q3": 24.0,
+                "mean": 20.768571428571427,
+                "std": 11.962776588540619
+            },
+            "rule": [],
+            "crules": {
+                "C4": [
+                    [
+                        {
+                            "att": "duration_in_month",
+                            "op": ">",
+                            "thr": 39.5,
+                            "is_continuous": true
+                        },
+                        1
+                    ]
+                ]
+            },
+            "instance_value": 48
+        },
+        {
+            "name": "credit_amount",
+            "rname": "credit_amount",
+            "type": "numeric",
+            "feature_importance": -0.010231483210830554,
+            "eda": {
+                "min": 338,
+                "max": 15945,
+                "q1": 1360.75,
+                "median": 2319.5,
+                "q3": 3974.5,
+                "mean": 3200.8728571428574,
+                "std": 2674.9420417248216
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 3844
+        },
+        {
+            "name": "installment_as_income_perc",
+            "rname": "installment_as_income_perc",
+            "type": "numeric",
+            "feature_importance": 0.006345839100865957,
+            "eda": {
+                "min": 1,
+                "max": 4,
+                "q1": 2.0,
+                "median": 3.0,
+                "q3": 4.0,
+                "mean": 2.9385714285714286,
+                "std": 1.1235281718010328
+            },
+            "rule": [
+                [
+                    {
+                        "att": "installment_as_income_perc",
+                        "op": ">",
+                        "thr": 1.5,
+                        "is_continuous": true
+                    },
+                    0
+                ]
+            ],
+            "crules": {
+                "C1": [
+                    [
+                        {
+                            "att": "installment_as_income_perc",
+                            "op": ">",
+                            "thr": 1.5,
+                            "is_continuous": true
+                        },
+                        1
+                    ]
+                ],
+                "C3": [
+                    [
+                        {
+                            "att": "installment_as_income_perc",
+                            "op": "<=",
+                            "thr": 1.5,
+                            "is_continuous": true
+                        },
+                        1
+                    ]
+                ],
+                "C4": [
+                    [
+                        {
+                            "att": "installment_as_income_perc",
+                            "op": "<=",
+                            "thr": 1.5,
+                            "is_continuous": true
+                        },
+                        1
+                    ]
+                ]
+            },
+            "instance_value": 4
+        },
+        {
+            "name": "present_res_since",
+            "rname": "present_res_since",
+            "type": "numeric",
+            "feature_importance": -0.004988562848008818,
+            "eda": {
+                "min": 1,
+                "max": 4,
+                "q1": 2.0,
+                "median": 3.0,
+                "q3": 4.0,
+                "mean": 2.82,
+                "std": 1.097089399372081
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 4
+        },
+        {
+            "name": "age",
+            "rname": "age",
+            "type": "numeric",
+            "feature_importance": -0.01664264895538079,
+            "eda": {
+                "min": 19,
+                "max": 75,
+                "q1": 27.0,
+                "median": 33.0,
+                "q3": 41.25,
+                "mean": 35.46857142857143,
+                "std": 10.954079502905664
+            },
+            "rule": [
+                [
+                    {
+                        "att": "age",
+                        "op": ">",
+                        "thr": 19.5,
+                        "is_continuous": true
+                    },
+                    0
+                ]
+            ],
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "age",
+                            "op": "<=",
+                            "thr": 19.5,
+                            "is_continuous": true
+                        },
+                        1
+                    ]
+                ],
+                "C1": [
+                    [
+                        {
+                            "att": "age",
+                            "op": ">",
+                            "thr": 19.5,
+                            "is_continuous": true
+                        },
+                        1
+                    ]
+                ],
+                "C2": [
+                    [
+                        {
+                            "att": "age",
+                            "op": "<=",
+                            "thr": 19.5,
+                            "is_continuous": true
+                        },
+                        1
+                    ]
+                ],
+                "C3": [
+                    [
+                        {
+                            "att": "age",
+                            "op": "<=",
+                            "thr": 19.5,
+                            "is_continuous": true
+                        },
+                        1
+                    ]
+                ],
+                "C4": [
+                    [
+                        {
+                            "att": "age",
+                            "op": ">",
+                            "thr": 19.5,
+                            "is_continuous": true
+                        },
+                        1
+                    ]
+                ]
+            },
+            "instance_value": 34
+        },
+        {
+            "name": "credits_this_bank",
+            "rname": "credits_this_bank",
+            "type": "numeric",
+            "feature_importance": -0.0018145161330866593,
+            "eda": {
+                "min": 1,
+                "max": 4,
+                "q1": 1.0,
+                "median": 1.0,
+                "q3": 2.0,
+                "mean": 1.4028571428571428,
+                "std": 0.5563963934628723
+            },
+            "rule": [
+                [
+                    {
+                        "att": "credits_this_bank",
+                        "op": ">",
+                        "thr": 0.5,
+                        "is_continuous": true
+                    },
+                    0
+                ]
+            ],
+            "crules": {
+                "C1": [
+                    [
+                        {
+                            "att": "credits_this_bank",
+                            "op": ">",
+                            "thr": 0.5,
+                            "is_continuous": true
+                        },
+                        1
+                    ]
+                ]
+            },
+            "instance_value": 1
+        },
+        {
+            "name": "people_under_maintenance",
+            "rname": "people_under_maintenance",
+            "type": "numeric",
+            "feature_importance": 0.013043817042619237,
+            "eda": {
+                "min": 1,
+                "max": 2,
+                "q1": 1.0,
+                "median": 1.0,
+                "q3": 1.0,
+                "mean": 1.1585714285714286,
+                "std": 0.3655371562923362
+            },
+            "rule": [
+                [
+                    {
+                        "att": "people_under_maintenance",
+                        "op": ">",
+                        "thr": 1.5,
+                        "is_continuous": true
+                    },
+                    0
+                ]
+            ],
+            "crules": {
+                "C1": [
+                    [
+                        {
+                            "att": "people_under_maintenance",
+                            "op": ">",
+                            "thr": 1.5,
+                            "is_continuous": true
+                        },
+                        1
+                    ]
+                ]
+            },
+            "instance_value": 2
+        },
+        {
+            "name": "account_check_status=0 <= ... < 200 DM",
+            "rname": "account_check_status",
+            "type": "categorical",
+            "feature_importance": 0.0133192697949364,
+            "eda": {
+                "category": "0 <= ... < 200 DM",
+                "count": 188
+            },
+            "rule": [
+                [
+                    {
+                        "att": "account_check_status=0 <= ... < 200 DM",
+                        "op": ">",
+                        "thr": 0.5,
+                        "is_continuous": true
+                    },
+                    0
+                ]
+            ],
+            "crules": {
+                "C1": [
+                    [
+                        {
+                            "att": "account_check_status=0 <= ... < 200 DM",
+                            "op": ">",
+                            "thr": 0.5,
+                            "is_continuous": true
+                        },
+                        1
+                    ]
+                ],
+                "C4": [
+                    [
+                        {
+                            "att": "account_check_status=0 <= ... < 200 DM",
+                            "op": ">",
+                            "thr": 0.5,
+                            "is_continuous": true
+                        },
+                        1
+                    ]
+                ]
+            },
+            "instance_value": 1,
+            "is_ordinal": true,
+            "order": [
+                "no checking account",
+                "< 0 DM",
+                "0 <= ... < 200 DM",
+                ">= 200 DM / salary assignments for at least 1 year"
+            ]
+        },
+        {
+            "name": "account_check_status=< 0 DM",
+            "rname": "account_check_status",
+            "type": "categorical",
+            "feature_importance": -0.025284446086209233,
+            "eda": {
+                "category": "< 0 DM",
+                "count": 192
+            },
+            "rule": [
+                [
+                    {
+                        "att": "account_check_status=< 0 DM",
+                        "op": "<=",
+                        "thr": 0.063063845038414,
+                        "is_continuous": true
+                    },
+                    0
+                ]
+            ],
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "account_check_status=< 0 DM",
+                            "op": "<=",
+                            "thr": 0.063063845038414,
+                            "is_continuous": true
+                        },
+                        1
+                    ]
+                ],
+                "C1": [
+                    [
+                        {
+                            "att": "account_check_status=< 0 DM",
+                            "op": "<=",
+                            "thr": 0.063063845038414,
+                            "is_continuous": true
+                        },
+                        1
+                    ]
+                ],
+                "C2": [
+                    [
+                        {
+                            "att": "account_check_status=< 0 DM",
+                            "op": "<=",
+                            "thr": 0.063063845038414,
+                            "is_continuous": true
+                        },
+                        1
+                    ]
+                ],
+                "C3": [
+                    [
+                        {
+                            "att": "account_check_status=< 0 DM",
+                            "op": "<=",
+                            "thr": 0.063063845038414,
+                            "is_continuous": true
+                        },
+                        1
+                    ]
+                ],
+                "C4": [
+                    [
+                        {
+                            "att": "account_check_status=< 0 DM",
+                            "op": "<=",
+                            "thr": 0.063063845038414,
+                            "is_continuous": true
+                        },
+                        1
+                    ]
+                ]
+            },
+            "instance_value": 0,
+            "is_ordinal": true,
+            "order": [
+                "no checking account",
+                "< 0 DM",
+                "0 <= ... < 200 DM",
+                ">= 200 DM / salary assignments for at least 1 year"
+            ]
+        },
+        {
+            "name": "account_check_status=>= 200 DM / salary assignments for at least 1 year",
+            "rname": "account_check_status",
+            "type": "categorical",
+            "feature_importance": -0.00022886912861758553,
+            "eda": {
+                "category": ">= 200 DM / salary assignments for at least 1 year",
+                "count": 44
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0,
+            "is_ordinal": true,
+            "order": [
+                "no checking account",
+                "< 0 DM",
+                "0 <= ... < 200 DM",
+                ">= 200 DM / salary assignments for at least 1 year"
+            ]
+        },
+        {
+            "name": "account_check_status=no checking account",
+            "rname": "account_check_status",
+            "type": "categorical",
+            "feature_importance": 0.06526837559575671,
+            "eda": {
+                "category": "no checking account",
+                "count": 276
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0,
+            "is_ordinal": true,
+            "order": [
+                "no checking account",
+                "< 0 DM",
+                "0 <= ... < 200 DM",
+                ">= 200 DM / salary assignments for at least 1 year"
+            ]
+        },
+        {
+            "name": "credit_history=all credits at this bank paid back duly",
+            "rname": "credit_history",
+            "type": "categorical",
+            "feature_importance": -0.001429165135916006,
+            "eda": {
+                "category": "all credits at this bank paid back duly",
+                "count": 38
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0,
+            "is_ordinal": true,
+            "order": [
+                "critical account/ other credits existing (not at this bank)",
+                "delay in paying off in the past",
+                "existing credits paid back duly till now",
+                "all credits at this bank paid back duly",
+                "no credits taken/ all credits paid back duly"
+            ]
+        },
+        {
+            "name": "credit_history=critical account/ other credits existing (not at this bank)",
+            "rname": "credit_history",
+            "type": "categorical",
+            "feature_importance": 0.0077416185451037916,
+            "eda": {
+                "category": "critical account/ other credits existing (not at this bank)",
+                "count": 205
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0,
+            "is_ordinal": true,
+            "order": [
+                "critical account/ other credits existing (not at this bank)",
+                "delay in paying off in the past",
+                "existing credits paid back duly till now",
+                "all credits at this bank paid back duly",
+                "no credits taken/ all credits paid back duly"
+            ]
+        },
+        {
+            "name": "credit_history=delay in paying off in the past",
+            "rname": "credit_history",
+            "type": "categorical",
+            "feature_importance": 0.006024776924533274,
+            "eda": {
+                "category": "delay in paying off in the past",
+                "count": 67
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0,
+            "is_ordinal": true,
+            "order": [
+                "critical account/ other credits existing (not at this bank)",
+                "delay in paying off in the past",
+                "existing credits paid back duly till now",
+                "all credits at this bank paid back duly",
+                "no credits taken/ all credits paid back duly"
+            ]
+        },
+        {
+            "name": "credit_history=existing credits paid back duly till now",
+            "rname": "credit_history",
+            "type": "categorical",
+            "feature_importance": -0.0007446049515683837,
+            "eda": {
+                "category": "existing credits paid back duly till now",
+                "count": 362
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0,
+            "is_ordinal": true,
+            "order": [
+                "critical account/ other credits existing (not at this bank)",
+                "delay in paying off in the past",
+                "existing credits paid back duly till now",
+                "all credits at this bank paid back duly",
+                "no credits taken/ all credits paid back duly"
+            ]
+        },
+        {
+            "name": "credit_history=no credits taken/ all credits paid back duly",
+            "rname": "credit_history",
+            "type": "categorical",
+            "feature_importance": 0.020565467299405466,
+            "eda": {
+                "category": "no credits taken/ all credits paid back duly",
+                "count": 28
+            },
+            "rule": [
+                [
+                    {
+                        "att": "credit_history=no credits taken/ all credits paid back duly",
+                        "op": ">",
+                        "thr": 0.5,
+                        "is_continuous": true
+                    },
+                    0
+                ]
+            ],
+            "crules": {
+                "C1": [
+                    [
+                        {
+                            "att": "credit_history=no credits taken/ all credits paid back duly",
+                            "op": "<=",
+                            "thr": 0.5,
+                            "is_continuous": true
+                        },
+                        1
+                    ]
+                ]
+            },
+            "instance_value": 1,
+            "is_ordinal": true,
+            "order": [
+                "critical account/ other credits existing (not at this bank)",
+                "delay in paying off in the past",
+                "existing credits paid back duly till now",
+                "all credits at this bank paid back duly",
+                "no credits taken/ all credits paid back duly"
+            ]
+        },
+        {
+            "name": "purpose=(vacation - does not exist?)",
+            "rname": "purpose",
+            "type": "categorical",
+            "feature_importance": -0.0020904705503306535,
+            "eda": {
+                "category": "(vacation - does not exist?)",
+                "count": 35
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0,
+            "is_ordinal": false
+        },
+        {
+            "name": "purpose=business",
+            "rname": "purpose",
+            "type": "categorical",
+            "feature_importance": 0.012633603313051283,
+            "eda": {
+                "category": "business",
+                "count": 69
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 1,
+            "is_ordinal": false
+        },
+        {
+            "name": "purpose=car (new)",
+            "rname": "purpose",
+            "type": "categorical",
+            "feature_importance": -0.005203977598069821,
+            "eda": {
+                "category": "car (new)",
+                "count": 171
+            },
+            "rule": [
+                [
+                    {
+                        "att": "purpose=car (new)",
+                        "op": "<=",
+                        "thr": 0.5,
+                        "is_continuous": true
+                    },
+                    0
+                ]
+            ],
+            "crules": {
+                "C1": [
+                    [
+                        {
+                            "att": "purpose=car (new)",
+                            "op": "<=",
+                            "thr": 0.5,
+                            "is_continuous": true
+                        },
+                        1
+                    ]
+                ]
+            },
+            "instance_value": 0,
+            "is_ordinal": false
+        },
+        {
+            "name": "purpose=car (used)",
+            "rname": "purpose",
+            "type": "categorical",
+            "feature_importance": 0.003880272456705034,
+            "eda": {
+                "category": "car (used)",
+                "count": 76
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0,
+            "is_ordinal": false
+        },
+        {
+            "name": "purpose=domestic appliances",
+            "rname": "purpose",
+            "type": "categorical",
+            "feature_importance": 0.0019937452530219887,
+            "eda": {
+                "category": "domestic appliances",
+                "count": 186
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0,
+            "is_ordinal": false
+        },
+        {
+            "name": "purpose=education",
+            "rname": "purpose",
+            "type": "categorical",
+            "feature_importance": 0.0003606428997126892,
+            "eda": {
+                "category": "education",
+                "count": 16
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0,
+            "is_ordinal": false
+        },
+        {
+            "name": "purpose=furniture/equipment",
+            "rname": "purpose",
+            "type": "categorical",
+            "feature_importance": 2.9068724814289893e-05,
+            "eda": {
+                "category": "furniture/equipment",
+                "count": 6
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0,
+            "is_ordinal": false
+        },
+        {
+            "name": "purpose=radio/television",
+            "rname": "purpose",
+            "type": "categorical",
+            "feature_importance": -0.00131108920584045,
+            "eda": {
+                "category": "radio/television",
+                "count": 126
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0,
+            "is_ordinal": false
+        },
+        {
+            "name": "purpose=repairs",
+            "rname": "purpose",
+            "type": "categorical",
+            "feature_importance": -0.00023232943918275693,
+            "eda": {
+                "category": "repairs",
+                "count": 10
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0,
+            "is_ordinal": false
+        },
+        {
+            "name": "purpose=retraining",
+            "rname": "purpose",
+            "type": "categorical",
+            "feature_importance": 0.0003054544803394039,
+            "eda": {
+                "category": "retraining",
+                "count": 5
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0,
+            "is_ordinal": false
+        },
+        {
+            "name": "savings=.. >= 1000 DM ",
+            "rname": "savings",
+            "type": "categorical",
+            "feature_importance": 0.0007147169106436999,
+            "eda": {
+                "category": ".. >= 1000 DM ",
+                "count": 37
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0,
+            "is_ordinal": true,
+            "order": [
+                "unknown/ no savings account",
+                "... < 100 DM",
+                "100 <= ... < 500 DM",
+                "500 <= ... < 1000 DM ",
+                ".. >= 1000 DM "
+            ]
+        },
+        {
+            "name": "savings=... < 100 DM",
+            "rname": "savings",
+            "type": "categorical",
+            "feature_importance": -0.05570564848632576,
+            "eda": {
+                "category": "... < 100 DM",
+                "count": 417
+            },
+            "rule": [
+                [
+                    {
+                        "att": "savings=... < 100 DM",
+                        "op": "<=",
+                        "thr": 0.31388577818870544,
+                        "is_continuous": true
+                    },
+                    0
+                ]
+            ],
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "savings=... < 100 DM",
+                            "op": "<=",
+                            "thr": 0.31388577818870544,
+                            "is_continuous": true
+                        },
+                        1
+                    ]
+                ],
+                "C1": [
+                    [
+                        {
+                            "att": "savings=... < 100 DM",
+                            "op": "<=",
+                            "thr": 0.31388577818870544,
+                            "is_continuous": true
+                        },
+                        1
+                    ]
+                ],
+                "C2": [
+                    [
+                        {
+                            "att": "savings=... < 100 DM",
+                            "op": "<=",
+                            "thr": 0.31388577818870544,
+                            "is_continuous": true
+                        },
+                        1
+                    ]
+                ],
+                "C3": [
+                    [
+                        {
+                            "att": "savings=... < 100 DM",
+                            "op": "<=",
+                            "thr": 0.31388577818870544,
+                            "is_continuous": true
+                        },
+                        1
+                    ]
+                ],
+                "C4": [
+                    [
+                        {
+                            "att": "savings=... < 100 DM",
+                            "op": "<=",
+                            "thr": 0.31388577818870544,
+                            "is_continuous": true
+                        },
+                        1
+                    ]
+                ]
+            },
+            "instance_value": 0,
+            "is_ordinal": true,
+            "order": [
+                "unknown/ no savings account",
+                "... < 100 DM",
+                "100 <= ... < 500 DM",
+                "500 <= ... < 1000 DM ",
+                ".. >= 1000 DM "
+            ]
+        },
+        {
+            "name": "savings=100 <= ... < 500 DM",
+            "rname": "savings",
+            "type": "categorical",
+            "feature_importance": -0.004440447579790174,
+            "eda": {
+                "category": "100 <= ... < 500 DM",
+                "count": 81
+            },
+            "rule": [],
+            "crules": {
+                "C3": [
+                    [
+                        {
+                            "att": "savings=100 <= ... < 500 DM",
+                            "op": ">",
+                            "thr": 0.5,
+                            "is_continuous": true
+                        },
+                        1
+                    ]
+                ]
+            },
+            "instance_value": 1,
+            "is_ordinal": true,
+            "order": [
+                "unknown/ no savings account",
+                "... < 100 DM",
+                "100 <= ... < 500 DM",
+                "500 <= ... < 1000 DM ",
+                ".. >= 1000 DM "
+            ]
+        },
+        {
+            "name": "savings=500 <= ... < 1000 DM ",
+            "rname": "savings",
+            "type": "categorical",
+            "feature_importance": -0.0004304056115992384,
+            "eda": {
+                "category": "500 <= ... < 1000 DM ",
+                "count": 41
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0,
+            "is_ordinal": true,
+            "order": [
+                "unknown/ no savings account",
+                "... < 100 DM",
+                "100 <= ... < 500 DM",
+                "500 <= ... < 1000 DM ",
+                ".. >= 1000 DM "
+            ]
+        },
+        {
+            "name": "savings=unknown/ no savings account",
+            "rname": "savings",
+            "type": "categorical",
+            "feature_importance": 0.02658075037747507,
+            "eda": {
+                "category": "unknown/ no savings account",
+                "count": 124
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0,
+            "is_ordinal": true,
+            "order": [
+                "unknown/ no savings account",
+                "... < 100 DM",
+                "100 <= ... < 500 DM",
+                "500 <= ... < 1000 DM ",
+                ".. >= 1000 DM "
+            ]
+        },
+        {
+            "name": "present_emp_since=.. >= 7 years",
+            "rname": "present_emp_since",
+            "type": "categorical",
+            "feature_importance": 0.0007911532911745806,
+            "eda": {
+                "category": ".. >= 7 years",
+                "count": 184
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0,
+            "is_ordinal": true,
+            "order": [
+                "unemployed",
+                "... < 1 year ",
+                "1 <= ... < 4 years",
+                "4 <= ... < 7 years",
+                ".. >= 7 years"
+            ]
+        },
+        {
+            "name": "present_emp_since=... < 1 year ",
+            "rname": "present_emp_since",
+            "type": "categorical",
+            "feature_importance": -0.018254145904409033,
+            "eda": {
+                "category": "... < 1 year ",
+                "count": 120
+            },
+            "rule": [
+                [
+                    {
+                        "att": "present_emp_since=... < 1 year ",
+                        "op": "<=",
+                        "thr": 0.5,
+                        "is_continuous": true
+                    },
+                    0
+                ]
+            ],
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "present_emp_since=... < 1 year ",
+                            "op": ">",
+                            "thr": 0.5,
+                            "is_continuous": true
+                        },
+                        1
+                    ]
+                ],
+                "C1": [
+                    [
+                        {
+                            "att": "present_emp_since=... < 1 year ",
+                            "op": "<=",
+                            "thr": 0.5,
+                            "is_continuous": true
+                        },
+                        1
+                    ]
+                ],
+                "C3": [
+                    [
+                        {
+                            "att": "present_emp_since=... < 1 year ",
+                            "op": "<=",
+                            "thr": 0.5,
+                            "is_continuous": true
+                        },
+                        1
+                    ]
+                ],
+                "C4": [
+                    [
+                        {
+                            "att": "present_emp_since=... < 1 year ",
+                            "op": "<=",
+                            "thr": 0.5,
+                            "is_continuous": true
+                        },
+                        1
+                    ]
+                ]
+            },
+            "instance_value": 0,
+            "is_ordinal": true,
+            "order": [
+                "unemployed",
+                "... < 1 year ",
+                "1 <= ... < 4 years",
+                "4 <= ... < 7 years",
+                ".. >= 7 years"
+            ]
+        },
+        {
+            "name": "present_emp_since=1 <= ... < 4 years",
+            "rname": "present_emp_since",
+            "type": "categorical",
+            "feature_importance": -0.0038370380348257127,
+            "eda": {
+                "category": "1 <= ... < 4 years",
+                "count": 246
+            },
+            "rule": [],
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "present_emp_since=1 <= ... < 4 years",
+                            "op": "<=",
+                            "thr": 0.5,
+                            "is_continuous": true
+                        },
+                        1
+                    ]
+                ],
+                "C2": [
+                    [
+                        {
+                            "att": "present_emp_since=1 <= ... < 4 years",
+                            "op": ">",
+                            "thr": 0.5,
+                            "is_continuous": true
+                        },
+                        1
+                    ]
+                ],
+                "C3": [
+                    [
+                        {
+                            "att": "present_emp_since=1 <= ... < 4 years",
+                            "op": "<=",
+                            "thr": 0.5,
+                            "is_continuous": true
+                        },
+                        1
+                    ]
+                ]
+            },
+            "instance_value": 0,
+            "is_ordinal": true,
+            "order": [
+                "unemployed",
+                "... < 1 year ",
+                "1 <= ... < 4 years",
+                "4 <= ... < 7 years",
+                ".. >= 7 years"
+            ]
+        },
+        {
+            "name": "present_emp_since=4 <= ... < 7 years",
+            "rname": "present_emp_since",
+            "type": "categorical",
+            "feature_importance": -0.02099782145748632,
+            "eda": {
+                "category": "4 <= ... < 7 years",
+                "count": 113
+            },
+            "rule": [],
+            "crules": {
+                "C1": [
+                    [
+                        {
+                            "att": "present_emp_since=4 <= ... < 7 years",
+                            "op": "<=",
+                            "thr": 0.5,
+                            "is_continuous": true
+                        },
+                        1
+                    ]
+                ],
+                "C4": [
+                    [
+                        {
+                            "att": "present_emp_since=4 <= ... < 7 years",
+                            "op": "<=",
+                            "thr": 0.5,
+                            "is_continuous": true
+                        },
+                        1
+                    ]
+                ]
+            },
+            "instance_value": 1,
+            "is_ordinal": true,
+            "order": [
+                "unemployed",
+                "... < 1 year ",
+                "1 <= ... < 4 years",
+                "4 <= ... < 7 years",
+                ".. >= 7 years"
+            ]
+        },
+        {
+            "name": "present_emp_since=unemployed",
+            "rname": "present_emp_since",
+            "type": "categorical",
+            "feature_importance": -0.00020257639498688938,
+            "eda": {
+                "category": "unemployed",
+                "count": 37
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0,
+            "is_ordinal": true,
+            "order": [
+                "unemployed",
+                "... < 1 year ",
+                "1 <= ... < 4 years",
+                "4 <= ... < 7 years",
+                ".. >= 7 years"
+            ]
+        },
+        {
+            "name": "personal_status_sex=female : divorced/separated/married",
+            "rname": "personal_status_sex",
+            "type": "categorical",
+            "feature_importance": -0.009738947085659469,
+            "eda": {
+                "category": "female : divorced/separated/married",
+                "count": 209
+            },
+            "rule": [],
+            "crules": {
+                "C1": [
+                    [
+                        {
+                            "att": "personal_status_sex=female : divorced/separated/married",
+                            "op": "<=",
+                            "thr": 0.5,
+                            "is_continuous": true
+                        },
+                        1
+                    ]
+                ]
+            },
+            "instance_value": 0,
+            "is_ordinal": false
+        },
+        {
+            "name": "personal_status_sex=male : divorced/separated",
+            "rname": "personal_status_sex",
+            "type": "categorical",
+            "feature_importance": -0.0007281342012803818,
+            "eda": {
+                "category": "male : divorced/separated",
+                "count": 38
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0,
+            "is_ordinal": false
+        },
+        {
+            "name": "personal_status_sex=male : married/widowed",
+            "rname": "personal_status_sex",
+            "type": "categorical",
+            "feature_importance": 0.0008695872498853811,
+            "eda": {
+                "category": "male : married/widowed",
+                "count": 67
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0,
+            "is_ordinal": false
+        },
+        {
+            "name": "personal_status_sex=male : single",
+            "rname": "personal_status_sex",
+            "type": "categorical",
+            "feature_importance": -0.0009530101790818501,
+            "eda": {
+                "category": "male : single",
+                "count": 386
+            },
+            "rule": [
+                [
+                    {
+                        "att": "personal_status_sex=male : single",
+                        "op": ">",
+                        "thr": 0.5,
+                        "is_continuous": true
+                    },
+                    0
+                ]
+            ],
+            "crules": {
+                "C1": [
+                    [
+                        {
+                            "att": "personal_status_sex=male : single",
+                            "op": ">",
+                            "thr": 0.5,
+                            "is_continuous": true
+                        },
+                        1
+                    ]
+                ]
+            },
+            "instance_value": 1,
+            "is_ordinal": false
+        },
+        {
+            "name": "other_debtors=co-applicant",
+            "rname": "other_debtors",
+            "type": "categorical",
+            "feature_importance": -0.004914676563917525,
+            "eda": {
+                "category": "co-applicant",
+                "count": 30
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0,
+            "is_ordinal": false
+        },
+        {
+            "name": "other_debtors=guarantor",
+            "rname": "other_debtors",
+            "type": "categorical",
+            "feature_importance": 0.0017969474623382796,
+            "eda": {
+                "category": "guarantor",
+                "count": 34
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0,
+            "is_ordinal": false
+        },
+        {
+            "name": "other_debtors=none",
+            "rname": "other_debtors",
+            "type": "categorical",
+            "feature_importance": -0.003757291293002296,
+            "eda": {
+                "category": "none",
+                "count": 636
+            },
+            "rule": [
+                [
+                    {
+                        "att": "other_debtors=none",
+                        "op": ">",
+                        "thr": 0.5,
+                        "is_continuous": true
+                    },
+                    0
+                ]
+            ],
+            "crules": {
+                "C1": [
+                    [
+                        {
+                            "att": "other_debtors=none",
+                            "op": ">",
+                            "thr": 0.5,
+                            "is_continuous": true
+                        },
+                        1
+                    ]
+                ]
+            },
+            "instance_value": 1,
+            "is_ordinal": false
+        },
+        {
+            "name": "property=if not A121 : building society savings agreement/ life insurance",
+            "rname": "property",
+            "type": "categorical",
+            "feature_importance": -0.002786447032275764,
+            "eda": {
+                "category": "if not A121 : building society savings agreement/ life insurance",
+                "count": 159
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0,
+            "is_ordinal": false
+        },
+        {
+            "name": "property=if not A121/A122 : car or other, not in attribute 6",
+            "rname": "property",
+            "type": "categorical",
+            "feature_importance": -0.0007766396566992393,
+            "eda": {
+                "category": "if not A121/A122 : car or other, not in attribute 6",
+                "count": 231
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0,
+            "is_ordinal": false
+        },
+        {
+            "name": "property=real estate",
+            "rname": "property",
+            "type": "categorical",
+            "feature_importance": 0.01454042397673748,
+            "eda": {
+                "category": "real estate",
+                "count": 199
+            },
+            "rule": [
+                [
+                    {
+                        "att": "property=real estate",
+                        "op": "<=",
+                        "thr": 0.5,
+                        "is_continuous": true
+                    },
+                    0
+                ]
+            ],
+            "crules": {
+                "C1": [
+                    [
+                        {
+                            "att": "property=real estate",
+                            "op": "<=",
+                            "thr": 0.5,
+                            "is_continuous": true
+                        },
+                        1
+                    ]
+                ],
+                "C4": [
+                    [
+                        {
+                            "att": "property=real estate",
+                            "op": "<=",
+                            "thr": 0.5,
+                            "is_continuous": true
+                        },
+                        1
+                    ]
+                ]
+            },
+            "instance_value": 0,
+            "is_ordinal": false
+        },
+        {
+            "name": "property=unknown / no property",
+            "rname": "property",
+            "type": "categorical",
+            "feature_importance": 0.0740254800796003,
+            "eda": {
+                "category": "unknown / no property",
+                "count": 111
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 1,
+            "is_ordinal": false
+        },
+        {
+            "name": "other_installment_plans=bank",
+            "rname": "other_installment_plans",
+            "type": "categorical",
+            "feature_importance": -0.001895517587081799,
+            "eda": {
+                "category": "bank",
+                "count": 99
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0,
+            "is_ordinal": true,
+            "order": [
+                "None",
+                "bank",
+                "stores"
+            ]
+        },
+        {
+            "name": "other_installment_plans=none",
+            "rname": "other_installment_plans",
+            "type": "categorical",
+            "feature_importance": -0.004788314435616682,
+            "eda": {
+                "category": "none",
+                "count": 563
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 1,
+            "is_ordinal": true,
+            "order": [
+                "None",
+                "bank",
+                "stores"
+            ]
+        },
+        {
+            "name": "other_installment_plans=stores",
+            "rname": "other_installment_plans",
+            "type": "categorical",
+            "feature_importance": -0.0029591969718936956,
+            "eda": {
+                "category": "stores",
+                "count": 38
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0,
+            "is_ordinal": true,
+            "order": [
+                "None",
+                "bank",
+                "stores"
+            ]
+        },
+        {
+            "name": "housing=for free",
+            "rname": "housing",
+            "type": "categorical",
+            "feature_importance": 0.0037783786262346585,
+            "eda": {
+                "category": "for free",
+                "count": 75
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 1,
+            "is_ordinal": true,
+            "order": [
+                "rent",
+                "for free",
+                "own"
+            ]
+        },
+        {
+            "name": "housing=own",
+            "rname": "housing",
+            "type": "categorical",
+            "feature_importance": 0.032914456434583794,
+            "eda": {
+                "category": "own",
+                "count": 502
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0,
+            "is_ordinal": true,
+            "order": [
+                "rent",
+                "for free",
+                "own"
+            ]
+        },
+        {
+            "name": "housing=rent",
+            "rname": "housing",
+            "type": "categorical",
+            "feature_importance": -0.009929515521735837,
+            "eda": {
+                "category": "rent",
+                "count": 123
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0,
+            "is_ordinal": true,
+            "order": [
+                "rent",
+                "for free",
+                "own"
+            ]
+        },
+        {
+            "name": "job=management/ self-employed/ highly qualified employee/ officer",
+            "rname": "job",
+            "type": "categorical",
+            "feature_importance": 0.005273228830733306,
+            "eda": {
+                "category": "management/ self-employed/ highly qualified employee/ officer",
+                "count": 99
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0,
+            "is_ordinal": false
+        },
+        {
+            "name": "job=skilled employee / official",
+            "rname": "job",
+            "type": "categorical",
+            "feature_importance": 0.0019891690232063074,
+            "eda": {
+                "category": "skilled employee / official",
+                "count": 449
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0,
+            "is_ordinal": false
+        },
+        {
+            "name": "job=unemployed/ unskilled - non-resident",
+            "rname": "job",
+            "type": "categorical",
+            "feature_importance": -0.0026870167923459193,
+            "eda": {
+                "category": "unemployed/ unskilled - non-resident",
+                "count": 12
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0,
+            "is_ordinal": false
+        },
+        {
+            "name": "job=unskilled - resident",
+            "rname": "job",
+            "type": "categorical",
+            "feature_importance": 0.00014186356075296288,
+            "eda": {
+                "category": "unskilled - resident",
+                "count": 140
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 1,
+            "is_ordinal": false
+        },
+        {
+            "name": "telephone=none",
+            "rname": "telephone",
+            "type": "categorical",
+            "feature_importance": 0.005936832551525966,
+            "eda": {
+                "category": "none",
+                "count": 417
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 1,
+            "is_ordinal": false
+        },
+        {
+            "name": "telephone=yes, registered under the customers name ",
+            "rname": "telephone",
+            "type": "categorical",
+            "feature_importance": 0.00048062450011871686,
+            "eda": {
+                "category": "yes, registered under the customers name ",
+                "count": 283
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0,
+            "is_ordinal": false
+        },
+        {
+            "name": "foreign_worker=no",
+            "rname": "foreign_worker",
+            "type": "categorical",
+            "feature_importance": 0.0006106729249671407,
+            "eda": {
+                "category": "no",
+                "count": 28
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 0,
+            "is_ordinal": false
+        },
+        {
+            "name": "foreign_worker=yes",
+            "rname": "foreign_worker",
+            "type": "categorical",
+            "feature_importance": 0.0012417177396803602,
+            "eda": {
+                "category": "yes",
+                "count": 672
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 1,
+            "is_ordinal": false
+        }
+    ],
+    "predicted_class": 0,
+    "true_class": 1,
+    "predicted_proba": [
+        0.5333333333333333,
+        0.4666666666666667
+    ]
+}

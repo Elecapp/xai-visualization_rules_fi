@@ -1,0 +1,2 @@
+r = { duration_in_month <= 25.42, account_check_status=< 0 DM <= 0.21, present_emp_since=... < 1 year  <= 0.50, savings=... < 100 DM <= 0.50, credit_amount <= 11049.00, credit_history=critical account/ other credits existing (not at this bank) <= 0.50 } --> { default: 0 }
+c =  }

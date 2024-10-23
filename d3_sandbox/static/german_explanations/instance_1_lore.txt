@@ -1,0 +1,5 @@
+r = { account_check_status=< 0 DM <= 0.50, duration_in_month <= 15.50, duration_in_month > -9.50, credit_amount <= 9171.00, purpose=(vacation - does not exist?) <= 0.50, other_installment_plans=bank <= 0.50, age <= 50.50, age > 15.50 } --> { default: 0 }
+c = { { duration_in_month > 34.00, housing=own <= 0.50 },
+      { duration_in_month > 25.50, housing=own <= 0.50 },
+      { credit_amount > 9171.00, purpose=domestic appliances <= 0.50 },
+      { duration_in_month > 49.50, housing=own <= 0.50 } }

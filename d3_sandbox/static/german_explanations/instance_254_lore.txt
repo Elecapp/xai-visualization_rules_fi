@@ -1,0 +1,2 @@
+r = { account_check_status=< 0 DM > 0.96, property=unknown / no property > 0.66, installment_as_income_perc > 2.50, account_check_status=no checking account <= 0.50, present_res_since <= 4.50, credit_history=critical account/ other credits existing (not at this bank) > -0.50, duration_in_month > 16.50 } --> { default: 1 }
+c = { { duration_in_month <= 4.50, job=skilled employee / official <= 0.50 } }

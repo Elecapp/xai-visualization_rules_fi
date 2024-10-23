@@ -1,0 +1,3 @@
+r = { savings=... < 100 DM > 0.00, duration_in_month <= 20.27, property=unknown / no property <= 0.00, age <= 53.00, age > 13.50, other_installment_plans=none > 0.50 } --> { default: 0 }
+c = { { savings=... < 100 DM <= 0.00, age <= 20.50, duration_in_month > 28.50, housing=own <= 0.50, credit_history=critical account/ other credits existing (not at this bank) <= 0.50 },
+      { duration_in_month > 16.50, other_installment_plans=none <= 0.50, account_check_status=< 0 DM <= 0.50, credit_history=critical account/ other credits existing (not at this bank) <= 0.50, telephone=none <= 0.50 } }

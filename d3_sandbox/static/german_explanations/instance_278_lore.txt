@@ -1,0 +1,2 @@
+r = { other_installment_plans=bank > 0.02, duration_in_month > 12.50, present_res_since > 1.19, savings=... < 100 DM <= 0.11, age > 22.00, housing=rent <= 0.50, telephone=none > 0.15, installment_as_income_perc > 3.62 } --> { default: 0 }
+c = { { other_installment_plans=bank <= 0.02, age <= 16.50, savings=... < 100 DM > 0.50, purpose=car (new) > 0.50 } }

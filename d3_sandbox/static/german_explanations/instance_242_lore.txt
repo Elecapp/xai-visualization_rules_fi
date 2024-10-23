@@ -1,0 +1,2 @@
+r = { account_check_status=< 0 DM > 0.05, duration_in_month <= 16.49, property=unknown / no property <= 0.18, personal_status_sex=male : single > 0.50, telephone=none > 0.50 } --> { default: 0 }
+c =  }

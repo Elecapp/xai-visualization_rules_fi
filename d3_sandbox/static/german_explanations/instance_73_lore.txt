@@ -1,0 +1,2 @@
+r = { account_check_status=< 0 DM <= 0.07, duration_in_month <= 33.35, property=unknown / no property <= 0.21, job=skilled employee / official <= 1.50, job=unemployed/ unskilled - non-resident > -0.05, credits_this_bank <= 2.50, savings=... < 100 DM <= 0.50, installment_as_income_perc > 0.50 } --> { default: 0 }
+c =  }

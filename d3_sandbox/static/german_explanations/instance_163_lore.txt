@@ -1,0 +1,2 @@
+r = { account_check_status=< 0 DM <= 0.04, duration_in_month <= 35.44, age > 19.50, housing=for free <= 0.02, property=if not A121 : building society savings agreement/ life insurance <= 0.50, purpose=radio/television <= 0.50, savings=... < 100 DM > 0.50, account_check_status=no checking account > 0.50 } --> { default: 0 }
+c =  }

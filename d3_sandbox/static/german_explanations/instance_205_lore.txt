@@ -1,0 +1,3 @@
+r = { purpose=repairs <= 0.01, purpose=repairs > -0.01, duration_in_month <= 42.50, account_check_status=< 0 DM <= 0.50, purpose=(vacation - does not exist?) > 0.50, credit_amount <= 3888.00, installment_as_income_perc > 0.50, age <= 43.50, age > 25.50, personal_status_sex=female : divorced/separated/married <= 0.50, job=skilled employee / official > 0.50, present_res_since <= 3.50, housing=own > 0.50 } --> { default: 0 }
+c = { { age <= 25.50 },
+      { housing=own <= 0.50 } }

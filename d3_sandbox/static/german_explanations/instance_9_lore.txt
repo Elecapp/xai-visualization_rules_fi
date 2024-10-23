@@ -1,0 +1,3 @@
+r = { savings=... < 100 DM <= 0.25, age > 19.50, job=management/ self-employed/ highly qualified employee/ officer <= 0.50, savings=100 <= ... < 500 DM > 0.50, credit_amount > 5120.50, people_under_maintenance > 0.50 } --> { default: 0 }
+c = { { savings=100 <= ... < 500 DM <= 0.50, account_check_status=< 0 DM > 0.50, credit_amount <= 1179.00 },
+      { age <= 19.50, installment_as_income_perc > 2.50, housing=own <= 0.50 } }

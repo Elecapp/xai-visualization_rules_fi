@@ -1,0 +1,2 @@
+r = { account_check_status=< 0 DM > 0.07, duration_in_month <= 16.50, installment_as_income_perc <= 4.50, credit_amount <= 8405.50 } --> { default: 0 }
+c = { { account_check_status=< 0 DM <= 0.07, duration_in_month > 44.50, age > 51.50, purpose=car (new) > 0.50 } }

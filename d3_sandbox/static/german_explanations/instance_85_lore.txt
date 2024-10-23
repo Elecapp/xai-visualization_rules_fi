@@ -1,0 +1,2 @@
+r = { account_check_status=< 0 DM <= 0.09, duration_in_month <= 31.50, other_debtors=guarantor <= 0.03, age > 15.50, property=unknown / no property <= 0.50, credit_amount <= 7618.50 } --> { default: 0 }
+c =  }

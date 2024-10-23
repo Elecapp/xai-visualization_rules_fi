@@ -1,0 +1,4 @@
+r = { job=unemployed/ unskilled - non-resident <= 0.00, purpose=repairs <= 0.02, credit_history=existing credits paid back duly till now <= 1.50, duration_in_month <= 18.50 } --> { default: 0 }
+c = { { duration_in_month > 35.50, account_check_status=< 0 DM > 0.50 },
+      { duration_in_month > 18.50, present_res_since <= 0.50 },
+      { duration_in_month > 18.50, purpose=radio/television > 0.50 } }

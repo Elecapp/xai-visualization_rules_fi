@@ -1,0 +1,5 @@
+r = { job=unemployed/ unskilled - non-resident <= 0.00, job=unemployed/ unskilled - non-resident > -0.01, savings=100 <= ... < 500 DM <= 0.06, installment_as_income_perc <= 6.50, age <= 48.00, age > 20.50, account_check_status=< 0 DM <= 0.50, purpose=(vacation - does not exist?) > 0.50, credit_amount <= 3802.50, credit_amount > 2956.50, present_res_since <= 3.50 } --> { default: 0 }
+c = { { age <= 20.50, people_under_maintenance <= 0.50 },
+      { account_check_status=< 0 DM > 0.50, savings=... < 100 DM > 0.50 },
+      { age <= 24.50, account_check_status=< 0 DM > 0.50 },
+      { age <= 20.50, duration_in_month <= 31.50 } }

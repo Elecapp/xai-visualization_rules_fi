@@ -1,0 +1,3 @@
+r = { savings=... < 100 DM <= 0.01, age > 30.50, account_check_status=0 <= ... < 200 DM > 0.50, credits_this_bank > 0.50, present_emp_since=... < 1 year  <= 0.50 } --> { default: 0 }
+c = { { credits_this_bank <= 0.50, savings=unknown/ no savings account <= 0.50 },
+      { account_check_status=0 <= ... < 200 DM <= 0.50, account_check_status=< 0 DM > 0.50 } }

@@ -1,0 +1,4 @@
+r = { savings=100 <= ... < 500 DM <= 0.01, purpose=car (used) > -0.01, duration_in_month <= 38.50, job=skilled employee / official > -0.50, present_res_since > 1.50, installment_as_income_perc > 0.50, credit_amount > 1101.50, property=if not A121/A122 : car or other, not in attribute 6 <= 0.50 } --> { default: 0 }
+c = { { present_res_since <= 1.50, credits_this_bank > 1.50, housing=own <= 0.50 },
+      { present_res_since <= 1.50, purpose=car (new) > 0.50, credit_history=critical account/ other credits existing (not at this bank) > 0.50 },
+      { present_res_since <= 1.50, installment_as_income_perc > 3.50, account_check_status=< 0 DM > 0.50 } }

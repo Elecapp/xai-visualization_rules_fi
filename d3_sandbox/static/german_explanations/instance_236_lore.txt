@@ -1,0 +1,2 @@
+r = { duration_in_month <= 15.50, other_debtors=co-applicant > -0.05, credits_this_bank <= 2.50, housing=rent <= 0.50, purpose=domestic appliances > -0.50, credit_history=critical account/ other credits existing (not at this bank) <= 0.50, age > 16.50 } --> { default: 0 }
+c =  }

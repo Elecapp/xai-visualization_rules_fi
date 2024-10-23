@@ -1,0 +1,4 @@
+r = { savings=... < 100 DM > 0.00, duration_in_month <= 9.50, installment_as_income_perc <= 3.50, property=unknown / no property > 0.50, credit_history=existing credits paid back duly till now > 0.50 } --> { default: 0 }
+c = { { savings=... < 100 DM <= 0.00, age <= 28.50, account_check_status=< 0 DM <= 0.50 },
+      { savings=... < 100 DM <= 0.00, age <= 28.50, duration_in_month > 32.00 },
+      { duration_in_month > 16.00, credit_amount <= 8758.00, account_check_status=< 0 DM <= 0.06 } }

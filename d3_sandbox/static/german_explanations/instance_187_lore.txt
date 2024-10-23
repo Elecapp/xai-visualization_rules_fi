@@ -1,0 +1,3 @@
+r = { credit_amount > 11655.50, duration_in_month > 13.50, savings=... < 100 DM <= 0.50, age <= 34.50, purpose=(vacation - does not exist?) > 0.50, job=skilled employee / official <= 1.50, personal_status_sex=male : single > 0.50, installment_as_income_perc <= 3.50, people_under_maintenance > 0.50 } --> { default: 1 }
+c = { { credit_amount <= 10459.50, savings=100 <= ... < 500 DM <= 0.78 },
+      { purpose=(vacation - does not exist?) <= 0.50, savings=100 <= ... < 500 DM <= 0.50 } }

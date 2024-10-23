@@ -1,0 +1,2 @@
+r = { account_check_status=< 0 DM <= 0.04, other_installment_plans=bank <= 0.13, duration_in_month <= 38.50, age > 23.50, personal_status_sex=female : divorced/separated/married > -0.50, savings=... < 100 DM <= 0.50 } --> { default: 0 }
+c =  }

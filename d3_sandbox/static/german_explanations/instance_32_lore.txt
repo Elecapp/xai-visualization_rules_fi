@@ -1,0 +1,3 @@
+r = { other_debtors=co-applicant <= 0.00, purpose=retraining <= 0.00, credit_amount <= 7627.00, credit_amount > 6796.00, savings=... < 100 DM > -0.50, account_check_status=< 0 DM > 0.50, age > 13.00, property=unknown / no property <= 0.50, installment_as_income_perc <= 2.50, property=real estate <= 0.50 } --> { default: 0 }
+c = { { credit_amount > 12218.00, age <= 46.50 },
+      { installment_as_income_perc > 2.50, duration_in_month > 23.50 } }

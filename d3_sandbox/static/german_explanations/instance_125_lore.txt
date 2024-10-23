@@ -1,0 +1,2 @@
+r = { account_check_status=< 0 DM <= 0.01, age > 19.50, duration_in_month <= 44.50, purpose=car (new) <= 0.08, savings=... < 100 DM > 0.50, credit_history=critical account/ other credits existing (not at this bank) > 0.50 } --> { default: 0 }
+c = { { age <= 19.50, personal_status_sex=male : single <= 0.50, present_res_since <= 2.50, other_installment_plans=none <= 0.50 } }

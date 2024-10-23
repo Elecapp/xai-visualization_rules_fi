@@ -1,0 +1,2 @@
+r = { duration_in_month <= 19.10, job=unemployed/ unskilled - non-resident <= 0.05, personal_status_sex=male : divorced/separated > -0.17, account_check_status=< 0 DM <= 0.50, housing=rent <= 0.50, age <= 57.50, present_emp_since=... < 1 year  <= 0.50 } --> { default: 0 }
+c =  }

@@ -1,0 +1,4 @@
+r = { duration_in_month <= 18.50, account_check_status=< 0 DM <= 0.11, credit_amount > 442.00, present_res_since <= 4.50, installment_as_income_perc > 3.50, purpose=domestic appliances > 0.50 } --> { default: 0 }
+c = { { duration_in_month > 29.50, foreign_worker=yes <= 0.15, account_check_status=< 0 DM > 0.50 },
+      { duration_in_month > 29.50, housing=own > 0.72, account_check_status=< 0 DM > 0.50 },
+      { duration_in_month > 29.50, account_check_status=no checking account > 0.64, account_check_status=< 0 DM > 0.50 } }

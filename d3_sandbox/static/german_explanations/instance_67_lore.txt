@@ -1,0 +1,2 @@
+r = { account_check_status=< 0 DM <= 0.06, duration_in_month <= 19.50, other_debtors=none <= 1.08, purpose=car (new) <= 0.50, age <= 63.50, property=unknown / no property <= 0.50, telephone=yes, registered under the customers name  > 0.50 } --> { default: 0 }
+c =  }

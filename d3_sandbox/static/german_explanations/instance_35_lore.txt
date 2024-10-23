@@ -1,0 +1,4 @@
+r = { present_emp_since=... < 1 year  > 0.03, property=if not A121/A122 : car or other, not in attribute 6 > 0.04, duration_in_month <= 36.50, duration_in_month > 13.50, credit_history=critical account/ other credits existing (not at this bank) > 0.87 } --> { default: 0 }
+c = { { property=if not A121/A122 : car or other, not in attribute 6 <= 0.04, other_installment_plans=none <= 0.50, personal_status_sex=male : divorced/separated <= 0.50 },
+      { property=if not A121/A122 : car or other, not in attribute 6 <= 0.04, other_installment_plans=none <= 0.50, housing=own <= 0.50 },
+      { property=if not A121/A122 : car or other, not in attribute 6 <= 0.04, other_installment_plans=none <= 0.50, duration_in_month <= 28.50 } }

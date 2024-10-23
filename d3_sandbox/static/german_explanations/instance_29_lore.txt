@@ -1,0 +1,2 @@
+r = { duration_in_month <= 17.50, job=unemployed/ unskilled - non-resident <= 0.04, purpose=car (new) > 0.50, age <= 46.50, age > 24.50, property=if not A121 : building society savings agreement/ life insurance <= 0.50 } --> { default: 0 }
+c = { { duration_in_month > 19.16, credit_amount > 5535.88 } }

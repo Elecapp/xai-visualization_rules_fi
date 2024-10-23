@@ -1,0 +1,2 @@
+r = { account_check_status=< 0 DM > 0.04, savings=... < 100 DM > 0.12, duration_in_month <= 15.50, property=unknown / no property <= 0.10 } --> { default: 0 }
+c =  }

@@ -1,0 +1,7 @@
+r = { account_check_status=< 0 DM > 0.94, credit_amount <= 3709.00, credit_amount > 3206.00, duration_in_month > 14.50, age <= 52.00, age > 14.00, savings=... < 100 DM > 0.50, installment_as_income_perc <= 2.50, installment_as_income_perc > 1.50, credit_history=critical account/ other credits existing (not at this bank) <= 0.50, purpose=radio/television <= 0.50, other_installment_plans=none > 0.50, personal_status_sex=female : divorced/separated/married > 0.50 } --> { default: 1 }
+c = { { purpose=radio/television > 0.50 },
+      { duration_in_month <= 10.50 },
+      { savings=... < 100 DM <= 0.50 },
+      { personal_status_sex=female : divorced/separated/married <= 0.50 },
+      { installment_as_income_perc <= 1.50 },
+      { duration_in_month <= 14.50 } }

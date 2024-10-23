@@ -1,0 +1,3 @@
+r = { age > 22.50, present_emp_since=... < 1 year  <= 0.10, credit_amount <= 7916.50, credit_amount > 630.50, purpose=(vacation - does not exist?) <= 0.01, other_installment_plans=bank <= 0.50, present_emp_since=.. >= 7 years <= 0.50, property=if not A121 : building society savings agreement/ life insurance > -0.50, property=unknown / no property <= 0.50, present_emp_since=4 <= ... < 7 years <= 0.50, present_emp_since=1 <= ... < 4 years <= 0.50, duration_in_month <= 30.50 } --> { default: 0 }
+c = { { age > 24.50, credit_amount <= 630.50 },
+      { other_installment_plans=bank > 0.50, savings=... < 100 DM > 0.50 } }

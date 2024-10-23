@@ -1,0 +1,2 @@
+r = { account_check_status=< 0 DM <= 0.04, duration_in_month <= 35.50, housing=rent <= 0.03, credit_amount <= 3781.00, credit_amount > 1301.50, age > 16.50, housing=for free <= 0.50 } --> { default: 0 }
+c =  }

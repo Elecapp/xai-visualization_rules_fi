@@ -1,0 +1,6 @@
+r = { account_check_status=< 0 DM > 0.97, duration_in_month > 17.00, housing=rent > 0.77, credit_amount <= 2117.50, account_check_status=no checking account <= 0.50, age > 20.50, installment_as_income_perc > 1.50, savings=unknown/ no savings account <= 0.50, purpose=business <= 0.50, other_installment_plans=none > 0.50, purpose=car (new) > 0.50, foreign_worker=yes > 0.50, credit_history=existing credits paid back duly till now > 0.50 } --> { default: 1 }
+c = { { duration_in_month <= 15.50 },
+      { installment_as_income_perc <= 1.50 },
+      { purpose=car (new) <= 0.50 },
+      { account_check_status=no checking account > 0.50 },
+      { savings=unknown/ no savings account > 0.50 } }

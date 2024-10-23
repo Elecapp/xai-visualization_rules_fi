@@ -1,0 +1,3 @@
+r = { savings=... < 100 DM <= 1.50, savings=... < 100 DM > 0.17, duration_in_month > 28.25, age > 33.50, present_emp_since=.. >= 7 years > 0.55, present_res_since > 2.50 } --> { default: 0 }
+c = { { age <= 33.50, credit_amount <= 3354.50 },
+      { present_res_since <= 2.50, telephone=none <= 0.50 } }

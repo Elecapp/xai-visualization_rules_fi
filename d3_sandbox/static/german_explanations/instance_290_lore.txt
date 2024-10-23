@@ -1,0 +1,2 @@
+r = { account_check_status=< 0 DM <= 0.01, age > 20.50, other_installment_plans=bank <= 0.23, job=skilled employee / official <= 1.50, property=if not A121/A122 : car or other, not in attribute 6 > -0.50, credit_amount <= 10893.00, purpose=car (new) <= 0.50, duration_in_month <= 50.50, savings=... < 100 DM <= 0.50, property=if not A121 : building society savings agreement/ life insurance <= 0.50 } --> { default: 0 }
+c =  }

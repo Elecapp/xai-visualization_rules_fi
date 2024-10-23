@@ -1,0 +1,2 @@
+r = { account_check_status=< 0 DM > 0.02, savings=... < 100 DM > 0.08, duration_in_month <= 16.17, duration_in_month > 5.00, credit_history=delay in paying off in the past <= 0.05 } --> { default: 0 }
+c = { { account_check_status=< 0 DM <= 0.02, duration_in_month > 34.50, age <= 23.50 } }

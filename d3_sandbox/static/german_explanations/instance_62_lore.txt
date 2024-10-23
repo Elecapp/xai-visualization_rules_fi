@@ -1,0 +1,4 @@
+r = { account_check_status=< 0 DM > 0.94, savings=... < 100 DM > 0.50, duration_in_month > 13.00, installment_as_income_perc > 2.50, credit_history=delay in paying off in the past <= 0.26, credit_amount > -2241.00, present_res_since > 1.50, account_check_status=no checking account <= 0.50, other_debtors=none > 0.50, people_under_maintenance > 0.50 } --> { default: 1 }
+c = { { savings=... < 100 DM <= 0.50 },
+      { account_check_status=no checking account > 0.50 },
+      { credit_amount <= -2241.00 } }

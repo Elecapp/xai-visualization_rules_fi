@@ -1,0 +1,2 @@
+r = { duration_in_month <= 27.30, account_check_status=< 0 DM <= 0.03, other_installment_plans=bank <= 0.50, age <= 61.50, age > 21.50, credit_amount <= 4476.50, credit_amount > -1175.50, purpose=car (new) <= 0.50 } --> { default: 0 }
+c =  }

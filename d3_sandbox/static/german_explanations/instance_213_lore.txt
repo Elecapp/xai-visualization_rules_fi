@@ -1,0 +1,2 @@
+r = { duration_in_month <= 20.50, account_check_status=< 0 DM <= 0.06, credit_amount <= 8939.50, age <= 49.50, personal_status_sex=male : single <= 0.50 } --> { default: 0 }
+c =  }

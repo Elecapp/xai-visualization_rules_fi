@@ -1,0 +1,2 @@
+r = { account_check_status=< 0 DM <= 0.03, duration_in_month <= 33.50, age <= 58.50, age > 27.50, purpose=education <= 0.06, purpose=car (new) <= 0.50 } --> { default: 0 }
+c = { { duration_in_month > 37.50, age <= 20.00, account_check_status=no checking account <= 0.50 } }

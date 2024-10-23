@@ -1,0 +1,10 @@
+r = { account_check_status=< 0 DM > 0.95, credit_amount <= 1843.50, credit_amount > 1428.50, duration_in_month > 13.50, property=unknown / no property > 0.50, job=management/ self-employed/ highly qualified employee/ officer <= 0.50, present_res_since > 0.50, housing=own <= 0.50 } --> { default: 1 }
+c = { { duration_in_month <= 13.50, property=unknown / no property <= 0.50 },
+      { property=unknown / no property <= 0.50, account_check_status=no checking account > 0.50 },
+      { property=unknown / no property <= 0.50, present_res_since <= 0.50 },
+      { credit_amount > 1843.50, property=unknown / no property <= 0.50 },
+      { property=unknown / no property <= 0.50, telephone=yes, registered under the customers name  > 0.50 },
+      { property=unknown / no property <= 0.50, savings=... < 100 DM <= 0.50 },
+      { property=unknown / no property <= 0.50, purpose=car (new) <= -0.50 },
+      { property=unknown / no property <= 0.50, present_emp_since=1 <= ... < 4 years > 0.50 },
+      { credit_amount <= 711.00, account_check_status=no checking account > 0.50 } }

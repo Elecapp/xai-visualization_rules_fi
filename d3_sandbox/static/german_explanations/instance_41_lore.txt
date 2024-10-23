@@ -1,0 +1,4 @@
+r = { account_check_status=< 0 DM > 0.93, credit_amount <= 1144.50, credit_amount > 218.00, foreign_worker=yes > 0.50, age <= 21.50, savings=... < 100 DM <= 0.50, present_res_since <= 3.50, job=unskilled - resident <= 0.50, other_installment_plans=none > 0.50, present_emp_since=.. >= 7 years <= 0.50, housing=own > 0.50, credit_history=existing credits paid back duly till now > 0.50 } --> { default: 1 }
+c = { { credit_amount > 1144.50 },
+      { savings=... < 100 DM > 0.50 },
+      { job=unskilled - resident > 0.50 } }

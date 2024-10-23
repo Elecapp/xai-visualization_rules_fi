@@ -1,0 +1,4 @@
+r = { credit_amount > 13676.00, savings=... < 100 DM > 0.50, duration_in_month > 8.50, property=unknown / no property > 0.50, people_under_maintenance <= 1.50, credit_history=critical account/ other credits existing (not at this bank) <= 0.50, installment_as_income_perc > 2.50 } --> { default: 1 }
+c = { { property=unknown / no property <= 0.50 },
+      { credit_history=critical account/ other credits existing (not at this bank) > 0.50 },
+      { savings=... < 100 DM <= 0.50 } }

@@ -1,0 +1,6 @@
+r = { credit_amount > 10663.00, duration_in_month > 29.50, savings=... < 100 DM > 0.50, present_emp_since=.. >= 7 years <= 0.50, people_under_maintenance <= 1.50, installment_as_income_perc <= 2.50, telephone=none <= 0.50, housing=own > 0.50, job=management/ self-employed/ highly qualified employee/ officer > 0.50 } --> { default: 1 }
+c = { { people_under_maintenance > 1.50 },
+      { credit_amount <= 4282.50 },
+      { duration_in_month <= 29.50 },
+      { duration_in_month <= 19.50 },
+      { housing=own <= 0.50 } }

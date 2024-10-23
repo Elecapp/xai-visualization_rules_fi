@@ -1,0 +1,2 @@
+r = { account_check_status=< 0 DM <= 0.01, duration_in_month <= 25.50, age <= 47.50, other_installment_plans=none <= 1.10, other_installment_plans=none > 0.50, credit_amount <= 10480.00 } --> { default: 0 }
+c =  }

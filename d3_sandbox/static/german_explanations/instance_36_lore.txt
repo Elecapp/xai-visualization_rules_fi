@@ -1,0 +1,2 @@
+r = { account_check_status=< 0 DM <= 0.11, age > 27.50, duration_in_month <= 42.50, housing=rent <= 0.48, housing=rent > -0.06, credit_amount <= 9596.00, purpose=domestic appliances > -0.50, property=unknown / no property <= 0.50 } --> { default: 0 }
+c = { { age <= 23.50, duration_in_month > 30.50, credits_this_bank <= 1.37, other_installment_plans=none <= 0.50, telephone=none <= 0.50, housing=own <= 0.50, personal_status_sex=male : single <= 0.50 } }

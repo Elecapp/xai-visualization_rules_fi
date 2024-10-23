@@ -1,0 +1,4 @@
+r = { account_check_status=< 0 DM <= 0.01, savings=... < 100 DM > 0.04, property=unknown / no property <= 0.14, other_installment_plans=bank <= 0.19, credit_amount <= 3579.50, age <= 56.50, purpose=domestic appliances > 0.50 } --> { default: 0 }
+c = { { credit_amount > 3579.50, installment_as_income_perc <= 2.50 },
+      { credit_amount > 9758.50, installment_as_income_perc <= 2.50 },
+      { savings=... < 100 DM <= 0.04, credit_amount > 10550.00 } }

@@ -1,0 +1,2 @@
+r = { account_check_status=no checking account > 0.92, savings=500 <= ... < 1000 DM  > -0.07, age > 14.50, account_check_status=0 <= ... < 200 DM <= 0.50 } --> { default: 0 }
+c =  }
