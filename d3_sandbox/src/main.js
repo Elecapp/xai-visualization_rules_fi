@@ -294,7 +294,7 @@ function FIPERTextualExplanationView() {
     const gRuleText = selection.selectAll('g.rule-text-explanation')
       .data(d => [d].filter(v => v.rulePredicateMap.R0))
       .join('g')
-      .classed('text-explanation', true)
+      .classed('rule-text-explanation', true)
       .attr('transform', `translate(0, ${SINGLE_FEATURE_HEIGHT * (selection.datum().rows + 1)})`);
 
     // create a rectangle that contain a text to be used as background
@@ -303,7 +303,7 @@ function FIPERTextualExplanationView() {
       .join('rect')
       .classed('text-rule-background', true)
       .attr('x', (-(7 * 3) - 4) - GUTTER)
-      .attr('y', -(SINGLE_FEATURE_HEIGHT / 2) + 2)
+      .attr('y', -(SINGLE_FEATURE_HEIGHT / 2) + 4)
       .attr('width', (7 * 3) + 4)
       .attr('height', SINGLE_FEATURE_HEIGHT / 2)
       .attr('fill', FTTemplate.RULE_COLOR);
@@ -329,13 +329,13 @@ function FIPERTextualExplanationView() {
       .attr('font-size', FONT_SIZE)
       .attr('fill', FTTemplate.TEXT_COLOR)
       .attr('font-weight', '300')
-      .text(d => d.ruleText.R0);
+      .html(d => d.ruleText.R0);
 
     const gCounterRuleText = selection.selectAll('g.counter-rule-text-explanation')
       .data(d => [d].filter(v => v.cRulesPredicateMap[selectedCounterRule]))
       .join('g')
-      .classed('text-explanation', true)
-      .attr('transform', `translate(0, ${SINGLE_FEATURE_HEIGHT * (selection.datum().rows + 1.75)})`);
+      .classed('counter-rule-text-explanation', true)
+      .attr('transform', `translate(0, ${SINGLE_FEATURE_HEIGHT * (selection.datum().rows + 2)})`);
 
     // create a rectangle that contain a text to be used as background
     gCounterRuleText.selectAll('rect.text-counter-rule-background')
@@ -343,7 +343,7 @@ function FIPERTextualExplanationView() {
       .join('rect')
       .classed('text-counter-rule-background', true)
       .attr('x', (-(22 * 3) - 4) - GUTTER)
-      .attr('y', -(SINGLE_FEATURE_HEIGHT / 2) + 2)
+      .attr('y', -(SINGLE_FEATURE_HEIGHT / 2) + 4)
       .attr('width', (22 * 3) + 4)
       .attr('height', SINGLE_FEATURE_HEIGHT / 2)
       .attr('fill', FTTemplate.CRULES_COLOR);
@@ -368,7 +368,7 @@ function FIPERTextualExplanationView() {
       .attr('font-size', FONT_SIZE)
       .attr('fill', FTTemplate.TEXT_COLOR)
       .attr('font-weight', '300')
-      .text(d => d.cruleText[selectedCounterRule]);
+      .html(d => d.cruleText[selectedCounterRule]);
 
     return me;
   }
@@ -394,6 +394,7 @@ function FIPERFeatureDistributionView() {
   let color = FTTemplate.DISTRIBUTION_COLOR;
   let strokeColor = FTTemplate.DISTRIBUTION_STROKE_COLOR;
   let fFilterRule = () => true;
+  const textualExplanation = FIPERTextualExplanationView();
 
   const t = d3.transition()
     .duration(500)
@@ -501,7 +502,7 @@ function FIPERFeatureDistributionView() {
       }
     }
 
-    const textualExplanation = FIPERTextualExplanationView();
+
     gDetails.call(textualExplanation);
 
     return me;
@@ -540,6 +541,13 @@ function FIPERFeatureDistributionView() {
   me.fFilterRule = function (_) {
     if (!arguments.length) return fFilterRule;
     fFilterRule = _;
+    return me;
+  };
+
+  // eslint-disable-next-line func-names
+  me.selectedCounterRule = function (_) {
+    if (!arguments.length) return textualExplanation.selectedCounterRule();
+    textualExplanation.selectedCounterRule(_);
     return me;
   };
 
@@ -927,6 +935,25 @@ function FIPERCRuleGrid() {
   return me;
 }
 
+function text2tspan(text, width) {
+  const words = text.split(' ');
+  const lines = [];
+  let currentLine = '';
+  words.forEach((word) => {
+    const testLine = `${currentLine} ${word}`;
+    const testLength = testLine.length;
+    if (testLength > width) {
+      lines.push(currentLine);
+      currentLine = word;
+    } else {
+      currentLine = testLine;
+    }
+  });
+  lines.push(currentLine);
+  // join lines with tspan elements
+  return lines.map((line, i) => `<tspan x="0" dy="${i ? '1.2em' : 0}">${line}</tspan>`).join('');
+}
+
 
 function FIPERView() {
   // global width of the whole visualization
@@ -974,6 +1001,9 @@ function FIPERView() {
       if (hasCounterRules) {
         additionalRows += 1;
       }
+      if (additionalRows > 0) {
+        additionalRows += 1;
+      }
 
 
       const f = {
@@ -988,11 +1018,11 @@ function FIPERView() {
       // Adding strings to be used for textual labels
       f.ruleText = Object.fromEntries(Object.entries(d.rulePredicateMap)
         .filter(([, v]) => v)
-        .map(([k]) => [k, `Rule ${k}: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla hendrerit lacus in mi.`]),
+        .map(([k]) => [k, text2tspan(`Rule ${k}: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla hendrerit lacus in mi.`, 55)]),
       );
       f.cruleText = Object.fromEntries(Object.entries(d.cRulesPredicateMap)
         .filter(([, v]) => v)
-        .map(([k]) => [k, `Counter Rule ${k}: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla hendrerit lacus in mi.`]),
+        .map(([k]) => [k, text2tspan(`Counter Rule ${k}: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla hendrerit lacus in mi.`, 55)]),
       );
 
       return f;
@@ -1043,6 +1073,7 @@ function FIPERView() {
       .height(SINGLE_FEATURE_HEIGHT)
       .cruleList(origDatum.counterRules)
       .selectedCounterRule(origDatum.selectedCounterRule);
+    fdv.selectedCounterRule(origDatum.selectedCounterRule);
 
 
     // colorscale to be used to highlight the selected feature
