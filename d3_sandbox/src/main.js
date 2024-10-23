@@ -274,6 +274,117 @@ function FIPERNumericDistributionLineChartView() {
   return me;
 }
 
+function FIPERTextualExplanationView() {
+  let selectedCounterRule = 'C0';
+
+  function me(selection) {
+    selection.selectAll('line.separator')
+      .data(d => [d])
+      .join('line')
+      .classed('separator', true)
+      .attr('x1', 0)
+      .attr('x2', RULES_COLUMN_WIDTH)
+      .attr('y1', d => (SINGLE_FEATURE_HEIGHT * (d.rows)) + 5)
+      .attr('y2', d => (SINGLE_FEATURE_HEIGHT * (d.rows)) + 5)
+      .attr('stroke', FTTemplate.TEXT_COLOR)
+      // .attr('stroke-dasharray', ('3, 3'))
+      .attr('stroke-width', 0.25);
+
+
+    const gRuleText = selection.selectAll('g.rule-text-explanation')
+      .data(d => [d].filter(v => v.rulePredicateMap.R0))
+      .join('g')
+      .classed('text-explanation', true)
+      .attr('transform', `translate(0, ${SINGLE_FEATURE_HEIGHT * (selection.datum().rows + 1)})`);
+
+    // create a rectangle that contain a text to be used as background
+    gRuleText.selectAll('rect.text-rule-background')
+      .data(d => [d])
+      .join('rect')
+      .classed('text-rule-background', true)
+      .attr('x', (-(7 * 3) - 4) - GUTTER)
+      .attr('y', -(SINGLE_FEATURE_HEIGHT / 2) + 2)
+      .attr('width', (7 * 3) + 4)
+      .attr('height', SINGLE_FEATURE_HEIGHT / 2)
+      .attr('fill', FTTemplate.RULE_COLOR);
+
+    gRuleText.selectAll('text.text-rule-label')
+      .data(d => [d])
+      .join('text')
+      .classed('text-rule-label', true)
+      .attr('x', -GUTTER - 2)
+      .attr('y', 0)
+      .attr('text-anchor', 'end')
+      .attr('font-size', FONT_SIZE)
+      .attr('fill', FTTemplate.TEXT_COLOR)
+      .text('RULE');
+
+
+    gRuleText.selectAll('text.text-rule')
+      .data(d => [d])
+      .join('text')
+      .classed('text-rule', true)
+      .attr('x', 0)
+      .attr('y', 0)
+      .attr('font-size', FONT_SIZE)
+      .attr('fill', FTTemplate.TEXT_COLOR)
+      .attr('font-weight', '300')
+      .text(d => d.ruleText.R0);
+
+    const gCounterRuleText = selection.selectAll('g.counter-rule-text-explanation')
+      .data(d => [d].filter(v => v.cRulesPredicateMap[selectedCounterRule]))
+      .join('g')
+      .classed('text-explanation', true)
+      .attr('transform', `translate(0, ${SINGLE_FEATURE_HEIGHT * (selection.datum().rows + 1.75)})`);
+
+    // create a rectangle that contain a text to be used as background
+    gCounterRuleText.selectAll('rect.text-counter-rule-background')
+      .data(d => [d])
+      .join('rect')
+      .classed('text-counter-rule-background', true)
+      .attr('x', (-(22 * 3) - 4) - GUTTER)
+      .attr('y', -(SINGLE_FEATURE_HEIGHT / 2) + 2)
+      .attr('width', (22 * 3) + 4)
+      .attr('height', SINGLE_FEATURE_HEIGHT / 2)
+      .attr('fill', FTTemplate.CRULES_COLOR);
+
+    gCounterRuleText.selectAll('text.text-counter-rule-label')
+      .data(d => [d])
+      .join('text')
+      .classed('text-counter-rule-label', true)
+      .attr('x', -GUTTER - 2)
+      .attr('y', 0)
+      .attr('text-anchor', 'end')
+      .attr('font-size', FONT_SIZE)
+      .attr('fill', FTTemplate.SECONDARY_BACKGROUND_COLOR)
+      .text('COUNTER RULE');
+
+    gCounterRuleText.selectAll('text.text-counter-rule')
+      .data(d => [d])
+      .join('text')
+      .classed('text-counter-rule', true)
+      .attr('x', 0)
+      .attr('y', 0)
+      .attr('font-size', FONT_SIZE)
+      .attr('fill', FTTemplate.TEXT_COLOR)
+      .attr('font-weight', '300')
+      .text(d => d.cruleText[selectedCounterRule]);
+
+    return me;
+  }
+
+  // eslint-disable-next-line
+  me.selectedCounterRule = function (_) {
+    if (!arguments.length) return selectedCounterRule;
+    selectedCounterRule = _;
+    return me;
+  };
+
+
+  return me;
+}
+
+
 function FIPERFeatureDistributionView() {
   let width = RULES_COLUMN_WIDTH;
   let height = 5022222;
@@ -304,21 +415,10 @@ function FIPERFeatureDistributionView() {
       const total = d3.sum(selection.datum().values, d => d.eda.count);
       barLength.domain([0, total]);
 
-      // selection.selectAll('rect.background')
-      //   .data(d => [d])
-      //   .join('rect')
-      //   .classed('background', true)
-      //   .attr('y', SINGLE_FEATURE_HEIGHT - height - 3)
-      //   .attr('width', width)
-      //   .attr('height', height)
-      //   .attr('fill', 'white')
-      //   .attr('fill-opacity', 0.4);
-
       const gSingleBar = selection.selectAll('g.single-bar')
         .data(d => [d])
         .join('g')
         .classed('single-bar', true);
-
 
       gSingleBar.selectAll('rect.single-bar')
         .data(d => prepareCategoricalValues(d.values))
@@ -400,6 +500,9 @@ function FIPERFeatureDistributionView() {
         gDetails.call(fndlcv);
       }
     }
+
+    const textualExplanation = FIPERTextualExplanationView();
+    gDetails.call(textualExplanation);
 
     return me;
   }
@@ -881,6 +984,16 @@ function FIPERView() {
       f.offsetRows = offsetRows;
       f.additionalRows = additionalRows;
       if (d.status === 1) { offsetRows = f.rows + additionalRows; }
+
+      // Adding strings to be used for textual labels
+      f.ruleText = Object.fromEntries(Object.entries(d.rulePredicateMap)
+        .filter(([, v]) => v)
+        .map(([k]) => [k, `Rule ${k}: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla hendrerit lacus in mi.`]),
+      );
+      f.cruleText = Object.fromEntries(Object.entries(d.cRulesPredicateMap)
+        .filter(([, v]) => v)
+        .map(([k]) => [k, `Counter Rule ${k}: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla hendrerit lacus in mi.`]),
+      );
 
       return f;
     });
