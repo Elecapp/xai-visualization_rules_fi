@@ -29,34 +29,39 @@ from plot_explanation import PlotExplanation
 
 path = os.getcwd()
 
-datasets=['titanic_c.csv','german_credit.csv']
+def load_data_from_csv(class_field, number_of_dataset):
+    datasets = ['titanic_c.csv','german_credit.csv','abalone.data']
+    source_file = f'../datasets/{datasets[number_of_dataset]}'
+    # Load and transform dataset
+    df = pd.read_csv(source_file, skipinitialspace=True, na_values='?', keep_default_na=True)
+    return df, class_field
 
-source_file = f'../datasets/{datasets[1]}'
-class_field = 'default'
-# Load and transform dataset
-df = pd.read_csv(source_file, skipinitialspace=True, na_values='?', keep_default_na=True)
+def train_model(df, class_field):
+    df, feature_names, class_values, numeric_columns, rdf, real_feature_names, features_map = prepare_dataframe(df, class_field)
 
-df, feature_names, class_values, numeric_columns, rdf, real_feature_names, features_map = prepare_dataframe(df, class_field)
-
-test_size = 0.3
-random_state = 42
-X_train_g, X_test_g, Y_train_g, Y_test_g= train_test_split(df[feature_names], df[class_field],
+    test_size = 0.3
+    random_state = 42
+    X_train, X_test, Y_train, Y_test= train_test_split(df[feature_names], df[class_field],
                                                         test_size=test_size,
                                                         random_state=random_state,
                                                         stratify=df[class_field])
 
-bb= RandomForestClassifier(n_estimators=30, random_state=42)
-bb.fit(X_train_g.values, Y_train_g.values)
-bbox = sklearn_classifier_wrapper(bb)
+    bb = RandomForestClassifier(n_estimators=30, random_state=42)
+    bb.fit(X_train.values, Y_train.values)
+    bbox = sklearn_classifier_wrapper(bb)
 
-s_explainer = ShapXAITabularExplainer(bbox, feature_names)
-config = {'explainer': 'tree', 'X_train': X_train_g.iloc[0:].values}
-s_explainer.fit(config)
+    s_explainer = ShapXAITabularExplainer(bbox, feature_names)
+    config = {'explainer': 'tree', 'X_train': X_train.iloc[0:].values}
+    s_explainer.fit(config)
 
 
-l_explainer = LoreTabularExplainer(bbox)
-config = {'neigh_type':'geneticp', 'size':100000, 'ocr':0.1, 'ngen':15}
-l_explainer.fit(df, class_field, config)
+    l_explainer = LoreTabularExplainer(bbox)
+    config = {'neigh_type':'geneticp', 'size':100000, 'ocr':0.1, 'ngen':15}
+    l_explainer.fit(df, class_field, config)
+
+
+
+    return X_test, Y_test, l_explainer, s_explainer,bb, feature_names, numeric_columns,real_feature_names
 
 class CustomJSONEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -73,9 +78,9 @@ class CustomJSONEncoder(json.JSONEncoder):
         return super(CustomJSONEncoder, self).default(obj)
 
 
-def select_and_explain_instance(inst_num, l_explnr, s_explnr, path):
-    inst = X_test_g.iloc[inst_num].values
-    true_class = Y_test_g.iloc[inst_num]
+def select_and_explain_instance(inst_num, l_explnr, s_explnr, path, X_test, Y_test, bb, feature_names,real_feature_names, X_train,numeric_columns):
+    inst = X_test.iloc[inst_num].values
+    true_class = Y_test.iloc[inst_num]
 
     # check
     # print('Instance ',inst)
@@ -101,7 +106,7 @@ def select_and_explain_instance(inst_num, l_explnr, s_explnr, path):
         feature_names=feature_names,
         real_feature_names=real_feature_names,
         instance_number=inst_num,
-        x_train=X_train_g,
+        x_train=X_train,
         expDict=l_expDict,
         feature_importance_type='shap',
         feature_importance=shap_feature_importance,
@@ -192,13 +197,19 @@ if __name__ == '__main__':
     # inst, num_crules = select_and_explain_instance(inst_num, l_explainer, s_explainer,'../d3_sandbox/static')
     # print(f'Instance {inst_num} explained with {num_crules} counter rules')
     # print(f'Files saved in {path}')
-    integer_list = list(range(X_test_g.shape[0]))
-    sample_length = 10
+
+    class_field = ""
+    folder=""
+    number_of_dataset = 1  # Select the dataset index (0 for Titanic, 1 for German Credit, etc.)
+    sample_length = 10  # Number of instances to explain
+    df, class_field = load_data_from_csv(class_field, number_of_dataset)
+    X_test, Y_test, l_explainer, s_explainer, bb, feature_names, numeric_columns, real_feature_names = train_model(df, class_field)
+    integer_list = list(range(X_test.shape[0]))
     insts_to_compute = random.sample(integer_list, len(integer_list))
     for inst_num in insts_to_compute:
         print(f'Processing Instance {inst_num}')
-        _, ncr = select_and_explain_instance(inst_num, l_explainer, s_explainer, '../d3_sandbox/static/german_explanations')
+        _, ncr = select_and_explain_instance(inst_num, l_explainer, s_explainer, f'../d3_sandbox/static/{folder}')
         num_try = 0
         while (ncr <= 1 and num_try < 5):
-            _, ncr = select_and_explain_instance(inst_num, l_explainer, s_explainer, '../d3_sandbox/static/german_explanations')
+            _, ncr = select_and_explain_instance(inst_num, l_explainer, s_explainer, f'../d3_sandbox/static/{folder}')
             num_try += 1

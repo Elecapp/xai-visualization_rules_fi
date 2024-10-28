@@ -60,7 +60,7 @@ config = {'explainer': 'tree', 'X_train': X_train.iloc[0:].values}
 s_explainer.fit(config)
 
 l_explainer = LoreTabularExplainer(bbox)
-config = {'neigh_type':'geneticp', 'size':100000, 'ocr':0.1, 'ngen':15}
+config = {'neigh_type': 'geneticp', 'size': 100000, 'ocr': 0.1, 'ngen': 15}
 l_explainer.fit(df, class_field, config)
 
 
