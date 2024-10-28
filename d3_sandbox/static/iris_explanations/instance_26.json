@@ -1,0 +1,213 @@
+{
+    "features": [
+        {
+            "name": "sepal.length",
+            "rname": "sepal.length",
+            "type": "numeric",
+            "feature_importance": -0.007023267659199955,
+            "eda": {
+                "min": 4.4,
+                "max": 7.3,
+                "q1": 5.0,
+                "median": 5.8,
+                "q3": 6.4,
+                "mean": 5.773333333333333,
+                "std": 0.7448001562347263
+            },
+            "rule": [
+                [
+                    {
+                        "att": "sepal.length",
+                        "op": "<=",
+                        "thr": 7.240466833114624,
+                        "is_continuous": true
+                    },
+                    1
+                ]
+            ],
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "sepal.length",
+                            "op": ">",
+                            "thr": 6.14304518699646,
+                            "is_continuous": true
+                        },
+                        2
+                    ]
+                ],
+                "C2": [
+                    [
+                        {
+                            "att": "sepal.length",
+                            "op": "<=",
+                            "thr": 5.593182325363159,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ]
+            },
+            "instance_value": 5.4
+        },
+        {
+            "name": "sepal.width",
+            "rname": "sepal.width",
+            "type": "numeric",
+            "feature_importance": 0.01551885778785479,
+            "eda": {
+                "min": 2.3,
+                "max": 4.0,
+                "q1": 2.9,
+                "median": 3.0,
+                "q3": 3.3,
+                "mean": 3.0622222222222226,
+                "std": 0.38629292282181693
+            },
+            "rule": [],
+            "crules": {},
+            "instance_value": 3.0
+        },
+        {
+            "name": "petal.length",
+            "rname": "petal.length",
+            "type": "numeric",
+            "feature_importance": 0.290892055112571,
+            "eda": {
+                "min": 1.0,
+                "max": 6.3,
+                "q1": 1.6,
+                "median": 4.5,
+                "q3": 5.1,
+                "mean": 3.695555555555555,
+                "std": 1.7389855396381841
+            },
+            "rule": [
+                [
+                    {
+                        "att": "petal.length",
+                        "op": ">",
+                        "thr": 2.3582414388656616,
+                        "is_continuous": true
+                    },
+                    1
+                ]
+            ],
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "petal.length",
+                            "op": "<=",
+                            "thr": 4.852366209030151,
+                            "is_continuous": true
+                        },
+                        2
+                    ]
+                ],
+                "C1": [
+                    [
+                        {
+                            "att": "petal.length",
+                            "op": ">",
+                            "thr": 4.852366209030151,
+                            "is_continuous": true
+                        },
+                        2
+                    ]
+                ],
+                "C2": [
+                    [
+                        {
+                            "att": "petal.length",
+                            "op": "<=",
+                            "thr": 2.4473495483398438,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ]
+            },
+            "instance_value": 4.5
+        },
+        {
+            "name": "petal.width",
+            "rname": "petal.width",
+            "type": "numeric",
+            "feature_importance": 0.3310885452349648,
+            "eda": {
+                "min": 0.2,
+                "max": 2.4,
+                "q1": 0.3,
+                "median": 1.4,
+                "q3": 1.8,
+                "mean": 1.1844444444444444,
+                "std": 0.7335949946405143
+            },
+            "rule": [
+                [
+                    {
+                        "att": "petal.width",
+                        "op": "<=",
+                        "thr": 1.5698375701904297,
+                        "is_continuous": true
+                    },
+                    1
+                ],
+                [
+                    {
+                        "att": "petal.width",
+                        "op": ">",
+                        "thr": 0.7009972929954529,
+                        "is_continuous": true
+                    },
+                    1
+                ]
+            ],
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "petal.width",
+                            "op": ">",
+                            "thr": 1.7559053897857666,
+                            "is_continuous": true
+                        },
+                        2
+                    ]
+                ],
+                "C1": [
+                    [
+                        {
+                            "att": "petal.width",
+                            "op": ">",
+                            "thr": 1.7559053897857666,
+                            "is_continuous": true
+                        },
+                        2
+                    ]
+                ],
+                "C2": [
+                    [
+                        {
+                            "att": "petal.width",
+                            "op": ">",
+                            "thr": 1.7559053897857666,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ]
+            },
+            "instance_value": 1.5
+        }
+    ],
+    "predicted_class": 1,
+    "true_class": 1,
+    "predicted_proba": [
+        0.03333333333333333,
+        0.9666666666666667,
+        0.0
+    ]
+}

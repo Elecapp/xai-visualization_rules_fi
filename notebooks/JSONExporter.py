@@ -30,7 +30,7 @@ from plot_explanation import PlotExplanation
 path = os.getcwd()
 
 def load_data_from_csv(class_field, number_of_dataset):
-    datasets = ['titanic_c.csv','german_credit.csv','abalone.csv']
+    datasets = ['titanic_c.csv','german_credit.csv','abalone.csv','iris.csv']
     source_file = f'../datasets/{datasets[number_of_dataset]}'
     # Load and transform dataset
     df = pd.read_csv(source_file, skipinitialspace=True, na_values='?', keep_default_na=True)
@@ -204,9 +204,9 @@ if __name__ == '__main__':
 
 
 
-    number_of_dataset = 2  # Select the dataset index (0 for Titanic, 1 for German Credit, etc.)
-    class_field = "Rings"  # Select the proper class field for the dataset
-    folder = "abalone_explanations" #Select the folder to save the result
+    number_of_dataset = 3  # Select the dataset index (0 for Titanic, 1 for German Credit, etc.)
+    class_field = "variety"  # Select the proper class field for the dataset
+    folder = "iris_explanations" #Select the folder to save the result
     sample_length = 3  # Number of instances to explain
     df, class_field = load_data_from_csv(class_field, number_of_dataset)
     X_test, Y_test, l_explainer, s_explainer, bb, feature_names, numeric_columns, real_feature_names = train_model(df, class_field)

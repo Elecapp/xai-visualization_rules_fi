@@ -1379,7 +1379,7 @@ function reduceUnionIntersection(predicatesWithIntervals) {
   return result;
 }
 
-d3.json('/static/abalone_explanations/instance_82.json').then((data) => {
+d3.json('/static/iris_explanations/instance_2.json').then((data) => {
   // preprocess each entry to copmute the expected value for the categorical counterrules
   const tfeature = data.features
     // .filter(f => f.type === 'categorical')

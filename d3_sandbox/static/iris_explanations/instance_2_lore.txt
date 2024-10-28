@@ -1,0 +1,4 @@
+r = { petal.width <= 1.59, petal.width > 0.69, petal.length > 2.37 } --> { variety: 1 }
+c = { { petal.width <= 0.69 },
+      { petal.width > 1.70 },
+      { petal.width > 1.59 } }
