@@ -1,0 +1,6 @@
+r = { Shell weight <= 0.18, Shell weight > 0.13, Viscera weight <= 0.11, Viscera weight > 0.06, Whole weight <= 0.49, Diameter <= 0.48, Height <= 0.13, Height > 0.08, Sex=M > 0.24, Sex=I <= 0.93, Sex=I > -0.62, Sex=F <= 0.74, Sex=F > -0.18, Shucked weight > 0.06, Length <= 0.64, Length > 0.46 } --> { Rings: 2 }
+c = { { Shell weight > 0.19 },
+      { Height > 0.20 },
+      { Viscera weight > 0.20 },
+      { Height > 0.13 },
+      { Sex=F > 0.74 } }

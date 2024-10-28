@@ -30,10 +30,14 @@ from plot_explanation import PlotExplanation
 path = os.getcwd()
 
 def load_data_from_csv(class_field, number_of_dataset):
-    datasets = ['titanic_c.csv','german_credit.csv','abalone.data']
+    datasets = ['titanic_c.csv','german_credit.csv','abalone.csv']
     source_file = f'../datasets/{datasets[number_of_dataset]}'
     # Load and transform dataset
     df = pd.read_csv(source_file, skipinitialspace=True, na_values='?', keep_default_na=True)
+    if class_field == "Rings":
+        df['Rings'] = pd.cut(df['Rings'],
+                             bins=[-np.inf, 8, 10, np.inf],
+                             labels=['young', 'medium', 'old'])
     return df, class_field
 
 def train_model(df, class_field):
@@ -198,18 +202,20 @@ if __name__ == '__main__':
     # print(f'Instance {inst_num} explained with {num_crules} counter rules')
     # print(f'Files saved in {path}')
 
-    class_field = ""
-    folder=""
-    number_of_dataset = 1  # Select the dataset index (0 for Titanic, 1 for German Credit, etc.)
-    sample_length = 10  # Number of instances to explain
+
+
+    number_of_dataset = 2  # Select the dataset index (0 for Titanic, 1 for German Credit, etc.)
+    class_field = "Rings"  # Select the proper class field for the dataset
+    folder = "abalone_explanations" #Select the folder to save the result
+    sample_length = 3  # Number of instances to explain
     df, class_field = load_data_from_csv(class_field, number_of_dataset)
     X_test, Y_test, l_explainer, s_explainer, bb, feature_names, numeric_columns, real_feature_names = train_model(df, class_field)
     integer_list = list(range(X_test.shape[0]))
-    insts_to_compute = random.sample(integer_list, len(integer_list))
+    insts_to_compute = random.sample(integer_list, sample_length)
     for inst_num in insts_to_compute:
-        print(f'Processing Instance {inst_num}')
-        _, ncr = select_and_explain_instance(inst_num, l_explainer, s_explainer, f'../d3_sandbox/static/{folder}')
+        print(f'Processing Instance {inst_num}',f'instance number {insts_to_compute.index(inst_num) + 1} out of {insts_to_compute}' )
+        _, ncr = select_and_explain_instance(inst_num, l_explainer, s_explainer, f'../d3_sandbox/static/{folder}', X_test, Y_test, bb, feature_names, real_feature_names, X_test, numeric_columns)
         num_try = 0
         while (ncr <= 1 and num_try < 5):
-            _, ncr = select_and_explain_instance(inst_num, l_explainer, s_explainer, f'../d3_sandbox/static/{folder}')
+            _, ncr = select_and_explain_instance(inst_num, l_explainer, s_explainer, f'../d3_sandbox/static/{folder}', X_test, Y_test, bb, feature_names, real_feature_names, X_test, numeric_columns)
             num_try += 1

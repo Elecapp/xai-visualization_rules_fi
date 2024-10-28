@@ -1,0 +1,472 @@
+{
+    "features": [
+        {
+            "name": "Length",
+            "rname": "Length",
+            "type": "numeric",
+            "feature_importance": 0.0015770688429471169,
+            "eda": {
+                "min": 0.11,
+                "max": 0.78,
+                "q1": 0.455,
+                "median": 0.535,
+                "q3": 0.615,
+                "mean": 0.5237240829346093,
+                "std": 0.11742161649248829
+            },
+            "rule": [],
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "Length",
+                            "op": ">",
+                            "thr": 0.4845007658004761,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ],
+                "C1": [
+                    [
+                        {
+                            "att": "Length",
+                            "op": ">",
+                            "thr": 0.4983500689268112,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ],
+                "C2": [
+                    [
+                        {
+                            "att": "Length",
+                            "op": "<=",
+                            "thr": 0.3041072338819504,
+                            "is_continuous": true
+                        },
+                        2
+                    ]
+                ]
+            },
+            "instance_value": 0.63
+        },
+        {
+            "name": "Diameter",
+            "rname": "Diameter",
+            "type": "numeric",
+            "feature_importance": 0.04504769858834141,
+            "eda": {
+                "min": 0.09,
+                "max": 0.625,
+                "q1": 0.35,
+                "median": 0.415,
+                "q3": 0.48,
+                "mean": 0.40708931419457733,
+                "std": 0.0965207841306839
+            },
+            "rule": [],
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "Diameter",
+                            "op": "<=",
+                            "thr": 0.40635161101818085,
+                            "is_continuous": true
+                        },
+                        0
+                    ],
+                    [
+                        {
+                            "att": "Diameter",
+                            "op": ">",
+                            "thr": 0.3063032478094101,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ],
+                "C1": [
+                    [
+                        {
+                            "att": "Diameter",
+                            "op": ">",
+                            "thr": 0.3360968381166458,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ],
+                "C2": [
+                    [
+                        {
+                            "att": "Diameter",
+                            "op": ">",
+                            "thr": 0.40635161101818085,
+                            "is_continuous": true
+                        },
+                        2
+                    ]
+                ]
+            },
+            "instance_value": 0.495
+        },
+        {
+            "name": "Height",
+            "rname": "Height",
+            "type": "numeric",
+            "feature_importance": 0.08356060821677455,
+            "eda": {
+                "min": 0.0,
+                "max": 1.13,
+                "q1": 0.115,
+                "median": 0.14,
+                "q3": 0.165,
+                "mean": 0.139170653907496,
+                "std": 0.04666180885347127
+            },
+            "rule": [
+                [
+                    {
+                        "att": "Height",
+                        "op": ">",
+                        "thr": 0.042846981436014175,
+                        "is_continuous": true
+                    },
+                    1
+                ]
+            ],
+            "crules": {
+                "C1": [
+                    [
+                        {
+                            "att": "Height",
+                            "op": ">",
+                            "thr": 0.10967008024454117,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ]
+            },
+            "instance_value": 0.18
+        },
+        {
+            "name": "Whole weight",
+            "rname": "Whole weight",
+            "type": "numeric",
+            "feature_importance": 0.031159760859242634,
+            "eda": {
+                "min": 0.008,
+                "max": 2.548,
+                "q1": 0.455625,
+                "median": 0.769,
+                "q3": 1.139,
+                "mean": 0.8225482456140351,
+                "std": 0.4845584683839856
+            },
+            "rule": [],
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "Whole weight",
+                            "op": ">",
+                            "thr": 0.6432441174983978,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ],
+                "C2": [
+                    [
+                        {
+                            "att": "Whole weight",
+                            "op": ">",
+                            "thr": 0.5638422966003418,
+                            "is_continuous": true
+                        },
+                        2
+                    ]
+                ]
+            },
+            "instance_value": 1.31
+        },
+        {
+            "name": "Shucked weight",
+            "rname": "Shucked weight",
+            "type": "numeric",
+            "feature_importance": -0.022748993391785575,
+            "eda": {
+                "min": 0.0025,
+                "max": 1.351,
+                "q1": 0.192,
+                "median": 0.3215,
+                "q3": 0.500875,
+                "mean": 0.3567826953748006,
+                "std": 0.2202693610291999
+            },
+            "rule": [],
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "Shucked weight",
+                            "op": ">",
+                            "thr": 0.3338042199611664,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ],
+                "C1": [
+                    [
+                        {
+                            "att": "Shucked weight",
+                            "op": ">",
+                            "thr": 0.3452961891889572,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ]
+            },
+            "instance_value": 0.495
+        },
+        {
+            "name": "Viscera weight",
+            "rname": "Viscera weight",
+            "type": "numeric",
+            "feature_importance": 0.03910493993178681,
+            "eda": {
+                "min": 0.002,
+                "max": 0.5745,
+                "q1": 0.096125,
+                "median": 0.163,
+                "q3": 0.247875,
+                "mean": 0.17949880382775119,
+                "std": 0.10898872280418842
+            },
+            "rule": [],
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "Viscera weight",
+                            "op": ">",
+                            "thr": 0.13251088559627533,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ],
+                "C1": [
+                    [
+                        {
+                            "att": "Viscera weight",
+                            "op": "<=",
+                            "thr": 0.13251088559627533,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ],
+                "C2": [
+                    [
+                        {
+                            "att": "Viscera weight",
+                            "op": ">",
+                            "thr": 0.13251088559627533,
+                            "is_continuous": true
+                        },
+                        2
+                    ]
+                ]
+            },
+            "instance_value": 0.295
+        },
+        {
+            "name": "Shell weight",
+            "rname": "Shell weight",
+            "type": "numeric",
+            "feature_importance": 0.25597558702081,
+            "eda": {
+                "min": 0.003,
+                "max": 0.725,
+                "q1": 0.13375,
+                "median": 0.225,
+                "q3": 0.325,
+                "mean": 0.23693341307814988,
+                "std": 0.13492232162654993
+            },
+            "rule": [
+                [
+                    {
+                        "att": "Shell weight",
+                        "op": "<=",
+                        "thr": 0.6125222742557526,
+                        "is_continuous": true
+                    },
+                    1
+                ],
+                [
+                    {
+                        "att": "Shell weight",
+                        "op": ">",
+                        "thr": 0.448232963681221,
+                        "is_continuous": true
+                    },
+                    1
+                ]
+            ],
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "Shell weight",
+                            "op": "<=",
+                            "thr": 0.06630716659128666,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ],
+                "C1": [
+                    [
+                        {
+                            "att": "Shell weight",
+                            "op": "<=",
+                            "thr": 0.25276531279087067,
+                            "is_continuous": true
+                        },
+                        0
+                    ],
+                    [
+                        {
+                            "att": "Shell weight",
+                            "op": ">",
+                            "thr": 0.16133499890565872,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ],
+                "C2": [
+                    [
+                        {
+                            "att": "Shell weight",
+                            "op": "<=",
+                            "thr": 0.17696138471364975,
+                            "is_continuous": true
+                        },
+                        2
+                    ]
+                ]
+            },
+            "instance_value": 0.4695
+        },
+        {
+            "name": "Sex=F",
+            "rname": "Sex",
+            "type": "categorical",
+            "feature_importance": -0.0022136346243274035,
+            "eda": {
+                "category": "F",
+                "count": 386
+            },
+            "rule": [],
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "Sex=F",
+                            "op": "<=",
+                            "thr": 0.31453000009059906,
+                            "is_continuous": true
+                        },
+                        0
+                    ]
+                ],
+                "C2": [
+                    [
+                        {
+                            "att": "Sex=F",
+                            "op": ">",
+                            "thr": -0.3060481548309326,
+                            "is_continuous": true
+                        },
+                        2
+                    ]
+                ]
+            },
+            "instance_value": false
+        },
+        {
+            "name": "Sex=I",
+            "rname": "Sex",
+            "type": "categorical",
+            "feature_importance": 0.006821778421421788,
+            "eda": {
+                "category": "I",
+                "count": 413
+            },
+            "rule": [
+                [
+                    {
+                        "att": "Sex=I",
+                        "op": "<=",
+                        "thr": 0.4751584082841873,
+                        "is_continuous": true
+                    },
+                    1
+                ]
+            ],
+            "crules": {
+                "C2": [
+                    [
+                        {
+                            "att": "Sex=I",
+                            "op": "<=",
+                            "thr": 0.9036797881126404,
+                            "is_continuous": true
+                        },
+                        2
+                    ]
+                ]
+            },
+            "instance_value": false
+        },
+        {
+            "name": "Sex=M",
+            "rname": "Sex",
+            "type": "categorical",
+            "feature_importance": 0.011196312831104767,
+            "eda": {
+                "category": "M",
+                "count": 455
+            },
+            "rule": [
+                [
+                    {
+                        "att": "Sex=M",
+                        "op": ">",
+                        "thr": -0.3189373165369034,
+                        "is_continuous": true
+                    },
+                    1
+                ]
+            ],
+            "crules": {},
+            "instance_value": true
+        }
+    ],
+    "predicted_class": 1,
+    "true_class": 0,
+    "predicted_proba": [
+        0.2,
+        0.8,
+        0.0
+    ]
+}
