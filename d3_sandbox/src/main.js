@@ -962,6 +962,44 @@ function text2tspan(text, width) {
   return lines.map((line, i) => `<tspan x="0" dy="${i ? '1.2em' : 0}">${line}</tspan>`).join('');
 }
 
+function predicate2text(adjmatrix, values, ruleSelector) {
+  // if adjmatrix is empty, then we are dealing with a numerical feature
+  console.log('adjmatrix', adjmatrix);
+  console.log('values', values);
+  console.log('ruleSelector', ruleSelector);
+  if (!adjmatrix) {
+    const fPredicate = values[0].predicates[ruleSelector];
+    if (fPredicate.length >= 1) {
+      return `To obtain class ${fPredicate[0].consequent_class} this feature should be in the interval [${fPredicate[0].interval[0]}, ${fPredicate[0].interval[1]}]`;
+    }
+  } else {
+    // we are dealing with a categorical feature
+    // count how many elements in the adjmatrix have the key exp_value set to one
+    const vPredicates = values.map(v => ({
+      preds: v.predicates[ruleSelector],
+      rname: v.rname,
+      cvalue: v.eda.category,
+    }));
+    console.log('vPredicates', vPredicates);
+    const vpPredicates = vPredicates.filter(v => v.preds && v.preds.exp_value === 1);
+    const vnPredicates = vPredicates.filter(v => v.preds && v.preds.exp_value === 0);
+
+    if (vpPredicates.length === 1) {
+      // there is a single predicate
+      return `To obtain class ${vpPredicates[0].preds.consequent_class}, the feature should have value ${vpPredicates[0].cvalue}`;
+    }
+    const negativePredicates = vnPredicates.length;
+    if (negativePredicates === 0) {
+      return `Mha!!!`;
+    }
+    if (negativePredicates === 1) {
+      return `To obtain class ${vnPredicates[0].preds.consequent_class} this feature should not have the value ${vnPredicates[0].cvalue}`;
+    }
+    return `To obtain class ${vnPredicates[0].preds.consequent_class} this feature should have the values ${vpPredicates.map(v => v.cvalue).join(', ')}`;
+  }
+  return '';
+}
+
 
 function FIPERView() {
   // global width of the whole visualization
@@ -1022,14 +1060,18 @@ function FIPERView() {
       f.additionalRows = additionalRows;
       if (d.status === 1) { offsetRows = f.rows + additionalRows; }
 
+      console.log('d', d);
+      const rule2text = predicate2text(d.rmatrix, d.values, 'R0');
       // Adding strings to be used for textual labels
       f.ruleText = Object.fromEntries(Object.entries(d.rulePredicateMap)
         .filter(([, v]) => v)
-        .map(([k]) => [k, text2tspan(`Rule ${k}: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla hendrerit lacus in mi.`, 55)]),
+        .map(([k]) => [k, text2tspan(rule2text, 55)]),
       );
       f.cruleText = Object.fromEntries(Object.entries(d.cRulesPredicateMap)
         .filter(([, v]) => v)
-        .map(([k]) => [k, text2tspan(`Counter Rule ${k}: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla hendrerit lacus in mi.`, 55)]),
+        .map(([k], i) => [k, text2tspan(
+          predicate2text(d.crmatrix && d.crmatrix[i], d.values, k)
+          , 55)]),
       );
 
       return f;
