@@ -943,6 +943,15 @@ function FIPERCRuleGrid() {
   return me;
 }
 
+function allOccurences(text, search) {
+  const indexes = [];
+  let i = -1;
+  while ((i = text.indexOf(search, i + 1)) !== -1) {
+    indexes.push(i);
+  }
+  return indexes;
+}
+
 function text2tspan(text, width) {
   const words = text.split(' ');
   const lines = [];
@@ -958,8 +967,45 @@ function text2tspan(text, width) {
     }
   });
   lines.push(currentLine);
+
+  // check that each line in lines contains the string '_*' and '*_'
+  const formatLines = lines.map((l) => {
+    // find all indexes of the occurences of string '_*'
+    let startIndexes = allOccurences(l, '_*');
+    let endIndexes = allOccurences(l, '*_');
+
+    if (startIndexes.length > endIndexes.length) {
+      endIndexes = allOccurences(`${l}*_`, '*_');
+      startIndexes = allOccurences(l, '_*');
+    }
+
+    if (startIndexes.length < endIndexes.length) {
+      startIndexes = allOccurences(`_*${l}`, '_*');
+      endIndexes = allOccurences(l, '*_');
+    }
+
+    console.log('startIndexes', startIndexes);
+    console.log('endIndexes', endIndexes);
+
+    // simple case when length of start and end indexes is the same and it is even
+    if (startIndexes.length === endIndexes.length) {
+      const l2 = l.split('');
+      startIndexes.forEach((s, i) => {
+        l2[s + 1] = '';
+        l2[s] = '<tspan font-weight="500">';
+        l2[endIndexes[i]] = '</tspan>';
+        l2[endIndexes[i] + 1] = '';
+      });
+      return l2.join('');
+    }
+
+
+    return l;
+  });
+
+
   // join lines with tspan elements
-  return lines.map((line, i) => `<tspan x="0" dy="${i ? '1.2em' : 0}">${line}</tspan>`).join('');
+  return formatLines.map((line, i) => `<tspan x="0" dy="${i ? '1.2em' : 0}">${line}</tspan>`).join('');
 }
 
 function predicate2text(adjmatrix, values, ruleSelector) {
@@ -967,7 +1013,7 @@ function predicate2text(adjmatrix, values, ruleSelector) {
   if (!adjmatrix) {
     const fPredicate = values[0].predicates[ruleSelector];
     if (fPredicate.length >= 1) {
-      return `To obtain class ${fPredicate[0].consequent_class} this feature should be in the interval [${fPredicate[0].interval[0]}, ${fPredicate[0].interval[1]}]`;
+      return `To obtain class _*${fPredicate[0].consequent_class}*_ this feature _*should be*_ in the interval _*[${fPredicate[0].interval[0]}, ${fPredicate[0].interval[1]}]*_`;
     }
   } else {
     // we are dealing with a categorical feature
@@ -982,16 +1028,16 @@ function predicate2text(adjmatrix, values, ruleSelector) {
 
     if (vpPredicates.length === 1) {
       // there is a single predicate
-      return `To obtain class ${vpPredicates[0].preds.consequent_class}, the feature should have value ${vpPredicates[0].cvalue}`;
+      return `To obtain class _*${vpPredicates[0].preds.consequent_class}*_, the feature _*should have*_ value _*${vpPredicates[0].cvalue}*_`;
     }
     const negativePredicates = vnPredicates.length;
     if (negativePredicates === 0) {
       return 'Mha!!!';
     }
     if (negativePredicates === 1) {
-      return `To obtain class ${vnPredicates[0].preds.consequent_class} this feature should not have the value ${vnPredicates[0].cvalue}`;
+      return `To obtain class _*${vnPredicates[0].preds.consequent_class}*_ this feature _*should NOT have*_ the value _*${vnPredicates[0].cvalue}*_`;
     }
-    return `To obtain class ${vnPredicates[0].preds.consequent_class} this feature should have the values ${vpPredicates.map(v => v.cvalue).join(', ')}`;
+    return `To obtain class _*${vnPredicates[0].preds.consequent_class}*_ this feature _*should have*_ the values _*${vpPredicates.map(v => v.cvalue).join(', ')}*_`;
   }
   return '';
 }
@@ -1060,13 +1106,13 @@ function FIPERView() {
       // Adding strings to be used for textual labels
       f.ruleText = Object.fromEntries(Object.entries(d.rulePredicateMap)
         .filter(([, v]) => v)
-        .map(([k]) => [k, text2tspan(rule2text, 55)]),
+        .map(([k]) => [k, text2tspan(rule2text, 60)]),
       );
       f.cruleText = Object.fromEntries(Object.entries(d.cRulesPredicateMap)
         .filter(([, v]) => v)
         .map(([k], i) => [k, text2tspan(
           predicate2text(d.crmatrix && d.crmatrix[i], d.values, k)
-          , 55)]),
+          , 65)]),
       );
 
       return f;
