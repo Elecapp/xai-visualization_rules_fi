@@ -900,6 +900,7 @@ function FIPERCRuleGrid() {
       .attr('stroke', d => ((d === selectedCounterRule) ? FTTemplate.CRULES_STROKE_COLOR : FTTemplate.BASE_STROKE_COLOR))
       .on('click', (d) => {
         dispatcher.call('changeCounterRule', this, d3.select(d.target).datum());
+        d.stopPropagation();
       });
   }
 
