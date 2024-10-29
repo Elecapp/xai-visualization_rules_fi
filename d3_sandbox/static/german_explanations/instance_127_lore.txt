@@ -1,0 +1,2 @@
+r = { savings=... < 100 DM <= 0.25, age <= 54.50, age > 22.50, housing=rent <= 0.17, credit_amount <= 10322.50, credit_amount > -1608.50, purpose=car (new) <= 0.50, duration_in_month <= 50.00, housing=own > 0.50 } --> { default: 0 }
+c =  }

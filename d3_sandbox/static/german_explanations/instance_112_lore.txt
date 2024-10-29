@@ -1,0 +1,3 @@
+r = { other_debtors=guarantor <= 0.01, savings=.. >= 1000 DM  <= 0.00, credit_amount > -2869.00, savings=... < 100 DM > 0.50, duration_in_month <= 47.00, foreign_worker=yes > 0.50, age <= 43.50, other_installment_plans=none > 0.50, purpose=radio/television <= 0.50 } --> { default: 0 }
+c = { { other_installment_plans=none <= 0.50, credit_history=existing credits paid back duly till now <= 0.50, property=unknown / no property > 0.50 },
+      { savings=... < 100 DM <= 0.50, account_check_status=< 0 DM > 0.50, property=unknown / no property > 0.50 } }
