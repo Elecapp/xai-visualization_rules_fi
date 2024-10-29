@@ -402,9 +402,7 @@ function FIPERFeatureDistributionView() {
 
   function me(selection) {
     const gDetails = selection.selectAll('g.details')
-      .data(d => [d].filter((v) => {
-        return v.status === 1;
-      }))
+      .data(d => [d].filter(v => v.status === 1))
       .join('g')
       .classed('details', true)
       .attr('transform', `translate(0, ${1.5 * height})`);
@@ -1110,9 +1108,6 @@ function FIPERView() {
       .join('g')
       .classed('feature', true);
 
-    gFeatures
-      .transition(t)
-      .attr('transform', (d, i) => `translate(0, ${yScale(i) + (d.offsetRows * SINGLE_FEATURE_HEIGHT)})`);
     // a rectangle to set the widht and height of the feature row.
     gFeatures.selectAll('rect.background')
       .data(d => [d])
@@ -1131,6 +1126,7 @@ function FIPERView() {
     // We call separate components to handle each group. Each groups is located accordingly
     // to the size of the corresponsing COLUMN.
 
+    let featureOffset = 0;
     gFeatures.each((_, j, n) => {
       const gLabels = d3.select(n[j]).selectAll('g.feature-labels')
         .data(d => [d])
@@ -1182,7 +1178,15 @@ function FIPERView() {
         .classed('feature-importance', true)
         .attr('transform', `translate(${LABELS_COLUMN_WIDTH + RULES_COLUMN_WIDTH + crWidth + (4 * GUTTER)}, 0)`);
       gFeatureImportance.call(ffv);
+      const gfBbox = n[j].getBBox();
+      d3.select(n[j]).datum().bbox = gfBbox;
+      d3.select(n[j]).datum().offset = featureOffset;
+      featureOffset += gfBbox.height;
+      d3.select(n[j])
+        .transition(t)
+        .attr('transform', d => `translate(0, ${d.offset})`);
     });
+
     // eslint-disable-next-line func-names
     gFeatures.on('click', function () {
       const clickedFeature = d3.select(this).datum();
