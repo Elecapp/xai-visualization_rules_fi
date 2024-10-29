@@ -402,7 +402,9 @@ function FIPERFeatureDistributionView() {
 
   function me(selection) {
     const gDetails = selection.selectAll('g.details')
-      .data(d => [d])
+      .data(d => [d].filter((v) => {
+        return v.status === 1;
+      }))
       .join('g')
       .classed('details', true)
       .attr('transform', `translate(0, ${1.5 * height})`);
@@ -502,8 +504,10 @@ function FIPERFeatureDistributionView() {
       }
     }
 
+    if (selection.datum().status === 1) {
+      gDetails.call(textualExplanation);
+    }
 
-    gDetails.call(textualExplanation);
 
     return me;
   }
