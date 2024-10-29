@@ -964,9 +964,6 @@ function text2tspan(text, width) {
 
 function predicate2text(adjmatrix, values, ruleSelector) {
   // if adjmatrix is empty, then we are dealing with a numerical feature
-  console.log('adjmatrix', adjmatrix);
-  console.log('values', values);
-  console.log('ruleSelector', ruleSelector);
   if (!adjmatrix) {
     const fPredicate = values[0].predicates[ruleSelector];
     if (fPredicate.length >= 1) {
@@ -980,7 +977,6 @@ function predicate2text(adjmatrix, values, ruleSelector) {
       rname: v.rname,
       cvalue: v.eda.category,
     }));
-    console.log('vPredicates', vPredicates);
     const vpPredicates = vPredicates.filter(v => v.preds && v.preds.exp_value === 1);
     const vnPredicates = vPredicates.filter(v => v.preds && v.preds.exp_value === 0);
 
@@ -990,7 +986,7 @@ function predicate2text(adjmatrix, values, ruleSelector) {
     }
     const negativePredicates = vnPredicates.length;
     if (negativePredicates === 0) {
-      return `Mha!!!`;
+      return 'Mha!!!';
     }
     if (negativePredicates === 1) {
       return `To obtain class ${vnPredicates[0].preds.consequent_class} this feature should not have the value ${vnPredicates[0].cvalue}`;
@@ -1060,7 +1056,6 @@ function FIPERView() {
       f.additionalRows = additionalRows;
       if (d.status === 1) { offsetRows = f.rows + additionalRows; }
 
-      console.log('d', d);
       const rule2text = predicate2text(d.rmatrix, d.values, 'R0');
       // Adding strings to be used for textual labels
       f.ruleText = Object.fromEntries(Object.entries(d.rulePredicateMap)
@@ -1434,7 +1429,7 @@ function reduceUnionIntersection(predicatesWithIntervals) {
   return result;
 }
 
-d3.json('/static/german_explanations/instance_2.json').then((data) => {
+d3.json('/static/german_explanations/instance_135.json').then((data) => {
   // preprocess each entry to copmute the expected value for the categorical counterrules
   const tfeature = data.features
     // .filter(f => f.type === 'categorical')
