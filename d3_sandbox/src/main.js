@@ -282,19 +282,22 @@ function FIPERTextualExplanationView() {
     if (selection.datum().ruleText.R0) {
       cRow += 1;
     }
+    const areThereAnyRules = Object.keys(selection.datum().ruleText).length +
+      Object.keys(selection.datum().cruleText).length;
 
-    selection.selectAll('line.separator')
-      .data(d => [d])
-      .join('line')
-      .classed('separator', true)
-      .attr('x1', 0)
-      .attr('x2', RULES_COLUMN_WIDTH)
-      .attr('y1', d => (SINGLE_FEATURE_HEIGHT * (d.rows)) + 10)
-      .attr('y2', d => (SINGLE_FEATURE_HEIGHT * (d.rows)) + 10)
-      .attr('stroke', FTTemplate.TEXT_COLOR)
-      // .attr('stroke-dasharray', ('3, 3'))
-      .attr('stroke-width', 0.25);
-
+    if (areThereAnyRules > 0) {
+      selection.selectAll('line.separator')
+        .data(d => [d])
+        .join('line')
+        .classed('separator', true)
+        .attr('x1', 0)
+        .attr('x2', RULES_COLUMN_WIDTH)
+        .attr('y1', d => (SINGLE_FEATURE_HEIGHT * (d.rows)) + 10)
+        .attr('y2', d => (SINGLE_FEATURE_HEIGHT * (d.rows)) + 10)
+        .attr('stroke', FTTemplate.TEXT_COLOR)
+        // .attr('stroke-dasharray', ('3, 3'))
+        .attr('stroke-width', 0.25);
+    }
 
     const gRuleText = selection.selectAll('g.rule-text-explanation')
       .data(d => [d].filter(v => v.rulePredicateMap.R0))
