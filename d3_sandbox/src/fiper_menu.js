@@ -12,6 +12,10 @@ import {
   VERTICAL_GUTTER,
 } from './constants';
 
+import {
+  text2tspan,
+} from './utilities';
+
 const d3 = require('d3');
 
 let FTTemplate = colorSet.default;
@@ -345,58 +349,55 @@ function FiperClassificationBox() {
       .attr('x', 0)
       .attr('y', 0)
       .attr('width', width)
-      .attr('height', MENU_HEIGHT)
+      .attr('height', MENU_HEIGHT + GUTTER)
+      .attr('stroke', FTTemplate.TEXT_COLOR)
+      .attr('stroke-width', 0.5)
       .attr('fill', `${FTTemplate.SECONDARY_BACKGROUND_COLOR}`);
 
-    selection.selectAll('line.horizontalLine')
-      .data([1])
-      .join('line')
-      .classed('horizontalLine', true)
-      .attr('x1', GUTTER)
-      .attr('y1', d => d * SINGLE_FEATURE_HEIGHT)
-      .attr('x2', width - (2 * GUTTER))
-      .attr('y2', d => d * SINGLE_FEATURE_HEIGHT)
-      .attr('stroke', FTTemplate.TEXT_COLOR)
-      .attr('stroke-width', 0.5);
-
+    const formatValue = d3.format('.2%');
     selection.selectAll('text.classification')
       .data(d => [d])
       .join('text')
       .classed('classification', true)
-      .attr('x', 0)
-      .attr('y', (FONT_SIZE / 2))
+      .attr('x', 2 * GUTTER)
+      .attr('y', (2 * GUTTER))
       .attr('font-size', FONT_SIZE)
-      .attr('alignment-baseline', 'middle')
       .attr('font-weight', 400)
       .attr('dy', '1em')
-      .attr('dx', GUTTER)
       .attr('fill', FTTemplate.TEXT_COLOR)
-      .html(d => `The instance is classified as <tspan font-weight="500" alignment-baseline="middle">${d.predicted_class}</tspan>`);
+      .html(d => text2tspan(`The instance is classified as _*${d.predicted_class}*_ with a probability of _*${formatValue(d.predicted_proba[d.predicted_class])}*_`, 50, GUTTER));
 
-    const formatValue = d3.format('.2%');
+
+    // .html(d => `The instance is classified as <tspan font-weight="500" alignment-baseline="middle">${d.predicted_class}</tspan>`);
+
+
     const pprobaBars = FiperMenuClassesBarChart().width(width - GUTTER)
       .height(SINGLE_FEATURE_HEIGHT / 2);
-    selection.selectAll('text.pproba')
-      .data(d => [d])
-      .join('text')
-      .classed('pproba', true)
-      .attr('x', 0)
-      .attr('y', SINGLE_FEATURE_HEIGHT + (FONT_SIZE / 2))
-      .attr('font-size', FONT_SIZE)
-      .attr('alignment-baseline', 'middle')
-      .attr('font-weight', 400)
-      .attr('dy', '1em')
-      .attr('dx', GUTTER)
-      .attr('fill', FTTemplate.TEXT_COLOR)
-      .html(d => `with a probability of <tspan font-weight="500" alignment-baseline="middle">
-            ${formatValue(d.predicted_proba[d.predicted_class])}</tspan>`);
 
     selection.selectAll('g.pproba')
       .data(d => [d])
       .join('g')
       .classed('pproba', true)
-      .attr('transform', `translate(${GUTTER / 2}, ${(SINGLE_FEATURE_HEIGHT * 2)})`)
+      .attr('transform', `translate(${GUTTER / 2}, ${(SINGLE_FEATURE_HEIGHT * 2.5)})`)
       .call(pprobaBars);
+
+    const nCRules = selection.datum().counterRules.length;
+
+    const lineSpan = RULES_COLUMN_WIDTH +
+        (CRULES_GRID_COLUMN_WIDTH * nCRules) + FI_COLUMN_WIDTH + (2 * GUTTER);
+
+    selection.selectAll('line.horizontalLine')
+      .data([0, 1])
+      .join('line')
+      .classed('horizontalLine', true)
+      .attr('x1', width + GUTTER)
+      .attr('y1', (d) => d * (MENU_HEIGHT + GUTTER))
+      .attr('x2', width + GUTTER + lineSpan)
+      .attr('y2', (d) => d * (MENU_HEIGHT + GUTTER))
+      .attr('stroke', FTTemplate.TEXT_COLOR)
+      .attr('stroke-width', 0.5)
+      .attr('stroke-dasharray', ('3, 3'))
+      .attr('stroke-width', 0.5);
   }
 
   // eslint-disable-next-line func-names
@@ -414,18 +415,6 @@ function FiperMenuColumnTitles() {
     // horizontal separator lines
     const titleDescriptor = selection.datum();
     const { labels, widthColumn, CRulesList } = titleDescriptor;
-
-    selection.selectAll('line.separator')
-      .data([1])
-      .join('line')
-      .classed('separator', true)
-      .attr('x1', 0)
-      .attr('y1', -5)
-      .attr('x2', widthColumn.reduce((a, b) => a + b, 0) + (GUTTER * 3))
-      .attr('y2', -5)
-      .attr('stroke', FTTemplate.TEXT_COLOR)
-      .style('stroke-dasharray', ('3, 3'))
-      .attr('stroke-width', 0.5);
 
     selection.selectAll('line.horizontalLine')
       .data(labels)
@@ -619,7 +608,7 @@ function FiperMenu() {
       .data(d => [d])
       .join('g')
       .classed('titles', true)
-      .attr('transform', `translate(${GUTTER}, ${MENU_HEIGHT + (SINGLE_FEATURE_HEIGHT)})`);
+      .attr('transform', `translate(${GUTTER}, ${MENU_HEIGHT + SINGLE_FEATURE_HEIGHT})`);
 
     gTitles.datum(titleDescriptor).call(menuColumnTitles);
     // =========================================================
