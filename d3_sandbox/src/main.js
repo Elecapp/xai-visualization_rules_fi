@@ -949,8 +949,10 @@ function FIPERCRuleGrid() {
 function allOccurences(text, search) {
   const indexes = [];
   let i = -1;
-  while ((i = text.indexOf(search, i + 1)) !== -1) {
+  i = text.indexOf(search, i + 1);
+  while (i !== -1) {
     indexes.push(i);
+    i = text.indexOf(search, i + 1);
   }
   return indexes;
 }
@@ -986,9 +988,6 @@ function text2tspan(text, width) {
       startIndexes = allOccurences(`_*${l}`, '_*');
       endIndexes = allOccurences(l, '*_');
     }
-
-    console.log('startIndexes', startIndexes);
-    console.log('endIndexes', endIndexes);
 
     // simple case when length of start and end indexes is the same and it is even
     if (startIndexes.length === endIndexes.length) {
