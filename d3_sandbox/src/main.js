@@ -28,6 +28,7 @@ function fontScaleFactor(fontSize) {
   return Math.floor(((LABELS_COLUMN_WIDTH - GUTTER) * cWidthFactor(fontSize)) /
     (fontScale(fontSize)));
 }
+
 const maxLabelLength = fontScaleFactor(FONT_SIZE);
 
 // create a function to darken a color using d3
@@ -833,7 +834,8 @@ function FIPERFeatureImportanceView() {
 
       gaxis.selectAll('g.tick line')
         .attr('y2', (d, i) => (i > 1 ? 18 : 6))
-        .attr('stroke', 'gray');
+        .attr('stroke', 'gray')
+        .attr('stroke-dasharray', ('3, 3'));
 
       gaxis.selectAll('g.tick text')
         .attr('y', (d, i) => (i > 1 ? 21 : 9));
@@ -1088,8 +1090,8 @@ function FIPERView() {
 
     let offsetRows = 0;
     const features = oFeatures.map((d) => {
-    // We want to leave additional space (a couple of rows) if a rule or counterrule predicates
-    // are present.
+      // We want to leave additional space (a couple of rows) if a rule or counterrule predicates
+      // are present.
       const hasRule = d.rulePredicateMap.R0;
       // check if any of the counter-rules is set to true
       const hasCounterRules = Object.values(d.cRulesPredicateMap).some(v => v);
@@ -1111,7 +1113,9 @@ function FIPERView() {
       };
       f.offsetRows = offsetRows;
       f.additionalRows = additionalRows;
-      if (d.status === 1) { offsetRows = f.rows + additionalRows; }
+      if (d.status === 1) {
+        offsetRows = f.rows + additionalRows;
+      }
 
       const rule2text = predicate2text(d.rmatrix, d.values, 'R0');
       // Adding strings to be used for textual labels
@@ -1307,7 +1311,7 @@ function FIPERView() {
   }
 
   // eslint-disable-next-line
-  me.cRulesGridBandScale = function() {
+  me.cRulesGridBandScale = function () {
     if (!arguments.length) return fcrg.bandScale();
     return me;
   };
@@ -1372,24 +1376,24 @@ function adjustCounterRuleMatrix(matrix) {
     const max = d3.max(r, v => v.exp_value);
     const minV = d3.min(r, v => v.consequent_class);
     if (max === 0) {
-      return r.map(d => (d.exp_value === -1 ? ({ exp_value: 1, conquent_class: minV }) : d));
+      return r.map(d => (d.exp_value === -1 ? ({exp_value: 1, conquent_class: minV}) : d));
     }
     if (max === 1) {
-      return r.map(d => (d.exp_value === -1 ? ({ exp_value: 0, conquent_class: minV }) : d));
+      return r.map(d => (d.exp_value === -1 ? ({exp_value: 0, conquent_class: minV}) : d));
     }
     return r;
   });
 }
 
 function rewritePredicatesCategorical(c, e, ruleSelector) { // for each CounterRule,
-  // for each value in the current Feature
+                                                            // for each value in the current Feature
   return e.values.map(v =>
     // check if the current CR id is present in the crules of the current value
     (v[ruleSelector] ? v[ruleSelector][c] : []),
   )
     // in case of categorical features, we have a list of possible predicates
     // of the form {exp_value: false, conquent_class: 0}
-    .map(v => ((v) ? v[0] : ({ exp_value: -1, consequent_class: 27 })))
+    .map(v => ((v) ? v[0] : ({exp_value: -1, consequent_class: 27})))
     // for those entries where there is an array, we take the expected value
     // of the first element
     // .map(v => [v[0].exp_value, v[1]])
@@ -1528,7 +1532,7 @@ d3.json('/static/german_explanations/instance_135.json').then((data) => {
   const rEntries = Array.from(rFeatures.entries())
     .map(d => ({
       rname: d[0],
-      values: d[1].map(v => ({ ...v, rvalues: [], crvalues: [] })),
+      values: d[1].map(v => ({...v, rvalues: [], crvalues: []})),
       feature_importance: d3.sum(d[1], f => f.feature_importance),
       type: d[1][0].type,
       status: 0, // flag to indicate the status of the feature. 0: normal, 1: selected
