@@ -958,7 +958,7 @@ function text2tspan(text, width) {
   let currentLine = '';
   words.forEach((word) => {
     const testLine = `${currentLine} ${word}`;
-    const testLength = testLine.length;
+    const testLength = testLine.replace(/_\*|\*_/g, '').length;
     if (testLength > width) {
       lines.push(currentLine);
       currentLine = word;
@@ -1106,13 +1106,13 @@ function FIPERView() {
       // Adding strings to be used for textual labels
       f.ruleText = Object.fromEntries(Object.entries(d.rulePredicateMap)
         .filter(([, v]) => v)
-        .map(([k]) => [k, text2tspan(rule2text, 60)]),
+        .map(([k]) => [k, text2tspan(rule2text, 55)]),
       );
       f.cruleText = Object.fromEntries(Object.entries(d.cRulesPredicateMap)
         .filter(([, v]) => v)
         .map(([k], i) => [k, text2tspan(
           predicate2text(d.crmatrix && d.crmatrix[i], d.values, k)
-          , 65)]),
+          , 55)]),
       );
 
       return f;
