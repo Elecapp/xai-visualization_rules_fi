@@ -817,18 +817,26 @@ function FIPERFeatureImportanceView() {
     if (selection.datum().status === 1) {
       const axis = d3.axisBottom(barLength)
         .tickValues([...fiExtent, Math.abs(selection.datum().feature_importance)])
-        .tickFormat(d3.format('.2f'));
+        .tickFormat((d, i) => (i > 0 ? `${d3.format('.2f')(d)}` : d))
+        .tickSize(6);
 
       if (selection.datum().feature_importance < 0) {
-        axis.tickFormat(d => `-${d3.format('.2f')(d)}`);
+        axis.tickFormat((d, i) => (i > 0 ? `-${d3.format('.2f')(d)}` : d));
       }
 
-      selection.selectAll('g.fi-axis')
+      const gaxis = selection.selectAll('g.fi-axis')
         .data(d => [d])
         .join('g')
         .classed('fi-axis', true)
         .attr('transform', `translate(0, ${(height * 11) / 6})`)
         .call(axis);
+
+      gaxis.selectAll('g.tick line')
+        .attr('y2', (d, i) => (i > 1 ? 18 : 6))
+        .attr('stroke', 'gray');
+
+      gaxis.selectAll('g.tick text')
+        .attr('y', (d, i) => (i > 1 ? 21 : 9));
     } else {
       selection.selectAll('g.fi-axis').remove();
     }
