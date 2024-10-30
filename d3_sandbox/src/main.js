@@ -1012,11 +1012,12 @@ function text2tspan(text, width) {
 }
 
 function predicate2text(adjmatrix, values, ruleSelector) {
+  const format = d3.format('.2f');
   // if adjmatrix is empty, then we are dealing with a numerical feature
   if (!adjmatrix) {
     const fPredicate = values[0].predicates[ruleSelector];
     if (fPredicate.length >= 1) {
-      return `To obtain class _*${fPredicate[0].consequent_class}*_ this feature _*should be*_ in the interval _*[${fPredicate[0].interval[0]}, ${fPredicate[0].interval[1]}]*_`;
+      return `To obtain class _*${fPredicate[0].consequent_class}*_ this feature _*should have*_ a value between _*${format(fPredicate[0].interval[0])} and ${format(fPredicate[0].interval[1])}*_`;
     }
   } else {
     // we are dealing with a categorical feature
