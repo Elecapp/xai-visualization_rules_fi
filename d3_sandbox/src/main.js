@@ -1691,7 +1691,7 @@ d3.json('/static/german_explanations/instance_135.json').then((data) => {
   ;
 
   const menuSvg = mainSvg
-    .append('g').append('svg')
+    .append('g')
     .classed('menu', true)
     .attr('width', fv.width())
     .attr('height', MENU_HEIGHT + (2 * SINGLE_FEATURE_HEIGHT)) // added height of the menu + chart title here, check if it is correct
