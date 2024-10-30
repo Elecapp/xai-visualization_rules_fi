@@ -19,7 +19,7 @@ let FTTemplate = colorSet.default;
 function FiperMenuCRule() {
   let bandScale = d3.scaleBand();
   let width = 200;
-  bandScale.padding(0.1);
+  bandScale.padding(0.2);
 
   function me(selection) {
     const explanationDescriptor = selection.datum();
@@ -47,27 +47,60 @@ function FiperMenuCRule() {
       .data(d => [d])
       .join('rect')
       .classed('counterRule', true)
+      .attr('y', GUTTER)
       .attr('width', bandScale.bandwidth())
-      .attr('height', (MENU_HEIGHT / 3) * 2)
-      .attr('transform', `translate(0, ${MENU_HEIGHT / 3})`)
+      .attr('height', (SINGLE_FEATURE_HEIGHT * 2) - (2 * GUTTER))
+      .attr('transform', `translate(0, ${SINGLE_FEATURE_HEIGHT})`)
       .attr('stroke', FTTemplate.TEXT_COLOR)
       .attr('stroke-width', 0.5)
       .attr('fill-opacity', 1)
       .attr('fill', d => (d === explanationDescriptor.selectedCounterRule ? FTTemplate.CRULES_COLOR : FTTemplate.BASE_COLOR))
       .attr('stroke', d => (d === explanationDescriptor.selectedCounterRule ? FTTemplate.CRULES_STROKE_COLOR : FTTemplate.BASE_STROKE_COLOR));
 
+    const internalGutter = 2;
+
+    gcRuleButtons.selectAll('rect.toggle')
+      .data(d => [d])
+      .join('rect')
+      .classed('toggle', true)
+      .attr('x', internalGutter)
+      .attr('width', bandScale.bandwidth() - (internalGutter * 2))
+      .attr('height', bandScale.bandwidth() - (internalGutter * 2))
+      .attr('transform', `translate(0, ${SINGLE_FEATURE_HEIGHT})`)
+      .attr('stroke', FTTemplate.TEXT_COLOR)
+      .attr('stroke-width', 0.5)
+      .attr('fill-opacity', 1)
+      .attr('fill', FTTemplate.SECONDARY_BACKGROUND_COLOR)
+      .attr('stroke', FTTemplate.TEXT_COLOR)
+      .transition()
+      .attr('y', d => (d === explanationDescriptor.selectedCounterRule ?
+        GUTTER + internalGutter : ((MENU_HEIGHT / 3) * 2) - (2 * GUTTER) - (internalGutter * 2)));
+
+
     gcRuleButtons.selectAll('text.label')
       .data(d => [d])
       .join('text')
       .classed('label', true)
       .attr('x', bandScale.bandwidth() / 2)
-      .attr('y', (MENU_HEIGHT / 3) * 2)
+      .attr('y', (SINGLE_FEATURE_HEIGHT / 2) - (FONT_SIZE / 2))
+      .attr('dy', '1em')
       .attr('text-anchor', 'middle')
       .attr('font-size', FONT_SIZE)
       .attr('font-weight', d => (d === explanationDescriptor.selectedCounterRule ? 500 : 400))
-      .attr('fill', d => (d === explanationDescriptor.selectedCounterRule ? '#eee' : FTTemplate.TEXT_COLOR))
+      .attr('fill', FTTemplate.TEXT_COLOR)
       .attr('cursor', 'pointer')
       .text(d => d);
+
+    selection.selectAll('line.horizontalLine')
+      .data([1, 3])
+      .join('line')
+      .classed('horizontalLine', true)
+      .attr('x1', 0)
+      .attr('y1', d => (d * SINGLE_FEATURE_HEIGHT))
+      .attr('x2', bandScale.range()[1])
+      .attr('y2', d => (d * SINGLE_FEATURE_HEIGHT))
+      .attr('stroke', FTTemplate.TEXT_COLOR)
+      .attr('stroke-width', 0.5);
   }
 
   // eslint-disable-next-line func-names
@@ -138,10 +171,8 @@ function FiperMenuOrderBy() {
       .attr('y', (d, i) => ((i % 2) * SINGLE_FEATURE_HEIGHT) + SINGLE_FEATURE_HEIGHT + ((SINGLE_FEATURE_HEIGHT / 2) - (FONT_SIZE / 2)))
       .attr('width', FONT_SIZE)
       .attr('height', FONT_SIZE)
-      .attr('fill', FTTemplate.TEXT_COLOR)
-      .attr('fill-opacity', d => (orderByOptions[d] ? 0.8 : 0.2))
+      .attr('fill', d => (orderByOptions[d] ? FTTemplate.TEXT_COLOR : FTTemplate.SECONDARY_BACKGROUND_COLOR))
       .attr('stroke', FTTemplate.TEXT_COLOR)
-      .attr('stroke-width', 0.5)
       .style('cursor', 'pointer')
       .on('click', generateEvent);
 
