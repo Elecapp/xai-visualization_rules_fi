@@ -570,7 +570,7 @@ function FiperMenu() {
   const menuCRulesCall = FiperMenuCRule();
   const menuFilterBy = FiperMenuFilterBy();
   const menuClassification = FiperClassificationBox()
-    .width(LABELS_COLUMN_WIDTH - SINGLE_FEATURE_HEIGHT - GUTTER);
+    .width(LABELS_COLUMN_WIDTH);
   const menuColumnTitles = FiperMenuColumnTitles();
   const menuPaletteSelector = FiperMenuPaletteSelector().width(SINGLE_FEATURE_HEIGHT + GUTTER);
 
@@ -631,7 +631,8 @@ function FiperMenu() {
       .data(d => [d])
       .join('g')
       .classed('palette', true)
-      .attr('transform', `translate(${menuClassification.width() + GUTTER}, ${GUTTER})`);
+      .attr('transform', `translate(${LABELS_COLUMN_WIDTH + RULES_COLUMN_WIDTH +
+        (CRULES_GRID_COLUMN_WIDTH * CRulesList.length) + FI_COLUMN_WIDTH + (5 * GUTTER)}, ${GUTTER})`);
     gPalette.call(menuPaletteSelector);
 
 
