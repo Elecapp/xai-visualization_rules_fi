@@ -569,7 +569,7 @@ function FIPERFeatureDistributionView() {
           .attr('text-anchor', 'start')
           .attr('font-size', FONT_SIZE)
           .attr('fill', d => ((d.instance_value === 1) ? FTTemplate.VALUE_TEXT_COLOR : FTTemplate.OTHER_TEXT_COLOR))
-          .text(d => `${d.value} (${d.percent.toFixed(2)}%)`);
+          .text(d => `${d.percent.toFixed(2)}%`);
       } else {
         gDetails.selectAll('g.feature-value').transition(t).remove();
       }
