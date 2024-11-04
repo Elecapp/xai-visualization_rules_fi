@@ -69,6 +69,94 @@ function prepareCategoricalValues(data) {
   }).filter(d => d.value > 0);
 }
 
+// Reusable tooltip
+function TooltipHandler() {
+  // Creates the tooltip div and adds it to the body
+  const tooltip = d3.select('body')
+    .selectAll('div.d3-tooltip')
+    .data([1])
+    .join('div')
+    .attr('class', 'd3-tooltip')
+    .style('opacity', 0);
+
+  let tooltipHtml = (d) => {
+    const formatter = d3.format('.2%');
+    return `<div>Value: ${d.label} (<span style="font-weight: 500">${formatter(d.percent / 100)}</span>)</div>`;
+  };
+
+  // Css for the tooltip
+
+  const tooltipStyleText = `
+      .d3-tooltip {
+          position: absolute;
+          padding: 4px 8px;
+          font-family: 'M PLUS 1 Code', 'Courier New', monospace;
+          font-size: 11px;
+          color: ${FTTemplate.TEXT_COLOR};
+          background: ${FTTemplate.SECONDARY_BACKGROUND_COLOR};
+          border-radius: 2px;
+          pointer-events: none;
+          z-index: 1000;
+          max-width: 200px;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      }
+    `;
+  d3.select('head').selectAll('style.d3-tooltip')
+    .data([1])
+    .join('style')
+    .classed('d3-tooltip', true)
+    .text(tooltipStyleText);
+
+  // Function to handle the tooltip
+  function me(selection) {
+    selection
+      .on('mouseover', (event, d) => {
+        // Show the tooltip with a transition
+        tooltip
+          .transition()
+          .duration(200)
+          .style('opacity', 0.9);
+
+        // Set the content of the tooltip and position it
+        tooltip
+          .html(() => tooltipHtml(d))
+          .style('left', `${event.pageX + 10}px`)
+          .style('top', `${event.pageY - 20}px`);
+      })
+      .on('mousemove', (event) => {
+        // Update the position of the tooltip
+        tooltip
+          .style('left', `${event.pageX + 10}px`)
+          .style('top', `${event.pageY - 20}px`);
+      })
+      .on('click', () => {
+        // Hide the tooltip with a transition
+        tooltip
+          .transition()
+          .duration(50)
+          .style('opacity', 0);
+      })
+      .on('mouseout', () => {
+        // Hide the tooltip with a transition
+        tooltip
+          .transition()
+          .duration(50)
+          .style('opacity', 0);
+      });
+  }
+
+  // Method to set the content of the tooltip
+  // eslint-disable-next-line func-names
+  me.html = function (formatter) {
+    // eslint-disable-next-line no-use-before-define
+    if (!arguments.length) return tooltipHtml;
+    tooltipHtml = typeof formatter === 'function' ? formatter : () => formatter;
+    return me;
+  };
+
+  return me;
+}
+
 function FIPERFeatureInstanceValueView() {
   let width = RULES_COLUMN_WIDTH;
   let height = 51110;
@@ -77,7 +165,7 @@ function FIPERFeatureInstanceValueView() {
     .domain([0, 1]);
 
   function me(selection) {
-    const fTooltip = createTooltip();
+    const fTooltip = TooltipHandler();
     if (selection.datum().type === 'categorical') {
       // draw the symbol for the actual value of the instance
       const total = d3.sum(selection.datum().values, d => d.eda.count);
@@ -153,7 +241,7 @@ function FIPERNumericDistributionBoxPlotView() {
     const g = selection.selectAll('g.axis')
       .data(d => [d])
       .join('g')
-      .classed('axis', true)
+      .classed('axis', true);
     g.call(d3.axisBottom(xScale)
       .tickValues(prepareNumericalValues(feature.values)),
     );
@@ -407,83 +495,6 @@ function FIPERTextualExplanationView() {
   return me;
 }
 
-// Reusable tooltip
-function createTooltip() {
-  // Creates the tooltip div and adds it to the body
-  const tooltip = d3.select('body')
-    .append('div')
-    .attr('class', 'd3-tooltip')
-    .style('opacity', 0);
-
-  // Css for the tooltip
-  const tooltipStyle = document.createElement('style');
-  tooltipStyle.textContent = `
-        .d3-tooltip {
-            position: absolute;
-            padding: 4px 8px;
-            font-family: 'M PLUS 1 Code', 'Courier New', monospace;
-            font-size: 11px;
-            color: ${FTTemplate.TEXT_COLOR};
-            background: ${FTTemplate.SECONDARY_BACKGROUND_COLOR};
-            border-radius: 2px;
-            pointer-events: none;
-            z-index: 1000;
-            max-width: 200px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-    `;
-  document.head.appendChild(tooltipStyle);
-
-  // Function to handle the tooltip
-  function tooltipHandler(selection) {
-    selection
-      .on('mouseover', (event, d) => {
-        // Mouse position
-        const [x, y] = d3.pointer(event, document.body);
-
-        // Show the tooltip with a transition
-        tooltip
-          .transition()
-          .duration(200)
-          .style('opacity', 0.9);
-
-        console.log('d', d);
-        // Set the content of the tooltip and position it
-        tooltip
-          .html(`
-${d.label.trim()}: <span style="font-weight:500">
-${d.percent.toFixed(2)}%</span>`
-          )
-          .style('left', `${x + 10}px`)
-          .style('top', `${y - 20}px`);
-      })
-      .on('click', () => {
-        // Hide the tooltip with a transition
-        tooltip
-          .transition()
-          .duration(50)
-          .style('opacity', 0);
-      })
-      .on('mouseout', () => {
-        // Hide the tooltip with a transition
-        tooltip
-          .transition()
-          .duration(50)
-          .style('opacity', 0);
-      });
-  }
-
-  // Method to set the content of the tooltip
-  tooltipHandler.html = function (formatter) {
-    // eslint-disable-next-line no-use-before-define
-    if (!arguments.length) return tooltipHtml;
-    let tooltipHtml = typeof formatter === 'function' ? formatter : () => formatter;
-    return tooltipHandler;
-  };
-
-  return tooltipHandler;
-}
-
 function FIPERFeatureDistributionView() {
   let width = RULES_COLUMN_WIDTH;
   let height = 5022222;
@@ -498,7 +509,13 @@ function FIPERFeatureDistributionView() {
   const t = d3.transition()
     .duration(500)
     .ease(d3.easeLinear);
-  const fTooltip = createTooltip();
+  const cTooltip = TooltipHandler();
+  const nTooltip = TooltipHandler().html(d => `<div style="font-weight: 500">Value: ${d.values[0].instance_value}</div>
+            <div>min: ${d.values[0].eda.min}</div>
+            <div>q1: ${d.values[0].eda.q1}</div>
+            <div>median: ${d.values[0].eda.median}</div>
+            <div>q3: ${d.values[0].eda.q3}</div>
+            <div>max: ${d.values[0].eda.max}</div>`);
 
   function me(selection) {
     const gDetails = selection.selectAll('g.details')
@@ -532,7 +549,7 @@ function FIPERFeatureDistributionView() {
         .attr('fill', color)
         .attr('fill-opacity', 1)
         .attr('stroke', strokeColor)
-        .call(fTooltip);
+        .call(cTooltip);
 
       if (selection.datum().status === 1) {
         // create an element g that will contain each single value of the feature
@@ -557,7 +574,7 @@ function FIPERFeatureDistributionView() {
           .attr('fill', d => (d.instance_value ? FTTemplate.CATEGORICAL_INSTANCE_COLOR : color))
           // .attr('fill-opacity', d => (d.instance_value ? 1 : 0.2))
           .attr('stroke', d => (d.instance_value ? FTTemplate.CATEGORICAL_INSTANCE_STROKE_COLOR : strokeColor))
-          .call(fTooltip);
+          .call(cTooltip);
         // text for the labels for each value of the feature
         gFeatureValue.selectAll('text.single-bar')
           .data(d => [d])
@@ -593,7 +610,8 @@ function FIPERFeatureDistributionView() {
         .height((SINGLE_FEATURE_HEIGHT * 2) / 3)
         .color(color)
         .strokeColor(strokeColor);
-      selection.call(ndbpv);
+      selection.call(ndbpv).call(nTooltip);
+
 
       if (selection.datum().status === 1) {
         const fndlcv = FIPERNumericDistributionBoxPlotView()
@@ -941,7 +959,7 @@ function FIPERFeatureImportanceView() {
 
       gaxis.selectAll('g.tick text')
         .filter((d, i) => i > 1)
-        .attr('fill', (d, i) => (selection.datum().feature_importance < 0 ? FTTemplate.NEGATIVE_FI_COLOR : FTTemplate.FI_POSITIVE_COLOR));
+        .attr('fill', () => (selection.datum().feature_importance < 0 ? FTTemplate.NEGATIVE_FI_COLOR : FTTemplate.FI_POSITIVE_COLOR));
 
 
       // add a circle on the value of the feature importance
@@ -953,8 +971,6 @@ function FIPERFeatureImportanceView() {
         .attr('cy', 0)
         .attr('r', 3)
         .attr('fill', d => (d.feature_importance < 0 ? FTTemplate.NEGATIVE_FI_COLOR : FTTemplate.FI_POSITIVE_COLOR));
-
-
     } else {
       selection.selectAll('g.fi-axis').remove();
     }
@@ -1240,9 +1256,11 @@ function FIPERView() {
       .attr('fill', d => highlightScale(d.status));
 
     // change color if mouseover and mouseout
+    // eslint-disable-next-line func-names
     gFeatures.on('mouseover', function () {
       d3.select(this).selectAll('rect.background').attr('fill', FTTemplate.SECONDARY_BACKGROUND_COLOR);
     });
+    // eslint-disable-next-line func-names
     gFeatures.on('mouseout', function (d) {
       d3.select(this).selectAll('rect.background')
         .attr('fill', highlightScale(d.status))
@@ -1403,10 +1421,10 @@ function adjustCounterRuleMatrix(matrix) {
     const max = d3.max(r, v => v.exp_value);
     const minV = d3.min(r, v => v.consequent_class);
     if (max === 0) {
-      return r.map(d => (d.exp_value === -1 ? ({exp_value: 1, conquent_class: minV}) : d));
+      return r.map(d => (d.exp_value === -1 ? ({ exp_value: 1, conquent_class: minV }) : d));
     }
     if (max === 1) {
-      return r.map(d => (d.exp_value === -1 ? ({exp_value: 0, conquent_class: minV}) : d));
+      return r.map(d => (d.exp_value === -1 ? ({ exp_value: 0, conquent_class: minV }) : d));
     }
     return r;
   });
@@ -1420,7 +1438,7 @@ function rewritePredicatesCategorical(c, e, ruleSelector) { // for each CounterR
   )
     // in case of categorical features, we have a list of possible predicates
     // of the form {exp_value: false, conquent_class: 0}
-    .map(v => ((v) ? v[0] : ({exp_value: -1, consequent_class: 27})))
+    .map(v => ((v) ? v[0] : ({ exp_value: -1, consequent_class: 27 })))
     // for those entries where there is an array, we take the expected value
     // of the first element
     // .map(v => [v[0].exp_value, v[1]])
@@ -1517,7 +1535,7 @@ function reduceUnionIntersection(predicatesWithIntervals) {
   return result;
 }
 
-d3.json('/static/german_explanations/instance_135.json').then((data) => {
+d3.json('/static/german_explanations/instance_2.json').then((data) => {
   // preprocess each entry to copmute the expected value for the categorical counterrules
   const tfeature = data.features
     // .filter(f => f.type === 'categorical')
@@ -1559,7 +1577,7 @@ d3.json('/static/german_explanations/instance_135.json').then((data) => {
   const rEntries = Array.from(rFeatures.entries())
     .map(d => ({
       rname: d[0],
-      values: d[1].map(v => ({...v, rvalues: [], crvalues: []})),
+      values: d[1].map(v => ({ ...v, rvalues: [], crvalues: [] })),
       feature_importance: d3.sum(d[1], f => f.feature_importance),
       type: d[1][0].type,
       status: 0, // flag to indicate the status of the feature. 0: normal, 1: selected
