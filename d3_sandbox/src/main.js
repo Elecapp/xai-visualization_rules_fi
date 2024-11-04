@@ -440,9 +440,13 @@ function createTooltip() {
           .duration(200)
           .style('opacity', 0.9);
 
+        console.log('d', d);
         // Set the content of the tooltip and position it
         tooltip
-          .html(`${d.label.trim()}: <span style="font-weight:500"> ${d.percent.toFixed(2)}%</span>`)
+          .html(`
+${d.label.trim()}: <span style="font-weight:500">
+${d.percent.toFixed(2)}%</span>`
+          )
           .style('left', `${x + 10}px`)
           .style('top', `${y - 20}px`);
       })
@@ -1203,6 +1207,16 @@ function FIPERView() {
       .attr('height', d => (d.status === 1 ? (d.rows + d.additionalRows + 1) * SINGLE_FEATURE_HEIGHT : SINGLE_FEATURE_HEIGHT))
       .transition(t)
       .attr('fill', d => highlightScale(d.status));
+
+    // change color if mouseover and mouseout
+    gFeatures.on('mouseover', function () {
+      d3.select(this).selectAll('rect.background').attr('fill', FTTemplate.SECONDARY_BACKGROUND_COLOR);
+    });
+    gFeatures.on('mouseout', function (d) {
+      d3.select(this).selectAll('rect.background')
+        .attr('fill', highlightScale(d.status))
+        .attr('fill-opacity', 0.7);
+    });
 
     // for each feature row, we have 3 groups:
     // 1. the feature importance
