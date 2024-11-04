@@ -44,6 +44,11 @@ export const colorSet = {
   },
   darkModeColorPalette: {
     BACKGROUND_COLOR: '#3a3a3a', // Dark gray for background
+    CRULES_COLOR: 'rgba(158,79,103,1)',
+    CRULES_STROKE_COLOR: 'rgba(133,66,86,1)',
+    RULE_COLOR: 'rgba(230,174,85,1)',
+    RULE_STROKE_COLOR: darkenColor('#E6AE55B3', 1),
+    BASE_COLOR: '#dcc',
     BASE_STROKE_COLOR: '#4e4e4e', // Darker stroke color for base
     SECONDARY_BACKGROUND_COLOR: '#2a2a2a', // Slightly lighter background for secondary elements
     TEXT_COLOR: '#ffffff', // White text for high contrast
@@ -56,7 +61,7 @@ export const colorSet = {
     CATEGORICAL_INSTANCE_STROKE_COLOR: '#d1d1d1', // Darker stroke color for categorical instances
     FI_POSITIVE_COLOR: '#37995e', // Green for positive feature importance
     NEGATIVE_FI_COLOR: '#d1804d', // Red for negative feature importance
-    GRID_COLOR: '#3a3a3a', // Dark color for grid lines
+    GRID_COLOR: '#b0b0b0', // Dark color for grid lines
   },
   grayscaleHighContrast: {
     BACKGROUND_COLOR: '#f8f8f8', // Grigio molto chiaro per un leggero contrasto con il bianco
