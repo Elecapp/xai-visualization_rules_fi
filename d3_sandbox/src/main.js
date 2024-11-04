@@ -1314,12 +1314,15 @@ function FIPERView() {
         .classed('crules', true)
         .attr('transform', `translate(0, ${(3 * SINGLE_FEATURE_HEIGHT) / 6})`)
         .call(crpv);
-      gValueStack.selectAll('g.crule-grid')
+
+
+      const gCruleGrid = d3.select(n[j]).selectAll('g.crule-grid')
         .data(d => [d])
         .join('g')
         .classed('crule-grid', true)
-        .attr('transform', `translate(${RULES_COLUMN_WIDTH + GUTTER}, 0)`)
-        .call(fcrg);
+        .attr('transform', `translate(${RULES_COLUMN_WIDTH + LABELS_COLUMN_WIDTH + (3 * GUTTER)}, 0)`);
+      gCruleGrid.call(fcrg);
+
       const gFeatureImportance = d3.select(n[j]).selectAll('g.feature-importance')
         .data(d => [d])
         .join('g')
