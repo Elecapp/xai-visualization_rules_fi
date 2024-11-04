@@ -1326,6 +1326,28 @@ function FIPERView() {
         .classed('feature-importance', true)
         .attr('transform', `translate(${LABELS_COLUMN_WIDTH + RULES_COLUMN_WIDTH + crWidth + (4 * GUTTER)}, 0)`);
       gFeatureImportance.call(ffv);
+
+
+      const HANDLER_OFFSET = LABELS_COLUMN_WIDTH + RULES_COLUMN_WIDTH + crWidth
+        + FI_COLUMN_WIDTH + (5 * GUTTER) + 12;
+      const gFeatureHandler = d3.select(n[j]).selectAll('g.feature-handler')
+        .data(d => [d])
+        .join('g')
+        .classed('feature-handler', true)
+        .attr('transform', `translate(${HANDLER_OFFSET}, 6)`);
+      gFeatureHandler.selectAll('path.feature-handler')
+        .data(d => [d])
+        .join('path')
+        .classed('feature-handler', true)
+        .attr('d', 'M3.6,-3l1.4,1.4-5,5-5-5,1.4-1.4,3.6,3.6,3.6-3.6')
+        .attr('fill', FTTemplate.DISTRIBUTION_STROKE_COLOR);
+
+      gFeatureHandler
+        .transition()
+        .duration(200)
+        .attr('transform', d => (d.status === 1 ? `translate(${HANDLER_OFFSET}, 6)rotate(180)` : `translate(${HANDLER_OFFSET}, 6)rotate(-1)`));
+
+
       const gfBbox = n[j].getBBox();
       d3.select(n[j]).datum().bbox = gfBbox;
       d3.select(n[j]).datum().offset = featureOffset;

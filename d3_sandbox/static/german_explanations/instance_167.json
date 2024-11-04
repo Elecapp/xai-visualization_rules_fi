@@ -132,17 +132,7 @@
                 "mean": 1.1585714285714286,
                 "std": 0.3655371562923362
             },
-            "rule": [
-                [
-                    {
-                        "att": "people_under_maintenance",
-                        "op": "<=",
-                        "thr": 1.5,
-                        "is_continuous": true
-                    },
-                    0
-                ]
-            ],
+            "rule": [],
             "crules": {},
             "instance_value": 1
         },
@@ -180,7 +170,7 @@
                     {
                         "att": "account_check_status=< 0 DM",
                         "op": "<=",
-                        "thr": 0.06916197389364243,
+                        "thr": 0.5,
                         "is_continuous": true
                     },
                     0
@@ -364,7 +354,17 @@
                 "category": "business",
                 "count": 69
             },
-            "rule": [],
+            "rule": [
+                [
+                    {
+                        "att": "purpose=business",
+                        "op": "<=",
+                        "thr": 0.05214978754520416,
+                        "is_continuous": true
+                    },
+                    0
+                ]
+            ],
             "crules": {},
             "instance_value": 0,
             "is_ordinal": false
@@ -516,7 +516,7 @@
                     {
                         "att": "savings=... < 100 DM",
                         "op": "<=",
-                        "thr": 0.039509985595941544,
+                        "thr": 0.17219948768615723,
                         "is_continuous": true
                     },
                     0
@@ -850,7 +850,17 @@
                 "category": "unknown / no property",
                 "count": 111
             },
-            "rule": [],
+            "rule": [
+                [
+                    {
+                        "att": "property=unknown / no property",
+                        "op": "<=",
+                        "thr": 0.5,
+                        "is_continuous": true
+                    },
+                    0
+                ]
+            ],
             "crules": {},
             "instance_value": 0,
             "is_ordinal": false
