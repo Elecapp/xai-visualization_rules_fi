@@ -175,8 +175,9 @@ function FiperMenuOrderBy() {
       .attr('y', (d, i) => ((i % 2) * SINGLE_FEATURE_HEIGHT) + SINGLE_FEATURE_HEIGHT + ((SINGLE_FEATURE_HEIGHT / 2) - (FONT_SIZE / 2)))
       .attr('width', FONT_SIZE)
       .attr('height', FONT_SIZE)
-      .attr('fill', d => (orderByOptions[d] ? FTTemplate.TEXT_COLOR : FTTemplate.SECONDARY_BACKGROUND_COLOR))
+      .attr('fill', d => (orderByOptions[d] ? FTTemplate.CATEGORICAL_INSTANCE_STROKE_COLOR : FTTemplate.SECONDARY_BACKGROUND_COLOR))
       .attr('stroke', FTTemplate.TEXT_COLOR)
+      .attr('stroke-width', 0.5)
       .style('cursor', 'pointer')
       .on('click', generateEvent);
 
@@ -514,12 +515,24 @@ function FiperMenuPaletteSelector() {
   ];
 
   function me(selection) {
+    selection.selectAll('rect.palette-background')
+      .data(paletteOptions)
+      .join('rect')
+      .classed('palette-background', true)
+      .attr('x', 0)
+      .attr('y', (d, i) => (i * SINGLE_FEATURE_HEIGHT) + GUTTER)
+      .attr('width', SINGLE_FEATURE_HEIGHT * 0.75)
+      .attr('height', SINGLE_FEATURE_HEIGHT * 0.75)
+      .attr('fill', FTTemplate.SECONDARY_BACKGROUND_COLOR)
+      .attr('stroke', FTTemplate.TEXT_COLOR)
+      .attr('stroke-width', 0.5);
+
     selection.selectAll('path.icon')
       .data(paletteOptions)
       .join('path')
       .classed('icon', true)
       .attr('d', d => d.icon)
-      .attr('transform', (d, i) => `translate(2, ${(i * SINGLE_FEATURE_HEIGHT) + GUTTER + 3})`)
+      .attr('transform', (d, i) => `translate(3, ${(i * SINGLE_FEATURE_HEIGHT) + GUTTER + 3})`)
       .attr('fill', FTTemplate.OTHER_TEXT_COLOR);
 
     selection.selectAll('rect.palette')
