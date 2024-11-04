@@ -1335,17 +1335,24 @@ function FIPERView() {
         .join('g')
         .classed('feature-handler', true)
         .attr('transform', `translate(${HANDLER_OFFSET}, 6)`);
-      gFeatureHandler.selectAll('path.feature-handler')
+
+      const igFeatureHandler = gFeatureHandler.selectAll('g.feature-handler-internal')
+        .data(d => [d])
+        .join('g')
+        .classed('feature-handler-internal', true)
+        .attr('transform', 'rotate(0)');
+
+      igFeatureHandler.selectAll('path.feature-handler')
         .data(d => [d])
         .join('path')
         .classed('feature-handler', true)
         .attr('d', 'M3.6,-3l1.4,1.4-5,5-5-5,1.4-1.4,3.6,3.6,3.6-3.6')
         .attr('fill', FTTemplate.DISTRIBUTION_STROKE_COLOR);
 
-      gFeatureHandler
+      igFeatureHandler
         .transition()
         .duration(200)
-        .attr('transform', d => (d.status === 1 ? `translate(${HANDLER_OFFSET}, 6)rotate(180)` : `translate(${HANDLER_OFFSET}, 6)rotate(-1)`));
+        .attr('transform', d => (d.status === 1 ? 'rotate(180)' : 'rotate(0)'));
 
 
       const gfBbox = n[j].getBBox();
