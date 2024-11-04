@@ -77,6 +77,7 @@ function FIPERFeatureInstanceValueView() {
     .domain([0, 1]);
 
   function me(selection) {
+    const fTooltip = createTooltip();
     if (selection.datum().type === 'categorical') {
       // draw the symbol for the actual value of the instance
       const total = d3.sum(selection.datum().values, d => d.eda.count);
@@ -91,7 +92,8 @@ function FIPERFeatureInstanceValueView() {
         .attr('height', height)
         .attr('fill', FTTemplate.CATEGORICAL_INSTANCE_COLOR)
         // .attr('fill-opacity', 0.9)
-        .attr('stroke', FTTemplate.CATEGORICAL_INSTANCE_STROKE_COLOR);
+        .attr('stroke', FTTemplate.CATEGORICAL_INSTANCE_STROKE_COLOR)
+        .call(fTooltip);
     } else {
       // selection.selectAll('rect.bck-instance-value')
       //   .data(d => d.values)
@@ -398,6 +400,78 @@ function FIPERTextualExplanationView() {
   return me;
 }
 
+// Reusable tooltip
+function createTooltip() {
+  // Creates the tooltip div and adds it to the body
+  const tooltip = d3.select('body')
+    .append('div')
+    .attr('class', 'd3-tooltip')
+    .style('opacity', 0);
+
+  // Css for the tooltip
+  const tooltipStyle = document.createElement('style');
+  tooltipStyle.textContent = `
+        .d3-tooltip {
+            position: absolute;
+            padding: 4px 8px;
+            font-family: 'M PLUS 1 Code', 'Courier New', monospace;
+            font-size: 11px;
+            color: ${FTTemplate.TEXT_COLOR};
+            background: ${FTTemplate.SECONDARY_BACKGROUND_COLOR};
+            border-radius: 2px;
+            pointer-events: none;
+            z-index: 1000;
+            max-width: 200px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+    `;
+  document.head.appendChild(tooltipStyle);
+
+  // Function to handle the tooltip
+  function tooltipHandler(selection) {
+    selection
+      .on('mouseover', (event, d) => {
+        // Mouse position
+        const [x, y] = d3.pointer(event, document.body);
+
+        // Show the tooltip with a transition
+        tooltip
+          .transition()
+          .duration(200)
+          .style('opacity', 0.9);
+
+        // Set the content of the tooltip and position it
+        tooltip
+          .html(`${d.label.trim()}: <span style="font-weight:500"> ${d.percent.toFixed(2)}%</span>`)
+          .style('left', `${x + 10}px`)
+          .style('top', `${y - 20}px`);
+      })
+      .on('click', () => {
+        // Hide the tooltip with a transition
+        tooltip
+          .transition()
+          .duration(50)
+          .style('opacity', 0);
+      })
+      .on('mouseout', () => {
+        // Hide the tooltip with a transition
+        tooltip
+          .transition()
+          .duration(50)
+          .style('opacity', 0);
+      });
+  }
+
+  // Method to set the content of the tooltip
+  tooltipHandler.html = function (formatter) {
+    // eslint-disable-next-line no-use-before-define
+    if (!arguments.length) return tooltipHtml;
+    let tooltipHtml = typeof formatter === 'function' ? formatter : () => formatter;
+    return tooltipHandler;
+  };
+
+  return tooltipHandler;
+}
 
 function FIPERFeatureDistributionView() {
   let width = RULES_COLUMN_WIDTH;
@@ -413,6 +487,7 @@ function FIPERFeatureDistributionView() {
   const t = d3.transition()
     .duration(500)
     .ease(d3.easeLinear);
+  const fTooltip = createTooltip();
 
   function me(selection) {
     const gDetails = selection.selectAll('g.details')
@@ -445,7 +520,8 @@ function FIPERFeatureDistributionView() {
         .attr('height', height)
         .attr('fill', color)
         .attr('fill-opacity', 1)
-        .attr('stroke', strokeColor);
+        .attr('stroke', strokeColor)
+        .call(fTooltip);
 
       if (selection.datum().status === 1) {
         // create an element g that will contain each single value of the feature
@@ -469,7 +545,8 @@ function FIPERFeatureDistributionView() {
           .attr('height', (height))
           .attr('fill', d => (d.instance_value ? FTTemplate.CATEGORICAL_INSTANCE_COLOR : color))
           // .attr('fill-opacity', d => (d.instance_value ? 1 : 0.2))
-          .attr('stroke', d => (d.instance_value ? FTTemplate.CATEGORICAL_INSTANCE_STROKE_COLOR : strokeColor));
+          .attr('stroke', d => (d.instance_value ? FTTemplate.CATEGORICAL_INSTANCE_STROKE_COLOR : strokeColor))
+          .call(fTooltip);
         // text for the labels for each value of the feature
         gFeatureValue.selectAll('text.single-bar')
           .data(d => [d])
