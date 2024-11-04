@@ -1282,39 +1282,51 @@ function FIPERView() {
         .classed('feature-labels', true)
         .attr('transform', `translate(${GUTTER}, 0)`);
       gLabels.call(flv);
+
       const gValueStack = d3.select(n[j]).selectAll('g.feature-values')
         .data(d => [d])
         .join('g')
         .classed('feature-values', true)
         .attr('transform', `translate(${LABELS_COLUMN_WIDTH + (2 * GUTTER)}, 0)`);
-      gValueStack.selectAll('g.distribution')
-        .data(d => [d])
-        .join('g')
-        .classed('distribution', true)
-        .call(fdv);
-      gValueStack.selectAll('g.instance-value')
-        .data(d => [d])
-        .join('g')
-        .classed('instance-value', true)
-        .call(fivv);
-      // The element g.rule is translated to the bottom part of the feature row
-      // it is computed as 1 - 1/6 of the height of the feature row
-      // thus it is 4/6
-      gValueStack.selectAll('g.rule')
-        .data(d => [d])
-        .join('g')
-        .classed('rule', true)
-        .attr('transform', `translate(0, ${(3 * SINGLE_FEATURE_HEIGHT) / 6})`)
-        .call(rpv);
-      // The element g.crules is translated to the bottom part of the feature row
-      // below the element g.rule. Thus it is 4/6 + 1/6 = 5/6
-      gValueStack.selectAll('g.crules')
-        .data(d => [d])
-        .join('g')
-        .classed('crules', true)
-        .attr('transform', `translate(0, ${(3 * SINGLE_FEATURE_HEIGHT) / 6})`)
-        .call(crpv);
-
+      if (!origDatum.textVersion) {
+        gValueStack.selectAll('g.distribution')
+          .data(d => [d])
+          .join('g')
+          .classed('distribution', true)
+          .call(fdv);
+        gValueStack.selectAll('g.instance-value')
+          .data(d => [d])
+          .join('g')
+          .classed('instance-value', true)
+          .call(fivv);
+        // The element g.rule is translated to the bottom part of the feature row
+        // it is computed as 1 - 1/6 of the height of the feature row
+        // thus it is 4/6
+        gValueStack.selectAll('g.rule')
+          .data(d => [d])
+          .join('g')
+          .classed('rule', true)
+          .attr('transform', `translate(0, ${(3 * SINGLE_FEATURE_HEIGHT) / 6})`)
+          .call(rpv);
+        // The element g.crules is translated to the bottom part of the feature row
+        // below the element g.rule. Thus it is 4/6 + 1/6 = 5/6
+        gValueStack.selectAll('g.crules')
+          .data(d => [d])
+          .join('g')
+          .classed('crules', true)
+          .attr('transform', `translate(0, ${(3 * SINGLE_FEATURE_HEIGHT) / 6})`)
+          .call(crpv);
+      } else {
+        gValueStack.selectAll('text.description')
+          .data(d => [d])
+          .join('text')
+          .classed('description', true)
+          .attr('x', 0)
+          .attr('y', GUTTER / 2)
+          .attr('font-size', FONT_SIZE)
+          .attr('fill', FTTemplate.TEXT_COLOR)
+          .html(d => d.ruleText.R0);
+      }
 
       const gCruleGrid = d3.select(n[j]).selectAll('g.crule-grid')
         .data(d => [d])
@@ -1746,8 +1758,9 @@ d3.json('/static/german_explanations/instance_2.json').then((data) => {
     predicted_class: data.predicted_class,
     predicted_proba: data.predicted_proba,
     selectedCounterRule: '',
-    filterRules: false,
+    filterRules: true,
     filterCRules: false,
+    textVersion: false,
   };
   const fv = FIPERView().width(GLOBAL_WIDTH + (CRulesList.length * CRULES_GRID_COLUMN_WIDTH));
   const fm = FiperMenu();
