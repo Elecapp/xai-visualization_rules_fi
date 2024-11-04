@@ -925,10 +925,23 @@ function FIPERFeatureImportanceView() {
 
       gaxis.selectAll('g.tick text')
         .attr('y', (d, i) => (i > 1 ? 21 : 9));
+
+      // add a circle on the value of the feature importance
+      gaxis.selectAll('circle.fi-value')
+        .data(d => [d])
+        .join('circle')
+        .classed('fi-value', true)
+        .attr('cx', d => barLength(Math.abs(d.feature_importance)))
+        .attr('cy', 0)
+        .attr('r', 3)
+        .attr('fill', d => (d.feature_importance < 0 ? FTTemplate.NEGATIVE_FI_COLOR : FTTemplate.FI_POSITIVE_COLOR));
+
+
     } else {
       selection.selectAll('g.fi-axis').remove();
     }
   }
+
 
   // eslint-disable-next-line
   me.width = function (_) {
@@ -1372,10 +1385,10 @@ function adjustCounterRuleMatrix(matrix) {
     const max = d3.max(r, v => v.exp_value);
     const minV = d3.min(r, v => v.consequent_class);
     if (max === 0) {
-      return r.map(d => (d.exp_value === -1 ? ({ exp_value: 1, conquent_class: minV }) : d));
+      return r.map(d => (d.exp_value === -1 ? ({exp_value: 1, conquent_class: minV}) : d));
     }
     if (max === 1) {
-      return r.map(d => (d.exp_value === -1 ? ({ exp_value: 0, conquent_class: minV }) : d));
+      return r.map(d => (d.exp_value === -1 ? ({exp_value: 0, conquent_class: minV}) : d));
     }
     return r;
   });
@@ -1389,7 +1402,7 @@ function rewritePredicatesCategorical(c, e, ruleSelector) { // for each CounterR
   )
     // in case of categorical features, we have a list of possible predicates
     // of the form {exp_value: false, conquent_class: 0}
-    .map(v => ((v) ? v[0] : ({ exp_value: -1, consequent_class: 27 })))
+    .map(v => ((v) ? v[0] : ({exp_value: -1, consequent_class: 27})))
     // for those entries where there is an array, we take the expected value
     // of the first element
     // .map(v => [v[0].exp_value, v[1]])
@@ -1528,7 +1541,7 @@ d3.json('/static/german_explanations/instance_135.json').then((data) => {
   const rEntries = Array.from(rFeatures.entries())
     .map(d => ({
       rname: d[0],
-      values: d[1].map(v => ({ ...v, rvalues: [], crvalues: [] })),
+      values: d[1].map(v => ({...v, rvalues: [], crvalues: []})),
       feature_importance: d3.sum(d[1], f => f.feature_importance),
       type: d[1][0].type,
       status: 0, // flag to indicate the status of the feature. 0: normal, 1: selected
