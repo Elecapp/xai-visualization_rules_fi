@@ -154,12 +154,17 @@ function FIPERNumericDistributionBoxPlotView() {
       .data(d => [d])
       .join('g')
       .classed('axis', true)
-      .attr('transform', `translate(0, ${height / 6})`);
     g.call(d3.axisBottom(xScale)
       .tickValues(prepareNumericalValues(feature.values)),
     );
+
+    g.selectAll('g.axis .domain')
+      .attr('stroke', FTTemplate.CATEGORICAL_INSTANCE_STROKE_COLOR);
+    g.selectAll('g.axis .tick line')
+      .attr('stroke', FTTemplate.CATEGORICAL_INSTANCE_STROKE_COLOR);
     // avoid overlapping labels using vertical offset
     g.selectAll('.tick text')
+      .attr('color', FTTemplate.CATEGORICAL_INSTANCE_STROKE_COLOR)
       .attr('transform', (d, i, nodes) => {
         if ((i > 0)) {
           const prev = nodes[i - 1];
@@ -167,6 +172,8 @@ function FIPERNumericDistributionBoxPlotView() {
             const prevBox = prev.getBBox();
             const curr = nodes[i];
             const currBox = curr.getBBox();
+            console.log('prevBox', prevBox);
+            console.log('currBox', currBox);
             if (currBox.x < (prevBox.x + prevBox.width)) {
               const offset = (prevBox.y + prevBox.height) - currBox.y;
               return `translate(0, ${offset})`;
@@ -907,6 +914,7 @@ function FIPERFeatureImportanceView() {
         .tickFormat((d, i) => (i > 0 ? `${d3.format('.2f')(d)}` : d))
         .tickSize(6);
 
+
       if (selection.datum().feature_importance < 0) {
         axis.tickFormat((d, i) => (i > 0 ? `-${d3.format('.2f')(d)}` : d));
       }
@@ -915,16 +923,26 @@ function FIPERFeatureImportanceView() {
         .data(d => [d])
         .join('g')
         .classed('fi-axis', true)
-        .attr('transform', `translate(0, ${(height * 11) / 6})`)
+        .attr('transform', `translate(0, ${(height * 11) / 7})`)
         .call(axis);
+
+      gaxis.select('.domain')
+        .attr('stroke', FTTemplate.CATEGORICAL_INSTANCE_STROKE_COLOR);
+
 
       gaxis.selectAll('g.tick line')
         .attr('y2', (d, i) => (i > 1 ? 18 : 6))
-        .attr('stroke', 'gray')
-        .attr('stroke-dasharray', ('3, 3'));
+        .attr('stroke-dasharray', ('3, 3'))
+        .attr('stroke', FTTemplate.CATEGORICAL_INSTANCE_STROKE_COLOR);
 
       gaxis.selectAll('g.tick text')
-        .attr('y', (d, i) => (i > 1 ? 21 : 9));
+        .attr('y', (d, i) => (i > 1 ? 18 : 9))
+        .attr('fill', FTTemplate.CATEGORICAL_INSTANCE_STROKE_COLOR);
+
+      gaxis.selectAll('g.tick text')
+        .filter((d, i) => i > 1)
+        .attr('fill', (d, i) => (selection.datum().feature_importance < 0 ? FTTemplate.NEGATIVE_FI_COLOR : FTTemplate.FI_POSITIVE_COLOR));
+
 
       // add a circle on the value of the feature importance
       gaxis.selectAll('circle.fi-value')
