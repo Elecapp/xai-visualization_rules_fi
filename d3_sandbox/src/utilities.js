@@ -11,7 +11,7 @@ function allOccurences(text, search) {
   return indexes;
 }
 
-function text2tspan(text, width, x=0) {
+function text2tspan(text, width, x = 0) {
   const words = text.split(' ');
   const lines = [];
   let currentLine = '';
@@ -64,27 +64,27 @@ function text2tspan(text, width, x=0) {
   return formatLines.map((line, i) => `<tspan x="${x}" dy="${i ? '1.2em' : 0}">${line}</tspan>`).join('');
 }
 
-function predicate2text(adjmatrix, values, ruleSelector) {
+function predicate2text(adjmatrix, values, ruleSelector, verbose = true) {
   const format = d3.format('.2f');
-  // if adjmatrix is empty, then we are dealing with a numerical feature
   if (!adjmatrix) {
     const fPredicate = values[0].predicates[ruleSelector];
     if (fPredicate.length >= 1) {
-      return `To obtain class _*${fPredicate[0].consequent_class}*_ this feature _*should have*_ a value between _*${format(fPredicate[0].interval[0])} and ${format(fPredicate[0].interval[1])}*_`;
+      if (verbose) {
+        return `_*should have*_ a value between _*${format(fPredicate[0].interval[0])} and ${format(fPredicate[0].interval[1])}*_`;
+      }
+      return `To obtain class _*${fPredicate[0].consequent_class}*_, this feature _*should have*_ a value between _*${format(fPredicate[0].interval[0])} and ${format(fPredicate[0].interval[1])}*_`;
     }
   } else {
-    // we are dealing with a categorical feature
-    // count how many elements in the adjmatrix have the key exp_value set to one
     const vPredicates = values.map(v => ({
-      preds: v.predicates[ruleSelector],
-      rname: v.rname,
-      cvalue: v.eda.category,
+      preds: v.predicates[ruleSelector], rname: v.rname, cvalue: v.eda.category,
     }));
     const vpPredicates = vPredicates.filter(v => v.preds && v.preds.exp_value === 1);
     const vnPredicates = vPredicates.filter(v => v.preds && v.preds.exp_value === 0);
 
     if (vpPredicates.length === 1) {
-      // there is a single predicate
+      if (verbose) {
+        return `_*should have*_ value _*${vpPredicates[0].cvalue}*_`;
+      }
       return `To obtain class _*${vpPredicates[0].preds.consequent_class}*_, the feature _*should have*_ value _*${vpPredicates[0].cvalue}*_`;
     }
     const negativePredicates = vnPredicates.length;
@@ -92,7 +92,13 @@ function predicate2text(adjmatrix, values, ruleSelector) {
       return 'Mha!!!';
     }
     if (negativePredicates === 1) {
+      if (verbose) {
+        return `_*should NOT have*_ the value _*${vnPredicates[0].cvalue}*_`;
+      }
       return `To obtain class _*${vnPredicates[0].preds.consequent_class}*_ this feature _*should NOT have*_ the value _*${vnPredicates[0].cvalue}*_`;
+    }
+    if (verbose) {
+      return `_*should NOT have*_ the values _*${vnPredicates.map(v => v.cvalue).join(', ')}*_`;
     }
     return `To obtain class _*${vnPredicates[0].preds.consequent_class}*_ this feature _*should have*_ the values _*${vpPredicates.map(v => v.cvalue).join(', ')}*_`;
   }
@@ -100,6 +106,5 @@ function predicate2text(adjmatrix, values, ruleSelector) {
 }
 
 module.exports = {
-  text2tspan,
-  predicate2text,
+  text2tspan, predicate2text,
 };
