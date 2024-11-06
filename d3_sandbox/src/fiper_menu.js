@@ -210,7 +210,7 @@ function FiperMenuOrderBy() {
 function FiperChooseTextualFormat() {
   const formatOptions = {
     'Textual Explanation': false,
-    'Visual Explanation': true,
+    'Graphical Explanation': true,
   };
   const xScale = d3.scaleBand()
     .domain(Object.keys(formatOptions))

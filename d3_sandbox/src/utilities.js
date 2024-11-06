@@ -64,14 +64,11 @@ function text2tspan(text, width, x = 0) {
   return formatLines.map((line, i) => `<tspan x="${x}" dy="${i ? '1.2em' : 0}">${line}</tspan>`).join('');
 }
 
-function predicate2text(adjmatrix, values, ruleSelector, verbose = true) {
+function predicate2text(adjmatrix, values, ruleSelector) {
   const format = d3.format('.2f');
   if (!adjmatrix) {
     const fPredicate = values[0].predicates[ruleSelector];
     if (fPredicate.length >= 1) {
-      if (verbose) {
-        return `_*should have*_ a value between _*${format(fPredicate[0].interval[0])} and ${format(fPredicate[0].interval[1])}*_`;
-      }
       return `To obtain class _*${fPredicate[0].consequent_class}*_, this feature _*should have*_ a value between _*${format(fPredicate[0].interval[0])} and ${format(fPredicate[0].interval[1])}*_`;
     }
   } else {
@@ -82,9 +79,7 @@ function predicate2text(adjmatrix, values, ruleSelector, verbose = true) {
     const vnPredicates = vPredicates.filter(v => v.preds && v.preds.exp_value === 0);
 
     if (vpPredicates.length === 1) {
-      if (verbose) {
-        return `_*should have*_ value _*${vpPredicates[0].cvalue}*_`;
-      }
+
       return `To obtain class _*${vpPredicates[0].preds.consequent_class}*_, the feature _*should have*_ value _*${vpPredicates[0].cvalue}*_`;
     }
     const negativePredicates = vnPredicates.length;
@@ -92,14 +87,10 @@ function predicate2text(adjmatrix, values, ruleSelector, verbose = true) {
       return 'Mha!!!';
     }
     if (negativePredicates === 1) {
-      if (verbose) {
-        return `_*should NOT have*_ the value _*${vnPredicates[0].cvalue}*_`;
-      }
+
       return `To obtain class _*${vnPredicates[0].preds.consequent_class}*_ this feature _*should NOT have*_ the value _*${vnPredicates[0].cvalue}*_`;
     }
-    if (verbose) {
-      return `_*should NOT have*_ the values _*${vnPredicates.map(v => v.cvalue).join(', ')}*_`;
-    }
+
     return `To obtain class _*${vnPredicates[0].preds.consequent_class}*_ this feature _*should have*_ the values _*${vpPredicates.map(v => v.cvalue).join(', ')}*_`;
   }
   return '';

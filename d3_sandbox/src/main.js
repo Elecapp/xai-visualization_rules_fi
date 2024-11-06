@@ -1248,7 +1248,8 @@ function FIPERView() {
       .classed('background', true)
       .attr('y', -6)
       .attr('width', width)
-      .attr('height', d => (d.status === 1 ? (d.rows + d.additionalRows + 1) * SINGLE_FEATURE_HEIGHT : SINGLE_FEATURE_HEIGHT))
+      .attr('height', SINGLE_FEATURE_HEIGHT)
+      //.attr('height', d => (d.status === 1 ? (d.rows + d.additionalRows + 1) * SINGLE_FEATURE_HEIGHT : SINGLE_FEATURE_HEIGHT))
       .transition(t)
       .attr('fill', d => highlightScale(d.status));
 
