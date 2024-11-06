@@ -12,7 +12,8 @@ export const MENU_HEIGHT = SINGLE_FEATURE_HEIGHT * 3;
 export const FONT_SIZE = 11;
 
 export const GLOBAL_WIDTH = 700;
-export const dispatcher = d3.dispatch('changeCounterRule', 'changeOrder', 'changeFilter', 'changePalette');
+export const dispatcher = d3.dispatch('changeCounterRule',
+  'changeOrder', 'changeFilter', 'changePalette', 'changeTextualFormat');
 
 
 function darkenColor(color, amount) {

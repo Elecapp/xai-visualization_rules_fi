@@ -207,6 +207,66 @@ function FiperMenuOrderBy() {
   return me;
 }
 
+function FiperChooseTextualFormat() {
+  const formatOptions = {
+    'Textual Explanation': false,
+    'Visual Explanation': true,
+  };
+  const xScale = d3.scaleBand()
+    .domain(Object.keys(formatOptions))
+    .range([0, LABELS_COLUMN_WIDTH])
+    .padding(0.01);
+
+  const colorScale = d3.scaleOrdinal()
+    .domain([true, false])
+    .range([FTTemplate.FI_POSITIVE_COLOR, FTTemplate.DISTRIBUTION_COLOR]);
+
+  const textColorScale = d3.scaleOrdinal()
+    .domain([true, false])
+    .range([FTTemplate.SECONDARY_BACKGROUND_COLOR, FTTemplate.BASE_COLOR]);
+
+
+  function me(selection) {
+    const generateEvent = (d) => {
+      const selectedKey = d3.select(d.target).datum();
+      Object.keys(formatOptions).forEach((key) => {
+        formatOptions[key] = key === selectedKey;
+      });
+      dispatcher.call('changeTextualFormat', null, formatOptions);
+    };
+
+    selection.selectAll('rect.chooseFormat')
+      .data(xScale.domain())
+      .join('rect')
+      .classed('chooseFormat', true)
+      .attr('x', xScale)
+      .attr('y', 0.5 * GUTTER)
+      .attr('width', xScale.bandwidth())
+      .attr('height', 1.5 * GUTTER)
+      .attr('fill', d => colorScale(formatOptions[d]))
+      .style('cursor', 'pointer')
+      .on('click', generateEvent);
+
+
+    selection.selectAll('text.chooseFormat')
+      .data(Object.keys(formatOptions))
+      .join('text')
+      .classed('chooseFormat', true)
+      .attr('x', xScale)
+      .attr('y', 0.5 * GUTTER)
+      .attr('font-size', FONT_SIZE)
+      .attr('font-weight', 400)
+      .attr('dy', '1em')
+      .attr('dx', '0.5em')
+      .attr('fill', d => textColorScale(formatOptions[d]))
+      .text(d => d)
+      .style('cursor', 'pointer')
+      .on('click', generateEvent);
+  }
+
+  return me;
+}
+
 function FiperMenuFilterBy() {
   const filterByOptions = {
     Rules: false, CRules: false,
@@ -350,7 +410,7 @@ function FiperClassificationBox() {
       .attr('x', 0)
       .attr('y', 0)
       .attr('width', width)
-      .attr('height', MENU_HEIGHT + GUTTER)
+      .attr('height', (3 * SINGLE_FEATURE_HEIGHT))
       .attr('stroke', FTTemplate.TEXT_COLOR)
       .attr('stroke-width', 0.5)
       .attr('fill', `${FTTemplate.SECONDARY_BACKGROUND_COLOR}`);
@@ -375,7 +435,7 @@ function FiperClassificationBox() {
       .data(d => [d])
       .join('g')
       .classed('pproba', true)
-      .attr('transform', `translate(${GUTTER / 2}, ${(SINGLE_FEATURE_HEIGHT * 2.5)})`)
+      .attr('transform', `translate(${GUTTER / 2}, ${(SINGLE_FEATURE_HEIGHT * 2.5) - (GUTTER / 2)})`)
       .call(pprobaBars);
 
     const nCRules = selection.datum().counterRules.length;
@@ -411,7 +471,7 @@ function FiperMenuColumnTitles() {
   function me(selection) {
     // horizontal separator lines
     const titleDescriptor = selection.datum();
-    const {labels, widthColumn, CRulesList} = titleDescriptor;
+    const { labels, widthColumn, CRulesList } = titleDescriptor;
 
     selection.selectAll('line.horizontalLine')
       .data(labels)
@@ -578,6 +638,7 @@ function FiperMenu() {
   const menuOrderBy = FiperMenuOrderBy();
   const menuCRulesCall = FiperMenuCRule();
   const menuFilterBy = FiperMenuFilterBy();
+  const chooseFormat = FiperChooseTextualFormat();
   const menuClassification = FiperClassificationBox()
     .width(LABELS_COLUMN_WIDTH);
   const menuColumnTitles = FiperMenuColumnTitles();
@@ -670,10 +731,8 @@ function FiperMenu() {
 
 
     // =========================================================
-    //                   Feature Importance
+    //                   Filter By Selector
     // =========================================================
-
-
     const gFilter = gMenu.selectAll('g.filter')
       .data(d => [d])
       .join('g')
@@ -681,6 +740,16 @@ function FiperMenu() {
       .attr('transform', `translate(${LABELS_COLUMN_WIDTH + RULES_COLUMN_WIDTH + (CRULES_GRID_COLUMN_WIDTH * CRulesList.length) + (4 * GUTTER)}, ${GUTTER})`);
     gFilter.call(menuFilterBy);
     // =========================================================
+
+    // =========================================================
+    //            Choose Textual Format
+    // =========================================================
+    const gChooseFormat = gMenu.selectAll('g.chooseFormat')
+      .data(d => [d])
+      .join('g')
+      .classed('chooseFormat', true)
+      .attr('transform', `translate(${GUTTER}, ${(3 * SINGLE_FEATURE_HEIGHT) + (GUTTER)})`);
+    gChooseFormat.call(chooseFormat);
   }
 
   // eslint-disable-next-line func-names

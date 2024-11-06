@@ -2,24 +2,21 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import FiperMenu from './fiper_menu';
 import {
-  GLOBAL_WIDTH,
-  SINGLE_FEATURE_HEIGHT,
-  FI_COLUMN_WIDTH,
-  RULES_COLUMN_WIDTH,
-  LABELS_COLUMN_WIDTH,
-  GUTTER,
-  VERTICAL_GUTTER,
-  MENU_HEIGHT,
-  FONT_SIZE,
-  CRULES_GRID_COLUMN_WIDTH,
   colorSet,
+  CRULES_GRID_COLUMN_WIDTH,
   dispatcher,
+  FI_COLUMN_WIDTH,
+  FONT_SIZE,
+  GLOBAL_WIDTH,
+  GUTTER,
+  LABELS_COLUMN_WIDTH,
+  MENU_HEIGHT,
+  RULES_COLUMN_WIDTH,
+  SINGLE_FEATURE_HEIGHT,
+  VERTICAL_GUTTER,
 } from './constants';
 
-import {
-  text2tspan,
-  predicate2text,
-} from './utilities';
+import { predicate2text, text2tspan } from './utilities';
 
 const d3 = require('d3');
 
@@ -1288,13 +1285,22 @@ function FIPERView() {
         .join('g')
         .classed('feature-values', true)
         .attr('transform', `translate(${LABELS_COLUMN_WIDTH + (2 * GUTTER)}, 0)`);
+      const gTextualExplanation = gValueStack.selectAll('g.textual-explanation')
+        .data(d => [d])
+        .join('g')
+        .classed('textual-explanation', true);
+      const gGraphicalExplanation = gValueStack.selectAll('g.graphical-explanation')
+        .data(d => [d])
+        .join('g')
+        .classed('graphical-explanation', true);
+
       if (!origDatum.textVersion) {
-        gValueStack.selectAll('g.distribution')
+        gGraphicalExplanation.selectAll('g.distribution')
           .data(d => [d])
           .join('g')
           .classed('distribution', true)
           .call(fdv);
-        gValueStack.selectAll('g.instance-value')
+        gGraphicalExplanation.selectAll('g.instance-value')
           .data(d => [d])
           .join('g')
           .classed('instance-value', true)
@@ -1302,7 +1308,7 @@ function FIPERView() {
         // The element g.rule is translated to the bottom part of the feature row
         // it is computed as 1 - 1/6 of the height of the feature row
         // thus it is 4/6
-        gValueStack.selectAll('g.rule')
+        gGraphicalExplanation.selectAll('g.rule')
           .data(d => [d])
           .join('g')
           .classed('rule', true)
@@ -1310,14 +1316,15 @@ function FIPERView() {
           .call(rpv);
         // The element g.crules is translated to the bottom part of the feature row
         // below the element g.rule. Thus it is 4/6 + 1/6 = 5/6
-        gValueStack.selectAll('g.crules')
+        gGraphicalExplanation.selectAll('g.crules')
           .data(d => [d])
           .join('g')
           .classed('crules', true)
           .attr('transform', `translate(0, ${(3 * SINGLE_FEATURE_HEIGHT) / 6})`)
           .call(crpv);
+        gTextualExplanation.remove();
       } else {
-        gValueStack.selectAll('text.description')
+        gTextualExplanation.selectAll('text.description')
           .data(d => [d])
           .join('text')
           .classed('description', true)
@@ -1326,6 +1333,7 @@ function FIPERView() {
           .attr('font-size', FONT_SIZE)
           .attr('fill', FTTemplate.TEXT_COLOR)
           .html(d => d.ruleText.R0);
+        gGraphicalExplanation.remove();
       }
 
       const gCruleGrid = d3.select(n[j]).selectAll('g.crule-grid')
@@ -1888,9 +1896,13 @@ d3.json('/static/german_explanations/instance_2.json').then((data) => {
     refreshVisualization(explanationDescriptor);
   });
 
+  dispatcher.on('changeTextualFormat', (d) => {
+    explanationDescriptor.textVersion = d['Textual Explanation'];
+    refreshVisualization(explanationDescriptor);
+  });
+
   dispatcher.on('changePalette', (d) => {
-    const newTemplate = colorSet[d.value];
-    FTTemplate = newTemplate;
+    FTTemplate = colorSet[d.value];
 
     mainSvg
       .attr('style', `background-color: ${FTTemplate.BACKGROUND_COLOR};`);
