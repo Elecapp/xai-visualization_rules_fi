@@ -1365,8 +1365,15 @@ function FIPERView() {
       igFeatureHandler
         .transition()
         .duration(200)
-        .attr('transform', d => (d.status === 1 ? 'rotate(180)' : 'rotate(0)'));
-
+        .attrTween('transform', (d) => {
+          const interpolate = d3.interpolateString(
+            d.status === 1 ? 'rotate(0)' : 'rotate(180)',
+            d.status === 1 ? 'rotate(180)' : 'rotate(0)',
+          );
+          return function (t) {
+            return interpolate(t);
+          };
+        });
 
       const gfBbox = n[j].getBBox();
       d3.select(n[j]).datum().bbox = gfBbox;
