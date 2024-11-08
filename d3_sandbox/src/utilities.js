@@ -53,8 +53,6 @@ function text2tspan(text, width, x = 0) {
         l2[endIndexes[i]] = '</tspan>';
         l2[endIndexes[i] + 1] = '';
       });
-      console.log('non so', startIndexes, endIndexes);
-      console.log(l2.join(''));
       return l2.join('');
     }
 
