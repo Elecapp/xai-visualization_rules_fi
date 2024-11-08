@@ -11,10 +11,10 @@ function allOccurences(text, search) {
   return indexes;
 }
 
-function text2tspan(text, width, x = 0) {
+function text2tspan(text, width, x = 0, prefixLength = 0) {
   const words = text.split(' ');
   const lines = [];
-  let currentLine = '';
+  let currentLine = ' '.repeat(prefixLength);
   words.forEach((word) => {
     const testLine = `${currentLine} ${word}`;
     const testLength = testLine.replace(/_\*|\*_/g, '').length;
@@ -61,7 +61,7 @@ function text2tspan(text, width, x = 0) {
 
 
   // join lines with tspan elements
-  return formatLines.map((line, i) => `<tspan x="${x}" dy="${i ? '1.2em' : 0}">${line}</tspan>`).join('');
+  return formatLines.map((line, i) => `<tspan x="${x}" dy="${i ? '1.2em' : 0}" dx="${i === 0 ? prefixLength : 0}ex">${line}</tspan>`).join('');
 }
 
 function predicate2text(adjmatrix, values, ruleSelector) {

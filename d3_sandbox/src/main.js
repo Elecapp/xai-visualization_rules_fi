@@ -406,7 +406,7 @@ function FIPERTextualExplanationView() {
         .data(d => [d])
         .join('rect')
         .classed('text-rule-background', true)
-        .attr('x', (-(7 * 3) - 4) - GUTTER)
+        .attr('x', '5.75ex')
         .attr('y', -(SINGLE_FEATURE_HEIGHT / 2) + 4)
         .attr('width', (7 * 3) + 4)
         .attr('height', SINGLE_FEATURE_HEIGHT / 2)
@@ -416,7 +416,8 @@ function FIPERTextualExplanationView() {
         .data(d => [d])
         .join('text')
         .classed('text-rule-label', true)
-        .attr('x', -GUTTER - 2)
+        .attr('x', '12ex')
+        .attr('dx', -3)
         .attr('y', 0)
         .attr('text-anchor', 'end')
         .attr('font-size', FONT_SIZE)
@@ -435,7 +436,7 @@ function FIPERTextualExplanationView() {
         .html(d => d.ruleText.R0);
 
       let ruleHeight = 0;
-      if (gRuleText.length > 0) {
+      if (Object.keys(selection.datum().ruleText).length) {
         ruleHeight = gRuleText.node().getBBox().height;
       }
 
@@ -450,7 +451,7 @@ function FIPERTextualExplanationView() {
         .data(d => [d])
         .join('rect')
         .classed('text-counter-rule-background', true)
-        .attr('x', (-(22 * 3) - 4) - GUTTER)
+        .attr('x', '-.25ex')
         .attr('y', -(SINGLE_FEATURE_HEIGHT / 2) + 4)
         .attr('width', (22 * 3) + 4)
         .attr('height', SINGLE_FEATURE_HEIGHT / 2)
@@ -460,8 +461,8 @@ function FIPERTextualExplanationView() {
         .data(d => [d])
         .join('text')
         .classed('text-counter-rule-label', true)
-        .attr('x', -GUTTER - 2)
-        .attr('y', 0)
+        .attr('x', '12ex')
+        .attr('dx', -3)
         .attr('text-anchor', 'end')
         .attr('font-size', FONT_SIZE)
         .attr('fill', FTTemplate.SECONDARY_BACKGROUND_COLOR)
@@ -1139,13 +1140,13 @@ function FIPERView() {
       // Adding strings to be used for textual labels
       f.ruleText = Object.fromEntries(Object.entries(d.rulePredicateMap)
         .filter(([, v]) => v)
-        .map(([k]) => [k, text2tspan(rule2text, 55)]),
+        .map(([k]) => [k, text2tspan(rule2text, 55, 0, 'COUNTER RULE'.length)]),
       );
       f.cruleText = Object.fromEntries(Object.entries(d.cRulesPredicateMap)
         .filter(([, v]) => v)
         .map(([k], i) => [k, text2tspan(
           predicate2text(d.crmatrix && d.crmatrix[i], d.values, k)
-          , 55)]),
+          , 55, 0, 'COUNTER RULE'.length)]),
       );
 
       return f;
@@ -1757,8 +1758,8 @@ d3.json('/static/german_explanations/instance_2.json').then((data) => {
     predicted_proba: data.predicted_proba,
     selectedCounterRule: '',
     filterRules: true,
-    filterCRules: true,
-    textVersion: true,
+    filterCRules: false,
+    textVersion: false,
   };
   const fv = FIPERView().width(GLOBAL_WIDTH + (CRulesList.length * CRULES_GRID_COLUMN_WIDTH));
   const fm = FiperMenu();
