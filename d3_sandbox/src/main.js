@@ -1757,8 +1757,8 @@ d3.json('/static/german_explanations/instance_2.json').then((data) => {
     predicted_proba: data.predicted_proba,
     selectedCounterRule: '',
     filterRules: true,
-    filterCRules: false,
-    textVersion: false,
+    filterCRules: true,
+    textVersion: true,
   };
   const fv = FIPERView().width(GLOBAL_WIDTH + (CRulesList.length * CRULES_GRID_COLUMN_WIDTH));
   const fm = FiperMenu();

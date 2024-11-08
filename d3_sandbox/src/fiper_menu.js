@@ -208,7 +208,7 @@ function FiperMenuOrderBy() {
 }
 
 function FiperChooseTextualFormat() {
-  const formatOptions = {
+  let formatOptions = {
     'Textual Explanation': false,
     'Graphical Explanation': true,
   };
@@ -264,11 +264,19 @@ function FiperChooseTextualFormat() {
       .on('click', generateEvent);
   }
 
+  // eslint-disable-next-line func-names
+  me.formatOptions = function (_) {
+    if (!arguments.length) return formatOptions;
+    formatOptions = _;
+
+    return me;
+  };
+
   return me;
 }
 
 function FiperMenuFilterBy() {
-  const filterByOptions = {
+  let filterByOptions = {
     Rules: false, CRules: false,
   };
 
@@ -339,6 +347,14 @@ function FiperMenuFilterBy() {
       .attr('stroke', FTTemplate.TEXT_COLOR)
       .attr('stroke-width', 0.5);
   }
+
+  // eslint-disable-next-line func-names
+  me.filterByOptions = function (_) {
+    if (!arguments.length) return filterByOptions;
+    filterByOptions = _;
+
+    return me;
+  };
 
   return me;
 }
@@ -738,6 +754,12 @@ function FiperMenu() {
       .join('g')
       .classed('filter', true)
       .attr('transform', `translate(${LABELS_COLUMN_WIDTH + RULES_COLUMN_WIDTH + (CRULES_GRID_COLUMN_WIDTH * CRulesList.length) + (4 * GUTTER)}, ${GUTTER})`);
+
+    const filterByOptions = {
+      Rules: explanationDescriptor.filterRules,
+      CRules: explanationDescriptor.filterCRules,
+    };
+    menuFilterBy.filterByOptions(filterByOptions);
     gFilter.call(menuFilterBy);
     // =========================================================
 
@@ -749,6 +771,12 @@ function FiperMenu() {
       .join('g')
       .classed('chooseFormat', true)
       .attr('transform', `translate(${GUTTER}, ${(3 * SINGLE_FEATURE_HEIGHT) + (GUTTER)})`);
+
+    const formatOptions = {
+      'Textual Explanation': explanationDescriptor.textVersion,
+      'Graphical Explanation': !explanationDescriptor.textVersion,
+    };
+    chooseFormat.formatOptions(formatOptions);
     gChooseFormat.call(chooseFormat);
   }
 
