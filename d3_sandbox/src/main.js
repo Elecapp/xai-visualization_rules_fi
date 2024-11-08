@@ -1264,7 +1264,7 @@ function FIPERView() {
         .data(d => [d])
         .join('g')
         .classed('textual-explanation', true)
-        .attr('transform', `translate(0, ${0.5 * GUTTER})`);
+        .attr('transform', `translate(${VERTICAL_GUTTER}, ${0.5 * GUTTER})`);
       const gGraphicalExplanation = gValueStack.selectAll('g.graphical-explanation')
         .data(d => [d])
         .join('g')
