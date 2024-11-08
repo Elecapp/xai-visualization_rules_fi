@@ -406,23 +406,11 @@ function FIPERTextualExplanationView() {
         .data(d => [d])
         .join('rect')
         .classed('text-rule-background', true)
-        .attr('x', '5.75ex')
+        .attr('x', '-.25ex')
         .attr('y', -(SINGLE_FEATURE_HEIGHT / 2) + 4)
         .attr('width', (7 * 3) + 4)
         .attr('height', SINGLE_FEATURE_HEIGHT / 2)
         .attr('fill', FTTemplate.RULE_COLOR);
-
-      gRuleText.selectAll('text.text-rule-label')
-        .data(d => [d])
-        .join('text')
-        .classed('text-rule-label', true)
-        .attr('x', '12ex')
-        .attr('dx', -3)
-        .attr('y', 0)
-        .attr('text-anchor', 'end')
-        .attr('font-size', FONT_SIZE)
-        .attr('fill', FTTemplate.TEXT_COLOR)
-        .text('RULE');
 
       gRuleText.selectAll('text.text-rule')
         .data(d => [d])
@@ -457,16 +445,10 @@ function FIPERTextualExplanationView() {
         .attr('height', SINGLE_FEATURE_HEIGHT / 2)
         .attr('fill', FTTemplate.CRULES_COLOR);
 
-      gCounterRuleText.selectAll('text.text-counter-rule-label')
-        .data(d => [d])
-        .join('text')
-        .classed('text-counter-rule-label', true)
-        .attr('x', '12ex')
-        .attr('dx', -3)
-        .attr('text-anchor', 'end')
-        .attr('font-size', FONT_SIZE)
-        .attr('fill', FTTemplate.SECONDARY_BACKGROUND_COLOR)
-        .text('COUNTER RULE');
+      const makeCRuleText = (d) => {
+        const cruleText = d.cruleText[selectedCounterRule];
+        return cruleText.replace("COUNTER RULE ", `<tspan fill='${FTTemplate.SECONDARY_BACKGROUND_COLOR}'>COUNTER RULE </tspan>`);
+      };
 
       gCounterRuleText.selectAll('text.text-counter-rule')
         .data(d => [d])
@@ -477,7 +459,7 @@ function FIPERTextualExplanationView() {
         .attr('font-size', FONT_SIZE)
         .attr('fill', FTTemplate.TEXT_COLOR)
         .attr('font-weight', '300')
-        .html(d => d.cruleText[selectedCounterRule]);
+        .html(makeCRuleText);
     }
 
     return me;
@@ -1136,17 +1118,17 @@ function FIPERView() {
         ...d,
       };
 
-      const rule2text = predicate2text(d.rmatrix, d.values, 'R0');
+      const rule2text = predicate2text(d.rmatrix, d.values, 'R0', 'RULE ');
       // Adding strings to be used for textual labels
       f.ruleText = Object.fromEntries(Object.entries(d.rulePredicateMap)
         .filter(([, v]) => v)
-        .map(([k]) => [k, text2tspan(rule2text, 55, 0, 'COUNTER RULE'.length)]),
+        .map(([k]) => [k, text2tspan(rule2text, 55, 0)]),
       );
       f.cruleText = Object.fromEntries(Object.entries(d.cRulesPredicateMap)
         .filter(([, v]) => v)
         .map(([k], i) => [k, text2tspan(
-          predicate2text(d.crmatrix && d.crmatrix[i], d.values, k)
-          , 55, 0, 'COUNTER RULE'.length)]),
+          predicate2text(d.crmatrix && d.crmatrix[i], d.values, k, 'COUNTER RULE ')
+          , 55, 0)]),
       );
 
       return f;

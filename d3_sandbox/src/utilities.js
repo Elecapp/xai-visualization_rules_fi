@@ -11,10 +11,10 @@ function allOccurences(text, search) {
   return indexes;
 }
 
-function text2tspan(text, width, x = 0, prefixLength = 0) {
+function text2tspan(text, width, x = 0) {
   const words = text.split(' ');
   const lines = [];
-  let currentLine = ' '.repeat(prefixLength);
+  let currentLine = '';
   words.forEach((word) => {
     const testLine = `${currentLine} ${word}`;
     const testLength = testLine.replace(/_\*|\*_/g, '').length;
@@ -29,29 +29,32 @@ function text2tspan(text, width, x = 0, prefixLength = 0) {
 
   // check that each line in lines contains the string '_*' and '*_'
   const formatLines = lines.map((l) => {
+    let cl = l;
     // find all indexes of the occurences of string '_*'
-    let startIndexes = allOccurences(l, '_*');
-    let endIndexes = allOccurences(l, '*_');
+    let startIndexes = allOccurences(cl, '_*');
+    let endIndexes = allOccurences(cl, '*_');
 
     if (startIndexes.length > endIndexes.length) {
-      endIndexes = allOccurences(`${l}*_`, '*_');
-      startIndexes = allOccurences(l, '_*');
+      cl = `${l}*_`;
     }
 
     if (startIndexes.length < endIndexes.length) {
-      startIndexes = allOccurences(`_*${l}`, '_*');
-      endIndexes = allOccurences(l, '*_');
+      cl = `_*${l}`;
     }
+    startIndexes = allOccurences(cl, '_*');
+    endIndexes = allOccurences(cl, '*_');
 
     // simple case when length of start and end indexes is the same and it is even
     if (startIndexes.length === endIndexes.length) {
-      const l2 = l.split('');
+      const l2 = cl.split('');
       startIndexes.forEach((s, i) => {
         l2[s + 1] = '';
         l2[s] = '<tspan font-weight="500">';
         l2[endIndexes[i]] = '</tspan>';
         l2[endIndexes[i] + 1] = '';
       });
+      console.log('non so', startIndexes, endIndexes);
+      console.log(l2.join(''));
       return l2.join('');
     }
 
@@ -61,15 +64,15 @@ function text2tspan(text, width, x = 0, prefixLength = 0) {
 
 
   // join lines with tspan elements
-  return formatLines.map((line, i) => `<tspan x="${x}" dy="${i ? '1.2em' : 0}" dx="${i === 0 ? prefixLength : 0}ex">${line}</tspan>`).join('');
+  return formatLines.map((line, i) => `<tspan x="${x}" dy="${i ? '1.2em' : 0}" >${line}</tspan>`).join('');
 }
 
-function predicate2text(adjmatrix, values, ruleSelector) {
+function predicate2text(adjmatrix, values, ruleSelector, prefix = '') {
   const format = d3.format('.2f');
   if (!adjmatrix) {
     const fPredicate = values[0].predicates[ruleSelector];
     if (fPredicate.length >= 1) {
-      return `To obtain class _*${fPredicate[0].consequent_class}*_, this feature _*should have*_ a value between _*${format(fPredicate[0].interval[0])} and ${format(fPredicate[0].interval[1])}*_`;
+      return `${prefix} To obtain class _*${fPredicate[0].consequent_class}*_, this feature _*should have*_ a value between _*${format(fPredicate[0].interval[0])} and ${format(fPredicate[0].interval[1])}*_`;
     }
   } else {
     const vPredicates = values.map(v => ({
@@ -79,17 +82,17 @@ function predicate2text(adjmatrix, values, ruleSelector) {
     const vnPredicates = vPredicates.filter(v => v.preds && v.preds.exp_value === 0);
 
     if (vpPredicates.length === 1) {
-      return `To obtain class _*${vpPredicates[0].preds.consequent_class}*_, the feature _*should have*_ value _*${vpPredicates[0].cvalue}*_`;
+      return `${prefix} To obtain class _*${vpPredicates[0].preds.consequent_class}*_, the feature _*should have*_ value _*${vpPredicates[0].cvalue}*_`;
     }
     const negativePredicates = vnPredicates.length;
     if (negativePredicates === 0) {
       return 'Mha!!!';
     }
     if (negativePredicates === 1) {
-      return `To obtain class _*${vnPredicates[0].preds.consequent_class}*_ this feature _*should NOT have*_ the value _*${vnPredicates[0].cvalue}*_`;
+      return `${prefix} To obtain class _*${vnPredicates[0].preds.consequent_class}*_ this feature _*should NOT have*_ the value _*${vnPredicates[0].cvalue}*_`;
     }
 
-    return `To obtain class _*${vnPredicates[0].preds.consequent_class}*_ this feature _*should have*_ the values _*${vpPredicates.map(v => v.cvalue).join(', ')}*_`;
+    return `${prefix} To obtain class _*${vnPredicates[0].preds.consequent_class}*_ this feature _*should have*_ the values _*${vpPredicates.map(v => v.cvalue).join(', ')}*_`;
   }
   return '';
 }
