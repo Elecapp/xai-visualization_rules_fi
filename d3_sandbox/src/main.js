@@ -447,7 +447,7 @@ function FIPERTextualExplanationView() {
 
       const makeCRuleText = (d) => {
         const cruleText = d.cruleText[selectedCounterRule];
-        return cruleText.replace("COUNTER RULE ", `<tspan fill='${FTTemplate.SECONDARY_BACKGROUND_COLOR}'>COUNTER RULE </tspan>`);
+        return cruleText.replace('COUNTER RULE ', `<tspan fill='${FTTemplate.SECONDARY_BACKGROUND_COLOR}'>COUNTER RULE </tspan>`);
       };
 
       gCounterRuleText.selectAll('text.text-counter-rule')
@@ -460,6 +460,21 @@ function FIPERTextualExplanationView() {
         .attr('fill', FTTemplate.TEXT_COLOR)
         .attr('font-weight', '300')
         .html(makeCRuleText);
+
+
+      let crHeight = 0;
+      if (!gCounterRuleText.empty()) {
+        crHeight = gCounterRuleText.node().getBBox().height;
+      }
+      selection.selectAll('rect.counter-rule-gutter')
+        .data(d => [d])
+        .join('rect')
+        .classed('counter-rule-gutter', true)
+        .attr('x', 0)
+        .attr('y', crHeight + ruleHeight)
+        .attr('width', RULES_COLUMN_WIDTH)
+        .attr('height', GUTTER)
+        .attr('fill', 'none');
     }
 
     return me;
@@ -1248,7 +1263,8 @@ function FIPERView() {
       const gTextualExplanation = gValueStack.selectAll('g.textual-explanation')
         .data(d => [d])
         .join('g')
-        .classed('textual-explanation', true);
+        .classed('textual-explanation', true)
+        .attr('transform', `translate(0, ${0.5 * GUTTER})`);
       const gGraphicalExplanation = gValueStack.selectAll('g.graphical-explanation')
         .data(d => [d])
         .join('g')
