@@ -79,7 +79,6 @@ function predicate2text(adjmatrix, values, ruleSelector) {
     const vnPredicates = vPredicates.filter(v => v.preds && v.preds.exp_value === 0);
 
     if (vpPredicates.length === 1) {
-
       return `To obtain class _*${vpPredicates[0].preds.consequent_class}*_, the feature _*should have*_ value _*${vpPredicates[0].cvalue}*_`;
     }
     const negativePredicates = vnPredicates.length;
@@ -87,7 +86,6 @@ function predicate2text(adjmatrix, values, ruleSelector) {
       return 'Mha!!!';
     }
     if (negativePredicates === 1) {
-
       return `To obtain class _*${vnPredicates[0].preds.consequent_class}*_ this feature _*should NOT have*_ the value _*${vnPredicates[0].cvalue}*_`;
     }
 
