@@ -16,7 +16,7 @@ import {
   VERTICAL_GUTTER,
 } from './constants';
 
-import { predicate2text, text2tspan } from './utilities';
+import {predicate2text, text2tspan} from './utilities';
 
 const d3 = require('d3');
 
@@ -238,7 +238,8 @@ function FIPERNumericDistributionBoxPlotView() {
     const g = selection.selectAll('g.axis')
       .data(d => [d])
       .join('g')
-      .classed('axis', true);
+      .classed('axis', true)
+      .attr('transform', `translate(0, ${GUTTER / 2})`);
     g.call(d3.axisBottom(xScale)
       .tickValues(prepareNumericalValues(feature.values)),
     );
@@ -251,18 +252,27 @@ function FIPERNumericDistributionBoxPlotView() {
     g.selectAll('.tick text')
       .attr('color', FTTemplate.CATEGORICAL_INSTANCE_STROKE_COLOR)
       .attr('transform', (d, i, nodes) => {
-        if ((i > 0)) {
+        if (i > 0) {
           const prev = nodes[i - 1];
-          if (d3.select(prev).attr('transform') === 'translate(0, 0)') {
-            const prevBox = prev.getBBox();
-            const curr = nodes[i];
-            const currBox = curr.getBBox();
-            // console.log('prevBox', prevBox);
-            // console.log('currBox', currBox);
-            if (currBox.x < (prevBox.x + prevBox.width)) {
-              const offset = (prevBox.y + prevBox.height) - currBox.y;
-              return `translate(0, ${offset})`;
-            }
+          const prevBox = prev.getBBox();
+          const curr = nodes[i];
+          const currBox = curr.getBBox();
+          const prevWidth = xScale(d3.select(nodes[i - 1]).datum()) + prevBox.width;
+          const currWidth = xScale(d);
+          // console.log('prevWidth', prevWidth);
+          // console.log('currWidth', currWidth);
+          const prevParentNodeY = nodes[i - 1].parentNode.querySelector('text').transform.baseVal[0].matrix.f;
+          const currParentNodeY = nodes[i].parentNode.transform.baseVal[0].matrix.f;
+          // console.log('NOT shifted', d, prevParentNodeY, currParentNodeY);
+          // console.log('---');
+          // check if the current label overlaps with the previous one
+          // and if they are in the same line (y) position of the parent node (g)
+          if (prevWidth + 5 > currWidth && prevParentNodeY === currParentNodeY) {
+            const offset = (prevBox.y + prevBox.height) - currBox.y;
+            // console.log('shifted', d, prevParentNodeY, currParentNodeY);
+            const tick = d3.select(curr.parentNode).select('line');
+            tick.attr('y2', 18);
+            return `translate(0, ${offset})`;
           }
         }
         return 'translate(0, 0)';
@@ -1462,24 +1472,24 @@ function adjustCounterRuleMatrix(matrix) {
     const max = d3.max(r, v => v.exp_value);
     const minV = d3.min(r, v => v.consequent_class);
     if (max === 0) {
-      return r.map(d => (d.exp_value === -1 ? ({ exp_value: 1, conquent_class: minV }) : d));
+      return r.map(d => (d.exp_value === -1 ? ({exp_value: 1, conquent_class: minV}) : d));
     }
     if (max === 1) {
-      return r.map(d => (d.exp_value === -1 ? ({ exp_value: 0, conquent_class: minV }) : d));
+      return r.map(d => (d.exp_value === -1 ? ({exp_value: 0, conquent_class: minV}) : d));
     }
     return r;
   });
 }
 
 function rewritePredicatesCategorical(c, e, ruleSelector) { // for each CounterRule,
-  // for each value in the current Feature
+                                                            // for each value in the current Feature
   return e.values.map(v =>
     // check if the current CR id is present in the crules of the current value
     (v[ruleSelector] ? v[ruleSelector][c] : []),
   )
     // in case of categorical features, we have a list of possible predicates
     // of the form {exp_value: false, conquent_class: 0}
-    .map(v => ((v) ? v[0] : ({ exp_value: -1, consequent_class: 27 })))
+    .map(v => ((v) ? v[0] : ({exp_value: -1, consequent_class: 27})))
     // for those entries where there is an array, we take the expected value
     // of the first element
     // .map(v => [v[0].exp_value, v[1]])
@@ -1618,7 +1628,7 @@ d3.json('/static/german_explanations/instance_2.json').then((data) => {
   const rEntries = Array.from(rFeatures.entries())
     .map(d => ({
       rname: d[0],
-      values: d[1].map(v => ({ ...v, rvalues: [], crvalues: [] })),
+      values: d[1].map(v => ({...v, rvalues: [], crvalues: []})),
       feature_importance: d3.sum(d[1], f => f.feature_importance),
       type: d[1][0].type,
       status: 0, // flag to indicate the status of the feature. 0: normal, 1: selected
