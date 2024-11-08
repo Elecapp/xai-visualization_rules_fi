@@ -1118,34 +1118,10 @@ function FIPERView() {
     // by the sum of the number of rows of the selected feature.
 
 
-    let offsetRows = 0;
     const features = oFeatures.map((d) => {
-      // We want to leave additional space (a couple of rows) if a rule or counterrule predicates
-      // are present.
-      const hasRule = d.rulePredicateMap.R0;
-      // check if any of the counter-rules is set to true
-      const hasCounterRules = Object.values(d.cRulesPredicateMap).some(v => v);
-      let additionalRows = 0;
-      if (hasRule) {
-        additionalRows += 1;
-      }
-      if (hasCounterRules) {
-        additionalRows += 1;
-      }
-      if (additionalRows > 0) {
-        additionalRows += 1;
-      }
-
-
       const f = {
         ...d,
-        rows: d.values.length,
       };
-      f.offsetRows = offsetRows;
-      f.additionalRows = additionalRows;
-      if (d.status === 1) {
-        offsetRows = f.rows + additionalRows;
-      }
 
       const rule2text = predicate2text(d.rmatrix, d.values, 'R0');
       // Adding strings to be used for textual labels
@@ -1241,30 +1217,6 @@ function FIPERView() {
       .join('g')
       .classed('feature', true);
 
-    // a rectangle to set the widht and height of the feature row.
-    gFeatures.selectAll('rect.background')
-      .data(d => [d])
-      .join('rect')
-      .classed('background', true)
-      .attr('y', -6)
-      .attr('width', width)
-      .attr('height', SINGLE_FEATURE_HEIGHT)
-      //.attr('height', d => (d.status === 1 ? (d.rows + d.additionalRows + 1) * SINGLE_FEATURE_HEIGHT : SINGLE_FEATURE_HEIGHT))
-      .transition(t)
-      .attr('fill', d => highlightScale(d.status));
-
-    // change color if mouseover and mouseout
-    // eslint-disable-next-line func-names
-    gFeatures.on('mouseover', function () {
-      d3.select(this).selectAll('rect.background').attr('fill', FTTemplate.SECONDARY_BACKGROUND_COLOR);
-    });
-    // eslint-disable-next-line func-names
-    gFeatures.on('mouseout', function (d) {
-      d3.select(this).selectAll('rect.background')
-        .attr('fill', highlightScale(d.status))
-        .attr('fill-opacity', 0.7);
-    });
-
     // for each feature row, we have 3 groups:
     // 1. the feature importance
     // 2. the distribution of the values
@@ -1274,6 +1226,18 @@ function FIPERView() {
 
     let featureOffset = 0;
     gFeatures.each((_, j, n) => {
+      // a rectangle to set the widht and height of the feature row.
+      d3.select(n[j]).selectAll('rect.background')
+        .data(d => [d])
+        .join('rect')
+        .classed('background', true)
+        .attr('y', -6)
+        .attr('width', width)
+        .attr('height', SINGLE_FEATURE_HEIGHT)
+        .transition(t)
+        .attr('fill', d => highlightScale(d.status));
+
+
       const gLabels = d3.select(n[j]).selectAll('g.feature-labels')
         .data(d => [d])
         .join('g')
@@ -1383,9 +1347,18 @@ function FIPERView() {
       d3.select(n[j]).datum().bbox = gfBbox;
       d3.select(n[j]).datum().offset = featureOffset;
       featureOffset += gfBbox.height;
+
+      if (d3.select(n[j]).datum().status === 1) {
+        featureOffset += GUTTER;
+      }
       d3.select(n[j])
         .transition(t)
         .attr('transform', d => `translate(0, ${d.offset})`);
+      d3.select(n[j]).selectAll('rect.background')
+        .attr('height', gfBbox.height + (0.5 * GUTTER));
+      d3.select(n[j]).selectAll('rect.gutter')
+        .attr('height', 1.5 * GUTTER)
+        .attr('y', gfBbox.height - GUTTER);
     });
 
     // eslint-disable-next-line func-names
