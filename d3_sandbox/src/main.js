@@ -1038,7 +1038,6 @@ function FIPERCRuleGrid() {
   function me(selection) {
     // we need to scan all the values elements, to extract the exp_value from the dictionary
     // predicates...
-
     selection.selectAll('line.gridLine')
       .data(Object.keys(selection.datum().cRulesPredicateMap))
       .join('line')
@@ -1046,7 +1045,7 @@ function FIPERCRuleGrid() {
       .attr('x1', d => bandScale(d) + (bandScale.bandwidth() / 2))
       .attr('x2', d => bandScale(d) + (bandScale.bandwidth() / 2))
       .attr('y1', -(SINGLE_FEATURE_HEIGHT) / 6)
-      .attr('y2', (SINGLE_FEATURE_HEIGHT))
+      .attr('y2', SINGLE_FEATURE_HEIGHT)
       .attr('stroke', FTTemplate.GRID_COLOR)
       .attr('stroke-width', 0.3)
       .attr('stroke-dasharray', ('3, 3'));
@@ -1371,10 +1370,9 @@ function FIPERView() {
             d.status === 1 ? 'rotate(0)' : 'rotate(180)',
             d.status === 1 ? 'rotate(180)' : 'rotate(0)',
           );
-          return function (t) {
-            return interpolate(t);
-          };
+          return interpolate;
         });
+
 
       const gfBbox = n[j].getBBox();
       d3.select(n[j]).datum().bbox = gfBbox;
@@ -1392,6 +1390,8 @@ function FIPERView() {
       d3.select(n[j]).selectAll('rect.gutter')
         .attr('height', 1.5 * GUTTER)
         .attr('y', gfBbox.height - GUTTER);
+      d3.select(n[j]).selectAll('line.gridLine')
+        .attr('y2', gfBbox.height);
     });
 
     // eslint-disable-next-line func-names
@@ -1490,7 +1490,7 @@ function adjustCounterRuleMatrix(matrix) {
 }
 
 function rewritePredicatesCategorical(c, e, ruleSelector) { // for each CounterRule,
-                                                            // for each value in the current Feature
+  // for each value in the current Feature
   return e.values.map(v =>
     // check if the current CR id is present in the crules of the current value
     (v[ruleSelector] ? v[ruleSelector][c] : []),
