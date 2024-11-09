@@ -426,7 +426,7 @@ function FiperClassificationBox() {
       .attr('x', 0)
       .attr('y', 0)
       .attr('width', width)
-      .attr('height', (3 * SINGLE_FEATURE_HEIGHT))
+      .attr('height', ((3 * SINGLE_FEATURE_HEIGHT) - GUTTER))
       .attr('stroke', FTTemplate.TEXT_COLOR)
       .attr('stroke-width', 0.5)
       .attr('fill', `${FTTemplate.SECONDARY_BACKGROUND_COLOR}`);
@@ -451,7 +451,7 @@ function FiperClassificationBox() {
       .data(d => [d])
       .join('g')
       .classed('pproba', true)
-      .attr('transform', `translate(${GUTTER / 2}, ${(SINGLE_FEATURE_HEIGHT * 2.5) - (GUTTER / 2)})`)
+      .attr('transform', `translate(${GUTTER / 2}, ${(SINGLE_FEATURE_HEIGHT * 2) })`)
       .call(pprobaBars);
 
     const nCRules = selection.datum().counterRules.length;
@@ -598,7 +598,7 @@ function FiperMenuPaletteSelector() {
       .join('rect')
       .classed('palette-background', true)
       .attr('x', 0)
-      .attr('y', (d, i) => (i * SINGLE_FEATURE_HEIGHT) + GUTTER)
+      .attr('y', (d, i) => (i * SINGLE_FEATURE_HEIGHT) + (GUTTER))
       .attr('width', SINGLE_FEATURE_HEIGHT * 0.75)
       .attr('height', SINGLE_FEATURE_HEIGHT * 0.75)
       .attr('fill', FTTemplate.SECONDARY_BACKGROUND_COLOR)
@@ -764,7 +764,7 @@ function FiperMenu() {
       .data(d => [d])
       .join('g')
       .classed('chooseFormat', true)
-      .attr('transform', `translate(${GUTTER}, ${(3 * SINGLE_FEATURE_HEIGHT) + (GUTTER)})`);
+      .attr('transform', `translate(${GUTTER}, ${(3 * SINGLE_FEATURE_HEIGHT)})`);
 
     const formatOptions = {
       'Textual Explanation': explanationDescriptor.textVersion,
