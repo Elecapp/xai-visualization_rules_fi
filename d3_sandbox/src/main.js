@@ -1363,6 +1363,7 @@ function FIPERView() {
         .attr('fill', FTTemplate.DISTRIBUTION_STROKE_COLOR);
 
       igFeatureHandler
+        .filter(d => d.status === 1)
         .transition()
         .duration(200)
         .attrTween('transform', (d) => {
