@@ -16,7 +16,7 @@ import {
   VERTICAL_GUTTER,
 } from './constants';
 
-import {predicate2text, text2tspan} from './utilities';
+import { predicate2text, text2tspan } from './utilities';
 
 const d3 = require('d3');
 
@@ -1365,13 +1365,8 @@ function FIPERView() {
         .filter(d => d.status === 1)
         .transition()
         .duration(200)
-        .attrTween('transform', (d) => {
-          const interpolate = d3.interpolateString(
-            d.status === 1 ? 'rotate(0)' : 'rotate(180)',
-            d.status === 1 ? 'rotate(180)' : 'rotate(0)',
-          );
-          return interpolate;
-        });
+        .style('transition', 'transform 0.5s')
+        .attr('transform', d => (d.status === 1 ? 'rotate(180)' : 'rotate(0)'));
 
 
       const gfBbox = n[j].getBBox();
@@ -1480,10 +1475,10 @@ function adjustCounterRuleMatrix(matrix) {
     const max = d3.max(r, v => v.exp_value);
     const minV = d3.min(r, v => v.consequent_class);
     if (max === 0) {
-      return r.map(d => (d.exp_value === -1 ? ({exp_value: 1, conquent_class: minV}) : d));
+      return r.map(d => (d.exp_value === -1 ? ({ exp_value: 1, conquent_class: minV }) : d));
     }
     if (max === 1) {
-      return r.map(d => (d.exp_value === -1 ? ({exp_value: 0, conquent_class: minV}) : d));
+      return r.map(d => (d.exp_value === -1 ? ({ exp_value: 0, conquent_class: minV }) : d));
     }
     return r;
   });
@@ -1497,7 +1492,7 @@ function rewritePredicatesCategorical(c, e, ruleSelector) { // for each CounterR
   )
     // in case of categorical features, we have a list of possible predicates
     // of the form {exp_value: false, conquent_class: 0}
-    .map(v => ((v) ? v[0] : ({exp_value: -1, consequent_class: 27})))
+    .map(v => ((v) ? v[0] : ({ exp_value: -1, consequent_class: 27 })))
     // for those entries where there is an array, we take the expected value
     // of the first element
     // .map(v => [v[0].exp_value, v[1]])
@@ -1636,7 +1631,7 @@ d3.json('/static/german_explanations/instance_2.json').then((data) => {
   const rEntries = Array.from(rFeatures.entries())
     .map(d => ({
       rname: d[0],
-      values: d[1].map(v => ({...v, rvalues: [], crvalues: []})),
+      values: d[1].map(v => ({ ...v, rvalues: [], crvalues: [] })),
       feature_importance: d3.sum(d[1], f => f.feature_importance),
       type: d[1][0].type,
       status: 0, // flag to indicate the status of the feature. 0: normal, 1: selected

@@ -219,7 +219,7 @@ function FiperChooseTextualFormat() {
 
   const colorScale = d3.scaleOrdinal()
     .domain([true, false])
-    .range([FTTemplate.FI_POSITIVE_COLOR, FTTemplate.DISTRIBUTION_COLOR]);
+    .range([FTTemplate.OTHER_TEXT_COLOR, FTTemplate.DISTRIBUTION_COLOR]);
 
   const textColorScale = d3.scaleOrdinal()
     .domain([true, false])
