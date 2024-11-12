@@ -451,7 +451,7 @@ function FiperClassificationBox() {
       .data(d => [d])
       .join('g')
       .classed('pproba', true)
-      .attr('transform', `translate(${GUTTER / 2}, ${(SINGLE_FEATURE_HEIGHT * 2) })`)
+      .attr('transform', `translate(${GUTTER / 2}, ${(SINGLE_FEATURE_HEIGHT * 2)})`)
       .call(pprobaBars);
 
     const nCRules = selection.datum().counterRules.length;
