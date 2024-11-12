@@ -927,10 +927,8 @@ function FIPERFeatureImportanceView() {
       .attr('y', 0)
       .attr('width', d => barLength(Math.abs(d.feature_importance)))
       .attr('height', height)
-      .attr('fill', d => (d.feature_importance < 0 ? FTTemplate.NEGATIVE_FI_COLOR : FTTemplate.FI_POSITIVE_COLOR));
-    // selection.selectAll('rect')
-    //   .filter(d => d.feature_importance < 0)
-    //   .attr('x', d => (width / 2) - barLength(Math.abs(d.feature_importance)));
+      .attr('fill', d => (d.feature_importance < 0 ? FTTemplate.NEGATIVE_FI_COLOR : FTTemplate.FI_POSITIVE_COLOR))
+      .call(TooltipHandler().html(d => `<div style="font-weight: 400">Feature importance: <span style="font-weight: 500">${d3.format('.2f')(d.feature_importance)}</span></div>`));
 
     if (selection.datum().status === 1) {
       const axis = d3.axisBottom(barLength)
