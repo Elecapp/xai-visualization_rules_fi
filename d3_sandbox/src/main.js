@@ -1048,11 +1048,11 @@ function FIPERCRuleGrid() {
       .attr('r', d => (selection.datum().cRulesRelevanceMap[d] === 2 ? 6 : 3))
       .attr('fill', d => ((d === selectedCounterRule) ? FTTemplate.CRULES_COLOR : FTTemplate.BASE_COLOR))
       .attr('stroke', d => ((d === selectedCounterRule) ? FTTemplate.CRULES_STROKE_COLOR : FTTemplate.BASE_STROKE_COLOR))
+      .call(TooltipHandler().html(d => `<div style="font-weight: 400">Counter Rule: ${d}</div>`))
       .on('click', (d) => {
         dispatcher.call('changeCounterRule', this, d3.select(d.target).datum());
         d.stopPropagation();
-      })
-      .call(TooltipHandler().html(d => `<div style="font-weight: 400">Counter Rule: ${d}</div>`));
+      });
   }
 
   // eslint-disable-next-line
@@ -1474,7 +1474,7 @@ function adjustCounterRuleMatrix(matrix) {
 }
 
 function rewritePredicatesCategorical(c, e, ruleSelector) { // for each CounterRule,
-  // for each value in the current Feature
+                                                            // for each value in the current Feature
   return e.values.map(v =>
     // check if the current CR id is present in the crules of the current value
     (v[ruleSelector] ? v[ruleSelector][c] : []),
