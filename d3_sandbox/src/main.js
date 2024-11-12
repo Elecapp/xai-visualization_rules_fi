@@ -1052,7 +1052,7 @@ function FIPERCRuleGrid() {
         dispatcher.call('changeCounterRule', this, d3.select(d.target).datum());
         d.stopPropagation();
       })
-      .call(TooltipHandler().html((d) => `<div style="font-weight: 400">Counter Rule: ${d}</div>`));
+      .call(TooltipHandler().html(d => `<div style="font-weight: 400">Counter Rule: ${d}</div>`));
   }
 
   // eslint-disable-next-line
