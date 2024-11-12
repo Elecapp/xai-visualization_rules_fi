@@ -16,7 +16,7 @@ import {
   VERTICAL_GUTTER,
 } from './constants';
 
-import { predicate2text, text2tspan } from './utilities';
+import {predicate2text, text2tspan} from './utilities';
 
 const d3 = require('d3');
 
@@ -180,17 +180,6 @@ function FIPERFeatureInstanceValueView() {
         .attr('stroke', FTTemplate.CATEGORICAL_INSTANCE_STROKE_COLOR)
         .call(fTooltip);
     } else {
-      // selection.selectAll('rect.bck-instance-value')
-      //   .data(d => d.values)
-      //   .join('rect')
-      //   .classed('bck-instance-value', true)
-      //   .attr('x', 0)
-      //   .attr('y', SINGLE_FEATURE_HEIGHT / 1.5)
-      //   .attr('width', RULES_COLUMN_WIDTH)
-      //   .attr('height', height / 6)
-      //   .attr('fill', FTTemplate.DISTRIBUTION_COLOR)
-      //   .attr('fill-opacity', 0.9)
-      //   .attr('stroke', null);
       barLength.domain([selection.datum().values[0].eda.min, selection.datum().values[0].eda.max]);
       selection.selectAll('rect.instance-value')
         .data(d => d.values)
@@ -1050,7 +1039,6 @@ function FIPERCRuleGrid() {
       .attr('stroke-width', 0.3)
       .attr('stroke-dasharray', ('3, 3'));
 
-    //
     selection.selectAll('circle.predicate')
       .data(bandScale.domain().filter(d => selection.datum().cRulesRelevanceMap[d] > 0))
       .join('circle')
@@ -1063,7 +1051,8 @@ function FIPERCRuleGrid() {
       .on('click', (d) => {
         dispatcher.call('changeCounterRule', this, d3.select(d.target).datum());
         d.stopPropagation();
-      });
+      })
+      .call(TooltipHandler().html((d) => `<div style="font-weight: 400">Counter Rule: ${d}</div>`));
   }
 
   // eslint-disable-next-line
@@ -1475,10 +1464,10 @@ function adjustCounterRuleMatrix(matrix) {
     const max = d3.max(r, v => v.exp_value);
     const minV = d3.min(r, v => v.consequent_class);
     if (max === 0) {
-      return r.map(d => (d.exp_value === -1 ? ({ exp_value: 1, conquent_class: minV }) : d));
+      return r.map(d => (d.exp_value === -1 ? ({exp_value: 1, conquent_class: minV}) : d));
     }
     if (max === 1) {
-      return r.map(d => (d.exp_value === -1 ? ({ exp_value: 0, conquent_class: minV }) : d));
+      return r.map(d => (d.exp_value === -1 ? ({exp_value: 0, conquent_class: minV}) : d));
     }
     return r;
   });
@@ -1492,7 +1481,7 @@ function rewritePredicatesCategorical(c, e, ruleSelector) { // for each CounterR
   )
     // in case of categorical features, we have a list of possible predicates
     // of the form {exp_value: false, conquent_class: 0}
-    .map(v => ((v) ? v[0] : ({ exp_value: -1, consequent_class: 27 })))
+    .map(v => ((v) ? v[0] : ({exp_value: -1, consequent_class: 27})))
     // for those entries where there is an array, we take the expected value
     // of the first element
     // .map(v => [v[0].exp_value, v[1]])
@@ -1631,7 +1620,7 @@ d3.json('/static/german_explanations/instance_2.json').then((data) => {
   const rEntries = Array.from(rFeatures.entries())
     .map(d => ({
       rname: d[0],
-      values: d[1].map(v => ({ ...v, rvalues: [], crvalues: [] })),
+      values: d[1].map(v => ({...v, rvalues: [], crvalues: []})),
       feature_importance: d3.sum(d[1], f => f.feature_importance),
       type: d[1][0].type,
       status: 0, // flag to indicate the status of the feature. 0: normal, 1: selected
@@ -1892,10 +1881,10 @@ d3.json('/static/german_explanations/instance_2.json').then((data) => {
       explanationDescriptor.features
         .sort((a, b) =>
           ((Object.values(b.cRulesRelevanceMap).filter(v => v === 1).length) -
-          (Object.values(a.cRulesRelevanceMap).filter(v => v === 1).length)))
+            (Object.values(a.cRulesRelevanceMap).filter(v => v === 1).length)))
         .sort((a, b) =>
           ((Object.values(b.cRulesRelevanceMap).filter(v => v === 2).length) -
-          (Object.values(a.cRulesRelevanceMap).filter(v => v === 2).length)));
+            (Object.values(a.cRulesRelevanceMap).filter(v => v === 2).length)));
     }
     if (d === 'Rules first') {
       explanationDescriptor.features.sort((a, b) =>
