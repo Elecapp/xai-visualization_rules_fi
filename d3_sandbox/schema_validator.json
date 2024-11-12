@@ -1,0 +1,91 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "features": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "rname": { "type": "string" },
+            "type": { "type": "string", "enum": ["numeric", "categorical"] },
+            "feature_importance": { "type": "number" },
+            "eda": {
+              "type": "object",
+              "properties": {
+                "min": { "type": "number" },
+                "max": { "type": "number" },
+                "q1": { "type": "number" },
+                "median": { "type": "number" },
+                "q3": { "type": "number" },
+                "mean": { "type": "number" },
+                "std": { "type": "number" },
+                "category": { "type": "string" },
+                "count": { "type": "integer" }
+              },
+              "required": ["min", "max"]
+            },
+            "rule": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "att": { "type": "string" },
+                      "op": { "type": "string" },
+                      "thr": { "type": "number" },
+                      "is_continuous": { "type": "boolean" }
+                    },
+                    "required": ["att", "op", "thr", "is_continuous"]
+                  },
+                  { "type": "integer" }
+                ]
+              }
+            },
+            "crules": {
+              "type": "object",
+              "patternProperties": {
+                "^C\\d+$": {
+                  "type": "array",
+                  "items": {
+                    "type": "array",
+                    "items": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "att": { "type": "string" },
+                          "op": { "type": "string" },
+                          "thr": { "type": "number" },
+                          "is_continuous": { "type": "boolean" }
+                        },
+                        "required": ["att", "op", "thr", "is_continuous"]
+                      },
+                      { "type": "integer" }
+                    ]
+                  }
+                }
+              }
+            },
+            "instance_value": { "type": "number" },
+            "is_ordinal": { "type": "boolean" },
+            "order": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          },
+          "required": ["name", "type", "feature_importance", "eda"]
+        }
+      },
+      "predicted_class": { "type": "integer" },
+      "true_class": { "type": "integer" },
+      "predicted_proba": {
+        "type": "array",
+        "items": { "type": "number" }
+      }
+    },
+    "required": ["features", "predicted_class", "true_class", "predicted_proba"]
+  }
+  
