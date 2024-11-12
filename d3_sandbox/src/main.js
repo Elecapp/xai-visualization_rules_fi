@@ -439,7 +439,7 @@ function FIPERTextualExplanationView() {
       }
 
       const gCounterRuleText = selection.selectAll('g.counter-rule-text-explanation')
-        .data(d => [d].filter(v => v.cRulesPredicateMap[selectedCounterRule]))
+        .data(d => [d].filter(v => v.cRulesRelevanceMap[selectedCounterRule]))
         .join('g')
         .classed('counter-rule-text-explanation', true)
         .attr('transform', `translate(0, ${ruleHeight + (0.5 * GUTTER)})`);
@@ -1039,7 +1039,7 @@ function FIPERCRuleGrid() {
     // we need to scan all the values elements, to extract the exp_value from the dictionary
     // predicates...
     selection.selectAll('line.gridLine')
-      .data(Object.keys(selection.datum().cRulesPredicateMap))
+      .data(Object.keys(selection.datum().cRulesRelevanceMap))
       .join('line')
       .classed('gridLine', true)
       .attr('x1', d => bandScale(d) + (bandScale.bandwidth() / 2))
@@ -1052,12 +1052,12 @@ function FIPERCRuleGrid() {
 
     //
     selection.selectAll('circle.predicate')
-      .data(bandScale.domain().filter(d => selection.datum().cRulesPredicateMap[d]))
+      .data(bandScale.domain().filter(d => selection.datum().cRulesRelevanceMap[d] > 0))
       .join('circle')
       .classed('predicate', true)
       .attr('cx', d => bandScale(d) + (bandScale.bandwidth() / 2))
       .attr('cy', ((SINGLE_FEATURE_HEIGHT * 3) / 6) / 2)
-      .attr('r', 5)
+      .attr('r', d => (selection.datum().cRulesRelevanceMap[d] === 2 ? 6 : 3))
       .attr('fill', d => ((d === selectedCounterRule) ? FTTemplate.CRULES_COLOR : FTTemplate.BASE_COLOR))
       .attr('stroke', d => ((d === selectedCounterRule) ? FTTemplate.CRULES_STROKE_COLOR : FTTemplate.BASE_STROKE_COLOR))
       .on('click', (d) => {
@@ -1148,8 +1148,8 @@ function FIPERView() {
         .filter(([, v]) => v)
         .map(([k]) => [k, text2tspan(rule2text, 55, 0)]),
       );
-      f.cruleText = Object.fromEntries(Object.entries(d.cRulesPredicateMap)
-        .filter(([, v]) => v)
+      f.cruleText = Object.fromEntries(Object.entries(d.cRulesRelevanceMap)
+        .filter(([, v]) => v > 0)
         .map(([k], i) => [k, text2tspan(
           predicate2text(d.crmatrix && d.crmatrix[i], d.values, k, 'COUNTER RULE ')
           , 55, 0)]),
@@ -1681,14 +1681,18 @@ d3.json('/static/german_explanations/instance_2.json').then((data) => {
       })),
   })).map(e => ({
     ...e,
-    cRulesPredicateMap: Object.fromEntries(CRulesList.map(c => [c, (
-      e.values.map((v) => {
-        if (c in v.predicates) {
-          return v.predicates[c].exp_value > 0;
-        }
-        return false;
-      }).reduce((acc, curr) => acc || curr, false)
-    )])),
+    cRulesRelevanceMap: Object.fromEntries(CRulesList.map((c, i) => {
+      // check if exp_values of crmatrix are all -1;
+      if (e.crmatrix[i].map(v => v.exp_value).reduce((acc, curr) => acc && curr === -1, true)) {
+        return [c, 0];
+      }
+      // check if th exp_values of crmatrix are equal to the exp_values of rmatrix
+      if (e.crmatrix[i].map((v, j) => v.exp_value === e.rmatrix[0][j].exp_value)
+        .reduce((acc, curr) => acc && curr, true)) {
+        return [c, 1];
+      }
+      return [c, 2];
+    })),
     rulePredicateMap: Object.fromEntries(['R0'].map(c => [c, (
       e.values.map((v) => {
         if (c in v.predicates) {
@@ -1738,14 +1742,22 @@ d3.json('/static/german_explanations/instance_2.json').then((data) => {
       })),
     })).map(e => ({
       ...e,
-      cRulesPredicateMap: Object.fromEntries(CRulesList.map(c => [c, (
-        e.values.map((v) => {
-          if (c in v.predicates) {
-            return v.predicates[c].length > 0;
+      cRulesRelevanceMap: Object.fromEntries(CRulesList.map((c) => {
+        // check if the counter rule is relevant
+        const currValue = e.values[0];
+        // check if predicates of the counter is present
+        if (c in currValue.predicates && currValue.predicates[c].length > 0) {
+          // check if the interval of the counter rule is different from the interval of the rule
+          const instanceValue = currValue.instance_value;
+          const cruleInterval = currValue.predicates[c][0].interval;
+          // check if instance value is within the interval of the counter rule
+          if (instanceValue >= cruleInterval[0] && instanceValue <= cruleInterval[1]) {
+            return [c, 1];
           }
-          return false;
-        }).reduce((acc, curr) => acc || curr, false)
-      )])),
+          return [c, 2];
+        }
+        return [c, 0];
+      })),
       rulePredicateMap: Object.fromEntries(['R0'].map(c => [c, (
         e.values.map((v) => {
           if (c in v.predicates) {
@@ -1828,9 +1840,9 @@ d3.json('/static/german_explanations/instance_2.json').then((data) => {
 
   function refreshVisualization(descriptor) {
     const filterFunctionRule = f => d3.sum(Object.values(f.rulePredicateMap)) > 0;
-    const filterFunctionCRule = f => d3.sum(Object.values(f.cRulesPredicateMap)) > 0;
+    const filterFunctionCRule = f => d3.sum(Object.values(f.cRulesRelevanceMap)) > 0;
     const filterFunctionBoth = f => (d3.sum(Object.values(f.rulePredicateMap)) +
-      d3.sum(Object.values(f.cRulesPredicateMap))) > 0;
+      d3.sum(Object.values(f.cRulesRelevanceMap))) > 0;
 
     let currentFilter = () => true;
     if (descriptor.filterRules) {
@@ -1877,9 +1889,13 @@ d3.json('/static/german_explanations/instance_2.json').then((data) => {
         (b.feature_importance) - (a.feature_importance));
     }
     if (d === 'Counter Rules first') {
-      explanationDescriptor.features.sort((a, b) =>
-        (d3.sum(Object.values(b.cRulesPredicateMap)) -
-          d3.sum(Object.values(a.cRulesPredicateMap))));
+      explanationDescriptor.features
+        .sort((a, b) =>
+          ((Object.values(b.cRulesRelevanceMap).filter(v => v === 1).length) -
+          (Object.values(a.cRulesRelevanceMap).filter(v => v === 1).length)))
+        .sort((a, b) =>
+          ((Object.values(b.cRulesRelevanceMap).filter(v => v === 2).length) -
+          (Object.values(a.cRulesRelevanceMap).filter(v => v === 2).length)));
     }
     if (d === 'Rules first') {
       explanationDescriptor.features.sort((a, b) =>
