@@ -80,21 +80,6 @@ function FiperMenuCRule() {
       .attr('y', d => (d === explanationDescriptor.selectedCounterRule ?
         GUTTER + internalGutter : ((MENU_HEIGHT / 3) * 2) - (2 * GUTTER) - (internalGutter * 2)));
 
-
-    gcRuleButtons.selectAll('text.label')
-      .data(d => [d])
-      .join('text')
-      .classed('label', true)
-      .attr('x', bandScale.bandwidth() / 2)
-      .attr('y', (SINGLE_FEATURE_HEIGHT / 2) - (FONT_SIZE / 2))
-      .attr('dy', '1em')
-      .attr('text-anchor', 'middle')
-      .attr('font-size', FONT_SIZE)
-      .attr('font-weight', d => (d === explanationDescriptor.selectedCounterRule ? 500 : 400))
-      .attr('fill', FTTemplate.TEXT_COLOR)
-      .attr('cursor', 'pointer')
-      .text(d => d);
-
     selection.selectAll('line.horizontalLine')
       .data([1, 3])
       .join('line')
@@ -736,6 +721,20 @@ function FiperMenu() {
       .classed('cRuleGrid', true)
       .attr('transform', `translate(${LABELS_COLUMN_WIDTH + RULES_COLUMN_WIDTH + (3 * GUTTER)}, ${GUTTER})`);
 
+    if (selection.datum().counterRules.length > 0) {
+      menuCRules.selectAll('text.label')
+        .data([1])
+        .join('text')
+        .classed('label', true)
+        .attr('x', GUTTER / 2)
+        .attr('y', (SINGLE_FEATURE_HEIGHT / 2) - (FONT_SIZE / 2))
+        .attr('dy', '1em')
+        .attr('text-anchor', 'start')
+        .attr('font-size', FONT_SIZE)
+        .attr('font-weight', 400)
+        .attr('fill', FTTemplate.TEXT_COLOR)
+        .text(selection.datum().counterRules.length > 1 ? 'C.Rules' : 'C.R');
+    }
     menuCRules.call(menuCRulesCall);
     // =========================================================
 
