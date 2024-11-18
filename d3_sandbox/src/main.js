@@ -1576,201 +1576,207 @@ function reduceUnionIntersection(predicatesWithIntervals) {
   return result;
 }
 
-d3.json('/static/german_explanations/instance_2.json').then((data) => {
-  // preprocess each entry to copmute the expected value for the categorical counterrules
-  const tfeature = data.features
-    // .filter(f => f.type === 'categorical')
-    // .filter(f => Object.entries(f.crules).length)
-    .map((f) => {
-      if (f.type === 'categorical') {
-        return {
-          ...f,
-          // transform the original crules into a dictionary where each entry is extended
-          // with the expected value of the rule
-          crules: Object.fromEntries(
-            Object.keys(f.crules)
-              .map(k => [k,
-                f.crules[k].map(p =>
+function loadData(url, callback) {
+  d3.json(url).then((data) => {
+    // preprocess each entry to copmute the expected value for the categorical counterrules
+    const tfeature = data.features
+      // .filter(f => f.type === 'categorical')
+      // .filter(f => Object.entries(f.crules).length)
+      .map((f) => {
+        if (f.type === 'categorical') {
+          return {
+            ...f,
+            // transform the original crules into a dictionary where each entry is extended
+            // with the expected value of the rule
+            crules: Object.fromEntries(
+              Object.keys(f.crules)
+                .map(k => [k,
+                  f.crules[k].map(p =>
+                    ({
+                      exp_value: computeBooleanExpectedValue(p[0]),
+                      consequent_class: p[1],
+                    }),
+                  )])),
+            rules: Object.fromEntries(
+              ['R0'].map(k => [k,
+                f.rule.map(p =>
                   ({
                     exp_value: computeBooleanExpectedValue(p[0]),
                     consequent_class: p[1],
                   }),
-                )])),
-          rules: Object.fromEntries(
-            ['R0'].map(k => [k,
-              f.rule.map(p =>
-                ({
-                  exp_value: computeBooleanExpectedValue(p[0]),
-                  consequent_class: p[1],
-                }),
-              )],
-            ).filter(v => v[1].length > 0),
-          ),
-        };
-      }
-      return f;
-    });
-  // console.log('tfeature', tfeature);
-
-  // all values of a single features are grouped by the name of the feature
-  const rFeatures = d3.group(tfeature, d => d.rname);
-  // after the aggregation, we create a list of objects with the properties of the feature
-  const rEntries = Array.from(rFeatures.entries())
-    .map(d => ({
-      rname: d[0],
-      values: d[1].map(v => ({...v, rvalues: [], crvalues: []})),
-      feature_importance: d3.sum(d[1], f => f.feature_importance),
-      type: d[1][0].type,
-      status: 0, // flag to indicate the status of the feature. 0: normal, 1: selected
-      rows: d[1].length, // how many distinct values the feature has
-      // rvalues: [], // to be removed
-      // crvalues: [], // to be removed
-    }));
-  // since each value as references to a rule or counterrules, we select only those values
-  // that have a rule, i.e. the corresponding v.rule array is not empty and the value is the
-  // instance value
-  // console.log('rEntries', rEntries);
-
-  // this list contains the set of all the counterRules that are present in the explanation
-  // object. This is used to create the legend and selectors of the visualization
-  const CRulesList = Array.from(new Set(rEntries
-    .map(e => e.values.map(v =>
-      (v.crules ? Object.entries(v.crules).map(r => r[0]) : []))).flat().flat()));
-
-  // console.log('CRulesList', CRulesList);
-  // first manage the counter rules for categorical features
-  // =============================================================
-  //            CATEGORICAL FEATURES
-  // =============================================================
-  const cEntries = rEntries.filter(e => e.type === 'categorical').map(e => ({
-    ...e,
-    crmatrix: adjustCounterRuleMatrix(CRulesList.map(c => rewritePredicatesCategorical(c, e, 'crules'))),
-    rmatrix: adjustCounterRuleMatrix(['R0'].map(c => rewritePredicatesCategorical(c, e, 'rules'))),
-  })).map(e => ({
-    ...e,
-    values: e.values.map((v, i) => ({
-      ...v,
-      // we add the bitmap to decide if this value is visible for a specific counter rule.
-      predicates: Object.fromEntries(
-        CRulesList.map((_, j) => [_, e.crmatrix[j][i]])
-          .concat([['R0', e.rmatrix[0][i]]])
-          .filter(vv => vv[1].exp_value >= 0),
-      ),
-    }))
-      .map(v => ({
-        eda: v.eda,
-        feature_importance: v.feature_importance,
-        instance_value: v.instance_value,
-        name: v.name,
-        rname: v.rname,
-        type: v.type,
-        predicates: v.predicates,
-      })),
-  })).map(e => ({
-    ...e,
-    cRulesRelevanceMap: Object.fromEntries(CRulesList.map((c, i) => {
-      // check if exp_values of crmatrix are all -1;
-      if (e.crmatrix[i].map(v => v.exp_value).reduce((acc, curr) => acc && curr === -1, true)) {
-        return [c, 0];
-      }
-      // check if th exp_values of crmatrix are equal to the exp_values of rmatrix
-      if (e.crmatrix[i].map((v, j) => v.exp_value === e.rmatrix[0][j].exp_value)
-        .reduce((acc, curr) => acc && curr, true)) {
-        return [c, 1];
-      }
-      return [c, 2];
-    })),
-    rulePredicateMap: Object.fromEntries(['R0'].map(c => [c, (
-      e.values.map((v) => {
-        if (c in v.predicates) {
-          return v.predicates[c].exp_value > 0;
+                )],
+              ).filter(v => v[1].length > 0),
+            ),
+          };
         }
-        return false;
-      }).reduce((acc, curr) => acc || curr, false)
-    )])),
-  }));
+        return f;
+      });
+    // console.log('tfeature', tfeature);
 
-  // then manage the counter rules for numerical features
-  // =============================================================
-  //            NUMERICAL FEATURES
-  // =============================================================
-  const nEntries = rEntries.filter(e => e.type === 'numeric')
-    // transform each predicate into a dictionary with the consequent class
-    .map(e => ({
+    // all values of a single features are grouped by the name of the feature
+    const rFeatures = d3.group(tfeature, d => d.rname);
+    // after the aggregation, we create a list of objects with the properties of the feature
+    const rEntries = Array.from(rFeatures.entries())
+      .map(d => ({
+        rname: d[0],
+        values: d[1].map(v => ({...v, rvalues: [], crvalues: []})),
+        feature_importance: d3.sum(d[1], f => f.feature_importance),
+        type: d[1][0].type,
+        status: 0, // flag to indicate the status of the feature. 0: normal, 1: selected
+        rows: d[1].length, // how many distinct values the feature has
+        // rvalues: [], // to be removed
+        // crvalues: [], // to be removed
+      }));
+    // since each value as references to a rule or counterrules, we select only those values
+    // that have a rule, i.e. the corresponding v.rule array is not empty and the value is the
+    // instance value
+    // console.log('rEntries', rEntries);
+
+    // this list contains the set of all the counterRules that are present in the explanation
+    // object. This is used to create the legend and selectors of the visualization
+    const CRulesList = Array.from(new Set(rEntries
+      .map(e => e.values.map(v =>
+        (v.crules ? Object.entries(v.crules).map(r => r[0]) : []))).flat().flat()));
+
+    // console.log('CRulesList', CRulesList);
+    // first manage the counter rules for categorical features
+    // =============================================================
+    //            CATEGORICAL FEATURES
+    // =============================================================
+    const cEntries = rEntries.filter(e => e.type === 'categorical').map(e => ({
       ...e,
-      values: e.values.map(v => ({
-        ...v,
-        rule: v.rule.map(r => ({
-          attr: r[0].att,
-          op: r[0].op,
-          thr: r[0].thr,
-          consequent_class: r[1],
-        })),
-        predicates: Object.fromEntries(
-          CRulesList.map(c => [c, v.crules[c] ? v.crules[c].map(r => ({
-            attr: r[0].att,
-            op: r[0].op,
-            thr: r[0].thr,
-            consequent_class: r[1],
-          })) : []])
-            .concat([['R0', v.rule.map(r => ({
-              attr: r[0].att,
-              op: r[0].op,
-              thr: r[0].thr,
-              consequent_class: r[1],
-            }))]])
-            .map(pr => [pr[0], pr[1].map(pl => ({
-              ...pl,
-              // find the actual interval of the predicate
-              interval: resolveInterval(pl, v.eda.min, v.eda.max),
-            }))])
-            .map(pr => [pr[0], reduceUnionIntersection(pr[1])]),
-        ),
-      })),
+      crmatrix: adjustCounterRuleMatrix(CRulesList.map(c => rewritePredicatesCategorical(c, e, 'crules'))),
+      rmatrix: adjustCounterRuleMatrix(['R0'].map(c => rewritePredicatesCategorical(c, e, 'rules'))),
     })).map(e => ({
       ...e,
-      cRulesRelevanceMap: Object.fromEntries(CRulesList.map((c) => {
-        // check if the counter rule is relevant
-        const currValue = e.values[0];
-        // check if predicates of the counter is present
-        if (c in currValue.predicates && currValue.predicates[c].length > 0) {
-          // check if the interval of the counter rule is different from the interval of the rule
-          const instanceValue = currValue.instance_value;
-          const cruleInterval = currValue.predicates[c][0].interval;
-          // check if instance value is within the interval of the counter rule
-          if (instanceValue >= cruleInterval[0] && instanceValue <= cruleInterval[1]) {
-            return [c, 1];
-          }
-          return [c, 2];
+      values: e.values.map((v, i) => ({
+        ...v,
+        // we add the bitmap to decide if this value is visible for a specific counter rule.
+        predicates: Object.fromEntries(
+          CRulesList.map((_, j) => [_, e.crmatrix[j][i]])
+            .concat([['R0', e.rmatrix[0][i]]])
+            .filter(vv => vv[1].exp_value >= 0),
+        ),
+      }))
+        .map(v => ({
+          eda: v.eda,
+          feature_importance: v.feature_importance,
+          instance_value: v.instance_value,
+          name: v.name,
+          rname: v.rname,
+          type: v.type,
+          predicates: v.predicates,
+        })),
+    })).map(e => ({
+      ...e,
+      cRulesRelevanceMap: Object.fromEntries(CRulesList.map((c, i) => {
+        // check if exp_values of crmatrix are all -1;
+        if (e.crmatrix[i].map(v => v.exp_value).reduce((acc, curr) => acc && curr === -1, true)) {
+          return [c, 0];
         }
-        return [c, 0];
+        // check if th exp_values of crmatrix are equal to the exp_values of rmatrix
+        if (e.crmatrix[i].map((v, j) => v.exp_value === e.rmatrix[0][j].exp_value)
+          .reduce((acc, curr) => acc && curr, true)) {
+          return [c, 1];
+        }
+        return [c, 2];
       })),
       rulePredicateMap: Object.fromEntries(['R0'].map(c => [c, (
         e.values.map((v) => {
           if (c in v.predicates) {
-            return v.predicates[c].length > 0;
+            return v.predicates[c].exp_value > 0;
           }
           return false;
         }).reduce((acc, curr) => acc || curr, false)
       )])),
     }));
 
+    // then manage the counter rules for numerical features
+    // =============================================================
+    //            NUMERICAL FEATURES
+    // =============================================================
+    const nEntries = rEntries.filter(e => e.type === 'numeric')
+      // transform each predicate into a dictionary with the consequent class
+      .map(e => ({
+        ...e,
+        values: e.values.map(v => ({
+          ...v,
+          rule: v.rule.map(r => ({
+            attr: r[0].att,
+            op: r[0].op,
+            thr: r[0].thr,
+            consequent_class: r[1],
+          })),
+          predicates: Object.fromEntries(
+            CRulesList.map(c => [c, v.crules[c] ? v.crules[c].map(r => ({
+              attr: r[0].att,
+              op: r[0].op,
+              thr: r[0].thr,
+              consequent_class: r[1],
+            })) : []])
+              .concat([['R0', v.rule.map(r => ({
+                attr: r[0].att,
+                op: r[0].op,
+                thr: r[0].thr,
+                consequent_class: r[1],
+              }))]])
+              .map(pr => [pr[0], pr[1].map(pl => ({
+                ...pl,
+                // find the actual interval of the predicate
+                interval: resolveInterval(pl, v.eda.min, v.eda.max),
+              }))])
+              .map(pr => [pr[0], reduceUnionIntersection(pr[1])]),
+          ),
+        })),
+      })).map(e => ({
+        ...e,
+        cRulesRelevanceMap: Object.fromEntries(CRulesList.map((c) => {
+          // check if the counter rule is relevant
+          const currValue = e.values[0];
+          // check if predicates of the counter is present
+          if (c in currValue.predicates && currValue.predicates[c].length > 0) {
+            // check if the interval of the counter rule is different from the interval of the rule
+            const instanceValue = currValue.instance_value;
+            const cruleInterval = currValue.predicates[c][0].interval;
+            // check if instance value is within the interval of the counter rule
+            if (instanceValue >= cruleInterval[0] && instanceValue <= cruleInterval[1]) {
+              return [c, 1];
+            }
+            return [c, 2];
+          }
+          return [c, 0];
+        })),
+        rulePredicateMap: Object.fromEntries(['R0'].map(c => [c, (
+          e.values.map((v) => {
+            if (c in v.predicates) {
+              return v.predicates[c].length > 0;
+            }
+            return false;
+          }).reduce((acc, curr) => acc || curr, false)
+        )])),
+      }));
 
-  // concatenate cEntries and nEntries into a single array
-  const aEntries = cEntries.concat(nEntries);
-  // sort the entries by feature importance
-  aEntries.sort((a, b) => (b.feature_importance) - (a.feature_importance));
 
-  const explanationDescriptor = {
-    features: aEntries,
-    counterRules: CRulesList,
-    predicted_class: data.predicted_class,
-    predicted_proba: data.predicted_proba,
-    selectedCounterRule: '',
-    filterRules: true,
-    filterCRules: false,
-    textVersion: false,
-  };
+    // concatenate cEntries and nEntries into a single array
+    const aEntries = cEntries.concat(nEntries);
+    // sort the entries by feature importance
+    aEntries.sort((a, b) => (b.feature_importance) - (a.feature_importance));
+
+    const explanationDescriptor = {
+      features: aEntries,
+      counterRules: CRulesList,
+      predicted_class: data.predicted_class,
+      predicted_proba: data.predicted_proba,
+      selectedCounterRule: '',
+      filterRules: true,
+      filterCRules: false,
+      textVersion: false,
+    };
+    callback(explanationDescriptor, CRulesList);
+  });
+}
+
+function initializeVisualization(explanationDescriptor, CRulesList) {
   const fv = FIPERView().width(GLOBAL_WIDTH + (CRulesList.length * CRULES_GRID_COLUMN_WIDTH));
   const fm = FiperMenu();
 
@@ -1913,4 +1919,6 @@ d3.json('/static/german_explanations/instance_2.json').then((data) => {
       .attr('style', `background-color: ${FTTemplate.BACKGROUND_COLOR};`);
     refreshVisualization(explanationDescriptor);
   });
-});
+}
+
+loadData('/static/german_explanations/instance_2.json', initializeVisualization);
