@@ -1904,7 +1904,7 @@ d3.json('/static/german_explanations/instance_2.json').then((data) => {
   });
 
   dispatcher.on('changeTextualFormat', (d) => {
-    explanationDescriptor.textVersion = d['Textual Explanation'];
+    explanationDescriptor.textVersion = d.Textual;
     refreshVisualization(explanationDescriptor);
   });
 
