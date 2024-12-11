@@ -14,6 +14,7 @@ import {
 
 import {
   text2tspan,
+  columnLayout as cl,
 } from './utilities';
 
 const d3 = require('d3');
@@ -472,7 +473,7 @@ function FiperMenuColumnTitles() {
   function me(selection) {
     // horizontal separator lines
     const titleDescriptor = selection.datum();
-    const { labels, widthColumn, CRulesList } = titleDescriptor;
+    const { labels, selectors, CRulesList } = titleDescriptor;
 
     selection.selectAll('line.horizontalLine')
       .data(labels)
@@ -480,15 +481,8 @@ function FiperMenuColumnTitles() {
       .classed('horizontalLine', true)
       .attr('y1', SINGLE_FEATURE_HEIGHT / 2)
       .attr('y2', SINGLE_FEATURE_HEIGHT / 2)
-      .attr('x1', (d, i) => {
-        if (i === 0) {
-          return ((GUTTER * i) + widthColumn.slice(0, i).reduce((a, b) => a + b, 0));
-        }
-        return (widthColumn.slice(0, i).reduce((a, b) => a + b, 0) + (GUTTER * i));
-      })
-      .attr('x2', (d, i) =>
-        (widthColumn.slice(0, i + 1).reduce((a, b) => a + b, 0) + (GUTTER * i)),
-      )
+      .attr('x1', (d, i) => cl.dimensions(selectors[i]).x)
+      .attr('x2', (d, i) => cl.dimensions(selectors[i]).x + cl.dimensions(selectors[i]).width)
       .attr('stroke', FTTemplate.GRID_COLOR)
       .attr('stroke-width', 1)
       .attr('visibility', (d) => {
@@ -498,34 +492,18 @@ function FiperMenuColumnTitles() {
         return 'visible';
       });
 
-    selection.selectAll('rect.padding')
+    const rects = selection.selectAll('rect.padding')
       .data(labels)
       .join('rect')
       .classed('padding', true)
-      .attr('x', (d, i) =>
-        ((widthColumn.slice(0, i).reduce((a, b) => a + b, 0))
-          + (((widthColumn[i] / 2) + (GUTTER * i)) - ((d.length * 6.5) / 2))
-        ),
-      )
       .attr('y', SINGLE_FEATURE_HEIGHT / 4)
-      .attr('width', (d) => {
-        if (d === 'C.Rules' && CRulesList.length === 1) {
-          return 22;
-        } else if (d === 'C.Rules' && CRulesList.length === 0) {
-          return 0;
-        }
-        return (d.length * 6.5);
-      })
       .attr('height', SINGLE_FEATURE_HEIGHT / 2)
       .attr('fill', FTTemplate.BACKGROUND_COLOR);
-    selection.selectAll('text.label')
+    const tLabels = selection.selectAll('text.label')
       .data(labels)
       .join('text')
       .classed('label', true)
-      .attr('x', (d, i) =>
-        // eslint-disable-next-line max-len,no-mixed-operators
-        (widthColumn.slice(0, i).reduce((a, b) => a + b, 0) + (GUTTER * i) + (widthColumn[i] / 2)),
-      )
+      .attr('x', (d, i) => cl.dimensions(selectors[i]).x + (cl.dimensions(selectors[i]).width / 2))
       .attr('y', SINGLE_FEATURE_HEIGHT / 2)
       .attr('font-size', FONT_SIZE)
       .attr('text-anchor', 'middle')
@@ -540,6 +518,17 @@ function FiperMenuColumnTitles() {
         }
         return d;
       });
+    // for each element in tLabels
+    // get the length of the text
+    const textLengths = [];
+    tLabels.each(function (d, i) {
+      textLengths.push(d3.select(this).node().getComputedTextLength());
+    });
+
+    rects
+      .attr('x', (d, i) => cl.dimensions(selectors[i]).x + (cl.dimensions(selectors[i]).width / 2) - (textLengths[i] / 2))
+      .attr('width', (d, i) => textLengths[i]);
+
   }
 
   return me;
@@ -651,6 +640,7 @@ function FiperMenu() {
 
     const explanationDescriptor = selection.datum();
     const CRulesList = explanationDescriptor.counterRules;
+    const crWidth = CRulesList.length * CRULES_GRID_COLUMN_WIDTH;
 
     // =========================================================
     //                  Classification Box
@@ -659,7 +649,7 @@ function FiperMenu() {
       .data(d => [d])
       .join('g')
       .classed('classification', true)
-      .attr('transform', `translate(${GUTTER}, ${GUTTER})`);
+      .attr('transform', `translate(${cl.dimensions('feature-labels').x}, ${GUTTER})`);
     classificationRect.call(menuClassification);
     // =========================================================
 
@@ -668,15 +658,10 @@ function FiperMenu() {
     //                  Visualization blocks titles
     // =========================================================
     const labels = ['Feature', 'Feature Distribution', 'C.Rules', 'F.I.'];
-    const widthColumn = [
-      LABELS_COLUMN_WIDTH,
-      RULES_COLUMN_WIDTH,
-      ((CRulesList.length) * CRULES_GRID_COLUMN_WIDTH),
-      FI_COLUMN_WIDTH,
-    ];
+    const selectors = ['feature-labels', 'feature-values', 'crule-grid', 'feature-importance'];
     const titleDescriptor = {
       labels,
-      widthColumn,
+      selectors,
       CRulesList,
     };
 
@@ -684,7 +669,7 @@ function FiperMenu() {
       .data(d => [d])
       .join('g')
       .classed('titles', true)
-      .attr('transform', `translate(${GUTTER}, ${MENU_HEIGHT + SINGLE_FEATURE_HEIGHT})`);
+      .attr('transform', `translate(0, ${MENU_HEIGHT + SINGLE_FEATURE_HEIGHT})`);
 
     gTitles.datum(titleDescriptor).call(menuColumnTitles);
     // =========================================================
@@ -696,8 +681,7 @@ function FiperMenu() {
       .data(d => [d])
       .join('g')
       .classed('palette', true)
-      .attr('transform', `translate(${LABELS_COLUMN_WIDTH + RULES_COLUMN_WIDTH +
-      (CRULES_GRID_COLUMN_WIDTH * CRulesList.length) + FI_COLUMN_WIDTH + (5 * GUTTER)}, 0)`);
+      .attr('transform', `translate(${cl.dimensions('feature-handler').x}, 0)`);
     gPalette.call(menuPaletteSelector);
 
 
@@ -708,7 +692,7 @@ function FiperMenu() {
       .data(d => [d])
       .join('g')
       .classed('orderby', true)
-      .attr('transform', `translate(${LABELS_COLUMN_WIDTH + (2 * GUTTER)}, ${GUTTER})`);
+      .attr('transform', `translate(${cl.dimensions('feature-values').x}, ${GUTTER})`);
     gOrder.call(menuOrderBy);
     // =========================================================
 
@@ -719,7 +703,7 @@ function FiperMenu() {
       .data(d => [d])
       .join('g')
       .classed('cRuleGrid', true)
-      .attr('transform', `translate(${LABELS_COLUMN_WIDTH + RULES_COLUMN_WIDTH + (3 * GUTTER)}, ${GUTTER})`);
+      .attr('transform', `translate(${cl.dimensions('crule-grid').x}, ${GUTTER})`);
 
     if (selection.datum().counterRules.length > 0) {
       menuCRules.selectAll('text.label')
@@ -746,7 +730,7 @@ function FiperMenu() {
       .data(d => [d])
       .join('g')
       .classed('filter', true)
-      .attr('transform', `translate(${LABELS_COLUMN_WIDTH + RULES_COLUMN_WIDTH + (CRULES_GRID_COLUMN_WIDTH * CRulesList.length) + (4 * GUTTER)}, ${GUTTER})`);
+      .attr('transform', `translate(${cl.dimensions('feature-importance').x}, ${GUTTER})`);
 
     const filterByOptions = {
       Rules: explanationDescriptor.filterRules,
@@ -763,7 +747,7 @@ function FiperMenu() {
       .data(d => [d])
       .join('g')
       .classed('chooseFormat', true)
-      .attr('transform', `translate(${GUTTER}, ${(3 * SINGLE_FEATURE_HEIGHT)})`);
+      .attr('transform', `translate(${cl.dimensions('feature-labels').x}, ${(3 * SINGLE_FEATURE_HEIGHT)})`);
 
     const formatOptions = {
       'Textual Explanation': explanationDescriptor.textVersion,

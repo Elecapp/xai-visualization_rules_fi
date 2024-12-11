@@ -1,4 +1,5 @@
 const d3 = require('d3');
+const {GUTTER, LABELS_COLUMN_WIDTH, RULES_COLUMN_WIDTH, FI_COLUMN_WIDTH} = require("./constants");
 
 function allOccurences(text, search) {
   const indexes = [];
@@ -95,6 +96,83 @@ function predicate2text(adjmatrix, values, ruleSelector, prefix = '') {
   return '';
 }
 
+function ColumnLayout() {
+  const columns = [
+    // this array will contain the configuration of each column, something like
+    // {
+    //   'column1': {
+    //     'name': 'column1',
+    //     'width': 100,
+    //     'x': 0,
+    //   },
+  ];
+
+  const columnNames = {
+    // 'column1': 0,
+  };
+
+  let spacing = 10; // spacing between columns
+
+  function me() {
+
+  }
+
+  me.addColumn = function (columnName, width) {
+    const newColumn = {
+      width,
+      x: 0,
+      name: columnName,
+    };
+    // compute the x position of the new column on the basis of the previous columns
+    if (columns.length > 0) {
+      newColumn.x = columns[columns.length - 1].x + columns[columns.length - 1].width + spacing;
+    } else {
+      newColumn.x = spacing;
+    }
+    columns.push(newColumn);
+    columnNames[columnName] = columns.length - 1;
+
+    return me;
+  };
+
+  me.spacing = function (_) {
+    if (!arguments.length) return spacing;
+    spacing = _;
+    return me;
+  };
+
+  me.dimensions = function (columnName) {
+    if (columnName in columnNames) {
+      return columns[columnNames[columnName]];
+    }
+    return null;
+  };
+
+  me.setWidth = function (columnName, width) {
+    if (columnName in columnNames) {
+      columns[columnNames[columnName]].width = width;
+      // update the x position of the columns after the one that has been resized
+      for (let i = columnNames[columnName] + 1; i < columns.length; i++) {
+        columns[i].x = columns[i - 1].x + columns[i - 1].width + spacing;
+      }
+    }
+    return me;
+  };
+
+  return me;
+}
+
+// setting the columns dimensions
+// the handler of the columns
+const columnLayout = ColumnLayout();
+columnLayout.spacing(GUTTER);
+columnLayout.addColumn('feature-handler', 20);
+columnLayout.addColumn('feature-labels', LABELS_COLUMN_WIDTH);
+columnLayout.addColumn('feature-values', RULES_COLUMN_WIDTH);
+columnLayout.addColumn('crule-grid', 10);
+columnLayout.addColumn('feature-importance', FI_COLUMN_WIDTH);
+
+
 module.exports = {
-  text2tspan, predicate2text,
+  text2tspan, predicate2text,columnLayout,
 };
