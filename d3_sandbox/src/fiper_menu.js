@@ -201,7 +201,7 @@ function FiperChooseTextualFormat() {
   };
   const xScale = d3.scaleBand()
     .domain(Object.keys(formatOptions))
-    .range([0, RULES_COLUMN_WIDTH/3])
+    .range([0, RULES_COLUMN_WIDTH / 3])
     .padding(0.01);
 
   const colorScale = d3.scaleOrdinal()
@@ -277,9 +277,12 @@ function FiperChooseTextualFormat() {
 
 function FiperMenuProgressHandler() {
   let progressSteps = [];
-  function me(selection){
+  const xScale = d3.scaleBand()
+    .domain(progressSteps.map(d => d.label))
+    .range([cl.dimensions('feature-labels').width / 8, cl.dimensions('feature-labels').width / 3]);
+  function me(selection) {
     const gSteps = selection.selectAll('g.progressStep')
-      .data(progressSteps)
+      .data(progressSteps.filter(d => !d.showOnlyBullet))
       .join('g')
       .classed('progressStep', true)
       .attr('transform', d => `translate(${d.x}, ${d.y})`);
@@ -311,13 +314,63 @@ function FiperMenuProgressHandler() {
       .text(d => d.label)
       .style('cursor', 'pointer')
       .on('click', d => console.log(d.label));
+
+    // create the bullets of the progress bar
+    const gCircles = selection.selectAll('g.progressBullet')
+      .data([1])
+      .join('g')
+      .classed('progressBullet', true)
+      .attr('transform', `translate(${cl.dimensions('feature-labels').x}, ${0.75 * GUTTER})`);
+
+    gCircles.selectAll('circle.progressBullet')
+      .data(progressSteps)
+      .join('circle')
+      .classed('progressBullet', true)
+      .attr('cx', d => xScale(d.label))
+      .attr('cy', 0.5 * GUTTER)
+      .attr('r', xScale.bandwidth() / 3)
+      .attr('fill', d => d.backgroundColor)
+      .attr('stroke', d => (d.completed ? FTTemplate.TEXT_COLOR : null));
+
+
+    // create the navigation arrows
+    gCircles.selectAll('path.rightArrow')
+      .data([1])
+      .join('path')
+      .classed('rightArrow', true)
+      .attr('d', 'M 0 0 l 5 5 l -5 5 Z')
+      .attr('fill', FTTemplate.DISTRIBUTION_STROKE_COLOR)
+      .attr('transform', `translate(${xScale.range()[1]}, 0)`)
+      .style('cursor', 'pointer')
+      .on('click', () => console.log('right + 1'));
+
+    gCircles.selectAll('path.leftArrow')
+      .data([1])
+      .join('path')
+      .classed('leftArrow', true)
+      .attr('d', 'M 0 0 l -5 5 l 5 5 Z')
+      .attr('fill', FTTemplate.DISTRIBUTION_STROKE_COLOR)
+      .attr('transform', `translate(${xScale.range()[0] - xScale.bandwidth()}, 0)`)
+      .style('cursor', 'pointer')
+      .on('click', () => console.log('left - 1'));
+
+    gCircles.selectAll('path.lastArrow')
+      .data([1])
+      .join('path')
+      .classed('lastArrow', true)
+      .attr('d', 'M 0 0 l 5 5 l -5 5 Z M 5 0 l 2 0 l 0 10 l -2 0 Z')
+      .attr('fill', FTTemplate.DISTRIBUTION_STROKE_COLOR)
+      .attr('transform', `translate(${xScale.range()[1] + xScale.bandwidth()}, 0)`)
+      .style('cursor', 'pointer')
+      .on('click', () => console.log('last'));
   }
 
   me.progressSteps = function (_) {
     if (!arguments.length) return progressSteps;
     progressSteps = _;
+    xScale.domain(progressSteps.map(d => d.label));
     return me;
-  }
+  };
 
   return me;
 }
@@ -827,17 +880,18 @@ function FiperMenu() {
       .classed('progress', true);
 
     const progressSteps = [
-      // {
-      //   name: 'Classification',
-      //   label: 'Classification',
-      //   tooltip: 'Shows the outcome of the model to be explained',
-      //   completed: true,
-      //   x: cl.dimensions('feature-labels').x,
-      //   y: 0.5 * GUTTER,
-      //   width: cl.dimensions('feature-labels').width / 2,
-      //   backgroundColor: FTTemplate.SECONDARY_BACKGROUND_COLOR,
-      //   textColor: FTTemplate.TEXT_COLOR,
-      // },
+      {
+        name: 'Classification',
+        label: 'Classification',
+        tooltip: 'Shows the outcome of the model to be explained',
+        completed: true,
+        x: cl.dimensions('feature-labels').x,
+        y: 0.5 * GUTTER,
+        width: cl.dimensions('feature-labels').width / 2,
+        backgroundColor: FTTemplate.DISTRIBUTION_COLOR,
+        textColor: FTTemplate.TEXT_COLOR,
+        showOnlyBullet: true,
+      },
       {
         name: 'Feature Values',
         label: 'Show Features',
@@ -848,6 +902,7 @@ function FiperMenu() {
         width: cl.dimensions('feature-labels').width,
         backgroundColor: FTTemplate.DISTRIBUTION_STROKE_COLOR,
         textColor: FTTemplate.TEXT_COLOR,
+        showOnlyBullet: false,
       },
       {
         name: 'Rules',
@@ -859,6 +914,7 @@ function FiperMenu() {
         width: cl.dimensions('feature-labels').width / 2,
         backgroundColor: FTTemplate.RULE_COLOR,
         textColor: FTTemplate.TEXT_COLOR,
+        showOnlyBullet: false,
       },
       {
         name: 'Counter Rules',
@@ -870,6 +926,7 @@ function FiperMenu() {
         width: cl.dimensions('feature-values').width / 3,
         backgroundColor: FTTemplate.CRULES_COLOR,
         textColor: FTTemplate.SECONDARY_BACKGROUND_COLOR,
+        showOnlyBullet: false,
       },
       {
         name: 'Feature Importance',
@@ -881,12 +938,11 @@ function FiperMenu() {
         width: cl.dimensions('feature-importance').width,
         backgroundColor: FTTemplate.FI_POSITIVE_COLOR,
         textColor: FTTemplate.SECONDARY_BACKGROUND_COLOR,
+        showOnlyBullet: false,
       },
     ];
     progressButtons.progressSteps(progressSteps);
     gProgress.call(progressButtons);
-
-
   }
   // eslint-disable-next-line func-names
   me.width = function (_) {
