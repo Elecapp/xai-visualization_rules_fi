@@ -14,6 +14,7 @@ import {
 
 import {
   text2tspan,
+  columnLayout as cl,
 } from './utilities';
 
 const d3 = require('d3');
@@ -78,7 +79,8 @@ function FiperMenuCRule() {
       .attr('stroke', FTTemplate.TEXT_COLOR)
       .transition()
       .attr('y', d => (d === explanationDescriptor.selectedCounterRule ?
-        GUTTER + internalGutter : ((MENU_HEIGHT / 3) * 2) - (2 * GUTTER) - (internalGutter * 2)));
+        GUTTER + internalGutter : (SINGLE_FEATURE_HEIGHT * 2)
+        - (2 * GUTTER) - (internalGutter * 2)));
 
     selection.selectAll('line.horizontalLine')
       .data([1, 3])
@@ -194,12 +196,12 @@ function FiperMenuOrderBy() {
 
 function FiperChooseTextualFormat() {
   let formatOptions = {
-    'Textual Explanation': false,
-    'Graphical Explanation': true,
+    Textual: false,
+    Graphic: true,
   };
   const xScale = d3.scaleBand()
     .domain(Object.keys(formatOptions))
-    .range([0, LABELS_COLUMN_WIDTH])
+    .range([0, RULES_COLUMN_WIDTH / 3])
     .padding(0.01);
 
   const colorScale = d3.scaleOrdinal()
@@ -247,6 +249,19 @@ function FiperChooseTextualFormat() {
       .text(d => d)
       .style('cursor', 'pointer')
       .on('click', generateEvent);
+
+    selection.selectAll('text.label')
+      .data(['Explanation'])
+      .join('text')
+      .classed('label', true)
+      .attr('x', xScale.range()[1])
+      .attr('y', 0.5 * GUTTER)
+      .attr('font-size', FONT_SIZE)
+      .attr('font-weight', 400)
+      .attr('dy', '1em')
+      .attr('dx', '0.5em')
+      .attr('fill', FTTemplate.TEXT_COLOR)
+      .text(d => d);
   }
 
   // eslint-disable-next-line func-names
@@ -254,6 +269,106 @@ function FiperChooseTextualFormat() {
     if (!arguments.length) return formatOptions;
     formatOptions = _;
 
+    return me;
+  };
+
+  return me;
+}
+
+function FiperMenuProgressHandler() {
+  let progressSteps = [];
+  const xScale = d3.scaleBand()
+    .domain(progressSteps.map(d => d.label))
+    .range([cl.dimensions('feature-labels').width / 8, cl.dimensions('feature-labels').width / 3]);
+  function me(selection) {
+    const gSteps = selection.selectAll('g.progressStep')
+      .data(progressSteps.filter(d => !d.showOnlyBullet))
+      .join('g')
+      .classed('progressStep', true)
+      .attr('transform', d => `translate(${d.x}, ${d.y})`);
+
+    gSteps.selectAll('rect.progressButton')
+      .data(d => [d])
+      .join('rect')
+      .classed('progressButton', true)
+      .attr('x', 0)
+      .attr('y', 0)
+      .attr('width', d => d.width)
+      .attr('height', 1.5 * GUTTER)
+      .attr('fill', d => d.backgroundColor)
+      .style('cursor', 'pointer')
+      .on('click', d => console.log(d.label));
+
+
+    gSteps.selectAll('text.progressButton')
+      .data(d => [d])
+      .join('text')
+      .classed('progressButton', true)
+      .attr('x', 0)
+      .attr('y', 0)
+      .attr('font-size', FONT_SIZE)
+      .attr('font-weight', 400)
+      .attr('dy', '1em')
+      .attr('dx', '0.5em')
+      .attr('fill', d => d.textColor)
+      .text(d => d.label)
+      .style('cursor', 'pointer')
+      .on('click', d => console.log(d.label));
+
+    // create the bullets of the progress bar
+    const gCircles = selection.selectAll('g.progressBullet')
+      .data([1])
+      .join('g')
+      .classed('progressBullet', true)
+      .attr('transform', `translate(${cl.dimensions('feature-labels').x}, ${0.75 * GUTTER})`);
+
+    gCircles.selectAll('circle.progressBullet')
+      .data(progressSteps)
+      .join('circle')
+      .classed('progressBullet', true)
+      .attr('cx', d => xScale(d.label))
+      .attr('cy', 0.5 * GUTTER)
+      .attr('r', xScale.bandwidth() / 3)
+      .attr('fill', d => d.backgroundColor)
+      .attr('stroke', d => (d.completed ? FTTemplate.TEXT_COLOR : null));
+
+
+    // create the navigation arrows
+    gCircles.selectAll('path.rightArrow')
+      .data([1])
+      .join('path')
+      .classed('rightArrow', true)
+      .attr('d', 'M 0 0 l 5 5 l -5 5 Z')
+      .attr('fill', FTTemplate.DISTRIBUTION_STROKE_COLOR)
+      .attr('transform', `translate(${xScale.range()[1]}, 0)`)
+      .style('cursor', 'pointer')
+      .on('click', () => console.log('right + 1'));
+
+    gCircles.selectAll('path.leftArrow')
+      .data([1])
+      .join('path')
+      .classed('leftArrow', true)
+      .attr('d', 'M 0 0 l -5 5 l 5 5 Z')
+      .attr('fill', FTTemplate.DISTRIBUTION_STROKE_COLOR)
+      .attr('transform', `translate(${xScale.range()[0] - xScale.bandwidth()}, 0)`)
+      .style('cursor', 'pointer')
+      .on('click', () => console.log('left - 1'));
+
+    gCircles.selectAll('path.lastArrow')
+      .data([1])
+      .join('path')
+      .classed('lastArrow', true)
+      .attr('d', 'M 0 0 l 5 5 l -5 5 Z M 5 0 l 2 0 l 0 10 l -2 0 Z')
+      .attr('fill', FTTemplate.DISTRIBUTION_STROKE_COLOR)
+      .attr('transform', `translate(${xScale.range()[1] + xScale.bandwidth()}, 0)`)
+      .style('cursor', 'pointer')
+      .on('click', () => console.log('last'));
+  }
+
+  me.progressSteps = function (_) {
+    if (!arguments.length) return progressSteps;
+    progressSteps = _;
+    xScale.domain(progressSteps.map(d => d.label));
     return me;
   };
 
@@ -411,7 +526,7 @@ function FiperClassificationBox() {
       .attr('x', 0)
       .attr('y', 0)
       .attr('width', width)
-      .attr('height', ((3 * SINGLE_FEATURE_HEIGHT) - GUTTER))
+      .attr('height', ((3 * SINGLE_FEATURE_HEIGHT)))
       .attr('stroke', FTTemplate.TEXT_COLOR)
       .attr('stroke-width', 0.5)
       .attr('fill', `${FTTemplate.SECONDARY_BACKGROUND_COLOR}`);
@@ -449,9 +564,9 @@ function FiperClassificationBox() {
       .join('line')
       .classed('horizontalLine', true)
       .attr('x1', width + GUTTER)
-      .attr('y1', d => d * (MENU_HEIGHT + GUTTER))
+      .attr('y1', d => d * ((3 * SINGLE_FEATURE_HEIGHT) + GUTTER))
       .attr('x2', width + GUTTER + lineSpan)
-      .attr('y2', d => d * (MENU_HEIGHT + GUTTER))
+      .attr('y2', d => d * ((3 * SINGLE_FEATURE_HEIGHT) + GUTTER))
       .attr('stroke', FTTemplate.TEXT_COLOR)
       .attr('stroke-width', 0.5)
       .attr('stroke-dasharray', ('3, 3'))
@@ -472,7 +587,7 @@ function FiperMenuColumnTitles() {
   function me(selection) {
     // horizontal separator lines
     const titleDescriptor = selection.datum();
-    const { labels, widthColumn, CRulesList } = titleDescriptor;
+    const { labels, selectors, CRulesList } = titleDescriptor;
 
     selection.selectAll('line.horizontalLine')
       .data(labels)
@@ -480,15 +595,8 @@ function FiperMenuColumnTitles() {
       .classed('horizontalLine', true)
       .attr('y1', SINGLE_FEATURE_HEIGHT / 2)
       .attr('y2', SINGLE_FEATURE_HEIGHT / 2)
-      .attr('x1', (d, i) => {
-        if (i === 0) {
-          return ((GUTTER * i) + widthColumn.slice(0, i).reduce((a, b) => a + b, 0));
-        }
-        return (widthColumn.slice(0, i).reduce((a, b) => a + b, 0) + (GUTTER * i));
-      })
-      .attr('x2', (d, i) =>
-        (widthColumn.slice(0, i + 1).reduce((a, b) => a + b, 0) + (GUTTER * i)),
-      )
+      .attr('x1', (d, i) => cl.dimensions(selectors[i]).x)
+      .attr('x2', (d, i) => cl.dimensions(selectors[i]).x + cl.dimensions(selectors[i]).width)
       .attr('stroke', FTTemplate.GRID_COLOR)
       .attr('stroke-width', 1)
       .attr('visibility', (d) => {
@@ -498,34 +606,18 @@ function FiperMenuColumnTitles() {
         return 'visible';
       });
 
-    selection.selectAll('rect.padding')
+    const rects = selection.selectAll('rect.padding')
       .data(labels)
       .join('rect')
       .classed('padding', true)
-      .attr('x', (d, i) =>
-        ((widthColumn.slice(0, i).reduce((a, b) => a + b, 0))
-          + (((widthColumn[i] / 2) + (GUTTER * i)) - ((d.length * 6.5) / 2))
-        ),
-      )
       .attr('y', SINGLE_FEATURE_HEIGHT / 4)
-      .attr('width', (d) => {
-        if (d === 'C.Rules' && CRulesList.length === 1) {
-          return 22;
-        } else if (d === 'C.Rules' && CRulesList.length === 0) {
-          return 0;
-        }
-        return (d.length * 6.5);
-      })
       .attr('height', SINGLE_FEATURE_HEIGHT / 2)
       .attr('fill', FTTemplate.BACKGROUND_COLOR);
-    selection.selectAll('text.label')
+    const tLabels = selection.selectAll('text.label')
       .data(labels)
       .join('text')
       .classed('label', true)
-      .attr('x', (d, i) =>
-        // eslint-disable-next-line max-len,no-mixed-operators
-        (widthColumn.slice(0, i).reduce((a, b) => a + b, 0) + (GUTTER * i) + (widthColumn[i] / 2)),
-      )
+      .attr('x', (d, i) => cl.dimensions(selectors[i]).x + (cl.dimensions(selectors[i]).width / 2))
       .attr('y', SINGLE_FEATURE_HEIGHT / 2)
       .attr('font-size', FONT_SIZE)
       .attr('text-anchor', 'middle')
@@ -540,6 +632,16 @@ function FiperMenuColumnTitles() {
         }
         return d;
       });
+    // for each element in tLabels
+    // get the length of the text
+    const textLengths = [];
+    tLabels.each(function (d, i) {
+      textLengths.push(d3.select(this).node().getComputedTextLength());
+    });
+
+    rects
+      .attr('x', (d, i) => cl.dimensions(selectors[i]).x + (cl.dimensions(selectors[i]).width / 2) - (textLengths[i] / 2))
+      .attr('width', (d, i) => textLengths[i]);
   }
 
   return me;
@@ -583,7 +685,7 @@ function FiperMenuPaletteSelector() {
       .join('rect')
       .classed('palette-background', true)
       .attr('x', 0)
-      .attr('y', (d, i) => (i * SINGLE_FEATURE_HEIGHT) + (GUTTER))
+      .attr('y', (d, i) => (i * SINGLE_FEATURE_HEIGHT))
       .attr('width', SINGLE_FEATURE_HEIGHT * 0.75)
       .attr('height', SINGLE_FEATURE_HEIGHT * 0.75)
       .attr('fill', FTTemplate.SECONDARY_BACKGROUND_COLOR)
@@ -594,7 +696,7 @@ function FiperMenuPaletteSelector() {
       .join('path')
       .classed('icon', true)
       .attr('d', d => d.icon)
-      .attr('transform', (d, i) => `translate(3, ${(i * SINGLE_FEATURE_HEIGHT) + GUTTER + 3})`)
+      .attr('transform', (d, i) => `translate(3, ${(i * SINGLE_FEATURE_HEIGHT) + 3})`)
       .attr('fill', FTTemplate.OTHER_TEXT_COLOR);
 
     selection.selectAll('rect.palette')
@@ -634,6 +736,7 @@ function FiperMenu() {
   const menuCRulesCall = FiperMenuCRule();
   const menuFilterBy = FiperMenuFilterBy();
   const chooseFormat = FiperChooseTextualFormat();
+  const progressButtons = FiperMenuProgressHandler();
   const menuClassification = FiperClassificationBox()
     .width(LABELS_COLUMN_WIDTH);
   const menuColumnTitles = FiperMenuColumnTitles();
@@ -647,7 +750,8 @@ function FiperMenu() {
     const gMenu = selection.selectAll('g.menu')
       .data(d => [d])
       .join('g')
-      .classed('menu', true);
+      .classed('menu', true)
+      .attr('transform', `translate(0, ${GUTTER})`);
 
     const explanationDescriptor = selection.datum();
     const CRulesList = explanationDescriptor.counterRules;
@@ -659,7 +763,7 @@ function FiperMenu() {
       .data(d => [d])
       .join('g')
       .classed('classification', true)
-      .attr('transform', `translate(${GUTTER}, ${GUTTER})`);
+      .attr('transform', `translate(${cl.dimensions('feature-labels').x}, ${SINGLE_FEATURE_HEIGHT})`);
     classificationRect.call(menuClassification);
     // =========================================================
 
@@ -668,15 +772,10 @@ function FiperMenu() {
     //                  Visualization blocks titles
     // =========================================================
     const labels = ['Feature', 'Feature Distribution', 'C.Rules', 'F.I.'];
-    const widthColumn = [
-      LABELS_COLUMN_WIDTH,
-      RULES_COLUMN_WIDTH,
-      ((CRulesList.length) * CRULES_GRID_COLUMN_WIDTH),
-      FI_COLUMN_WIDTH,
-    ];
+    const selectors = ['feature-labels', 'feature-values', 'crule-grid', 'feature-importance'];
     const titleDescriptor = {
       labels,
-      widthColumn,
+      selectors,
       CRulesList,
     };
 
@@ -684,7 +783,7 @@ function FiperMenu() {
       .data(d => [d])
       .join('g')
       .classed('titles', true)
-      .attr('transform', `translate(${GUTTER}, ${MENU_HEIGHT + SINGLE_FEATURE_HEIGHT})`);
+      .attr('transform', `translate(0, ${MENU_HEIGHT + SINGLE_FEATURE_HEIGHT})`);
 
     gTitles.datum(titleDescriptor).call(menuColumnTitles);
     // =========================================================
@@ -696,8 +795,7 @@ function FiperMenu() {
       .data(d => [d])
       .join('g')
       .classed('palette', true)
-      .attr('transform', `translate(${LABELS_COLUMN_WIDTH + RULES_COLUMN_WIDTH +
-      (CRULES_GRID_COLUMN_WIDTH * CRulesList.length) + FI_COLUMN_WIDTH + (5 * GUTTER)}, 0)`);
+      .attr('transform', `translate(${cl.dimensions('feature-handler').x}, 0)`);
     gPalette.call(menuPaletteSelector);
 
 
@@ -708,7 +806,7 @@ function FiperMenu() {
       .data(d => [d])
       .join('g')
       .classed('orderby', true)
-      .attr('transform', `translate(${LABELS_COLUMN_WIDTH + (2 * GUTTER)}, ${GUTTER})`);
+      .attr('transform', `translate(${cl.dimensions('feature-values').x}, ${SINGLE_FEATURE_HEIGHT})`);
     gOrder.call(menuOrderBy);
     // =========================================================
 
@@ -719,7 +817,7 @@ function FiperMenu() {
       .data(d => [d])
       .join('g')
       .classed('cRuleGrid', true)
-      .attr('transform', `translate(${LABELS_COLUMN_WIDTH + RULES_COLUMN_WIDTH + (3 * GUTTER)}, ${GUTTER})`);
+      .attr('transform', `translate(${cl.dimensions('crule-grid').x}, ${SINGLE_FEATURE_HEIGHT})`);
 
     if (selection.datum().counterRules.length > 0) {
       menuCRules.selectAll('text.label')
@@ -746,7 +844,7 @@ function FiperMenu() {
       .data(d => [d])
       .join('g')
       .classed('filter', true)
-      .attr('transform', `translate(${LABELS_COLUMN_WIDTH + RULES_COLUMN_WIDTH + (CRULES_GRID_COLUMN_WIDTH * CRulesList.length) + (4 * GUTTER)}, ${GUTTER})`);
+      .attr('transform', `translate(${cl.dimensions('feature-importance').x}, ${SINGLE_FEATURE_HEIGHT})`);
 
     const filterByOptions = {
       Rules: explanationDescriptor.filterRules,
@@ -763,16 +861,89 @@ function FiperMenu() {
       .data(d => [d])
       .join('g')
       .classed('chooseFormat', true)
-      .attr('transform', `translate(${GUTTER}, ${(3 * SINGLE_FEATURE_HEIGHT)})`);
+      .attr('transform', `translate(${cl.dimensions('feature-values').x},0)`);
 
     const formatOptions = {
-      'Textual Explanation': explanationDescriptor.textVersion,
-      'Graphical Explanation': !explanationDescriptor.textVersion,
+      Textual: explanationDescriptor.textVersion,
+      Graphic: !explanationDescriptor.textVersion,
     };
     chooseFormat.formatOptions(formatOptions);
     gChooseFormat.call(chooseFormat);
-  }
+    // =========================================================
 
+    // =========================================================
+    //            Progress Disclosure
+    // =========================================================
+    const gProgress = gMenu.selectAll('g.progress')
+      .data(d => [d])
+      .join('g')
+      .classed('progress', true);
+
+    const progressSteps = [
+      {
+        name: 'Classification',
+        label: 'Classification',
+        tooltip: 'Shows the outcome of the model to be explained',
+        completed: true,
+        x: cl.dimensions('feature-labels').x,
+        y: 0.5 * GUTTER,
+        width: cl.dimensions('feature-labels').width / 2,
+        backgroundColor: FTTemplate.DISTRIBUTION_COLOR,
+        textColor: FTTemplate.TEXT_COLOR,
+        showOnlyBullet: true,
+      },
+      {
+        name: 'Feature Values',
+        label: 'Show Features',
+        tooltip: 'Shows the list of the features and their values',
+        completed: false,
+        x: cl.dimensions('feature-labels').x,
+        y: (4 * SINGLE_FEATURE_HEIGHT) + (0.5 * GUTTER),
+        width: cl.dimensions('feature-labels').width,
+        backgroundColor: FTTemplate.DISTRIBUTION_STROKE_COLOR,
+        textColor: FTTemplate.TEXT_COLOR,
+        showOnlyBullet: false,
+      },
+      {
+        name: 'Rules',
+        label: 'Show Explanation',
+        tooltip: 'Shows the rule based explanation',
+        completed: false,
+        x: cl.dimensions('feature-labels').x + (cl.dimensions('feature-labels').width / 2),
+        y: 0.5 * GUTTER,
+        width: cl.dimensions('feature-labels').width / 2,
+        backgroundColor: FTTemplate.RULE_COLOR,
+        textColor: FTTemplate.TEXT_COLOR,
+        showOnlyBullet: false,
+      },
+      {
+        name: 'Counter Rules',
+        label: 'Counter Rules',
+        tooltip: 'Shows the counter rules',
+        completed: false,
+        x: cl.dimensions('feature-values').x + (cl.dimensions('feature-values').width / 3 * 2),
+        y: 0.5 * GUTTER,
+        width: cl.dimensions('feature-values').width / 3,
+        backgroundColor: FTTemplate.CRULES_COLOR,
+        textColor: FTTemplate.SECONDARY_BACKGROUND_COLOR,
+        showOnlyBullet: false,
+      },
+      {
+        name: 'Feature Importance',
+        label: 'Feat. Imp.',
+        tooltip: 'Shows the feature importance',
+        completed: false,
+        x: cl.dimensions('feature-importance').x,
+        y: (4 * SINGLE_FEATURE_HEIGHT) + (0.5 * GUTTER),
+        width: cl.dimensions('feature-importance').width,
+        backgroundColor: FTTemplate.FI_POSITIVE_COLOR,
+        textColor: FTTemplate.SECONDARY_BACKGROUND_COLOR,
+        showOnlyBullet: false,
+      },
+    ];
+    progressButtons.progressSteps(progressSteps);
+    gProgress.call(progressButtons);
+  }
   // eslint-disable-next-line func-names
   me.width = function (_) {
     if (!arguments.length) return width;

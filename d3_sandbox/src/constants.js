@@ -8,7 +8,7 @@ export const LABELS_COLUMN_WIDTH = 250;
 export const CRULES_GRID_COLUMN_WIDTH = 20;
 export const GUTTER = 10;
 export const VERTICAL_GUTTER = 5;
-export const MENU_HEIGHT = SINGLE_FEATURE_HEIGHT * 3;
+export const MENU_HEIGHT = SINGLE_FEATURE_HEIGHT * 4;
 export const FONT_SIZE = 11;
 
 export const GLOBAL_WIDTH = 700;

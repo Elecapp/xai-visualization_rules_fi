@@ -16,7 +16,7 @@ import {
   VERTICAL_GUTTER,
 } from './constants';
 
-import { predicate2text, text2tspan } from './utilities';
+import { predicate2text, text2tspan, columnLayout as cl } from './utilities';
 
 const d3 = require('d3');
 
@@ -1223,13 +1223,14 @@ function FIPERView() {
       .join('g')
       .classed('feature', true);
 
+    cl.setWidth('crule-grid', crWidth);
+
     // for each feature row, we have 3 groups:
     // 1. the feature importance
     // 2. the distribution of the values
     // 3. the labels
     // We call separate components to handle each group. Each groups is located accordingly
     // to the size of the corresponsing COLUMN.
-
     let featureOffset = 0;
     gFeatures.each((_, j, n) => {
       // a rectangle to set the widht and height of the feature row.
@@ -1244,18 +1245,20 @@ function FIPERView() {
         .attr('fill', d => highlightScale(d.status));
 
 
+      // ==========    FEATURE LABELS    ==========
       const gLabels = d3.select(n[j]).selectAll('g.feature-labels')
         .data(d => [d])
         .join('g')
         .classed('feature-labels', true)
-        .attr('transform', `translate(${GUTTER}, 0)`);
+        .attr('transform', `translate(${cl.dimensions('feature-labels').x}, 0)`);
       gLabels.call(flv);
 
+      // ==========    FEATURE VALUES    ==========
       const gValueStack = d3.select(n[j]).selectAll('g.feature-values')
         .data(d => [d])
         .join('g')
         .classed('feature-values', true)
-        .attr('transform', `translate(${LABELS_COLUMN_WIDTH + (2 * GUTTER)}, 0)`);
+        .attr('transform', `translate(${cl.dimensions('feature-values').x}, 0)`);
       const gTextualExplanation = gValueStack.selectAll('g.textual-explanation')
         .data(d => [d])
         .join('g')
@@ -1312,28 +1315,27 @@ function FIPERView() {
         gGraphicalExplanation.remove();
       }
 
+      // ==========    COUNTER RULES GRID    ==========
       const gCruleGrid = d3.select(n[j]).selectAll('g.crule-grid')
         .data(d => [d])
         .join('g')
         .classed('crule-grid', true)
-        .attr('transform', `translate(${RULES_COLUMN_WIDTH + LABELS_COLUMN_WIDTH + (3 * GUTTER)}, 0)`);
+        .attr('transform', `translate(${cl.dimensions('crule-grid').x}, 0)`);
       gCruleGrid.call(fcrg);
 
+      // ==========    FEATURE IMPORTANCE    ==========
       const gFeatureImportance = d3.select(n[j]).selectAll('g.feature-importance')
         .data(d => [d])
         .join('g')
         .classed('feature-importance', true)
-        .attr('transform', `translate(${LABELS_COLUMN_WIDTH + RULES_COLUMN_WIDTH + crWidth + (4 * GUTTER)}, 0)`);
+        .attr('transform', `translate(${cl.dimensions('feature-importance').x}, 0)`);
       gFeatureImportance.call(ffv);
 
-
-      const HANDLER_OFFSET = LABELS_COLUMN_WIDTH + RULES_COLUMN_WIDTH + crWidth
-        + FI_COLUMN_WIDTH + (5 * GUTTER) + 12;
       const gFeatureHandler = d3.select(n[j]).selectAll('g.feature-handler')
         .data(d => [d])
         .join('g')
         .classed('feature-handler', true)
-        .attr('transform', `translate(${HANDLER_OFFSET}, 6)`);
+        .attr('transform', `translate(${cl.dimensions('feature-handler').x + 6 + 6}, 6)`);
 
       const igFeatureHandler = gFeatureHandler.selectAll('g.feature-handler-internal')
         .data(d => [d])
@@ -1770,7 +1772,6 @@ d3.json('/static/german_explanations/instance_2.json').then((data) => {
     filterRules: true,
     filterCRules: false,
     textVersion: false,
-    status: 'classification', // 'feature_values', 'rule explanation', 'counter rule explanation', 'feature importance'
   };
   const fv = FIPERView().width(GLOBAL_WIDTH + (CRulesList.length * CRULES_GRID_COLUMN_WIDTH));
   const fm = FiperMenu();
@@ -1903,7 +1904,7 @@ d3.json('/static/german_explanations/instance_2.json').then((data) => {
   });
 
   dispatcher.on('changeTextualFormat', (d) => {
-    explanationDescriptor.textVersion = d['Textual Explanation'];
+    explanationDescriptor.textVersion = d.Textual;
     refreshVisualization(explanationDescriptor);
   });
 
