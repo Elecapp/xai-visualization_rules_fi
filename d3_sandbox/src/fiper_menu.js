@@ -114,7 +114,7 @@ function FiperMenuCRule() {
 
 function FiperMenuOrderBy() {
   const orderByOptions = {
-    'Feature Importance': true, 'Rules first': false, 'Counter Rules first': false, Alphabetical: false,
+    'Feature Importance': true, Alphabetical: false, 'Rules first': false, 'Counter Rules first': false,
   };
 
   function me(selection) {
@@ -280,6 +280,22 @@ function FiperMenuProgressHandler() {
   const xScale = d3.scaleBand()
     .domain(progressSteps.map(d => d.label))
     .range([cl.dimensions('feature-labels').width / 8, cl.dimensions('feature-labels').width / 3]);
+
+  function processStep(step) {
+    let completed = true;
+    const steps = progressSteps.map((d1) => {
+      if (d1.name === step.name) {
+        completed = !completed;
+        return { ...d1, completed: !completed };
+      }
+      return { ...d1, completed };
+    })
+      .filter(d1 => d1.completed)
+      .map(d1 => d1.name);
+    dispatcher.call('changeProgressStep', null, steps);
+  }
+
+
   function me(selection) {
     const gSteps = selection.selectAll('g.progressStep')
       .data(progressSteps.filter(d => !d.showOnlyBullet))
@@ -297,7 +313,10 @@ function FiperMenuProgressHandler() {
       .attr('height', 1.5 * GUTTER)
       .attr('fill', d => d.backgroundColor)
       .style('cursor', 'pointer')
-      .on('click', d => console.log(d.label));
+      .on('click', (d) => {
+        const step = d3.select(d.target).datum();
+        processStep(step);
+      });
 
 
     gSteps.selectAll('text.progressButton')
@@ -313,7 +332,10 @@ function FiperMenuProgressHandler() {
       .attr('fill', d => d.textColor)
       .text(d => d.label)
       .style('cursor', 'pointer')
-      .on('click', d => console.log(d.label));
+      .on('click', (d) => {
+        const step = d3.select(d.target).datum();
+        processStep(step);
+      });
 
     // create the bullets of the progress bar
     const gCircles = selection.selectAll('g.progressBullet')
@@ -333,20 +355,7 @@ function FiperMenuProgressHandler() {
       .attr('stroke', d => (d.completed ? FTTemplate.TEXT_COLOR : null))
       .on('click', (d) => {
         const step = d3.select(d.target).datum();
-        console.log(step);
-        let completed = true;
-        const steps = progressSteps.map((d1) => {
-          if (d1.name === step.name) {
-            completed = !completed;
-            return { ...d1, completed: !completed };
-          }
-          return { ...d1, completed };
-        })
-          .filter(d1 => d1.completed)
-          .map(d1 => d1.name);
-
-
-        dispatcher.call('changeProgressStep', null, steps);
+        processStep(step);
       });
 
 
@@ -407,75 +416,78 @@ function FiperMenuProgressHandler() {
 
 function FiperMenuFilterBy() {
   let filterByOptions = {
-    Rules: false, CRules: false,
+    Cose: false, Rules: false, CRules: false,
   };
 
   function me(selection) {
+    const generateEvent = (d) => {
+      const selectedKey = d3.select(d.target).datum();
+      console.log('selectedKey', selectedKey);
+      Object.keys(filterByOptions).forEach((key) => {
+        if (key === selectedKey) {
+          filterByOptions[key].value = !(filterByOptions[key].value);
+        }
+      });
+      const values = Object.keys(filterByOptions).filter(key => key !== "All").map(key => filterByOptions[key].value);
+      const allValues = !(values[0] || values[1]);
+      filterByOptions.All.value = allValues;
+
+
+      dispatcher.call('changeFilter', null, filterByOptions);
+    };
+
     selection.selectAll('text.label')
       .data(d => [d])
       .join('text')
       .classed('label', true)
       .attr('x', 0)
-      .attr('y', (SINGLE_FEATURE_HEIGHT / 2) - (FONT_SIZE / 2))
+      .attr('y', (SINGLE_FEATURE_HEIGHT) + (FONT_SIZE / 2))
       .attr('font-size', FONT_SIZE)
       .attr('font-weight', 400)
       .attr('dy', '1em')
       .attr('dx', '0.5em')
       .attr('fill', FTTemplate.TEXT_COLOR)
-      .text('FILTER BY');
+      .text('SHOW');
+    console.log('filterByOptions', filterByOptions);
+    const gCheckboxes = selection.selectAll('g.checkboxes')
+      .data([0])
+      .join('g')
+      .classed('checkboxes', true)
+      .attr('transform', `translate(${GUTTER + 72}, ${SINGLE_FEATURE_HEIGHT + (FONT_SIZE / 2)})`);
 
-    const generateEvent = (d) => {
-      const selectedKey = d3.select(d.target).datum();
-      Object.keys(filterByOptions).forEach((key) => {
-        // if (key !== selectedKey) {
-        //   filterByOptions[key] = false;
-        // }
-        if (key === selectedKey) {
-          filterByOptions[key] = !filterByOptions[key];
-        }
-      });
-      dispatcher.call('changeFilter', null, filterByOptions);
-    };
-
-    selection.selectAll('text.filterBy')
+    const gCheckbox = gCheckboxes.selectAll('g.checkbox')
       .data(Object.keys(filterByOptions))
+      .join('g')
+      .classed('checkbox', true)
+      .attr('transform', (d, i) => `translate(${i * RULES_COLUMN_WIDTH / 4}, ${1})`);
+    gCheckbox.selectAll('text.filterBy')
+      .data(d => [d])
       .join('text')
       .classed('filterBy', true)
-      .attr('x', (d, i) => (Math.floor(i / 2) * RULES_COLUMN_WIDTH) / 2)
-      .attr('y', (d, i) => ((i % 2) * (SINGLE_FEATURE_HEIGHT)) + SINGLE_FEATURE_HEIGHT + GUTTER)
+      // .attr('x', (d, i) => (Math.floor(i) * RULES_COLUMN_WIDTH) / 2)
+      // .attr('y', (d, i) => SINGLE_FEATURE_HEIGHT + GUTTER)
       .attr('font-size', FONT_SIZE)
       .attr('dy', (SINGLE_FEATURE_HEIGHT / 2) - (FONT_SIZE / 2))
-      .attr('dx', '2em') // we leave some space for the checkbox
+      .attr('dx', '1.5em') // we leave some space for the checkbox
       .attr('fill', FTTemplate.TEXT_COLOR)
       .text(d => d)
       .style('cursor', 'pointer')
       .on('click', generateEvent);
 
-    selection.selectAll('rect.checkbox')
-      .data(Object.keys(filterByOptions))
+    gCheckbox.selectAll('rect.checkbox')
+      .data(d => [d])
       .join('rect')
       .classed('checkbox', true)
-      .attr('x', (d, i) => 2 + ((Math.floor(i / 2) * RULES_COLUMN_WIDTH) / 2) + VERTICAL_GUTTER)
-      .attr('y', (d, i) => ((i % 2) * (SINGLE_FEATURE_HEIGHT)) + SINGLE_FEATURE_HEIGHT + GUTTER)
+      // .attr('x', (d, i) => 2 + ((Math.floor(i) * RULES_COLUMN_WIDTH) / 2) + VERTICAL_GUTTER)
+      // .attr('y', (d, i) => SINGLE_FEATURE_HEIGHT + GUTTER)
       .attr('width', FONT_SIZE)
       .attr('height', FONT_SIZE)
-      .attr('fill', d => (d === 'Rules' ? FTTemplate.RULE_COLOR : FTTemplate.CRULES_COLOR))
-      .attr('fill-opacity', d => (filterByOptions[d] ? 0.8 : 0.2))
+      .attr('fill', d => (filterByOptions[d].color))
+      .attr('fill-opacity', d => (filterByOptions[d].value ? 0.8 : 0.2))
       .attr('stroke', FTTemplate.TEXT_COLOR)
       .attr('stroke-width', 0.5)
       .style('cursor', 'pointer')
       .on('click', generateEvent);
-
-    selection.selectAll('line.horizontalLine')
-      .data([1, 2, 3])
-      .join('line')
-      .classed('horizontalLine', true)
-      .attr('x1', 0)
-      .attr('y1', d => (d * SINGLE_FEATURE_HEIGHT))
-      .attr('x2', FI_COLUMN_WIDTH)
-      .attr('y2', d => (d * SINGLE_FEATURE_HEIGHT))
-      .attr('stroke', FTTemplate.TEXT_COLOR)
-      .attr('stroke-width', 0.5);
   }
 
   // eslint-disable-next-line func-names
@@ -590,7 +602,7 @@ function FiperClassificationBox() {
       (CRULES_GRID_COLUMN_WIDTH * nCRules) + FI_COLUMN_WIDTH + (2 * GUTTER);
 
     selection.selectAll('line.horizontalLine')
-      .data([0, 1])
+      .data([0])
       .join('line')
       .classed('horizontalLine', true)
       .attr('x1', width + GUTTER)
@@ -785,6 +797,7 @@ function FiperMenu() {
 
     const explanationDescriptor = selection.datum();
     const CRulesList = explanationDescriptor.counterRules;
+    const steps = explanationDescriptor.progressStatus;
 
     // =========================================================
     //                  Classification Box
@@ -838,6 +851,8 @@ function FiperMenu() {
       .classed('orderby', true)
       .attr('transform', `translate(${cl.dimensions('feature-values').x}, ${SINGLE_FEATURE_HEIGHT})`);
     gOrder.call(menuOrderBy);
+
+
     // =========================================================
 
     // =========================================================
@@ -864,6 +879,7 @@ function FiperMenu() {
         .text(selection.datum().counterRules.length > 1 ? 'C.Rules' : 'C.R');
     }
     menuCRules.call(menuCRulesCall);
+
     // =========================================================
 
 
@@ -874,14 +890,26 @@ function FiperMenu() {
       .data(d => [d])
       .join('g')
       .classed('filter', true)
-      .attr('transform', `translate(${cl.dimensions('feature-importance').x}, ${SINGLE_FEATURE_HEIGHT})`);
+      .attr('transform', `translate(${cl.dimensions('feature-values').x}, ${3 * SINGLE_FEATURE_HEIGHT})`);
 
     const filterByOptions = {
-      Rules: explanationDescriptor.filterRules,
-      CRules: explanationDescriptor.filterCRules,
+      All: {
+        value: true,
+        color: FTTemplate.DISTRIBUTION_COLOR,
+      },
+      Rules: {
+        value: explanationDescriptor.filterRules,
+        color: FTTemplate.RULE_COLOR,
+      },
+      CRules: {
+        value: explanationDescriptor.filterCRules,
+        color: FTTemplate.CRULES_COLOR,
+      },
     };
     menuFilterBy.filterByOptions(filterByOptions);
     gFilter.call(menuFilterBy);
+
+
     // =========================================================
 
     // =========================================================
@@ -972,7 +1000,6 @@ function FiperMenu() {
       },
     ];
     const progressStatus = explanationDescriptor.progressStatus;
-    console.log(explanationDescriptor);
     progressSteps.forEach((step) => {
       const found = progressStatus.findIndex(d => d === step.name) > -1;
       // eslint-disable-next-line no-param-reassign

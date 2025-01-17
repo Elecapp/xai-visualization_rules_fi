@@ -1245,6 +1245,7 @@ function FIPERView() {
         .attr('fill', d => highlightScale(d.status));
 
 
+      const steps = origDatum.progressStatus;
       // ==========    FEATURE LABELS    ==========
       const gLabels = d3.select(n[j]).selectAll('g.feature-labels')
         .data(d => [d])
@@ -1322,14 +1323,22 @@ function FIPERView() {
         .classed('crule-grid', true)
         .attr('transform', `translate(${cl.dimensions('crule-grid').x}, 0)`);
       gCruleGrid.call(fcrg);
+      if (steps.findIndex(d1 => d1 === 'Counter Rules') < 0) {
+        gCruleGrid.remove();
+      }
 
       // ==========    FEATURE IMPORTANCE    ==========
       const gFeatureImportance = d3.select(n[j]).selectAll('g.feature-importance')
         .data(d => [d])
         .join('g')
         .classed('feature-importance', true)
-        .attr('transform', `translate(${cl.dimensions('feature-importance').x}, 0)`);
+        .attr('transform', `translate(${cl.dimensions('feature-importance').x}, 0)`)
+        .attr('visibility', () => (steps.findIndex(d1 => d1 === 'Feature Importance') > 0 ? 'visible' : 'collapse'));
       gFeatureImportance.call(ffv);
+      if (steps.findIndex(d1 => d1 === 'Feature Importance') < 0) {
+        gFeatureImportance.remove();
+      }
+
 
       const gFeatureHandler = d3.select(n[j]).selectAll('g.feature-handler')
         .data(d => [d])
@@ -1898,8 +1907,8 @@ d3.json('/static/german_explanations/instance_2.json').then((data) => {
     refreshVisualization(explanationDescriptor);
   });
   dispatcher.on('changeFilter', (d) => {
-    explanationDescriptor.filterRules = d.Rules;
-    explanationDescriptor.filterCRules = d.CRules;
+    explanationDescriptor.filterRules = d.Rules.value;
+    explanationDescriptor.filterCRules = d.CRules.value;
 
     refreshVisualization(explanationDescriptor);
   });
