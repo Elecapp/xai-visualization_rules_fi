@@ -1,5 +1,5 @@
 const d3 = require('d3');
-const {GUTTER, LABELS_COLUMN_WIDTH, RULES_COLUMN_WIDTH, FI_COLUMN_WIDTH} = require("./constants");
+const { GUTTER, LABELS_COLUMN_WIDTH, RULES_COLUMN_WIDTH, FI_COLUMN_WIDTH } = require('./constants');
 
 function allOccurences(text, search) {
   const indexes = [];
@@ -174,5 +174,5 @@ columnLayout.addColumn('feature-importance', FI_COLUMN_WIDTH);
 
 
 module.exports = {
-  text2tspan, predicate2text,columnLayout,
+  text2tspan, predicate2text, columnLayout,
 };

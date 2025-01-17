@@ -13,7 +13,7 @@ export const FONT_SIZE = 11;
 
 export const GLOBAL_WIDTH = 700;
 export const dispatcher = d3.dispatch('changeCounterRule',
-  'changeOrder', 'changeFilter', 'changePalette', 'changeTextualFormat');
+  'changeOrder', 'changeFilter', 'changePalette', 'changeTextualFormat', 'changeProgressStep');
 
 
 function darkenColor(color, amount) {

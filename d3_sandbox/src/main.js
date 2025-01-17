@@ -1772,6 +1772,7 @@ d3.json('/static/german_explanations/instance_2.json').then((data) => {
     filterRules: true,
     filterCRules: false,
     textVersion: false,
+    progressStatus: 'Classification', // is one of ['Classification', 'Feature Values', 'Rules', 'Counter Rules', 'Feature Importance']
   };
   const fv = FIPERView().width(GLOBAL_WIDTH + (CRulesList.length * CRULES_GRID_COLUMN_WIDTH));
   const fm = FiperMenu();
@@ -1913,6 +1914,12 @@ d3.json('/static/german_explanations/instance_2.json').then((data) => {
 
     mainSvg
       .attr('style', `background-color: ${FTTemplate.BACKGROUND_COLOR};`);
+    refreshVisualization(explanationDescriptor);
+  });
+
+  dispatcher.on('changeProgressStep', (d) => {
+    console.log('changeProgressStep', d);
+    explanationDescriptor.progressStatus = d.name;
     refreshVisualization(explanationDescriptor);
   });
 });

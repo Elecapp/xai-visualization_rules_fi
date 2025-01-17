@@ -330,7 +330,11 @@ function FiperMenuProgressHandler() {
       .attr('cy', 0.5 * GUTTER)
       .attr('r', xScale.bandwidth() / 3)
       .attr('fill', d => d.backgroundColor)
-      .attr('stroke', d => (d.completed ? FTTemplate.TEXT_COLOR : null));
+      .attr('stroke', d => (d.completed ? FTTemplate.TEXT_COLOR : null))
+      .on('click', d => {
+        const step = d3.select(d.target).datum();
+        dispatcher.call('changeProgressStep', null, step);
+      });
 
 
     // create the navigation arrows
@@ -342,7 +346,12 @@ function FiperMenuProgressHandler() {
       .attr('fill', FTTemplate.DISTRIBUTION_STROKE_COLOR)
       .attr('transform', `translate(${xScale.range()[1]}, 0)`)
       .style('cursor', 'pointer')
-      .on('click', () => console.log('right + 1'));
+      .on('click', () => {
+        const step = progressSteps.find(d1 => !d1.completed);
+        if (step) {
+          dispatcher.call('changeProgressStep', null, step);
+        }
+      });
 
     gCircles.selectAll('path.leftArrow')
       .data([1])
@@ -352,7 +361,12 @@ function FiperMenuProgressHandler() {
       .attr('fill', FTTemplate.DISTRIBUTION_STROKE_COLOR)
       .attr('transform', `translate(${xScale.range()[0] - xScale.bandwidth()}, 0)`)
       .style('cursor', 'pointer')
-      .on('click', () => console.log('left - 1'));
+      .on('click', () => {
+        const stepIndex = progressSteps.findLastIndex(d => d.completed);
+        if (stepIndex > 0) {
+          dispatcher.call('changeProgressStep', null, progressSteps[stepIndex - 1]);
+        }
+      });
 
     gCircles.selectAll('path.lastArrow')
       .data([1])
@@ -362,7 +376,10 @@ function FiperMenuProgressHandler() {
       .attr('fill', FTTemplate.DISTRIBUTION_STROKE_COLOR)
       .attr('transform', `translate(${xScale.range()[1] + xScale.bandwidth()}, 0)`)
       .style('cursor', 'pointer')
-      .on('click', () => console.log('last'));
+      .on('click', () => {
+        const step = progressSteps[progressSteps.length - 1];
+        dispatcher.call('changeProgressStep', null, step);
+      });
   }
 
   me.progressSteps = function (_) {
@@ -884,7 +901,7 @@ function FiperMenu() {
         name: 'Classification',
         label: 'Classification',
         tooltip: 'Shows the outcome of the model to be explained',
-        completed: true,
+        completed: false,
         x: cl.dimensions('feature-labels').x,
         y: 0.5 * GUTTER,
         width: cl.dimensions('feature-labels').width / 2,
@@ -941,6 +958,17 @@ function FiperMenu() {
         showOnlyBullet: false,
       },
     ];
+    const progressStatus = explanationDescriptor.progressStatus;
+    let completed = true;
+    progressSteps.forEach((step) => {
+      const found = (progressStatus === step.name);
+      // eslint-disable-next-line no-param-reassign
+      step.completed = completed;
+      if (found) {
+        completed = false;
+      }
+    });
+
     progressButtons.progressSteps(progressSteps);
     gProgress.call(progressButtons);
   }
