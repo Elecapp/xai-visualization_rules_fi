@@ -428,7 +428,7 @@ function FiperMenuFilterBy() {
           filterByOptions[key].value = !(filterByOptions[key].value);
         }
       });
-      const values = Object.keys(filterByOptions).filter(key => key !== "All").map(key => filterByOptions[key].value);
+      const values = Object.keys(filterByOptions).filter(key => key !== 'All').map(key => filterByOptions[key].value);
       const allValues = !(values[0] || values[1]);
       filterByOptions.All.value = allValues;
 
@@ -851,6 +851,9 @@ function FiperMenu() {
       .classed('orderby', true)
       .attr('transform', `translate(${cl.dimensions('feature-values').x}, ${SINGLE_FEATURE_HEIGHT})`);
     gOrder.call(menuOrderBy);
+    if (steps.findIndex(d => d === 'Rules') < 0) {
+      gOrder.remove();
+    }
 
 
     // =========================================================
@@ -879,6 +882,9 @@ function FiperMenu() {
         .text(selection.datum().counterRules.length > 1 ? 'C.Rules' : 'C.R');
     }
     menuCRules.call(menuCRulesCall);
+    if (steps.findIndex(d => d === 'Counter Rules') < 0) {
+      menuCRules.remove();
+    }
 
     // =========================================================
 
@@ -908,6 +914,9 @@ function FiperMenu() {
     };
     menuFilterBy.filterByOptions(filterByOptions);
     gFilter.call(menuFilterBy);
+    if (steps.findIndex(d => d === 'Rules') < 0) {
+      gFilter.remove();
+    }
 
 
     // =========================================================
@@ -927,6 +936,9 @@ function FiperMenu() {
     };
     chooseFormat.formatOptions(formatOptions);
     gChooseFormat.call(chooseFormat);
+    if (steps.findIndex(d => d === 'Rules') < 0) {
+      gChooseFormat.remove();
+    }
     // =========================================================
 
     // =========================================================
@@ -991,8 +1003,8 @@ function FiperMenu() {
         label: 'Feat. Imp.',
         tooltip: 'Shows the feature importance',
         completed: false,
-        x: cl.dimensions('feature-importance').x,
-        y: (4 * SINGLE_FEATURE_HEIGHT) + (0.5 * GUTTER),
+        x: cl.dimensions('crule-grid').x,
+        y: 0.5 * GUTTER,
         width: cl.dimensions('feature-importance').width,
         backgroundColor: FTTemplate.FI_POSITIVE_COLOR,
         textColor: FTTemplate.SECONDARY_BACKGROUND_COLOR,

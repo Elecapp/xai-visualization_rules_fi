@@ -1246,6 +1246,9 @@ function FIPERView() {
 
 
       const steps = origDatum.progressStatus;
+      if (steps.findIndex(d1 => d1 === 'Feature Values') < 0) {
+        d3.select(n[j]).selectAll('rect.background').remove();
+      }
       // ==========    FEATURE LABELS    ==========
       const gLabels = d3.select(n[j]).selectAll('g.feature-labels')
         .data(d => [d])
@@ -1253,6 +1256,9 @@ function FIPERView() {
         .classed('feature-labels', true)
         .attr('transform', `translate(${cl.dimensions('feature-labels').x}, 0)`);
       gLabels.call(flv);
+      if (steps.findIndex(d1 => d1 === 'Feature Values') < 0) {
+        gLabels.remove();
+      }
 
       // ==========    FEATURE VALUES    ==========
       const gValueStack = d3.select(n[j]).selectAll('g.feature-values')
@@ -1315,6 +1321,10 @@ function FIPERView() {
 
         gGraphicalExplanation.remove();
       }
+      // this remove the component if the step is not in the progressStatus
+      if (steps.findIndex(d1 => d1 === 'Rules') < 0) {
+        gValueStack.remove();
+      }
 
       // ==========    COUNTER RULES GRID    ==========
       const gCruleGrid = d3.select(n[j]).selectAll('g.crule-grid')
@@ -1365,6 +1375,10 @@ function FIPERView() {
         .duration(200)
         .style('transition', 'transform 0.5s')
         .attr('transform', d => (d.status === 1 ? 'rotate(180)' : 'rotate(0)'));
+
+      if (steps.findIndex(d1 => d1 === 'Rules') < 0) {
+        gFeatureHandler.remove();
+      }
 
 
       const gfBbox = n[j].getBBox();
@@ -1778,7 +1792,7 @@ d3.json('/static/german_explanations/instance_2.json').then((data) => {
     predicted_class: data.predicted_class,
     predicted_proba: data.predicted_proba,
     selectedCounterRule: '',
-    filterRules: true,
+    filterRules: false,
     filterCRules: false,
     textVersion: false,
     progressStatus: ['Classification'], // is one of ['Classification', 'Feature Values', 'Rules', 'Counter Rules', 'Feature Importance']
