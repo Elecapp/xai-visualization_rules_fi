@@ -331,9 +331,22 @@ function FiperMenuProgressHandler() {
       .attr('r', xScale.bandwidth() / 3)
       .attr('fill', d => d.backgroundColor)
       .attr('stroke', d => (d.completed ? FTTemplate.TEXT_COLOR : null))
-      .on('click', d => {
+      .on('click', (d) => {
         const step = d3.select(d.target).datum();
-        dispatcher.call('changeProgressStep', null, step);
+        console.log(step);
+        let completed = true;
+        const steps = progressSteps.map((d1) => {
+          if (d1.name === step.name) {
+            completed = !completed;
+            return { ...d1, completed: !completed };
+          }
+          return { ...d1, completed };
+        })
+          .filter(d1 => d1.completed)
+          .map(d1 => d1.name);
+
+
+        dispatcher.call('changeProgressStep', null, steps);
       });
 
 
@@ -347,9 +360,9 @@ function FiperMenuProgressHandler() {
       .attr('transform', `translate(${xScale.range()[1]}, 0)`)
       .style('cursor', 'pointer')
       .on('click', () => {
-        const step = progressSteps.find(d1 => !d1.completed);
-        if (step) {
-          dispatcher.call('changeProgressStep', null, step);
+        const stepIndex = progressSteps.findIndex(d1 => !d1.completed);
+        if ((stepIndex < progressSteps.length) && (stepIndex > -1)) {
+          dispatcher.call('changeProgressStep', null, progressSteps.slice(0, stepIndex + 1).map(d => d.name));
         }
       });
 
@@ -364,7 +377,7 @@ function FiperMenuProgressHandler() {
       .on('click', () => {
         const stepIndex = progressSteps.findLastIndex(d => d.completed);
         if (stepIndex > 0) {
-          dispatcher.call('changeProgressStep', null, progressSteps[stepIndex - 1]);
+          dispatcher.call('changeProgressStep', null, progressSteps.slice(0, stepIndex).map(d => d.name));
         }
       });
 
@@ -959,14 +972,11 @@ function FiperMenu() {
       },
     ];
     const progressStatus = explanationDescriptor.progressStatus;
-    let completed = true;
+    console.log(explanationDescriptor);
     progressSteps.forEach((step) => {
-      const found = (progressStatus === step.name);
+      const found = progressStatus.findIndex(d => d === step.name) > -1;
       // eslint-disable-next-line no-param-reassign
-      step.completed = completed;
-      if (found) {
-        completed = false;
-      }
+      step.completed = found;
     });
 
     progressButtons.progressSteps(progressSteps);
