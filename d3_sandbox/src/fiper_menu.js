@@ -1,5 +1,4 @@
 import {
-  FI_COLUMN_WIDTH,
   RULES_COLUMN_WIDTH,
   LABELS_COLUMN_WIDTH,
   GUTTER,
@@ -298,7 +297,7 @@ function FiperMenuProgressHandler() {
 
   function me(selection) {
     const gSteps = selection.selectAll('g.progressStep')
-      .data(progressSteps.filter(d => !d.showOnlyBullet))
+      .data(progressSteps.filter(d => !d.showOnlyBullet).filter(d => d.visible))
       .join('g')
       .classed('progressStep', true)
       .attr('transform', d => `translate(${d.x}, ${d.y})`);
@@ -404,6 +403,7 @@ function FiperMenuProgressHandler() {
       });
   }
 
+  // eslint-disable-next-line func-names
   me.progressSteps = function (_) {
     if (!arguments.length) return progressSteps;
     progressSteps = _;
@@ -422,7 +422,6 @@ function FiperMenuFilterBy() {
   function me(selection) {
     const generateEvent = (d) => {
       const selectedKey = d3.select(d.target).datum();
-      console.log('selectedKey', selectedKey);
       Object.keys(filterByOptions).forEach((key) => {
         if (key === selectedKey) {
           filterByOptions[key].value = !(filterByOptions[key].value);
@@ -448,7 +447,6 @@ function FiperMenuFilterBy() {
       .attr('dx', '0.5em')
       .attr('fill', FTTemplate.TEXT_COLOR)
       .text('SHOW');
-    console.log('filterByOptions', filterByOptions);
     const gCheckboxes = selection.selectAll('g.checkboxes')
       .data([0])
       .join('g')
@@ -459,7 +457,7 @@ function FiperMenuFilterBy() {
       .data(Object.keys(filterByOptions))
       .join('g')
       .classed('checkbox', true)
-      .attr('transform', (d, i) => `translate(${i * RULES_COLUMN_WIDTH / 4}, ${1})`);
+      .attr('transform', (d, i) => `translate(${(i * RULES_COLUMN_WIDTH) / 4}, ${1})`);
     gCheckbox.selectAll('text.filterBy')
       .data(d => [d])
       .join('text')
@@ -596,23 +594,23 @@ function FiperClassificationBox() {
       .attr('transform', `translate(${GUTTER / 2}, ${(SINGLE_FEATURE_HEIGHT * 2)})`)
       .call(pprobaBars);
 
-    const nCRules = selection.datum().counterRules.length;
+    // const nCRules = selection.datum().counterRules.length;
 
-    const lineSpan = RULES_COLUMN_WIDTH +
-      (CRULES_GRID_COLUMN_WIDTH * nCRules) + FI_COLUMN_WIDTH + (2 * GUTTER);
+    // const lineSpan = RULES_COLUMN_WIDTH +
+    //   (CRULES_GRID_COLUMN_WIDTH * nCRules) + FI_COLUMN_WIDTH + (2 * GUTTER);
 
-    selection.selectAll('line.horizontalLine')
-      .data([0])
-      .join('line')
-      .classed('horizontalLine', true)
-      .attr('x1', width + GUTTER)
-      .attr('y1', d => d * ((3 * SINGLE_FEATURE_HEIGHT) + GUTTER))
-      .attr('x2', width + GUTTER + lineSpan)
-      .attr('y2', d => d * ((3 * SINGLE_FEATURE_HEIGHT) + GUTTER))
-      .attr('stroke', FTTemplate.TEXT_COLOR)
-      .attr('stroke-width', 0.5)
-      .attr('stroke-dasharray', ('3, 3'))
-      .attr('stroke-width', 0.5);
+    // selection.selectAll('line.horizontalLine')
+    //   .data([0])
+    //   .join('line')
+    //   .classed('horizontalLine', true)
+    //   .attr('x1', width + GUTTER)
+    //   .attr('y1', d => d * ((3 * SINGLE_FEATURE_HEIGHT) + GUTTER))
+    //   .attr('x2', width + GUTTER + lineSpan)
+    //   .attr('y2', d => d * ((3 * SINGLE_FEATURE_HEIGHT) + GUTTER))
+    //   .attr('stroke', FTTemplate.TEXT_COLOR)
+    //   .attr('stroke-width', 0.5)
+    //   .attr('stroke-dasharray', ('3, 3'))
+    //   .attr('stroke-width', 0.5);
   }
 
   // eslint-disable-next-line func-names
@@ -677,12 +675,13 @@ function FiperMenuColumnTitles() {
     // for each element in tLabels
     // get the length of the text
     const textLengths = [];
-    tLabels.each(function (d, i) {
+    // eslint-disable-next-line func-names
+    tLabels.each(function () {
       textLengths.push(d3.select(this).node().getComputedTextLength());
     });
 
     rects
-      .attr('x', (d, i) => cl.dimensions(selectors[i]).x + (cl.dimensions(selectors[i]).width / 2) - (textLengths[i] / 2))
+      .attr('x', (d, i) => (cl.dimensions(selectors[i]).x + (cl.dimensions(selectors[i]).width / 2)) - (textLengths[i] / 2))
       .attr('width', (d, i) => textLengths[i]);
   }
 
@@ -814,13 +813,15 @@ function FiperMenu() {
     // =========================================================
     //                  Visualization blocks titles
     // =========================================================
-    const labels = ['Feature', 'Feature Distribution', 'C.Rules', 'F.I.'];
-    const selectors = ['feature-labels', 'feature-values', 'crule-grid', 'feature-importance'];
+
+    const labels = ['Feature', 'Feature Distribution', 'C.Rules', 'F.I.'].slice(0, steps.length - 1);
+    const selectors = ['feature-labels', 'feature-values', 'crule-grid', 'feature-importance'].slice(0, steps.length - 1);
     const titleDescriptor = {
       labels,
       selectors,
       CRulesList,
     };
+
 
     const gTitles = selection.selectAll('g.titles')
       .data(d => [d])
@@ -961,6 +962,7 @@ function FiperMenu() {
         backgroundColor: FTTemplate.DISTRIBUTION_COLOR,
         textColor: FTTemplate.TEXT_COLOR,
         showOnlyBullet: true,
+        visibleAtStep: 'Anything',
       },
       {
         name: 'Feature Values',
@@ -973,6 +975,7 @@ function FiperMenu() {
         backgroundColor: FTTemplate.DISTRIBUTION_STROKE_COLOR,
         textColor: FTTemplate.TEXT_COLOR,
         showOnlyBullet: false,
+        visibleAtStep: 'Classification',
       },
       {
         name: 'Rules',
@@ -985,18 +988,20 @@ function FiperMenu() {
         backgroundColor: FTTemplate.RULE_COLOR,
         textColor: FTTemplate.TEXT_COLOR,
         showOnlyBullet: false,
+        visibleAtStep: 'Feature Values',
       },
       {
         name: 'Counter Rules',
         label: 'Counter Rules',
         tooltip: 'Shows the counter rules',
         completed: false,
-        x: cl.dimensions('feature-values').x + (cl.dimensions('feature-values').width / 3 * 2),
+        x: cl.dimensions('feature-values').x + (((cl.dimensions('feature-values').width / 3) * 2)),
         y: 0.5 * GUTTER,
         width: cl.dimensions('feature-values').width / 3,
         backgroundColor: FTTemplate.CRULES_COLOR,
         textColor: FTTemplate.SECONDARY_BACKGROUND_COLOR,
         showOnlyBullet: false,
+        visibleAtStep: 'Rules',
       },
       {
         name: 'Feature Importance',
@@ -1009,6 +1014,7 @@ function FiperMenu() {
         backgroundColor: FTTemplate.FI_POSITIVE_COLOR,
         textColor: FTTemplate.SECONDARY_BACKGROUND_COLOR,
         showOnlyBullet: false,
+        visibleAtStep: 'Counter Rules',
       },
     ];
     const progressStatus = explanationDescriptor.progressStatus;
@@ -1016,7 +1022,17 @@ function FiperMenu() {
       const found = progressStatus.findIndex(d => d === step.name) > -1;
       // eslint-disable-next-line no-param-reassign
       step.completed = found;
+      // eslint-disable-next-line no-param-reassign
+      step.visible = false;
     });
+    const currentStep = progressSteps.findLast(d => d.completed);
+    progressSteps.forEach((step) => {
+      if (step.visibleAtStep === currentStep.name) {
+        // eslint-disable-next-line no-param-reassign
+        step.visible = true;
+      }
+    });
+
 
     progressButtons.progressSteps(progressSteps);
     gProgress.call(progressButtons);

@@ -1213,6 +1213,10 @@ function FIPERView() {
           const bbox = selection.node().getBBox();
           selection.node().parentNode.setAttribute('height', bbox.height +
             ((2 * VERTICAL_GUTTER) + (MENU_HEIGHT + (2 * SINGLE_FEATURE_HEIGHT))));
+          selection.node().parentNode.setAttribute('width', Math.max(
+            cl.dimensions('feature-labels').width + cl.dimensions('feature-labels').x + (GUTTER),
+            bbox.width + (2 * GUTTER)),
+          );
         }, 300);
       });
 
@@ -1806,7 +1810,7 @@ d3.json('/static/german_explanations/instance_2.json').then((data) => {
   const mainSvg = d3.select('#app')
     .append('svg')
     .classed('viz', true)
-    .attr('width', fv.width())
+    .attr('width', 300)
     .attr('height', 200)
     .attr('style', `background-color: ${FTTemplate.BACKGROUND_COLOR};`);
 
@@ -1818,7 +1822,7 @@ d3.json('/static/german_explanations/instance_2.json').then((data) => {
   const menuSvg = mainSvg
     .append('g')
     .classed('menu', true)
-    .attr('width', fv.width())
+    .attr('width', 300)
     .attr('height', MENU_HEIGHT + (2 * SINGLE_FEATURE_HEIGHT)) // added height of the menu + chart title here, check if it is correct
     .attr('style', `background-color: ${FTTemplate.BACKGROUND_COLOR};`);
 
@@ -1883,7 +1887,7 @@ d3.json('/static/german_explanations/instance_2.json').then((data) => {
   // compute the resulting bounding box to set the height of the svg
   // recall: `svg` variable is the group `g` that contains the visualization
   //        so we refer to the parent node to set the height correctly
-  const bbox = mainSvg.node().getBBox();
+  const bbox = svg.node().getBBox();
   mainSvg.node().parentNode.setAttribute('height', bbox.height +
     (GUTTER + (MENU_HEIGHT + (2 * SINGLE_FEATURE_HEIGHT))));
   mainSvg.node().parentNode.setAttribute('width', bbox.width + GUTTER);
@@ -1941,7 +1945,6 @@ d3.json('/static/german_explanations/instance_2.json').then((data) => {
   });
 
   dispatcher.on('changeProgressStep', (d) => {
-    console.log('changeProgressStep', d);
     explanationDescriptor.progressStatus = d;
     refreshVisualization(explanationDescriptor);
   });

@@ -117,6 +117,7 @@ function ColumnLayout() {
 
   }
 
+  // eslint-disable-next-line func-names
   me.addColumn = function (columnName, width) {
     const newColumn = {
       width,
@@ -135,12 +136,14 @@ function ColumnLayout() {
     return me;
   };
 
+  // eslint-disable-next-line func-names
   me.spacing = function (_) {
     if (!arguments.length) return spacing;
     spacing = _;
     return me;
   };
 
+  // eslint-disable-next-line func-names
   me.dimensions = function (columnName) {
     if (columnName in columnNames) {
       return columns[columnNames[columnName]];
@@ -148,11 +151,12 @@ function ColumnLayout() {
     return null;
   };
 
+  // eslint-disable-next-line func-names
   me.setWidth = function (columnName, width) {
     if (columnName in columnNames) {
       columns[columnNames[columnName]].width = width;
       // update the x position of the columns after the one that has been resized
-      for (let i = columnNames[columnName] + 1; i < columns.length; i++) {
+      for (let i = columnNames[columnName] + 1; i < columns.length; i += 1) {
         columns[i].x = columns[i - 1].x + columns[i - 1].width + spacing;
       }
     }
