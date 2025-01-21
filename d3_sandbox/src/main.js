@@ -420,7 +420,8 @@ function FIPERTextualExplanationView() {
         .attr('font-size', FONT_SIZE)
         .attr('fill', FTTemplate.TEXT_COLOR)
         .attr('font-weight', '300')
-        .html(d => d.ruleText.R0);
+        .html(d => text2tspan(`RULE: ${d.ruleText.R0}`, 55, 0))
+        .call(TooltipHandler().html(d => `<div>${text2tspan(`RULE: ${d.ruleText.R0}`, 10000, 0)}</div>`));
 
       let ruleHeight = 0;
       if (Object.keys(selection.datum().ruleText).length) {
@@ -445,7 +446,7 @@ function FIPERTextualExplanationView() {
         .attr('fill', FTTemplate.CRULES_COLOR);
 
       const makeCRuleText = (d) => {
-        const cruleText = d.cruleText[selectedCounterRule];
+        const cruleText = text2tspan(`COUNTER RULE: ${d.cruleText[selectedCounterRule]}`, 55, 0);
         return cruleText.replace('COUNTER RULE ', `<tspan fill='${FTTemplate.SECONDARY_BACKGROUND_COLOR}'>COUNTER RULE </tspan>`);
       };
 
@@ -458,7 +459,8 @@ function FIPERTextualExplanationView() {
         .attr('font-size', FONT_SIZE)
         .attr('fill', FTTemplate.TEXT_COLOR)
         .attr('font-weight', '300')
-        .html(makeCRuleText);
+        .html(makeCRuleText)
+        .call(TooltipHandler().html(d => `<div>${text2tspan(`COUNTER RULE: ${d.cruleText[selectedCounterRule]}`, 10000, 0)}</div>`));
 
 
       let crHeight = 0;
@@ -694,7 +696,6 @@ function FIPERRulePredicateView() {
   let isFactualRule = true;
   let selectedCounterRule = 'R0';
 
-
   function me(selection) {
     const gPredicateBar = selection.selectAll('g.single-predicate')
       .data(d => [d])
@@ -758,6 +759,7 @@ function FIPERRulePredicateView() {
         .attr('fill-opacity', 1)
         .attr('stroke', strokeColor);
     }
+    gPredicateBar.call(TooltipHandler().html(d => text2tspan(`<div style="font-weight: 500">${isFactualRule ? d.ruleText.R0 : d.cruleText[selectedCounterRule]}</div>`, 10000, 0)));
     return me;
   }
 
@@ -1052,7 +1054,7 @@ function FIPERCRuleGrid() {
       .call(TooltipHandler().html(d => `<div style="font-weight: 400">Counter Rule: ${d}</div>`))
       .on('click', (d) => {
         dispatcher.call('changeCounterRule', this, d3.select(d.target).datum());
-        d.stopPropagation();
+        d.stopPropagation(); // this to avoid that the deatils are shown when clicking on the circle
       });
   }
 
@@ -1132,17 +1134,17 @@ function FIPERView() {
         ...d,
       };
 
-      const rule2text = predicate2text(d.rmatrix, d.values, 'R0', 'RULE ');
+      const rule2text = predicate2text(d.rmatrix, d.values, 'R0', '');
       // Adding strings to be used for textual labels
       f.ruleText = Object.fromEntries(Object.entries(d.rulePredicateMap)
         .filter(([, v]) => v)
-        .map(([k]) => [k, text2tspan(rule2text, 55, 0)]),
+        .map(([k]) => [k, (rule2text)]),
       );
       f.cruleText = Object.fromEntries(Object.entries(d.cRulesRelevanceMap)
         .filter(([, v]) => v > 0)
-        .map(([k], i) => [k, text2tspan(
-          predicate2text(d.crmatrix && d.crmatrix[i], d.values, k, 'COUNTER RULE ')
-          , 55, 0)]),
+        .map(([k], i) => [k, (
+          predicate2text(d.crmatrix && d.crmatrix[i], d.values, k, '')
+        )]),
       );
 
       return f;
@@ -1697,6 +1699,7 @@ d3.json('/static/german_explanations/instance_2.json').then((data) => {
         rname: v.rname,
         type: v.type,
         predicates: v.predicates,
+        parent: e,
       })),
   })).map(e => ({
     ...e,
@@ -1802,7 +1805,7 @@ d3.json('/static/german_explanations/instance_2.json').then((data) => {
     filterRules: false,
     filterCRules: false,
     textVersion: false,
-    progressStatus: ['Classification'], // is one of ['Classification', 'Feature Values', 'Rules', 'Counter Rules', 'Feature Importance']
+    progressStatus: ['Classification', 'Feature Values', 'Rules', 'Counter Rules'], // is one of ['Classification', 'Feature Values', 'Rules', 'Counter Rules', 'Feature Importance']
   };
   const fv = FIPERView().width(GLOBAL_WIDTH + (CRulesList.length * CRULES_GRID_COLUMN_WIDTH));
   const fm = FiperMenu();
