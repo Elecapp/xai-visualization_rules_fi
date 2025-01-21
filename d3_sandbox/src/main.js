@@ -1051,7 +1051,7 @@ function FIPERCRuleGrid() {
       .attr('r', d => (selection.datum().cRulesRelevanceMap[d] === 2 ? 6 : 3))
       .attr('fill', d => ((d === selectedCounterRule) ? FTTemplate.CRULES_COLOR : FTTemplate.BASE_COLOR))
       .attr('stroke', d => ((d === selectedCounterRule) ? FTTemplate.CRULES_STROKE_COLOR : FTTemplate.BASE_STROKE_COLOR))
-      .call(TooltipHandler().html(d => `<div style="font-weight: 400">Counter Rule: ${d}</div>`))
+      .call(TooltipHandler().html(d => text2html(selection.datum().cruleText[d], 1000)))
       .on('click', (d) => {
         dispatcher.call('changeCounterRule', this, d3.select(d.target).datum());
         d.stopPropagation(); // this to avoid that the deatils are shown when clicking on the circle
