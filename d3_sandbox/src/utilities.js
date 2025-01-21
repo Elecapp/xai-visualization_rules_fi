@@ -12,7 +12,7 @@ function allOccurences(text, search) {
   return indexes;
 }
 
-function text2tspan(text, width, x = 0) {
+function processLines(text, width) {
   const words = text.split(' ');
   const lines = [];
   let currentLine = '';
@@ -27,6 +27,12 @@ function text2tspan(text, width, x = 0) {
     }
   });
   lines.push(currentLine);
+
+  return lines;
+}
+
+function text2tspan(text, width, x = 0) {
+  const lines = processLines(text, width);
 
   // check that each line in lines contains the string '_*' and '*_'
   const formatLines = lines.map((l) => {
@@ -61,10 +67,48 @@ function text2tspan(text, width, x = 0) {
     return l;
   });
 
-
   // join lines with tspan elements
   return formatLines.map((line, i) => `<tspan x="${x}" dy="${i ? '1.2em' : 0}" >${line}</tspan>`).join('');
 }
+
+function text2html(text, width) {
+  const lines = processLines(text, width);
+  // check that each line in lines contains the string '_*' and '*_'
+  const formatLines = lines.map((l) => {
+    let cl = l;
+    // find all indexes of the occurences of string '_*'
+    let startIndexes = allOccurences(cl, '_*');
+    let endIndexes = allOccurences(cl, '*_');
+
+    if (startIndexes.length > endIndexes.length) {
+      cl = `${l}*_`;
+    }
+
+    if (startIndexes.length < endIndexes.length) {
+      cl = `_*${l}`;
+    }
+    startIndexes = allOccurences(cl, '_*');
+    endIndexes = allOccurences(cl, '*_');
+
+    // simple case when length of start and end indexes is the same and it is even
+    if (startIndexes.length === endIndexes.length) {
+      const l2 = cl.split('');
+      startIndexes.forEach((s, i) => {
+        l2[s + 1] = '';
+        l2[s] = '<b>';
+        l2[endIndexes[i]] = '</b>';
+        l2[endIndexes[i] + 1] = '';
+      });
+      return l2.join('');
+    }
+
+
+    return l;
+  });
+    // join lines with div elements
+  return formatLines.map(line => `<div>${line}</div>`).join('');
+}
+
 
 function predicate2text(adjmatrix, values, ruleSelector, prefix = '') {
   const format = d3.format('.2f');
@@ -178,5 +222,5 @@ columnLayout.addColumn('feature-importance', FI_COLUMN_WIDTH);
 
 
 module.exports = {
-  text2tspan, predicate2text, columnLayout,
+  text2tspan, predicate2text, text2html, columnLayout,
 };

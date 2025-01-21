@@ -16,7 +16,7 @@ import {
   VERTICAL_GUTTER,
 } from './constants';
 
-import { predicate2text, text2tspan, columnLayout as cl } from './utilities';
+import { predicate2text, text2tspan, text2html, columnLayout as cl } from './utilities';
 
 const d3 = require('d3');
 
@@ -421,7 +421,7 @@ function FIPERTextualExplanationView() {
         .attr('fill', FTTemplate.TEXT_COLOR)
         .attr('font-weight', '300')
         .html(d => text2tspan(`RULE: ${d.ruleText.R0}`, 55, 0))
-        .call(TooltipHandler().html(d => `<div>${text2tspan(`RULE: ${d.ruleText.R0}`, 10000, 0)}</div>`));
+        .call(TooltipHandler().html(d => `<div>${text2html(`RULE: ${d.ruleText.R0}`, 10000)}</div>`));
 
       let ruleHeight = 0;
       if (Object.keys(selection.datum().ruleText).length) {
@@ -460,7 +460,7 @@ function FIPERTextualExplanationView() {
         .attr('fill', FTTemplate.TEXT_COLOR)
         .attr('font-weight', '300')
         .html(makeCRuleText)
-        .call(TooltipHandler().html(d => `<div>${text2tspan(`COUNTER RULE: ${d.cruleText[selectedCounterRule]}`, 10000, 0)}</div>`));
+        .call(TooltipHandler().html(d => `<div>${text2html(`COUNTER RULE: ${d.cruleText[selectedCounterRule]}`, 10000)}</div>`));
 
 
       let crHeight = 0;
@@ -759,7 +759,7 @@ function FIPERRulePredicateView() {
         .attr('fill-opacity', 1)
         .attr('stroke', strokeColor);
     }
-    gPredicateBar.call(TooltipHandler().html(d => text2tspan(`<div style="font-weight: 500">${isFactualRule ? d.ruleText.R0 : d.cruleText[selectedCounterRule]}</div>`, 10000, 0)));
+    gPredicateBar.call(TooltipHandler().html(d => text2html(`${isFactualRule ? d.ruleText.R0 : d.cruleText[selectedCounterRule]}`, 10000)));
     return me;
   }
 
