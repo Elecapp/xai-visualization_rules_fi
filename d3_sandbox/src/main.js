@@ -847,6 +847,14 @@ function FIPERFeatureLabelsView() {
       .attr('fill', FTTemplate.TEXT_COLOR)
       .text(d => (d.rname.length > maxLabelLength ? `${d.rname.substring(0, maxLabelLength - 2)}…` : d.rname));
 
+    function getFeatureValue(d, maxLength) {
+      if (d.type === 'categorical') {
+        const label = d.values.filter(v => v.instance_value === 1).map(v => v.eda.category).join(', ');
+        return (label.length > maxLength ? `${label.substring(0, maxLength - 2)}…` : label);
+      }
+      return `${d.values[0].instance_value}`;
+    }
+
     selection.selectAll('text.feature-value')
       .data(d => [d])
       .join('text')
@@ -856,16 +864,11 @@ function FIPERFeatureLabelsView() {
       .attr('text-anchor', 'end')
       .attr('font-size', FONT_SIZE)
       .attr('fill', FTTemplate.VALUE_TEXT_COLOR)
-      .text((d) => {
-        if (d.type === 'categorical') {
-          const label = d.values.filter(v => v.instance_value === 1).map(v => v.eda.category).join(', ');
-          return (label.length > maxLabelLength ? `${label.substring(0, maxLabelLength - 2)}…` : label);
-        }
-        return `${d.values[0].instance_value}`;
-      })
+      .text(d => getFeatureValue(d, maxLabelLength))
       .attr('opacity', d => ((d.status === 1 && d.type === 'categorical') ? 0 : 1));
 
-
+    selection.call(TooltipHandler()
+      .html(d => `<div style="font-weight: 500">Feature: ${d.rname}</div><div>Value: ${getFeatureValue(d, 10000)}</div>`));
     return me;
   }
 
