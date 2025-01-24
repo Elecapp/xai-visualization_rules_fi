@@ -1610,7 +1610,7 @@ function reduceUnionIntersection(predicatesWithIntervals) {
   return result;
 }
 
-d3.json('/static/german_explanations/instance_2.json').then((data) => {
+function preprocessData(data) {
   // preprocess each entry to copmute the expected value for the categorical counterrules
   const tfeature = data.features
     // .filter(f => f.type === 'categorical')
@@ -1807,151 +1807,180 @@ d3.json('/static/german_explanations/instance_2.json').then((data) => {
     textVersion: false,
     progressStatus: ['Classification', 'Feature Values', 'Rules', 'Counter Rules'], // is one of ['Classification', 'Feature Values', 'Rules', 'Counter Rules', 'Feature Importance']
   };
-  const fv = FIPERView().width(GLOBAL_WIDTH + (CRulesList.length * CRULES_GRID_COLUMN_WIDTH));
-  const fm = FiperMenu();
+  return explanationDescriptor;
+}
 
-  // TODO: fix the height of the visualization
-  //  (it should be computed based on the number of max values of the features,
-  //  test with "purpose" feature)
-  const mainSvg = d3.select('#app')
-    .append('svg')
-    .classed('viz', true)
-    .attr('width', 300)
-    .attr('height', 200)
-    .attr('style', `background-color: ${FTTemplate.BACKGROUND_COLOR};`);
+function InstanceView() {
+  function me(selection) {
+    const explanationDescriptor = selection.datum();
+    const fv = FIPERView().width(GLOBAL_WIDTH +
+    (explanationDescriptor.counterRules.length * CRULES_GRID_COLUMN_WIDTH));
+    const fm = FiperMenu();
+    
+    const mainSvg = selection.selectAll('svg.viz')
+      .data([0]) // Usa un array con un singolo elemento come dati
+      .join('svg')
+      .classed('viz', true)
+      // .attr('width', 300)
+      // .attr('height', 200)
+      .attr('style', `background-color: ${FTTemplate.BACKGROUND_COLOR};`);
 
-  const svg = mainSvg
-    .append('g')
-    .attr('transform', `translate(0, ${6 + MENU_HEIGHT + (2 * SINGLE_FEATURE_HEIGHT)})`)
+    const svg = mainSvg.selectAll('g.main')
+      .data([0]) // Usa un array con un singolo elemento come dati
+      .join('g')
+      .classed('main', true)
+      .attr('transform', `translate(0, ${6 + MENU_HEIGHT + (2 * SINGLE_FEATURE_HEIGHT)})`)
   ;
 
-  const menuSvg = mainSvg
-    .append('g')
-    .classed('menu', true)
-    .attr('width', 300)
-    .attr('height', MENU_HEIGHT + (2 * SINGLE_FEATURE_HEIGHT)) // added height of the menu + chart title here, check if it is correct
-    .attr('style', `background-color: ${FTTemplate.BACKGROUND_COLOR};`);
+    const menuSvg = mainSvg.selectAll('g.menu')
+      .data([0]) // Usa un array con un singolo elemento come dati
+      .join('g')
+      .classed('menu', true)
+      // .attr('width', 300)
+      .attr('height', MENU_HEIGHT + (2 * SINGLE_FEATURE_HEIGHT)) // added height of the menu + chart title here, check if it is correct
+      .attr('style', `background-color: ${FTTemplate.BACKGROUND_COLOR};`);
 
 
-  const defs = svg.selectAll('defs')
-    .data([null]) // Usa un array con un singolo elemento come dati
-    .join('defs');
+    const defs = svg.selectAll('defs')
+      .data([null]) // Usa un array con un singolo elemento come dati
+      .join('defs');
 
 
-  const spacing = 2;
-  const thickness = 3;
-  const rotation = 45;
+    const spacing = 2;
+    const thickness = 3;
+    const rotation = 45;
 
 
-  // create a pattern for each color in the template to be used in the visualization
-  Object.keys(FTTemplate).forEach((key) => {
-    defs.append('pattern')
-      .attr('id', `p_${key}`)
-      .attr('patternUnits', 'userSpaceOnUse')
-      .attr('width', spacing + (thickness / 2))
-      .attr('height', spacing + (thickness / 2))
-      .attr('patternTransform', (key === 'CRULES_COLOR' ? `rotate(${rotation})` : `rotate(${-rotation})`))
-      .append('line')
-      .attr('x1', 0)
-      .attr('y1', 0)
-      .attr('x2', 0)
-      .attr('y2', spacing + (thickness / 2))
-      .attr('stroke', FTTemplate[key])
-      .attr('stroke-width', thickness);
-  });
+    // create a pattern for each color in the template to be used in the visualization
+    Object.keys(FTTemplate).forEach((key) => {
+      defs.append('pattern')
+        .attr('id', `p_${key}`)
+        .attr('patternUnits', 'userSpaceOnUse')
+        .attr('width', spacing + (thickness / 2))
+        .attr('height', spacing + (thickness / 2))
+        .attr('patternTransform', (key === 'CRULES_COLOR' ? `rotate(${rotation})` : `rotate(${-rotation})`))
+        .append('line')
+        .attr('x1', 0)
+        .attr('y1', 0)
+        .attr('x2', 0)
+        .attr('y2', spacing + (thickness / 2))
+        .attr('stroke', FTTemplate[key])
+        .attr('stroke-width', thickness);
+    });
 
 
-  function refreshVisualization(descriptor) {
-    const filterFunctionRule = f => d3.sum(Object.values(f.rulePredicateMap)) > 0;
-    const filterFunctionCRule = f => d3.sum(Object.values(f.cRulesRelevanceMap)) > 0;
-    const filterFunctionBoth = f => (d3.sum(Object.values(f.rulePredicateMap)) +
+    function refreshVisualization(descriptor) {
+      const filterFunctionRule = f => d3.sum(Object.values(f.rulePredicateMap)) > 0;
+      const filterFunctionCRule = f => d3.sum(Object.values(f.cRulesRelevanceMap)) > 0;
+      const filterFunctionBoth = f => (d3.sum(Object.values(f.rulePredicateMap)) +
       d3.sum(Object.values(f.cRulesRelevanceMap))) > 0;
 
-    let currentFilter = () => true;
-    if (descriptor.filterRules) {
-      currentFilter = filterFunctionRule;
-    }
-    if (descriptor.filterCRules) {
-      currentFilter = filterFunctionCRule;
-    }
-    if (descriptor.filterRules && descriptor.filterCRules) {
-      currentFilter = filterFunctionBoth;
+      let currentFilter = () => true;
+      if (descriptor.filterRules) {
+        currentFilter = filterFunctionRule;
+      }
+      if (descriptor.filterCRules) {
+        currentFilter = filterFunctionCRule;
+      }
+      if (descriptor.filterRules && descriptor.filterCRules) {
+        currentFilter = filterFunctionBoth;
+      }
+
+      const filteredDescriptor = {
+        ...explanationDescriptor,
+        features: explanationDescriptor.features.filter(currentFilter),
+      };
+      svg.datum(filteredDescriptor).call(fv);
+      menuSvg.datum(filteredDescriptor).call(fm);
     }
 
-    const filteredDescriptor = {
-      ...explanationDescriptor,
-      features: explanationDescriptor.features.filter(currentFilter),
-    };
-    svg.datum(filteredDescriptor).call(fv);
-    menuSvg.datum(filteredDescriptor).call(fm);
+    // it is important that fm component is called after fv has been called the first time
+    // to ensure that the bandScale is correctly initialized
+    refreshVisualization(explanationDescriptor);
+
+    // compute the resulting bounding box to set the height of the svg
+    // recall: `svg` variable is the group `g` that contains the visualization
+    //        so we refer to the parent node to set the height correctly
+    const bbox = svg.node().getBBox();
+    mainSvg.node().parentNode.setAttribute('height', bbox.height +
+    (GUTTER + (MENU_HEIGHT + (2 * SINGLE_FEATURE_HEIGHT))));
+    mainSvg.node().parentNode.setAttribute('width', bbox.width + GUTTER);
+    fv.width(bbox.width + GUTTER);
+    // menuSvg.node().setAttribute('width', bbox.width + GUTTER);
+
+
+    dispatcher.on('changeCounterRule', (d) => {
+      explanationDescriptor.selectedCounterRule = d;
+      refreshVisualization(explanationDescriptor);
+    });
+
+    dispatcher.on('changeOrder', (d) => {
+      if (d === 'Feature Importance') {
+        explanationDescriptor.features.sort((a, b) =>
+          (b.feature_importance) - (a.feature_importance));
+      }
+      if (d === 'Counter Rules first') {
+        explanationDescriptor.features
+          .sort((a, b) =>
+            ((Object.values(b.cRulesRelevanceMap).filter(v => v === 1).length) -
+            (Object.values(a.cRulesRelevanceMap).filter(v => v === 1).length)))
+          .sort((a, b) =>
+            ((Object.values(b.cRulesRelevanceMap).filter(v => v === 2).length) -
+            (Object.values(a.cRulesRelevanceMap).filter(v => v === 2).length)));
+      }
+      if (d === 'Rules first') {
+        explanationDescriptor.features.sort((a, b) =>
+          (d3.sum(Object.values(b.rulePredicateMap)) - d3.sum(Object.values(a.rulePredicateMap))));
+      }
+      if (d === 'Alphabetical') {
+        explanationDescriptor.features.sort((a, b) =>
+          a.rname.localeCompare(b.rname));
+      }
+      refreshVisualization(explanationDescriptor);
+    });
+    dispatcher.on('changeFilter', (d) => {
+      explanationDescriptor.filterRules = d.Rules.value;
+      explanationDescriptor.filterCRules = d.CRules.value;
+
+      refreshVisualization(explanationDescriptor);
+    });
+
+    dispatcher.on('changeTextualFormat', (d) => {
+      explanationDescriptor.textVersion = d.Textual;
+      refreshVisualization(explanationDescriptor);
+    });
+
+    dispatcher.on('changePalette', (d) => {
+      FTTemplate = colorSet[d.value];
+
+      mainSvg
+        .attr('style', `background-color: ${FTTemplate.BACKGROUND_COLOR};`);
+      refreshVisualization(explanationDescriptor);
+    });
+
+    dispatcher.on('changeProgressStep', (d) => {
+      explanationDescriptor.progressStatus = d;
+      refreshVisualization(explanationDescriptor);
+    });
   }
 
-  // it is important that fm component is called after fv has been called the first time
-  // to ensure that the bandScale is correctly initialized
-  refreshVisualization(explanationDescriptor);
-
-  // compute the resulting bounding box to set the height of the svg
-  // recall: `svg` variable is the group `g` that contains the visualization
-  //        so we refer to the parent node to set the height correctly
-  const bbox = svg.node().getBBox();
-  mainSvg.node().parentNode.setAttribute('height', bbox.height +
-    (GUTTER + (MENU_HEIGHT + (2 * SINGLE_FEATURE_HEIGHT))));
-  mainSvg.node().parentNode.setAttribute('width', bbox.width + GUTTER);
-  fv.width(bbox.width + GUTTER);
-  // menuSvg.node().setAttribute('width', bbox.width + GUTTER);
+  return me;
+}
 
 
-  dispatcher.on('changeCounterRule', (d) => {
-    explanationDescriptor.selectedCounterRule = d;
-    refreshVisualization(explanationDescriptor);
+const instanceView = InstanceView();
+
+// d3.json('/static/german_explanations/instance_2.json').then((data) => {
+//   const explanationDescriptor = preprocessData(data);
+//   d3.select('#app').datum(explanationDescriptor).call(instanceView());
+// });
+
+
+d3.select('#instance')
+  .on('change', () => {
+    const path = d3.select('#instance').property('value');
+    d3.json(path).then((data) => {
+      const explanationDescriptor = preprocessData(data);
+      d3.select('#app').datum(explanationDescriptor).call(instanceView);
+    });
   });
-
-  dispatcher.on('changeOrder', (d) => {
-    if (d === 'Feature Importance') {
-      explanationDescriptor.features.sort((a, b) =>
-        (b.feature_importance) - (a.feature_importance));
-    }
-    if (d === 'Counter Rules first') {
-      explanationDescriptor.features
-        .sort((a, b) =>
-          ((Object.values(b.cRulesRelevanceMap).filter(v => v === 1).length) -
-            (Object.values(a.cRulesRelevanceMap).filter(v => v === 1).length)))
-        .sort((a, b) =>
-          ((Object.values(b.cRulesRelevanceMap).filter(v => v === 2).length) -
-            (Object.values(a.cRulesRelevanceMap).filter(v => v === 2).length)));
-    }
-    if (d === 'Rules first') {
-      explanationDescriptor.features.sort((a, b) =>
-        (d3.sum(Object.values(b.rulePredicateMap)) - d3.sum(Object.values(a.rulePredicateMap))));
-    }
-    if (d === 'Alphabetical') {
-      explanationDescriptor.features.sort((a, b) =>
-        a.rname.localeCompare(b.rname));
-    }
-    refreshVisualization(explanationDescriptor);
-  });
-  dispatcher.on('changeFilter', (d) => {
-    explanationDescriptor.filterRules = d.Rules.value;
-    explanationDescriptor.filterCRules = d.CRules.value;
-
-    refreshVisualization(explanationDescriptor);
-  });
-
-  dispatcher.on('changeTextualFormat', (d) => {
-    explanationDescriptor.textVersion = d.Textual;
-    refreshVisualization(explanationDescriptor);
-  });
-
-  dispatcher.on('changePalette', (d) => {
-    FTTemplate = colorSet[d.value];
-
-    mainSvg
-      .attr('style', `background-color: ${FTTemplate.BACKGROUND_COLOR};`);
-    refreshVisualization(explanationDescriptor);
-  });
-
-  dispatcher.on('changeProgressStep', (d) => {
-    explanationDescriptor.progressStatus = d;
-    refreshVisualization(explanationDescriptor);
-  });
-});
