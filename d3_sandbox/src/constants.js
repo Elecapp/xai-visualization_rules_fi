@@ -39,30 +39,30 @@ export const colorSet = {
     DISTRIBUTION_STROKE_COLOR: '#a0aec0',
     CATEGORICAL_INSTANCE_COLOR: '#a3b8cc',
     CATEGORICAL_INSTANCE_STROKE_COLOR: '#64748b',
-    FI_POSITIVE_COLOR: '#5c8d76',
+    FI_POSITIVE_COLOR: '#4b7561',
     NEGATIVE_FI_COLOR: '#73584E',
     GRID_COLOR: '#2d3748',
   },
   darkModeColorPalette: {
-    BACKGROUND_COLOR: '#3a3a3a', // Dark gray for background
-    CRULES_COLOR: 'rgba(158,79,103,1)',
-    CRULES_STROKE_COLOR: 'rgba(133,66,86,1)',
-    RULE_COLOR: 'rgba(230,174,85,1)',
-    RULE_STROKE_COLOR: darkenColor('#E6AE55B3', 1),
-    BASE_COLOR: '#dcc',
-    BASE_STROKE_COLOR: '#4e4e4e', // Darker stroke color for base
-    SECONDARY_BACKGROUND_COLOR: '#2a2a2a', // Slightly lighter background for secondary elements
-    TEXT_COLOR: '#ffffff', // White text for high contrast
-    VALUE_TEXT_COLOR: '#d1d1d1', // Light gray for value text
-    OTHER_TEXT_COLOR: '#b0b0b0', // Gray for other text
-    INSTANCE_COLOR: '#ff6f61', // Bright color for instances
-    DISTRIBUTION_COLOR: '#4d4d4d', // Dark color for distributions
-    DISTRIBUTION_STROKE_COLOR: '#808080', // Darker stroke color for distributions
-    CATEGORICAL_INSTANCE_COLOR: '#b0b0b0', // Dark gray for categorical instances
-    CATEGORICAL_INSTANCE_STROKE_COLOR: '#d1d1d1', // Darker stroke color for categorical instances
-    FI_POSITIVE_COLOR: '#37995e', // Green for positive feature importance
-    NEGATIVE_FI_COLOR: '#d1804d', // Red for negative feature importance
-    GRID_COLOR: '#b0b0b0', // Dark color for grid lines
+    BACKGROUND_COLOR: '#263135',
+    CRULES_COLOR: 'rgb(190,148,224)',
+    CRULES_STROKE_COLOR: 'rgb(154,125,179)',
+    RULE_COLOR: 'rgba(215, 155, 95, 1)',
+    RULE_STROKE_COLOR: 'rgba(235, 175, 115, 1)',
+    BASE_COLOR: '#3a526f',
+    BASE_STROKE_COLOR: '#7d8fbc',
+    SECONDARY_BACKGROUND_COLOR: '#22272e',
+    TEXT_COLOR: '#e2e8f0',
+    VALUE_TEXT_COLOR: 'rgba(180, 200, 230, 0.9)',
+    OTHER_TEXT_COLOR: 'rgba(220, 225, 235, 0.8)',
+    INSTANCE_COLOR: '#f8fafc',
+    DISTRIBUTION_COLOR: '#3d4d65',
+    DISTRIBUTION_STROKE_COLOR: '#5a6d8a',
+    CATEGORICAL_INSTANCE_COLOR: '#4e6080',
+    CATEGORICAL_INSTANCE_STROKE_COLOR: '#7085ad',
+    FI_POSITIVE_COLOR: '#608176',
+    NEGATIVE_FI_COLOR: '#73635f',
+    GRID_COLOR: '#d2d2dc',
   },
   grayscaleHighContrast: {
     BACKGROUND_COLOR: '#f8f8f8', // Grigio molto chiaro per un leggero contrasto con il bianco
