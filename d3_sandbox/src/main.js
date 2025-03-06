@@ -1852,6 +1852,7 @@ function InstanceView() {
 
 
     // create a pattern for each color in the template to be used in the visualization
+    // TODO: pattern must be created for all palette modes
     Object.keys(FTTemplate).forEach((key) => {
       defs.append('pattern')
         .attr('id', `p_${key}`)

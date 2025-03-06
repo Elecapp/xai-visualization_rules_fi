@@ -81,7 +81,7 @@ export const colorSet = {
     DISTRIBUTION_STROKE_COLOR: '#707070', // Grigio scuro per i contorni
     CATEGORICAL_INSTANCE_COLOR: '#a0a0a0', // Grigio medio per le categorie
     CATEGORICAL_INSTANCE_STROKE_COLOR: '#505050', // Grigio scuro per i bordi delle categorie
-    FI_POSITIVE_COLOR: '#404040', // Grigio molto scuro per i valori positivi
+    FI_POSITIVE_COLOR: '#535353', // Grigio molto scuro per i valori positivi
     NEGATIVE_FI_COLOR: '#202020', // Grigio quasi nero per i valori negativi
     GRID_COLOR: '#000000', // Nero puro per una griglia ben definita
   },
