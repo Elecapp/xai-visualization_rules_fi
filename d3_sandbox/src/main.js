@@ -420,8 +420,8 @@ function FIPERTextualExplanationView() {
         .attr('font-size', FONT_SIZE)
         .attr('fill', FTTemplate.TEXT_COLOR)
         .attr('font-weight', '300')
-        .html(d => text2tspan(`RULE: ${d.ruleText.R0}`, 55, 0))
-        .call(TooltipHandler().html(d => `<div>${text2html(`RULE: ${d.ruleText.R0}`, 10000)}</div>`));
+        .html(d => text2tspan(`<tspan fill='${FTTemplate.SECONDARY_BACKGROUND_COLOR}'>RULE </tspan>${d.ruleText.R0}`, 55, 0))
+        .call(TooltipHandler().html(d => `<div>${text2html(`RULE ${d.ruleText.R0}`, 10000)}</div>`));
 
       let ruleHeight = 0;
       if (Object.keys(selection.datum().ruleText).length) {
@@ -446,7 +446,7 @@ function FIPERTextualExplanationView() {
         .attr('fill', FTTemplate.CRULES_COLOR);
 
       const makeCRuleText = (d) => {
-        const cruleText = text2tspan(`COUNTER RULE: ${d.cruleText[selectedCounterRule]}`, 55, 0);
+        const cruleText = text2tspan(`COUNTER RULE ${d.cruleText[selectedCounterRule]}`, 55, 0);
         return cruleText.replace('COUNTER RULE ', `<tspan fill='${FTTemplate.SECONDARY_BACKGROUND_COLOR}'>COUNTER RULE </tspan>`);
       };
 
@@ -460,7 +460,7 @@ function FIPERTextualExplanationView() {
         .attr('fill', FTTemplate.TEXT_COLOR)
         .attr('font-weight', '300')
         .html(makeCRuleText)
-        .call(TooltipHandler().html(d => `<div>${text2html(`COUNTER RULE: ${d.cruleText[selectedCounterRule]}`, 10000)}</div>`));
+        .call(TooltipHandler().html(d => `<div>${text2html(`COUNTER RULE ${d.cruleText[selectedCounterRule]}`, 10000)}</div>`));
 
 
       let crHeight = 0;
@@ -1816,7 +1816,7 @@ function InstanceView() {
     const fv = FIPERView().width(GLOBAL_WIDTH +
     (explanationDescriptor.counterRules.length * CRULES_GRID_COLUMN_WIDTH));
     const fm = FiperMenu();
-    
+
     const mainSvg = selection.selectAll('svg.viz')
       .data([0]) // Usa un array con un singolo elemento come dati
       .join('svg')
@@ -1852,6 +1852,7 @@ function InstanceView() {
 
 
     // create a pattern for each color in the template to be used in the visualization
+    // TODO: pattern must be created for all palette modes
     Object.keys(FTTemplate).forEach((key) => {
       defs.append('pattern')
         .attr('id', `p_${key}`)
