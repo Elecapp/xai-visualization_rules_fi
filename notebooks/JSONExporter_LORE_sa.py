@@ -6,15 +6,16 @@ import shap
 
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
+from xailib.explainers.lime_explainer import LimeXAITabularExplainer
 
 from lore_sa.neighgen import GeneticGenerator
 
 
-from dataset import TabularDataset
-from neighgen import genetic
-from encoder_decoder import ColumnTransformerEnc
-from lore import Lore
-from surrogate import DecisionTreeSurrogate
+from lore_sa.dataset import TabularDataset
+from lore_sa.neighgen import genetic
+from lore_sa.encoder_decoder import ColumnTransformerEnc
+from lore_sa.lore import Lore
+from lore_sa.surrogate import DecisionTreeSurrogate
 
 from lore_sa.bbox import sklearn_classifier_bbox
 
@@ -45,6 +46,8 @@ def load_data_from_csv(class_field, number_of_dataset):
         df['Rings'] = pd.cut(df['Rings'],
                              bins=[-np.inf, 8, 10, np.inf],
                              labels=['young', 'medium', 'old'])
+    if class_field == "default":
+        df['default'] = df['default'].astype(str)
     df_prep = df.drop(columns=[class_field])
     num_indices = [df_prep.columns.get_loc(col) for col in df_prep.select_dtypes(include=[np.number]).columns]
     cat_indices = [df_prep.columns.get_loc(col) for col in df_prep.select_dtypes(exclude=[np.number]).columns]
@@ -69,7 +72,7 @@ def train_model(df, preprocessor, class_field):
                                                         test_size=0.3, random_state=42, stratify=df[class_field].values)
     model.fit(X_train, y_train)
 
-    return model, X_test, X_train
+    return model, X_test, X_train, y_test, y_train
 
 
 class CustomJSONEncoder(json.JSONEncoder):
@@ -87,18 +90,21 @@ class CustomJSONEncoder(json.JSONEncoder):
         return super(CustomJSONEncoder, self).default(obj)
 
 
-def select_and_explain_instance(number_of_dataset,class_field,bbox, X_train, X_test):
+def select_and_explain_instance(number_of_dataset,class_field,bbox, X_train, X_test, y_test):
     datasets = ['titanic_c.csv', 'german_credit.csv', 'abalone.csv', 'iris.csv']
     source_file = f'../datasets/{datasets[number_of_dataset]}'
     dataset = TabularDataset.from_csv(source_file, class_name=class_field)
-    dataset.df.dropna(inplace=True)
+    if class_field == "default":
+        dataset.df['default'] = dataset.df['default'].astype(str)
     dataset.update_descriptor()
     enc = ColumnTransformerEnc(dataset.descriptor)
     generator = GeneticGenerator(bbox=bbox, dataset=dataset, encoder=enc, ocr=0.1)
     surrogate = DecisionTreeSurrogate()
     tabularLore = Lore(bbox, dataset, enc, generator, surrogate)
 
-    instance = X_test[0]
+    inst_num = 0 #random.randint(0, len(X_test))
+    instance = X_test[inst_num]
+    true_class = y_test[inst_num]
     #neighbour = generator.generate(instance,200,dataset.descriptor,)
     l_exp= tabularLore.explain(instance)
     print(l_exp)
@@ -110,35 +116,62 @@ def select_and_explain_instance(number_of_dataset,class_field,bbox, X_train, X_t
     X_train_prep = preprocessor.transform(X_train)
     X_test_prep = preprocessor.transform(X_test)
 
-    s_explainer = shap.TreeExplainer(model, X_train_prep)
-    observation = preprocessor.transform(instance.reshape(1, -1))
-    shap_values = s_explainer.shap_values(observation)
-
+    # s_explainer = LimeXAITabularExplainer(bbox) #shap.TreeExplainer(model, X_train_prep)
+    # config = {'feature_selection': 'lasso_path'}
+    # s_explainer.fit(dataset.df, class_field, config)
+    # s_exp = s_explainer.explain(instance)
+    # feat_importance = s_exp.exp.as_list()
 
     predicted_class = bbox.predict(instance.reshape(1, -1))
     predicted_proba = bbox.predict_proba(instance.reshape(1, -1))
 
+    descr = dataset.descriptor
+    features = []
+    for i, f in enumerate(descr['numeric']):
+        feat = {
+            "index": descr['numeric'][f]['index'],
+            "name": f,
+            "rname": f,
+            "type": "numeric",
+            "eda": {
+                "min": descr['numeric'][f]['min'],
+                "max": descr['numeric'][f]['max'],
+                "mean": descr['numeric'][f]['mean'],
+                "std": descr['numeric'][f]['std'],
+                "q1": descr['numeric'][f]['q1'],
+                "q3": descr['numeric'][f]['q3'],
+                "median": descr['numeric'][f]['median'],
+            },
+            "instance_value": instance[descr['numeric'][f]['index']]
+        }
+        features.append(feat)
+
+
+
     ## Feature Importance Explanation
 
     #l_exp = l_explnr.explain(inst)
-    l_expDict = l_exp.expDict
+    l_expDict = l_exp
     # remove key dt from expDict
-    l_expDict.pop('dt', None)
-    crules = l_expDict['crules']
+    crules = l_expDict['counterfactuals']
     if len(crules) > 0:
         print('Lore crules', len(crules), 'instance', inst_num)
 
-    pe = PlotExplanation(
-        feature_names=df.columns.tolist(),
-        real_feature_names=real_feature_names,
-        instance_number=inst_num,
-        x_train=X_train,
-        expDict=l_expDict,
-        feature_importance_type='shap',
-        feature_importance=shap_values,
-        numeric_columns=numeric_columns
-    )
-    features = pe.prepare_rule_descriptor(inst)['features']
+    real_numerical_features_names = list(dataset.descriptor['numeric'].keys())
+    real_categorical_features_names = list(dataset.descriptor['categorical'].keys())
+    real_feature_names = real_numerical_features_names + real_categorical_features_names
+    #
+    # pe = PlotExplanation(
+    #     feature_names=df.columns.tolist(),
+    #     real_feature_names=real_feature_names,
+    #     instance_number=inst_num,
+    #     x_train=dataset.df,
+    #     expDict=l_expDict,
+    #     feature_importance_type='lime',
+    #     feature_importance=feat_importance,
+    #     numeric_columns=real_numerical_features_names
+    # )
+    # features = pe.prepare_rule_descriptor(instance)['features']
     # add categorical info
     categorical_features_info = {
         'account_check_status': {
@@ -212,7 +245,7 @@ def select_and_explain_instance(number_of_dataset,class_field,bbox, X_train, X_t
 
     # save the output of l_exp.exp to a text file named instance_{inst_num}_lore.txt
     with open(f'{path}/instance_{inst_num}_lore.txt', "w") as outfile:
-        outfile.write(str(l_exp.exp))
+        outfile.write(str(l_exp))
 
     return instance, len(crules)
 
@@ -226,11 +259,11 @@ if __name__ == '__main__':
 
 
 
-    number_of_dataset = 3  # Select the dataset index (0 for Titanic, 1 for German Credit, etc.)
-    class_field = "variety"  # Select the proper class field for the dataset
-    folder = "iris_explanations" #Select the folder to save the result
+    number_of_dataset = 1  # Select the dataset index (0 for Titanic, 1 for German Credit, etc.)
+    class_field = "default"  # Select the proper class field for the dataset
+    folder = "german_explanations" #Select the folder to save the result
     sample_length = 1  # Number of instances to explain
     df, preprocessor, class_field = load_data_from_csv(class_field, number_of_dataset)
-    model, X_test, X_train =  train_model(df, preprocessor, class_field)
+    model, X_test, X_train, y_test, _ =  train_model(df, preprocessor, class_field)
 
-    instance = select_and_explain_instance(number_of_dataset, class_field, model, X_train, X_test)
+    instance = select_and_explain_instance(number_of_dataset, class_field, model, X_train, X_test, y_test)
