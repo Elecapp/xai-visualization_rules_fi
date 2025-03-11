@@ -33,7 +33,7 @@ import os
 
 from plot_explanation import PlotExplanation
 
-path = os.getcwd()
+path = os.getcwd() + '/../d3_sandbox/static/german_explanations'
 
 def load_data_from_csv(class_field, number_of_dataset):
     datasets = ['titanic_c.csv','german_credit.csv','abalone.csv','iris.csv']
@@ -102,19 +102,12 @@ def select_and_explain_instance(number_of_dataset,class_field,bbox, X_train, X_t
     surrogate = DecisionTreeSurrogate()
     tabularLore = Lore(bbox, dataset, enc, generator, surrogate)
 
-    inst_num = 0 #random.randint(0, len(X_test))
+    inst_num = 285 #random.randint(0, len(X_test))
     instance = X_test[inst_num]
     true_class = y_test[inst_num]
     #neighbour = generator.generate(instance,200,dataset.descriptor,)
     l_exp= tabularLore.explain(instance)
     print(l_exp)
-
-
-    model = bbox.named_steps['randomforestclassifier']
-    preprocessor = bbox.named_steps['columntransformer']
-
-    X_train_prep = preprocessor.transform(X_train)
-    X_test_prep = preprocessor.transform(X_test)
 
     # s_explainer = LimeXAITabularExplainer(bbox) #shap.TreeExplainer(model, X_train_prep)
     # config = {'feature_selection': 'lasso_path'}
@@ -142,10 +135,87 @@ def select_and_explain_instance(number_of_dataset,class_field,bbox, X_train, X_t
                 "q3": descr['numeric'][f]['q3'],
                 "median": descr['numeric'][f]['median'],
             },
-            "instance_value": instance[descr['numeric'][f]['index']]
+            "instance_value": instance[descr['numeric'][f]['index']],
+            "rule": [],
+            "crules": {},
+            "feature_importance": random.random(),
         }
+        rule_prem = l_exp['rule']['premises']
+        for rule in rule_prem:
+            if rule['attr'] == f:
+                feat['rule'].append([{
+                    "att": rule["attr"],
+                    "is_continuous": True,
+                    "op": rule["op"],
+                    "thr": rule["val"]
+
+               }, l_exp['rule']['consequence']['val']])
+        for i, cf in enumerate(l_exp['counterfactuals']):
+            for rule in cf['premises']:
+                if rule['attr'] == f:
+                    if f'C{i}' not in feat['crules']:
+                        feat['crules'][f'C{i}'] = []
+                    feat['crules'][f'C{i}'].append( [{
+                        "att": rule["attr"],
+                        "is_continuous": True,
+                        "op": rule["op"],
+                        "thr": rule["val"]
+                    }, cf['consequence']['val']])
         features.append(feat)
 
+    for i, f in enumerate(descr['categorical']):
+        for j, c in enumerate(descr['categorical'][f]['count']):
+            feat = {
+                "index": descr['categorical'][f]['index'],
+                "name": f"{f}={c}",
+                "rname": f,
+                "type": "categorical",
+                "eda": {
+                    "category": c,
+                    "count": descr['categorical'][f]['count'][c]
+                },
+                "instance_value": instance[descr['categorical'][f]['index']] == c,
+                "rule": [],
+                "crules": {},
+                "feature_importance": random.random(),
+            }
+            rule_prem = l_exp['rule']['premises']
+            for rule in rule_prem:
+                if rule['attr'] == f and rule['val'] == c:
+                    if rule['op'] == '=':
+                        feat['rule'].append([{
+                            "att": f'{f}={c}',
+                            "is_continuous": False,
+                            "op": '>',
+                            "thr": 0.5
+                        }, l_exp['rule']['consequence']['val']])
+                    else:
+                        feat['rule'].append([{
+                            "att": f'{f}={c}',
+                            "is_continuous": False,
+                            "op": '<=',
+                            "thr": 0.5
+                        }, l_exp['rule']['consequence']['val']])
+            for i, cf in enumerate(l_exp['counterfactuals']):
+                for rule in cf['premises']:
+                    if rule['attr'] == f and rule['val'] == c:
+                        if f'C{i}' not in feat['crules']:
+                            feat['crules'][f'C{i}'] = []
+                        if rule['op'] == '=':
+                            feat['crules'][f'C{i}'].append([{
+                                "att": f'{f}={c}',
+                                "is_continuous": False,
+                                "op": '>',
+                                "thr": 0.5
+                            }, cf['consequence']['val']])
+                        else:
+                            feat['crules'][f'C{i}'].append([{
+                                "att": f'{f}={c}',
+                                "is_continuous": False,
+                                "op": '<=',
+                                "thr": 0.5
+                            }, cf['consequence']['val']])
+            features.append(feat)
 
 
     ## Feature Importance Explanation
