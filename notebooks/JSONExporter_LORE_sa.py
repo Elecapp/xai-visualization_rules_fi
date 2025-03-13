@@ -102,143 +102,144 @@ def select_and_explain_instance(number_of_dataset,class_field,bbox, X_train, X_t
     surrogate = DecisionTreeSurrogate()
     tabularLore = Lore(bbox, dataset, enc, generator, surrogate)
 
-    inst_num = random.randint(0, len(X_test))
-    instance = X_test[inst_num]
-    true_class = y_test[inst_num]
-    #neighbour = generator.generate(instance,200,dataset.descriptor,)
-    l_exp= tabularLore.explain(instance)
-    print(l_exp)
+    for inst_num in range(len(X_test)):
+        # inst_num = random.randint(0, len(X_test))
+        instance = X_test[inst_num]
+        true_class = y_test[inst_num]
+        #neighbour = generator.generate(instance,200,dataset.descriptor,)
+        l_exp= tabularLore.explain(instance, 3000)
+        print(l_exp)
 
-    # s_explainer = LimeXAITabularExplainer(bbox) #shap.TreeExplainer(model, X_train_prep)
-    # config = {'feature_selection': 'lasso_path'}
-    # s_explainer.fit(dataset.df, class_field, config)
-    # s_exp = s_explainer.explain(instance)
-    # feat_importance = s_exp.exp.as_list()
+        # s_explainer = LimeXAITabularExplainer(bbox) #shap.TreeExplainer(model, X_train_prep)
+        # config = {'feature_selection': 'lasso_path'}
+        # s_explainer.fit(dataset.df, class_field, config)
+        # s_exp = s_explainer.explain(instance)
+        # feat_importance = s_exp.exp.as_list()
 
-    predicted_class = bbox.predict(instance.reshape(1, -1))
-    predicted_proba = bbox.predict_proba(instance.reshape(1, -1))
+        predicted_class = bbox.predict(instance.reshape(1, -1))
+        predicted_proba = bbox.predict_proba(instance.reshape(1, -1))
 
-    descr = dataset.descriptor
-    features = []
-    for i, f in enumerate(descr['numeric']):
-        feat = {
-            "index": descr['numeric'][f]['index'],
-            "name": f,
-            "rname": f,
-            "type": "numeric",
-            "eda": {
-                "min": descr['numeric'][f]['min'],
-                "max": descr['numeric'][f]['max'],
-                "mean": descr['numeric'][f]['mean'],
-                "std": descr['numeric'][f]['std'],
-                "q1": descr['numeric'][f]['q1'],
-                "q3": descr['numeric'][f]['q3'],
-                "median": descr['numeric'][f]['median'],
-            },
-            "instance_value": instance[descr['numeric'][f]['index']],
-            "rule": [],
-            "crules": {},
-            "feature_importance": random.random(),
-        }
-        rule_prem = l_exp['rule']['premises']
-        for rule in rule_prem:
-            if rule['attr'] == f:
-                feat['rule'].append([{
-                    "att": rule["attr"],
-                    "is_continuous": True,
-                    "op": rule["op"],
-                    "thr": rule["val"]
-
-               }, l_exp['rule']['consequence']['val']])
-        for i, cf in enumerate(l_exp['counterfactuals']):
-            for rule in cf['premises']:
-                if rule['attr'] == f:
-                    if f'C{i}' not in feat['crules']:
-                        feat['crules'][f'C{i}'] = []
-                    feat['crules'][f'C{i}'].append( [{
-                        "att": rule["attr"],
-                        "is_continuous": True,
-                        "op": rule["op"],
-                        "thr": rule["val"]
-                    }, cf['consequence']['val']])
-        features.append(feat)
-
-    for i, f in enumerate(descr['categorical']):
-        for j, c in enumerate(descr['categorical'][f]['count']):
+        descr = dataset.descriptor
+        features = []
+        for i, f in enumerate(descr['numeric']):
             feat = {
-                "index": descr['categorical'][f]['index'],
-                "name": f"{f}={c}",
+                "index": descr['numeric'][f]['index'],
+                "name": f,
                 "rname": f,
-                "type": "categorical",
+                "type": "numeric",
                 "eda": {
-                    "category": c,
-                    "count": descr['categorical'][f]['count'][c]
+                    "min": descr['numeric'][f]['min'],
+                    "max": descr['numeric'][f]['max'],
+                    "mean": descr['numeric'][f]['mean'],
+                    "std": descr['numeric'][f]['std'],
+                    "q1": descr['numeric'][f]['q1'],
+                    "q3": descr['numeric'][f]['q3'],
+                    "median": descr['numeric'][f]['median'],
                 },
-                "instance_value": instance[descr['categorical'][f]['index']] == c,
+                "instance_value": instance[descr['numeric'][f]['index']],
                 "rule": [],
                 "crules": {},
                 "feature_importance": random.random(),
             }
             rule_prem = l_exp['rule']['premises']
             for rule in rule_prem:
-                if rule['attr'] == f and rule['val'] == c:
-                    if rule['op'] == '=':
-                        feat['rule'].append([{
-                            "att": f'{f}={c}',
-                            "is_continuous": False,
-                            "op": '>',
-                            "thr": 0.5
-                        }, l_exp['rule']['consequence']['val']])
-                    else:
-                        feat['rule'].append([{
-                            "att": f'{f}={c}',
-                            "is_continuous": False,
-                            "op": '<=',
-                            "thr": 0.5
-                        }, l_exp['rule']['consequence']['val']])
+                if rule['attr'] == f:
+                    feat['rule'].append([{
+                        "att": rule["attr"],
+                        "is_continuous": True,
+                        "op": rule["op"],
+                        "thr": rule["val"]
+
+                   }, l_exp['rule']['consequence']['val']])
             for i, cf in enumerate(l_exp['counterfactuals']):
                 for rule in cf['premises']:
-                    if rule['attr'] == f and rule['val'] == c:
+                    if rule['attr'] == f:
                         if f'C{i}' not in feat['crules']:
                             feat['crules'][f'C{i}'] = []
+                        feat['crules'][f'C{i}'].append( [{
+                            "att": rule["attr"],
+                            "is_continuous": True,
+                            "op": rule["op"],
+                            "thr": rule["val"]
+                        }, cf['consequence']['val']])
+            features.append(feat)
+
+        for i, f in enumerate(descr['categorical']):
+            for j, c in enumerate(descr['categorical'][f]['count']):
+                feat = {
+                    "index": descr['categorical'][f]['index'],
+                    "name": f"{f}={c}",
+                    "rname": f,
+                    "type": "categorical",
+                    "eda": {
+                        "category": c,
+                        "count": descr['categorical'][f]['count'][c]
+                    },
+                    "instance_value": instance[descr['categorical'][f]['index']] == c,
+                    "rule": [],
+                    "crules": {},
+                    "feature_importance": random.random(),
+                }
+                rule_prem = l_exp['rule']['premises']
+                for rule in rule_prem:
+                    if rule['attr'] == f and rule['val'] == c:
                         if rule['op'] == '=':
-                            feat['crules'][f'C{i}'].append([{
+                            feat['rule'].append([{
                                 "att": f'{f}={c}',
                                 "is_continuous": False,
                                 "op": '>',
                                 "thr": 0.5
-                            }, cf['consequence']['val']])
+                            }, l_exp['rule']['consequence']['val']])
                         else:
-                            feat['crules'][f'C{i}'].append([{
+                            feat['rule'].append([{
                                 "att": f'{f}={c}',
                                 "is_continuous": False,
                                 "op": '<=',
                                 "thr": 0.5
-                            }, cf['consequence']['val']])
-            features.append(feat)
+                            }, l_exp['rule']['consequence']['val']])
+                for i, cf in enumerate(l_exp['counterfactuals']):
+                    for rule in cf['premises']:
+                        if rule['attr'] == f and rule['val'] == c:
+                            if f'C{i}' not in feat['crules']:
+                                feat['crules'][f'C{i}'] = []
+                            if rule['op'] == '=':
+                                feat['crules'][f'C{i}'].append([{
+                                    "att": f'{f}={c}',
+                                    "is_continuous": False,
+                                    "op": '>',
+                                    "thr": 0.5
+                                }, cf['consequence']['val']])
+                            else:
+                                feat['crules'][f'C{i}'].append([{
+                                    "att": f'{f}={c}',
+                                    "is_continuous": False,
+                                    "op": '<=',
+                                    "thr": 0.5
+                                }, cf['consequence']['val']])
+                features.append(feat)
 
 
-    ## Feature Importance Explanation
+        ## Feature Importance Explanation
 
-    # remove key dt from expDict
-    crules = l_exp['counterfactuals']
-    if len(crules) > 0:
-        print('Lore crules', len(crules), 'instance', inst_num)
+        # remove key dt from expDict
+        crules = l_exp['counterfactuals']
+        if len(crules) > 0:
+            print('Lore crules', len(crules), 'instance', inst_num)
 
 
-    output_data = {
-        "features": features,
-        "predicted_class": predicted_class[0],
-        "true_class": int(true_class),
-        "predicted_proba": predicted_proba[0].tolist()
-    }
+        output_data = {
+            "features": features,
+            "predicted_class": predicted_class[0],
+            "true_class": int(true_class),
+            "predicted_proba": predicted_proba[0].tolist()
+        }
 
-    with open(f'{path}/instance_{inst_num}.json', "w") as outfile:
-        json.dump(output_data, outfile, cls=CustomJSONEncoder, indent=4)
+        with open(f'{path}/instance_{inst_num}.json', "w") as outfile:
+            json.dump(output_data, outfile, cls=CustomJSONEncoder, indent=4)
 
-    # save the output of l_exp.exp to a text file named instance_{inst_num}_lore.txt
-    with open(f'{path}/instance_{inst_num}_lore.txt', "w") as outfile:
-        outfile.write(str(l_exp))
+        # save the output of l_exp.exp to a text file named instance_{inst_num}_lore.txt
+        with open(f'{path}/instance_{inst_num}_lore.txt', "w") as outfile:
+            outfile.write(str(l_exp))
 
     return instance, len(crules)
 
