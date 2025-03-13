@@ -1,4 +1,1 @@
-r = { savings=500 <= ... < 1000 DM  <= 0.02, credit_history=all credits at this bank paid back duly <= 0.04, housing=own > 0.50, duration_in_month <= 18.50, present_emp_since=... < 1 year  > 0.50 } --> { default: 0 }
-c = { { duration_in_month > 18.50, present_res_since <= 1.50 },
-      { duration_in_month > 33.50, age > 45.00 },
-      { housing=own <= 0.50, duration_in_month > 51.50 } }
+{'rule': {'premises': [{'attr': 'age', 'val': 26.5, 'op': '>'}, {'attr': 'account_check_status', 'val': 'no checking account', 'op': '='}, {'attr': 'credit_amount', 'val': 6589.5, 'op': '<='}, {'attr': 'purpose', 'val': '(vacation - does not exist?)', 'op': '!='}, {'attr': 'duration_in_month', 'val': 22.5, 'op': '<='}], 'consequence': {'attr': 'default', 'val': '0', 'op': '='}}, 'counterfactuals': [{'premises': [{'attr': 'age', 'val': 25.5, 'op': '>'}, {'attr': 'account_check_status', 'val': 'no checking account', 'op': '!='}, {'attr': 'purpose', 'val': '(vacation - does not exist?)', 'op': '!='}, {'attr': 'personal_status_sex', 'val': 'male : divorced/separated', 'op': '='}], 'consequence': {'attr': 'default', 'val': '1', 'op': '='}}], 'fidelity': 1.0}

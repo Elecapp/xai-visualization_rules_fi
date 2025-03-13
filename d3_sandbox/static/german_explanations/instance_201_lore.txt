@@ -1,7 +1,1 @@
-r = { duration_in_month > 46.50, savings=... < 100 DM > 0.50, age <= 30.50, present_res_since <= 3.50, present_res_since > 1.50, account_check_status=no checking account <= 0.50, installment_as_income_perc > 1.50, credit_amount <= 6681.50, credit_amount > 3292.00, present_emp_since=4 <= ... < 7 years <= 0.50, credit_history=existing credits paid back duly till now > 0.50, present_emp_since=.. >= 7 years <= 0.50, purpose=domestic appliances > 0.50, property=if not A121/A122 : car or other, not in attribute 6 <= 0.50 } --> { default: 1 }
-c = { { savings=... < 100 DM <= 0.50 },
-      { duration_in_month <= 27.71 },
-      { present_res_since > 3.50 },
-      { present_res_since <= 1.50 },
-      { present_emp_since=.. >= 7 years > 0.50 },
-      { account_check_status=no checking account > 0.50 } }
+{'rule': {'premises': [{'attr': 'present_res_since', 'val': 1.6638124585151672, 'op': '>'}, {'attr': 'savings', 'val': '... < 100 DM', 'op': '='}, {'attr': 'account_check_status', 'val': '0 <', 'op': '='}, {'attr': 'duration_in_month', 'val': 41.5, 'op': '>'}, {'attr': 'age', 'val': 33.5, 'op': '<='}, {'attr': 'housing', 'val': 'for free', 'op': '!='}], 'consequence': {'attr': 'default', 'val': '1', 'op': '='}}, 'counterfactuals': [{'premises': [{'attr': 'present_res_since', 'val': 1.6638124585151672, 'op': '>'}, {'attr': 'savings', 'val': '... < 100 DM', 'op': '='}, {'attr': 'account_check_status', 'val': '0 <', 'op': '!='}, {'attr': 'account_check_status', 'val': '< 0 DM', 'op': '!='}, {'attr': 'other_debtors', 'val': 'guarantor', 'op': '!='}, {'attr': 'credit_history', 'val': 'existing credits paid back duly till now', 'op': '='}], 'consequence': {'attr': 'default', 'val': '0', 'op': '='}}], 'fidelity': 1.0}

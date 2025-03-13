@@ -1,5 +1,1 @@
-r = { account_check_status=< 0 DM <= 0.50, duration_in_month <= 15.50, duration_in_month > -9.50, credit_amount <= 9171.00, purpose=(vacation - does not exist?) <= 0.50, other_installment_plans=bank <= 0.50, age <= 50.50, age > 15.50 } --> { default: 0 }
-c = { { duration_in_month > 34.00, housing=own <= 0.50 },
-      { duration_in_month > 25.50, housing=own <= 0.50 },
-      { credit_amount > 9171.00, purpose=domestic appliances <= 0.50 },
-      { duration_in_month > 49.50, housing=own <= 0.50 } }
+{'rule': {'premises': [{'attr': 'property', 'val': 'real estate', 'op': '='}, {'attr': 'credit_history', 'val': 'no credits taken/ all credits paid back duly', 'op': '!='}, {'attr': 'duration_in_month', 'val': 27.5, 'op': '<='}, {'attr': 'purpose', 'val': '(vacation - does not exist?)', 'op': '!='}, {'attr': 'credit_amount', 'val': 5566.0, 'op': '<='}], 'consequence': {'attr': 'default', 'val': '0', 'op': '='}}, 'counterfactuals': [{'premises': [{'attr': 'property', 'val': 'real estate', 'op': '='}, {'attr': 'credit_history', 'val': 'no credits taken/ all credits paid back duly', 'op': '='}, {'attr': 'other_installment_plans', 'val': 'none', 'op': '='}, {'attr': 'housing', 'val': 'rent', 'op': '='}, {'attr': 'telephone', 'val': 'yes, registered under the customers name ', 'op': '!='}], 'consequence': {'attr': 'default', 'val': '1', 'op': '='}}], 'fidelity': 1.0}
