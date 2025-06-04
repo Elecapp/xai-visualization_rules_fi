@@ -102,7 +102,7 @@ def select_and_explain_instance(number_of_dataset,class_field,bbox, X_train, X_t
     surrogate = DecisionTreeSurrogate()
     tabularLore = Lore(bbox, dataset, enc, generator, surrogate)
 
-    for inst_num in range(len(X_test)):
+    for inst_num in [141]:  #range(len(X_test)):
         # inst_num = random.randint(0, len(X_test))
         instance = X_test[inst_num]
         true_class = y_test[inst_num]
@@ -231,7 +231,7 @@ def select_and_explain_instance(number_of_dataset,class_field,bbox, X_train, X_t
             "features": features,
             "predicted_class": predicted_class[0],
             "true_class": int(true_class),
-            "predicted_proba": predicted_proba[0].tolist()
+            "predicted_proba": { label: prob for label, prob in zip(bbox.classes_, predicted_proba[0]) },
         }
 
         with open(f'{path}/instance_{inst_num}.json', "w") as outfile:
