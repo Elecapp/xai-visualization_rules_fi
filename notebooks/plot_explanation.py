@@ -19,7 +19,7 @@ class PlotExplanation:
         self.instance_number = instance_number
         self.x_train = x_train
         self.rule = expDict['rule']
-        self.crules = expDict['crules']
+        self.crules = expDict['counterfactuals']
         self.expDict = expDict
         self.feature_importance_type = feature_importance_type
         self.feature_importance = feature_importance

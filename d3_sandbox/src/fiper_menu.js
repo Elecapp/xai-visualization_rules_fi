@@ -518,6 +518,23 @@ function prepareCategoricalValues(data, val) {
   }).filter(d => d.value > 0);
 }
 
+function prepareClassesProbabilitesValues(data, val) {
+  // filter out data that has zero values
+  // also get mapping for next placement
+  // (save having to format data for d3 stack)
+  let cumulative = 0;
+  return Object.entries(data).map(([key, d]) => {
+    cumulative += d;
+    return {
+      value: d,
+      // want the cumulative to prior value (start of rect)
+      cumulative: cumulative - d,
+      instance_value: (val === key) ? 1 : 0,
+    };
+  }).filter(d => d.value > 0);
+}
+
+
 function FiperMenuClassesBarChart() {
   let width = 200;
   let height = 300;
@@ -526,7 +543,7 @@ function FiperMenuClassesBarChart() {
 
   function me(selection) {
     selection.selectAll('rect.pproba')
-      .data(d => prepareCategoricalValues(d.predicted_proba, d.predicted_class))
+      .data(d => prepareClassesProbabilitesValues(d.predicted_proba, d.predicted_class))
       .join('rect')
       .classed('pproba', true)
       .attr('x', d => lengthScale(d.cumulative))

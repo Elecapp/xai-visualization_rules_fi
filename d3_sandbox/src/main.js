@@ -851,7 +851,7 @@ function FIPERFeatureLabelsView() {
 
     function getFeatureValue(d, maxLength) {
       if (d.type === 'categorical') {
-        const label = d.values.filter(v => v.instance_value === 1).map(v => v.eda.category).join(', ');
+        const label = d.values.filter(v => v.instance_value).map(v => v.eda.category).join(', ');
         return (label.length > maxLength ? `${label.substring(0, maxLength - 2)}…` : label);
       }
       return `${d.values[0].instance_value}`;
@@ -1612,6 +1612,7 @@ function reduceUnionIntersection(predicatesWithIntervals) {
 
 function preprocessData(data) {
   // preprocess each entry to copmute the expected value for the categorical counterrules
+  console.log('data', data);
   const tfeature = data.features
     // .filter(f => f.type === 'categorical')
     // .filter(f => Object.entries(f.crules).length)
