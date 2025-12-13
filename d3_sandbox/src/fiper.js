@@ -1,3 +1,19 @@
+/**
+ * fiper.js - Main visualization components for FIPER (Feature Importance and Predicates for Explainable Rules)
+ * 
+ * This file contains the core D3.js visualization components that render the explainable AI interface.
+ * It includes components for:
+ * - Feature importance visualizations
+ * - Distribution displays (both categorical and numerical)
+ * - Rule and counter-rule predicates
+ * - Instance value markers
+ * - Textual explanations
+ * - Interactive tooltips
+ * 
+ * The visualization follows a reusable chart pattern where each component is a function
+ * that can be configured and then applied to D3 selections.
+ */
+
 import FiperMenu from './fiper_menu';
 import {
   colorSet,
@@ -18,10 +34,23 @@ import { predicate2text, text2tspan, text2html, columnLayout as cl } from './uti
 
 const d3 = require('d3');
 
+/**
+ * Calculate the maximum label length that fits in the available space
+ * 
+ * Computes how many characters can fit in the label column based on:
+ * - Font size
+ * - Column width
+ * - Character width scaling factors
+ * 
+ * @param {number} fontSize - The font size in pixels
+ * @returns {number} Maximum number of characters that fit
+ */
 function fontScaleFactor(fontSize) {
+  // Scale character width based on font size (larger fonts = wider characters)
   const cWidthFactor = d3.scaleLinear()
     .domain([8, 13])
     .range([2, 2.6]);
+  // Scale font size to effective width
   const fontScale = d3.scaleLinear()
     .domain([0, 10])
     .range([0, fontSize]);
@@ -29,58 +58,89 @@ function fontScaleFactor(fontSize) {
     (fontScale(fontSize)));
 }
 
+/** Maximum length for feature labels before truncation */
 const maxLabelLength = fontScaleFactor(FONT_SIZE);
 
-// create a function to darken a color using d3
-
+/** Current color theme template (can be changed by user) */
 let FTTemplate = colorSet.default;
-// Format the data (instead of using d3.stack()) and
-// filter out 0 values:
-// extracted from: https://observablehq.com/@eesur/d3-single-stacked-bar
+/**
+ * Prepare categorical feature values for stacked bar visualization
+ * 
+ * Transforms categorical feature data into a format suitable for creating
+ * stacked bar charts. Calculates percentages and cumulative positions.
+ * Filters out zero-count categories and sorts by frequency (descending).
+ * 
+ * Based on: https://observablehq.com/@eesur/d3-single-stacked-bar
+ * 
+ * @param {Array} data - Array of categorical values with EDA statistics
+ * @returns {Array} Formatted data with cumulative positions and percentages
+ */
 function prepareCategoricalValues(data) {
+  // Calculate total count across all categories
   const total = d3.sum(data, d => d.eda.count);
 
-  // use a scale   to get percentage values
+  // Create scale to convert counts to percentages
   const percent = d3.scaleLinear()
     .domain([0, total])
     .range([0, 100]);
-  // filter out data that has zero values
-  // also get mapping for next placement
-  // (save having to format data for d3 stack)
+    
+  // Track cumulative position for stacking bars
   let cumulative = 0;
+  
+  // Sort categories by count (most frequent first)
   data.sort((a, b) => b.eda.count - a.eda.count);
+  
   return data.map((d) => {
     cumulative += d.eda.count;
     return {
       value: d.eda.count,
-      // want the cumulative to prior value (start of rect)
-      cumulative: cumulative - d.eda.count,
+      cumulative: cumulative - d.eda.count,  // Starting position of this segment
       label: d.eda.category,
       percent: percent(d.eda.count),
       instance_value: d.instance_value,
       predicates: d.predicates,
       name: d.name,
     };
-  }).filter(d => d.value > 0);
+  }).filter(d => d.value > 0);  // Remove categories with zero count
 }
 
-// Reusable tooltip
+/**
+ * TooltipHandler - Reusable tooltip component for D3 visualizations
+ * 
+ * Creates and manages an interactive tooltip that follows the mouse cursor
+ * and displays contextual information about visualization elements.
+ * 
+ * Features:
+ * - Smooth fade in/out transitions
+ * - Follows mouse cursor position
+ * - Customizable HTML content via formatter function
+ * - Automatically styled based on current color theme
+ * 
+ * @returns {Function} A function that can be called on D3 selections to add tooltip behavior
+ * 
+ * @example
+ * const tooltip = TooltipHandler().html(d => `<div>Value: ${d.value}</div>`);
+ * selection.call(tooltip);
+ */
 function TooltipHandler() {
-  // Creates the tooltip div and adds it to the body
+  // Create or select the tooltip div element
   const tooltip = d3.select('body')
     .selectAll('div.d3-tooltip')
     .data([1])
     .join('div')
     .attr('class', 'd3-tooltip')
-    .style('opacity', 0);
+    .style('opacity', 0);  // Initially hidden
 
+  /**
+   * Default formatter for tooltip content
+   * Can be overridden using the .html() method
+   */
   let tooltipHtml = (d) => {
     const formatter = d3.format('.2%');
     return `<div>Value: ${d.label} (<span style="font-weight: 500">${formatter(d.percent / 100)}</span>)</div>`;
   };
 
-  // Css for the tooltip
-
+  // Inject CSS styles for the tooltip
   const tooltipStyleText = `
       .d3-tooltip {
           position: absolute;
@@ -102,37 +162,41 @@ function TooltipHandler() {
     .classed('d3-tooltip', true)
     .text(tooltipStyleText);
 
-  // Function to handle the tooltip
+  /**
+   * Main function to attach tooltip behavior to a selection
+   * 
+   * @param {d3.selection} selection - D3 selection to add tooltip to
+   */
   function me(selection) {
     selection
       .on('mouseover', (event, d) => {
-        // Show the tooltip with a transition
+        // Show tooltip with fade-in animation
         tooltip
           .transition()
           .duration(200)
           .style('opacity', 0.9);
 
-        // Set the content of the tooltip and position it
+        // Set content and position near cursor
         tooltip
           .html(() => tooltipHtml(d))
           .style('left', `${event.pageX + 10}px`)
           .style('top', `${event.pageY - 20}px`);
       })
       .on('mousemove', (event) => {
-        // Update the position of the tooltip
+        // Update tooltip position as mouse moves
         tooltip
           .style('left', `${event.pageX + 10}px`)
           .style('top', `${event.pageY - 20}px`);
       })
       .on('click', () => {
-        // Hide the tooltip with a transition
+        // Hide tooltip on click
         tooltip
           .transition()
           .duration(50)
           .style('opacity', 0);
       })
       .on('mouseout', () => {
-        // Hide the tooltip with a transition
+        // Hide tooltip with fade-out when mouse leaves
         tooltip
           .transition()
           .duration(50)
@@ -140,10 +204,14 @@ function TooltipHandler() {
       });
   }
 
-  // Method to set the content of the tooltip
-  // eslint-disable-next-line func-names
+  /**
+   * Set or get the HTML content formatter for the tooltip
+   * 
+   * @param {Function|string} formatter - Function that takes data and returns HTML string,
+   *                                      or a static HTML string
+   * @returns {Function|string} Current formatter if no arguments, otherwise returns me for chaining
+   */
   me.html = function (formatter) {
-    // eslint-disable-next-line no-use-before-define
     if (!arguments.length) return tooltipHtml;
     tooltipHtml = typeof formatter === 'function' ? formatter : () => formatter;
     return me;
@@ -152,13 +220,31 @@ function TooltipHandler() {
   return me;
 }
 
+/**
+ * FIPERFeatureInstanceValueView - Visualize the actual instance value for a feature
+ * 
+ * Displays a visual marker showing the actual value of the current instance:
+ * - For categorical features: Shows which category the instance belongs to with a colored bar
+ * - For numerical features: Shows a vertical line at the instance value position
+ * 
+ * The marker is overlaid on the distribution visualization to show where
+ * the instance falls within the overall feature distribution.
+ * 
+ * @returns {Function} Configurable component function
+ */
 function FIPERFeatureInstanceValueView() {
   let width = RULES_COLUMN_WIDTH;
   let height = 51110;
+  // Scale for positioning elements based on data values
   const barLength = d3.scaleLinear()
     .range([0, width])
     .domain([0, 1]);
 
+  /**
+   * Render the instance value marker
+   * 
+   * @param {d3.selection} selection - D3 selection with feature data bound
+   */
   function me(selection) {
     const fTooltip = TooltipHandler();
     if (selection.datum().type === 'categorical') {
@@ -210,16 +296,35 @@ function FIPERFeatureInstanceValueView() {
   return me;
 }
 
+/**
+ * FIPERNumericDistributionBoxPlotView - Display box plot statistics for numerical features
+ * 
+ * Creates a box plot axis showing the five-number summary (min, Q1, median, Q3, max)
+ * of the feature distribution. Includes intelligent label positioning to avoid overlaps.
+ * 
+ * @returns {Function} Configurable component function
+ */
 function FIPERNumericDistributionBoxPlotView() {
   let width = RULES_COLUMN_WIDTH;
   let height = 50;
   let xScale = d3.scaleLinear();
 
+  /**
+   * Extract the five-number summary from feature data
+   * 
+   * @param {Array} data - Feature values with EDA statistics
+   * @returns {Array} [min, q1, median, q3, max]
+   */
   function prepareNumericalValues(data) {
     const eda = data[0].eda;
     return [eda.min, eda.q1, eda.median, eda.q3, eda.max];
   }
 
+  /**
+   * Render the box plot axis
+   * 
+   * @param {d3.selection} selection - D3 selection with feature data
+   */
   function me(selection) {
     const feature = selection.datum();
     const g = selection.selectAll('g.axis')
@@ -293,22 +398,41 @@ function FIPERNumericDistributionBoxPlotView() {
   return me;
 }
 
+/**
+ * FIPERNumericDistributionLineChartView - Visualize numerical feature distribution as a smooth curve
+ * 
+ * Creates a stylized distribution curve based on the five-number summary,
+ * giving a visual approximation of the data distribution shape.
+ * The curve peaks at the median and tapers toward min/max values.
+ * 
+ * @returns {Function} Configurable component function
+ */
 function FIPERNumericDistributionLineChartView() {
   let width = RULES_COLUMN_WIDTH;
   let height = 50;
   let color = FTTemplate.DISTRIBUTION_COLOR;
   let strokeColor = FTTemplate.DISTRIBUTION_STROKE_COLOR;
   let xScale = d3.scaleLinear();
+  // Y-scale for curve height (peak at median)
   const yScale = d3.scaleLinear()
     .domain([0, 1])
     .range([(height * 2) / 3, height / 6]);
+  // D3 line generator with smooth curves
   const line = d3.line()
     .x(d => xScale(d.value1))
     .y(d => yScale(d.y1))
     .curve(d3.curveBasis);
 
+  /**
+   * Prepare data points for the distribution curve
+   * Creates a bell-like curve shape using the five-number summary
+   * 
+   * @param {Array} data - Feature values with EDA statistics
+   * @returns {Array} Array of {value1, y1} points for the curve
+   */
   function prepareNumericalValues(data) {
     const eda = data[0].eda;
+    // Height values: low at extremes, high at median
     const yValues = [0, 0.1, 1.0, 0.1, 0];
     return ['min', 'q1', 'median', 'q3', 'max']
       .map((d, i) => ({
@@ -317,6 +441,11 @@ function FIPERNumericDistributionLineChartView() {
       }));
   }
 
+  /**
+   * Render the distribution curve
+   * 
+   * @param {d3.selection} selection - D3 selection with feature data
+   */
   function me(selection) {
     selection.selectAll('path.single-linechart-value')
       .data(d => [prepareNumericalValues(d.values)])
@@ -371,9 +500,27 @@ function FIPERNumericDistributionLineChartView() {
   return me;
 }
 
+/**
+ * FIPERTextualExplanationView - Display textual explanations of rules and counter-rules
+ * 
+ * Renders human-readable text explaining:
+ * - The rule (R0) that explains why the instance was classified as predicted
+ * - Counter-rules that would lead to different classifications
+ * 
+ * Text is formatted with colored backgrounds to distinguish rule types:
+ * - Orange/brown background for factual rules
+ * - Purple background for counter-rules
+ * 
+ * @returns {Function} Configurable component function
+ */
 function FIPERTextualExplanationView() {
   let selectedCounterRule = 'C0';
 
+  /**
+   * Render the textual explanations
+   * 
+   * @param {d3.selection} selection - D3 selection with feature data
+   */
   function me(selection) {
     const areThereAnyRules = Object.keys(selection.datum().ruleText).length +
       Object.keys(selection.datum().cruleText).length;
@@ -490,20 +637,39 @@ function FIPERTextualExplanationView() {
   return me;
 }
 
+/**
+ * FIPERFeatureDistributionView - Main component for displaying feature distributions
+ * 
+ * This is a composite component that handles visualization of feature distributions
+ * for both categorical and numerical features. It manages:
+ * - Categorical: Stacked bar charts showing category frequencies
+ * - Numerical: Distribution curves and box plots
+ * - Expandable details view showing individual category values
+ * - Textual explanations of rules when expanded
+ * 
+ * The view can be collapsed (showing just the distribution) or expanded
+ * (showing detailed breakdown and explanations).
+ * 
+ * @returns {Function} Configurable component function
+ */
 function FIPERFeatureDistributionView() {
   let width = RULES_COLUMN_WIDTH;
   let height = 5022222;
+  // Scale for positioning bars and elements
   const barLength = d3.scaleLinear()
     .range([0, width])
     .domain([0, 1]);
   let color = FTTemplate.DISTRIBUTION_COLOR;
   let strokeColor = FTTemplate.DISTRIBUTION_STROKE_COLOR;
-  let fFilterRule = () => true;
+  let fFilterRule = () => true;  // Filter function for rules
   const textualExplanation = FIPERTextualExplanationView();
 
+  // Transition for smooth expand/collapse animations
   const t = d3.transition()
     .duration(500)
     .ease(d3.easeLinear);
+    
+  // Tooltips for categorical and numerical features
   const cTooltip = TooltipHandler();
   const nTooltip = TooltipHandler().html(d => `<div style="font-weight: 500">Value: ${d.values[0].instance_value}</div>
             <div>min: ${d.values[0].eda.min}</div>
@@ -512,6 +678,12 @@ function FIPERFeatureDistributionView() {
             <div>q3: ${d.values[0].eda.q3}</div>
             <div>max: ${d.values[0].eda.max}</div>`);
 
+  /**
+   * Render the feature distribution
+   * Handles both collapsed and expanded states
+   * 
+   * @param {d3.selection} selection - D3 selection with feature data
+   */
   function me(selection) {
     const gDetails = selection.selectAll('g.details')
       .data(d => [d].filter(v => v.status === 1))
@@ -682,6 +854,19 @@ function FIPERFeatureDistributionView() {
   return me;
 }
 
+/**
+ * FIPERRulePredicateView - Visualize rule and counter-rule predicates
+ * 
+ * Displays the conditions (predicates) that make up a rule or counter-rule:
+ * - For categorical features: Shows which categories are included in the rule
+ * - For numerical features: Shows the range/interval specified by the rule
+ * 
+ * The visualization is overlaid on the distribution to show which parts
+ * of the feature space the rule covers. Uses patterns (diagonal lines)
+ * to distinguish rules from counter-rules.
+ * 
+ * @returns {Function} Configurable component function
+ */
 function FIPERRulePredicateView() {
   let width = RULES_COLUMN_WIDTH;
   let height = 50;
@@ -691,9 +876,14 @@ function FIPERRulePredicateView() {
     .domain([0, 1]);
   let color = FTTemplate.DISTRIBUTION_COLOR;
   let strokeColor = FTTemplate.DISTRIBUTION_STROKE_COLOR;
-  let isFactualRule = true;
+  let isFactualRule = true;  // true for factual rules (R0), false for counter-rules
   let selectedCounterRule = 'R0';
 
+  /**
+   * Render the rule predicate visualization
+   * 
+   * @param {d3.selection} selection - D3 selection with feature data
+   */
   function me(selection) {
     const gPredicateBar = selection.selectAll('g.single-predicate')
       .data(d => [d])
@@ -813,14 +1003,33 @@ function FIPERRulePredicateView() {
   return me;
 }
 
+/**
+ * FIPERFeatureLabelsView - Display feature names and instance values
+ * 
+ * Shows the leftmost column of the visualization containing:
+ * - Feature name (truncated with ellipsis if too long)
+ * - Current instance value for this feature
+ * - Background grid line for visual alignment
+ * - Tooltip with full feature name and value
+ * 
+ * Labels are right-aligned to create a clean visual separation
+ * from the distribution column.
+ * 
+ * @returns {Function} Configurable component function
+ */
 function FIPERFeatureLabelsView() {
   let width = LABELS_COLUMN_WIDTH;
   let height = 50;
-  // create a scale to fit the length of the feature name
+  // Scale for positioning grid lines based on label length
   const cLenght = d3.scaleLinear()
     .domain([0, maxLabelLength])
     .range([0, width]);
 
+  /**
+   * Render the feature labels
+   * 
+   * @param {d3.selection} selection - D3 selection with feature data
+   */
   function me(selection) {
     selection.selectAll('line.background')
       .data(d => [d])
@@ -889,19 +1098,34 @@ function FIPERFeatureLabelsView() {
   return me;
 }
 
+/**
+ * FIPERFeatureImportanceView - Visualize feature importance scores
+ * 
+ * Displays feature importance as horizontal bars:
+ * - Positive importance: Green bars (feature supports the prediction)
+ * - Negative importance: Brown bars (feature opposes the prediction)
+ * 
+ * When a feature is expanded, shows a detailed axis with tick marks
+ * at min, max, and the actual importance value, with a circle marker
+ * highlighting the importance position.
+ * 
+ * The visualization uses a shared scale across all features to allow
+ * direct visual comparison of importance magnitudes.
+ * 
+ * @returns {Function} Configurable component function
+ */
 function FIPERFeatureImportanceView() {
   let width = FI_COLUMN_WIDTH;
   let height = 50000;
-  let fiExtent = [0, 1];
+  let fiExtent = [0, 1];  // Domain for the importance scale
   const barLength = d3.scaleLinear()
     .range([0, width])
     .domain(fiExtent);
 
   /**
-   * This function receives one single ```g``` element and visualizes its
-   * content using the associated data.
-   * @param selection the element containing a single datum with the
-   *  metadata of the feature to be visualized.
+   * Render the feature importance visualization
+   * 
+   * @param {d3.selection} selection - D3 selection with a single feature's data bound
    */
   function me(selection) {
     selection.selectAll('line.background')
@@ -1010,20 +1234,35 @@ function FIPERFeatureImportanceView() {
   return me;
 }
 
+/**
+ * FIPERCRuleGrid - Display grid of counter-rule indicators for each feature
+ * 
+ * Creates a vertical column of circles for each available counter-rule,
+ * showing which counter-rules are relevant to each feature:
+ * - No circle: Counter-rule not relevant to this feature
+ * - Small circle: Counter-rule mentioned but same as factual rule (relevance=1)
+ * - Large circle: Counter-rule provides different prediction (relevance=2)
+ * - Highlighted circle: Currently selected counter-rule
+ * 
+ * Users can click on circles to select a counter-rule for detailed viewing.
+ * Tooltip shows the text of the counter-rule.
+ * 
+ * @returns {Function} Configurable component function
+ */
 function FIPERCRuleGrid() {
   let width = FI_COLUMN_WIDTH;
   let height = 50;
-  let cruleList = [];
+  let cruleList = [];  // List of all available counter-rule IDs
   let selectedCounterRule = 'C0';
+  // Band scale to position each counter-rule column
   const bandScale = d3.scaleBand()
     .range([0, width])
     .padding(0.1);
 
   /**
-   * This function receives one single ```g``` element and visualizes its
-   * content using the associated data.
-   * @param selection the element containing a single datum with the
-   *  metadata of the feature to be visualized.
+   * Render the counter-rule grid for one feature row
+   * 
+   * @param {d3.selection} selection - D3 selection with a single feature's data bound
    */
   function me(selection) {
     // we need to scan all the values elements, to extract the exp_value from the dictionary
@@ -1095,16 +1334,38 @@ function FIPERCRuleGrid() {
   return me;
 }
 
+/**
+ * FIPERView - Main orchestrator component for the complete FIPER visualization
+ * 
+ * This is the top-level component that composes all sub-components into
+ * the complete visualization interface. It manages:
+ * - Layout of all feature rows
+ * - Coordination between different columns (labels, distributions, rules, etc.)
+ * - Feature expansion/collapse interactions
+ * - Dynamic height calculations based on expanded features
+ * - Integration of all visual components with consistent styling
+ * 
+ * The component follows the reusable chart pattern and can be configured
+ * with various width/height settings.
+ * 
+ * @returns {Function} Configurable main view component
+ */
 function FIPERView() {
-  // global width of the whole visualization
+  // Global width of the visualization
   let width = GLOBAL_WIDTH;
-  // global height of the whole visualization
+  // Global height (dynamically adjusted based on content)
   let height = 500;
-  // scale to position each feature row. HINT: maybe a d3.scaleBand() is better?
+  // Scale to position each feature row vertically
   const yScale = d3.scaleLinear();
 
+  // Counter-rule grid component
   let fcrg = FIPERCRuleGrid();
 
+  /**
+   * Render the complete FIPER visualization
+   * 
+   * @param {d3.selection} selection - D3 selection with explanation data bound
+   */
   function me(selection) {
     const origDatum = selection.datum();
     // console.log('origDatum', origDatum);
@@ -1451,15 +1712,30 @@ function FIPERView() {
   return me;
 }
 
+/**
+ * Compute the expected boolean value for a categorical feature predicate
+ * 
+ * Categorical features are encoded as binary variables (0 or 1).
+ * This function interprets comparison operators (<=, <, >=, >) with thresholds
+ * to determine if the predicate expects the category to be present (true) or absent (false).
+ * 
+ * Logic:
+ * - For <= or <: Returns false if threshold >= 0 (expects category absent)
+ * - For >= or >: Returns true if threshold <= 1 (expects category present)
+ * 
+ * @param {Object} value - Predicate object with properties:
+ *   - att: Attribute name
+ *   - op: Comparison operator (<=, <, >=, >)
+ *   - thr: Threshold value
+ *   - is_continuous: Boolean indicating if continuous
+ *   - exp_value: Expected value
+ * @returns {boolean} True if category should be present, false otherwise
+ * 
+ * @example
+ * // For a predicate "category <= 0.5", expects category absent (false)
+ * computeBooleanExpectedValue({op: '<=', thr: 0.5}) // returns true
+ */
 function computeBooleanExpectedValue(value) {
-  // Given a dictionary like following, return an expected boolean value for it
-  // {
-  //     "att": "present_emp_since=.. >= 7 years",
-  //     "op": "<=",
-  //     "thr": 0.6689819991588593,
-  //     "is_continuous": true,
-  //     "exp_value": 15
-  // }
   if (value.op === '<=') {
     return !(value.thr >= 0);
   }
@@ -1476,27 +1752,36 @@ function computeBooleanExpectedValue(value) {
   return false;
 }
 
+/**
+ * Adjust counter-rule matrix to replace undefined predicates
+ * 
+ * For categorical features, rules are represented as a matrix where:
+ * - Rows represent different rules/counter-rules
+ * - Columns represent different category values
+ * - Values indicate if category should be present (1), absent (0), or undefined (-1)
+ * 
+ * This function fills in undefined (-1) values using a heuristic:
+ * 1. If max value in row is 0 (all defined predicates say "absent"), 
+ *    then undefined categories become "present" (1)
+ * 2. If max value is 1 (some predicates say "present"),
+ *    then undefined categories become "absent" (0)
+ * 3. If max is -1 (all undefined), leave as is
+ * 
+ * This creates a complete predicate specification for visualization.
+ * 
+ * @param {Array} matrix - 2D array where matrix[rule][category] = {exp_value, consequent_class}
+ * @returns {Array} Adjusted matrix with -1 values replaced by 0 or 1
+ */
 function adjustCounterRuleMatrix(matrix) {
-  // For a feature we take the matrix of the form:
-  // crmatrix:
-  //   Array(4)
-  //     0 : (5) [ [0,0], [0,0], [-1, undef], [-1, undef], [-1, undef]]
-  //     1 : (5) [ [-1, undef], [0,0], [-1, undef], [-1, undef], [-1, undef] ]
-  //     2 : (5) [ [-1, undef], [0,0], [-1, undef], [-1, undef], [-1, undef] ]
-  //     3 : (5) [ [-1, undef], [0,0], [-1, undef], [-1, undef], [-1, undef] ]
-  // and we adjust the values to have only 0 or 1 in the first compoent.
-  //  The approach is the following:
-  // 1. If the maximum value of one row is 0, then all the -1 are changed to 1
-  // 2. If the maximum value of one row is 1, then all the -1 are changed to 0
-  // 3. If the maximum value of one row is -1, then we do nothing
-
   return matrix.map((r) => {
     const max = d3.max(r, v => v.exp_value);
     const minV = d3.min(r, v => v.consequent_class);
     if (max === 0) {
+      // All defined predicates say "absent", so undefined become "present"
       return r.map(d => (d.exp_value === -1 ? ({ exp_value: 1, conquent_class: minV }) : d));
     }
     if (max === 1) {
+      // Some predicates say "present", so undefined become "absent"
       return r.map(d => (d.exp_value === -1 ? ({ exp_value: 0, conquent_class: minV }) : d));
     }
     return r;
@@ -1523,12 +1808,26 @@ function rewritePredicatesCategorical(c, e, ruleSelector) { // for each CounterR
     }));
 }
 
+/**
+ * Convert a numerical predicate to an interval
+ * 
+ * Transforms comparison predicates (>, >=, <, <=) into intervals [low, high]
+ * that represent the range of values satisfying the predicate.
+ * The interval is bounded by the feature's min/max values.
+ * 
+ * @param {Object} pred - Predicate with properties:
+ *   - att: Attribute name
+ *   - op: Comparison operator ('>', '>=', '<', '<=')
+ *   - thr: Threshold value
+ * @param {number} min - Minimum value of the feature
+ * @param {number} max - Maximum value of the feature
+ * @returns {Array} Interval [low, high] satisfying the predicate
+ * 
+ * @example
+ * resolveInterval({op: '>', thr: 5}, 0, 10) // returns [5, 10]
+ * resolveInterval({op: '<=', thr: 7}, 0, 10) // returns [0, 7]
+ */
 function resolveInterval(pred, min, max) {
-  // this function receives a predicate and the minimum and maximum values of the feature.
-  // The predicate has the following form: {att: 'att_name', op: '>', thr: 0.5}
-  // The function returns the interval that the predicate represents.
-  // we enforce that the interval is within the bounds of the feature
-
   if (pred.op === '>') {
     return [Math.max(pred.thr, min), max];
   }
@@ -1544,20 +1843,37 @@ function resolveInterval(pred, min, max) {
   return [min, max];
 }
 
+/**
+ * Compute the union of multiple intervals
+ * 
+ * Merges overlapping or adjacent intervals into a minimal set of
+ * non-overlapping intervals that cover the same range.
+ * 
+ * @param {Array} intervals - Array of interval objects with structure:
+ *   {consequent_class: number, interval: [low, high]}
+ * @returns {Array} Merged intervals covering the same range
+ * 
+ * @example
+ * intervalUnion([
+ *   {consequent_class: 0, interval: [1, 3]},
+ *   {consequent_class: 0, interval: [2, 5]}
+ * ]) // returns [{consequent_class: 0, interval: [1, 3]}]
+ */
 function intervalUnion(intervals) {
-  // this function receives a list of intervals and returns the union of all the intervals.
-  // Each interval has the form {consequent_class: 0, interval: [0.5, 1]}
   if (intervals.length === 0) {
     return [];
   }
+  // Sort by start position
   intervals.sort((a, b) => a.interval[0] - b.interval[0]);
   const union = [];
   let current = intervals[0];
 
   for (let i = 1; i < intervals.length; i += 1) {
     if (intervals[i].interval[0] <= current.interval[1]) {
+      // Intervals overlap or touch - merge them
       current.interval[1] = Math.min(current.interval[1], intervals[i].interval[1]);
     } else {
+      // No overlap - start a new interval
       union.push(current);
       current = intervals[i];
     }
@@ -1567,9 +1883,16 @@ function intervalUnion(intervals) {
   return union;
 }
 
+/**
+ * Compute the intersection of multiple intervals
+ * 
+ * Finds the overlapping regions where all intervals intersect.
+ * 
+ * @param {Array} intervals - Array of interval objects with structure:
+ *   {consequent_class: number, interval: [low, high]}
+ * @returns {Array} Intervals representing the intersection
+ */
 function intervalIntersection(intervals) {
-  // this function receives a list of intervals and returns the intersection of all the intervals.
-  // Each interval has the form {consequent_class: 0, interval: [0.5, 1]}
   if (intervals.length < 2) {
     return [];
   }
@@ -1580,9 +1903,11 @@ function intervalIntersection(intervals) {
 
   for (let i = 1; i < intervals.length; i += 1) {
     if (intervals[i].interval[0] <= current.interval[1]) {
+      // Intervals overlap - compute intersection
       current.interval[0] = Math.max(current.interval[0], intervals[i].interval[0]);
       current.interval[1] = Math.min(current.interval[1], intervals[i].interval[1]);
     } else {
+      // No overlap
       intersection.push(current);
       current = intervals[i];
     }
@@ -1592,24 +1917,53 @@ function intervalIntersection(intervals) {
   return intersection;
 }
 
+/**
+ * Reduce multiple predicate intervals using intersection, falling back to union
+ * 
+ * For rules with multiple predicates (e.g., "x > 5 AND x < 10"),
+ * this computes the effective range. Tries intersection first (AND logic),
+ * and if that's empty, uses union (OR logic).
+ * 
+ * @param {Array} predicatesWithIntervals - Array of predicate objects with intervals
+ * @returns {Array} Simplified interval(s) representing the combined predicates
+ */
 function reduceUnionIntersection(predicatesWithIntervals) {
-  // this function receives a list of predicates with intervals and returns the intersection
-  // of all the intervals.
-  // Each predicate has the form {att: 'att_name', op: '>', thr: 0.5, interval: [0.5, 1]}
   if (predicatesWithIntervals.length === 0) {
     return [];
   }
 
+  // Try intersection first (AND logic between predicates)
   let result = intervalIntersection(predicatesWithIntervals);
   if (result.length === 0) {
+    // No intersection, use union instead (OR logic)
     result = intervalUnion(predicatesWithIntervals);
   }
 
   return result;
 }
 
+/**
+ * preprocessData - Transform raw explanation data into visualization-ready format
+ * 
+ * This is the main data transformation function that converts the raw XAI
+ * explanation JSON into the internal format used by the visualization components.
+ * 
+ * Major transformations:
+ * 1. Parses and normalizes rules and counter-rules for both categorical and numerical features
+ * 2. Converts predicates to expected values (boolean for categorical, intervals for numerical)
+ * 3. Builds predicate matrices for efficient lookup
+ * 4. Calculates relevance scores for counter-rules
+ * 5. Aggregates features with multiple values
+ * 6. Sorts features by importance
+ * 7. Creates the explanationDescriptor object consumed by the visualization
+ * 
+ * @param {Object} data - Raw explanation data with structure:
+ *   - features: Array of feature objects with rules, counter-rules, and EDA stats
+ *   - predicted_class: The predicted class label
+ *   - predicted_proba: Probability distribution over classes
+ * @returns {Object} Explanation descriptor ready for visualization
+ */
 function preprocessData(data) {
-  // preprocess each entry to copmute the expected value for the categorical counterrules
   console.log('data', data);
   const tfeature = data.features
     // .filter(f => f.type === 'categorical')
@@ -1809,11 +2163,40 @@ function preprocessData(data) {
   return explanationDescriptor;
 }
 
+/**
+ * InstanceView - Top-level component that creates the complete visualization interface
+ * 
+ * This is the main entry point for rendering an explanation. It:
+ * - Sets up the SVG container with proper dimensions
+ * - Creates and integrates the menu component (FiperMenu)
+ * - Creates and integrates the main visualization (FIPERView)
+ * - Defines SVG patterns for rule/counter-rule visualization
+ * - Wires up all event handlers for user interactions
+ * - Manages filtering, ordering, and display mode changes
+ * 
+ * The component follows D3's reusable chart pattern and can be called
+ * on any selection with explanation data bound to it.
+ * 
+ * @returns {Function} Configurable component that renders the full interface
+ * 
+ * @example
+ * const instanceView = InstanceView();
+ * d3.select('#app').datum(explanationData).call(instanceView);
+ */
 function InstanceView() {
+  /**
+   * Render the complete visualization
+   * 
+   * @param {d3.selection} selection - D3 selection with explanation data
+   */
   function me(selection) {
     const explanationDescriptor = selection.datum();
+    
+    // Create main visualization with dynamic width based on counter-rules
     const fv = FIPERView().width(GLOBAL_WIDTH +
     (explanationDescriptor.counterRules.length * CRULES_GRID_COLUMN_WIDTH));
+    
+    // Create menu/control panel
     const fm = FiperMenu();
 
     const mainSvg = selection.selectAll('svg.viz')
