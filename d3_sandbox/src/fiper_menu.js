@@ -1,3 +1,21 @@
+/**
+ * fiper_menu.js - Menu and control components for the FIPER visualization
+ * 
+ * This file contains all the UI control components that allow users to interact with
+ * the visualization:
+ * - Counter-rule selector: Choose which counter-rule to display
+ * - Feature ordering: Sort features by importance, alphabetically, or by rules
+ * - Filtering: Show/hide features based on rules and counter-rules
+ * - Display mode toggle: Switch between graphical and textual explanations
+ * - Color palette selector: Choose between light, dark, and high-contrast themes
+ * - Progress disclosure: Step through the explanation progressively
+ * - Classification box: Show the predicted class and probability
+ * - Column titles: Label each section of the visualization
+ * 
+ * Each component follows the reusable chart pattern and emits events through
+ * the global dispatcher for coordination with the main visualization.
+ */
+
 import {
   RULES_COLUMN_WIDTH,
   LABELS_COLUMN_WIDTH,
@@ -18,13 +36,34 @@ import {
 
 const d3 = require('d3');
 
+/** Current color theme (updated when user changes palette) */
 let FTTemplate = colorSet.default;
 
+/**
+ * FiperMenuCRule - Counter-rule selector component
+ * 
+ * Displays a row of toggle buttons, one for each available counter-rule.
+ * Users can click to select a counter-rule to view in detail.
+ * The selected counter-rule is highlighted with a different color.
+ * Clicking the selected rule again deselects it.
+ * 
+ * Visual design:
+ * - Rectangular button for each counter-rule
+ * - Small toggle indicator that moves based on selection
+ * - Color-coded: selected uses counter-rule color, unselected uses base color
+ * 
+ * @returns {Function} Configurable component function
+ */
 function FiperMenuCRule() {
   let bandScale = d3.scaleBand();
   let width = 200;
   bandScale.padding(0.2);
 
+  /**
+   * Render the counter-rule selector
+   * 
+   * @param {d3.selection} selection - D3 selection with explanation data
+   */
   function me(selection) {
     const explanationDescriptor = selection.datum();
 
@@ -111,11 +150,30 @@ function FiperMenuCRule() {
   return me;
 }
 
+/**
+ * FiperMenuOrderBy - Feature ordering control component
+ * 
+ * Allows users to change how features are sorted in the visualization:
+ * - Feature Importance: Sort by absolute importance (default)
+ * - Alphabetical: Sort by feature name
+ * - Rules first: Show features with factual rules first
+ * - Counter Rules first: Show features with counter-rules first
+ * 
+ * Displayed as a set of radio buttons in a 2x2 grid.
+ * 
+ * @returns {Function} Configurable component function
+ */
 function FiperMenuOrderBy() {
+  // Track which ordering is currently active (only one can be true)
   const orderByOptions = {
     'Feature Importance': true, Alphabetical: false, 'Rules first': false, 'Counter Rules first': false,
   };
 
+  /**
+   * Render the ordering controls
+   * 
+   * @param {d3.selection} selection - D3 selection
+   */
   function me(selection) {
     selection.selectAll('text.label')
       .data(d => [d])
@@ -193,16 +251,32 @@ function FiperMenuOrderBy() {
   return me;
 }
 
+/**
+ * FiperChooseTextualFormat - Toggle between graphical and textual explanations
+ * 
+ * Provides a two-button toggle to switch the explanation display mode:
+ * - Graphic: Shows distributions, bars, and visual elements (default)
+ * - Textual: Shows text-only explanations of rules
+ * 
+ * The toggle has a segmented control appearance with the selected
+ * option highlighted.
+ * 
+ * @returns {Function} Configurable component function
+ */
 function FiperChooseTextualFormat() {
+  // Track current format (only one can be true)
   let formatOptions = {
     Textual: false,
     Graphic: true,
   };
+  
+  // Scale for positioning the two buttons
   const xScale = d3.scaleBand()
     .domain(Object.keys(formatOptions))
     .range([0, RULES_COLUMN_WIDTH / 3])
     .padding(0.01);
 
+  // Color scales for selected/unselected states
   const colorScale = d3.scaleOrdinal()
     .domain([true, false])
     .range([FTTemplate.OTHER_TEXT_COLOR, FTTemplate.DISTRIBUTION_COLOR]);
@@ -211,7 +285,11 @@ function FiperChooseTextualFormat() {
     .domain([true, false])
     .range([FTTemplate.SECONDARY_BACKGROUND_COLOR, FTTemplate.BASE_COLOR]);
 
-
+  /**
+   * Render the format toggle
+   * 
+   * @param {d3.selection} selection - D3 selection
+   */
   function me(selection) {
     const generateEvent = (d) => {
       const selectedKey = d3.select(d.target).datum();
@@ -274,12 +352,39 @@ function FiperChooseTextualFormat() {
   return me;
 }
 
+/**
+ * FiperMenuProgressHandler - Progressive disclosure controls
+ * 
+ * Allows users to step through the explanation in stages, progressively
+ * revealing more detail:
+ * 1. Classification: Show predicted class and probability
+ * 2. Feature Values: Show all features and their values
+ * 3. Rules: Show rule-based explanations
+ * 4. Counter Rules: Show alternative rules
+ * 5. Feature Importance: Show importance scores
+ * 
+ * Displays as:
+ * - Circular indicators (bullets) showing progress
+ * - Navigation arrows to move forward/backward
+ * - Optional buttons for each step
+ * 
+ * This helps users understand complex explanations incrementally.
+ * 
+ * @returns {Function} Configurable component function
+ */
 function FiperMenuProgressHandler() {
   let progressSteps = [];
+  
+  // Scale for positioning progress indicators
   const xScale = d3.scaleBand()
     .domain(progressSteps.map(d => d.label))
     .range([cl.dimensions('feature-labels').width / 8, cl.dimensions('feature-labels').width / 3]);
 
+  /**
+   * Handle step selection - update completed state for all steps
+   * 
+   * @param {Object} step - The step that was clicked
+   */
   function processStep(step) {
     let completed = true;
     const steps = progressSteps.map((d1) => {
@@ -294,7 +399,11 @@ function FiperMenuProgressHandler() {
     dispatcher.call('changeProgressStep', null, steps);
   }
 
-
+  /**
+   * Render the progress controls
+   * 
+   * @param {d3.selection} selection - D3 selection
+   */
   function me(selection) {
     const gSteps = selection.selectAll('g.progressStep')
       .data(progressSteps.filter(d => !d.showOnlyBullet).filter(d => d.visible))
@@ -414,11 +523,30 @@ function FiperMenuProgressHandler() {
   return me;
 }
 
+/**
+ * FiperMenuFilterBy - Feature filtering controls
+ * 
+ * Allows users to filter which features are shown based on:
+ * - All: Show all features (default)
+ * - Rules: Show only features mentioned in factual rules
+ * - CRules: Show only features mentioned in counter-rules
+ * 
+ * Filters can be combined (e.g., show features in both rules AND counter-rules).
+ * Implemented as checkboxes that can be toggled independently.
+ * 
+ * @returns {Function} Configurable component function
+ */
 function FiperMenuFilterBy() {
+  // Track which filters are active (multiple can be true)
   let filterByOptions = {
     Cose: false, Rules: false, CRules: false,
   };
 
+  /**
+   * Render the filter controls
+   * 
+   * @param {d3.selection} selection - D3 selection
+   */
   function me(selection) {
     const generateEvent = (d) => {
       const selectedKey = d3.select(d.target).datum();
@@ -499,48 +627,73 @@ function FiperMenuFilterBy() {
   return me;
 }
 
-// Format the data (instead of using d3.stack()) and
-// filter out 0 values:
-// extracted from: https://observablehq.com/@eesur/d3-single-stacked-bar
+/**
+ * Prepare categorical values for stacked bar visualization
+ * 
+ * Similar to the function in fiper.js but simpler - used for menu visualizations.
+ * Based on: https://observablehq.com/@eesur/d3-single-stacked-bar
+ * 
+ * @param {Array} data - Array of values
+ * @param {number} val - Index of the instance value
+ * @returns {Array} Formatted data with cumulative positions
+ */
 function prepareCategoricalValues(data, val) {
-  // filter out data that has zero values
-  // also get mapping for next placement
-  // (save having to format data for d3 stack)
   let cumulative = 0;
   return data.map((d, i) => {
     cumulative += d;
     return {
       value: d,
-      // want the cumulative to prior value (start of rect)
-      cumulative: cumulative - d,
+      cumulative: cumulative - d,  // Starting position for stacking
       instance_value: (val === i) ? 1 : 0,
     };
-  }).filter(d => d.value > 0);
+  }).filter(d => d.value > 0);  // Remove zero values
 }
 
+/**
+ * Prepare class probability values for visualization
+ * 
+ * Converts class probability dictionary to stacked bar format,
+ * marking which class is the predicted one.
+ * 
+ * @param {Object} data - Dictionary mapping class labels to probabilities
+ * @param {string} val - Label of the predicted class
+ * @returns {Array} Formatted data with cumulative positions
+ */
 function prepareClassesProbabilitesValues(data, val) {
-  // filter out data that has zero values
-  // also get mapping for next placement
-  // (save having to format data for d3 stack)
   let cumulative = 0;
   return Object.entries(data).map(([key, d]) => {
     cumulative += d;
     return {
       value: d,
-      // want the cumulative to prior value (start of rect)
-      cumulative: cumulative - d,
-      instance_value: (val === key) ? 1 : 0,
+      cumulative: cumulative - d,  // Starting position for stacking
+      instance_value: (val === key) ? 1 : 0,  // Mark predicted class
     };
   }).filter(d => d.value > 0);
 }
 
 
+/**
+ * FiperMenuClassesBarChart - Stacked bar showing class probabilities
+ * 
+ * Displays a horizontal stacked bar chart where:
+ * - Each segment represents a class
+ * - Width represents the probability for that class
+ * - Predicted class is highlighted with a different color
+ * 
+ * This gives a visual summary of the model's confidence across all classes.
+ * 
+ * @returns {Function} Configurable component function
+ */
 function FiperMenuClassesBarChart() {
   let width = 200;
   let height = 300;
   const lengthScale = d3.scaleLinear();
 
-
+  /**
+   * Render the probability bar chart
+   * 
+   * @param {d3.selection} selection - D3 selection with probability data
+   */
   function me(selection) {
     selection.selectAll('rect.pproba')
       .data(d => prepareClassesProbabilitesValues(d.predicted_proba, d.predicted_class))
@@ -572,9 +725,27 @@ function FiperMenuClassesBarChart() {
   return me;
 }
 
+/**
+ * FiperClassificationBox - Display the classification result
+ * 
+ * Shows a prominent box at the top of the visualization containing:
+ * - Predicted class label
+ * - Prediction probability (as percentage)
+ * - Visual probability distribution bar
+ * 
+ * This is the first thing users see and provides context for the explanation.
+ * The text uses formatting with bold elements to highlight key information.
+ * 
+ * @returns {Function} Configurable component function
+ */
 function FiperClassificationBox() {
   let width = 200;
 
+  /**
+   * Render the classification box
+   * 
+   * @param {d3.selection} selection - D3 selection with classification data
+   */
   function me(selection) {
     selection.selectAll('rect.classification')
       .data(d => [d])
@@ -640,7 +811,26 @@ function FiperClassificationBox() {
   return me;
 }
 
+/**
+ * FiperMenuColumnTitles - Display column headers for the visualization
+ * 
+ * Renders labeled headers for each major section of the visualization:
+ * - "Feature": Feature names column
+ * - "Feature Distribution": Distribution visualizations
+ * - "C.Rules": Counter-rules grid
+ * - "F.I.": Feature importance
+ * 
+ * Headers have a white background box to stand out from the content.
+ * Labels are abbreviated if there's limited space (e.g., "C.Rules" → "C.R").
+ * 
+ * @returns {Function} Configurable component function
+ */
 function FiperMenuColumnTitles() {
+  /**
+   * Render the column titles
+   * 
+   * @param {d3.selection} selection - D3 selection with title descriptor data
+   */
   function me(selection) {
     // horizontal separator lines
     const titleDescriptor = selection.datum();
@@ -705,8 +895,23 @@ function FiperMenuColumnTitles() {
   return me;
 }
 
+/**
+ * FiperMenuPaletteSelector - Color theme selector
+ * 
+ * Provides buttons to switch between different color palettes:
+ * - Light: Default light theme with blue/purple colors
+ * - Dark: Dark theme optimized for low-light viewing
+ * - ColorBlind: High-contrast grayscale for accessibility
+ * 
+ * Each option shows an icon representing the theme (sun, moon, accessibility).
+ * Clicking a palette triggers a global theme change affecting all visualizations.
+ * 
+ * @returns {Function} Configurable component function
+ */
 function FiperMenuPaletteSelector() {
   let width = 200;
+  
+  // Available color palettes with SVG icons
   const paletteOptions = [
     {
       name: 'Light',
@@ -737,6 +942,11 @@ function FiperMenuPaletteSelector() {
     },
   ];
 
+  /**
+   * Render the palette selector buttons
+   * 
+   * @param {d3.selection} selection - D3 selection
+   */
   function me(selection) {
     selection.selectAll('rect.palette-background')
       .data(paletteOptions)
@@ -787,9 +997,31 @@ function FiperMenuPaletteSelector() {
   return me;
 }
 
+/**
+ * FiperMenu - Main menu component that orchestrates all control panels
+ * 
+ * This is the top-level menu component that composes all individual
+ * menu components into a unified control interface at the top of the
+ * visualization. It manages:
+ * - Classification box: Shows prediction result
+ * - Counter-rule selector: Choose which counter-rule to explore
+ * - Feature ordering controls: Sort features different ways
+ * - Filter controls: Show/hide features
+ * - Display mode toggle: Graphical vs textual
+ * - Palette selector: Change color themes
+ * - Progress controls: Step through explanation stages
+ * - Column titles: Label each visualization section
+ * 
+ * The menu adapts its layout based on the current progress step,
+ * hiding controls that aren't relevant at early stages.
+ * 
+ * @returns {Function} Configurable menu component
+ */
 function FiperMenu() {
   let width = 200;
   let height = 500;
+  
+  // Initialize all sub-components
   const menuOrderBy = FiperMenuOrderBy();
   const menuCRulesCall = FiperMenuCRule();
   const menuFilterBy = FiperMenuFilterBy();
@@ -800,6 +1032,11 @@ function FiperMenu() {
   const menuColumnTitles = FiperMenuColumnTitles();
   const menuPaletteSelector = FiperMenuPaletteSelector().width(SINGLE_FEATURE_HEIGHT + GUTTER);
 
+  /**
+   * Render the complete menu
+   * 
+   * @param {d3.selection} selection - D3 selection with explanation data
+   */
   function me(selection) {
     // create a group to contain the menu elements:
     // 1. the feature importance
