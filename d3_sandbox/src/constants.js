@@ -16,6 +16,7 @@ export const dispatcher = d3.dispatch('changeCounterRule',
   'changeOrder', 'changeFilter', 'changePalette', 'changeTextualFormat', 'changeProgressStep');
 
 
+// eslint-disable-next-line no-unused-vars
 function darkenColor(color, amount) {
   return d3.hsl(color).darker(amount).toString();
 }

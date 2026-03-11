@@ -1610,7 +1610,7 @@ function reduceUnionIntersection(predicatesWithIntervals) {
 
 function preprocessData(data) {
   // preprocess each entry to copmute the expected value for the categorical counterrules
-  console.log('data', data);
+  // console.log('data', data);
   const tfeature = data.features
     // .filter(f => f.type === 'categorical')
     // .filter(f => Object.entries(f.crules).length)
