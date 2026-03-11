@@ -278,7 +278,8 @@ function FiperMenuProgressHandler() {
   let progressSteps = [];
   const xScale = d3.scaleBand()
     .domain(progressSteps.map(d => d.label))
-    .range([cl.dimensions('feature-labels').width / 8, cl.dimensions('feature-labels').width / 3]);
+    .range([cl.dimensions('feature-labels').width / 2, cl.dimensions('feature-labels').width / 1])
+    .paddingOuter(0.5);
 
   function processStep(step) {
     let completed = true;
@@ -297,10 +298,19 @@ function FiperMenuProgressHandler() {
 
   function me(selection) {
     const gSteps = selection.selectAll('g.progressStep')
-      .data(progressSteps.filter(d => !d.showOnlyBullet).filter(d => d.visible))
+      .data(progressSteps.filter(d => d.visible))
       .join('g')
       .classed('progressStep', true)
-      .attr('transform', d => `translate(${d.x}, ${d.y})`);
+      .attr('transform', `translate(${cl.dimensions('feature-labels').x + (1.2 * xScale.bandwidth())}, ${0.5 * GUTTER})`);
+
+    selection.selectAll('circle.test')
+      .data([1])
+      .join('circle')
+      .classed('test', true)
+      .attr('cx', cl.dimensions('feature-labels').x)
+      .attr('cy', 0)
+      .attr('r', 5)
+      .attr('fill', 'red');
 
     gSteps.selectAll('rect.progressButton')
       .data(d => [d])
@@ -308,14 +318,9 @@ function FiperMenuProgressHandler() {
       .classed('progressButton', true)
       .attr('x', 0)
       .attr('y', 0)
-      .attr('width', d => d.width)
+      .attr('width', (cl.dimensions('feature-labels').width / 2) - (2.5 * GUTTER))
       .attr('height', 1.5 * GUTTER)
-      .attr('fill', d => d.backgroundColor)
-      .style('cursor', 'pointer')
-      .on('click', (d) => {
-        const step = d3.select(d.target).datum();
-        processStep(step);
-      });
+      .attr('fill', d => d.backgroundColor);
 
 
     gSteps.selectAll('text.progressButton')
@@ -329,12 +334,12 @@ function FiperMenuProgressHandler() {
       .attr('dy', '1em')
       .attr('dx', '0.5em')
       .attr('fill', d => d.textColor)
-      .text(d => d.label)
-      .style('cursor', 'pointer')
-      .on('click', (d) => {
-        const step = d3.select(d.target).datum();
-        processStep(step);
-      });
+      .text(d => d.label);
+    // .style('cursor', 'pointer')
+    // .on('click', (d) => {
+    //   const step = d3.select(d.target).datum();
+    //   processStep(step);
+    // });
 
     // create the bullets of the progress bar
     const gCircles = selection.selectAll('g.progressBullet')
@@ -343,15 +348,38 @@ function FiperMenuProgressHandler() {
       .classed('progressBullet', true)
       .attr('transform', `translate(${cl.dimensions('feature-labels').x}, ${0.75 * GUTTER})`);
 
+    gCircles.selectAll('line.filrouge')
+      .data([1])
+      .join('line')
+      .classed('filrouge', true)
+      .attr('stroke-width', 0.75)
+      .attr('stroke', FTTemplate.CATEGORICAL_INSTANCE_STROKE_COLOR)
+      .attr('x1', xScale(progressSteps[0].label))
+      .attr('y1', 0.5 * GUTTER)
+      .attr('x2', xScale(progressSteps[4].label))
+      .attr('y2', 0.5 * GUTTER);
+
+    gCircles.selectAll('circle.backgroundProgressBullet')
+      .data(progressSteps)
+      .join('circle')
+      .classed('backgroundProgressBullet', true)
+      .attr('cx', d => xScale(d.label))
+      .attr('cy', 0.5 * GUTTER)
+      .attr('r', d => (d.visible ? xScale.bandwidth() / 3 : xScale.bandwidth() / 5))
+      .attr('fill', FTTemplate.BACKGROUND_COLOR);
+
+
     gCircles.selectAll('circle.progressBullet')
       .data(progressSteps)
       .join('circle')
       .classed('progressBullet', true)
       .attr('cx', d => xScale(d.label))
       .attr('cy', 0.5 * GUTTER)
-      .attr('r', xScale.bandwidth() / 3)
+      .attr('r', d => (d.visible ? xScale.bandwidth() / 3 : xScale.bandwidth() / 5))
       .attr('fill', d => d.backgroundColor)
-      .attr('stroke', d => (d.completed ? FTTemplate.TEXT_COLOR : null))
+      .attr('fill-opacity', d => (d.completed ? 1 : 0.6))
+      .attr('stroke-width', 0.75)
+      .attr('stroke', d => (d.completed ? FTTemplate.CATEGORICAL_INSTANCE_STROKE_COLOR : FTTemplate.BACKGROUND_COLOR))
       .on('click', (d) => {
         const step = d3.select(d.target).datum();
         processStep(step);
@@ -365,7 +393,7 @@ function FiperMenuProgressHandler() {
       .classed('rightArrow', true)
       .attr('d', 'M 0 0 l 5 5 l -5 5 Z')
       .attr('fill', FTTemplate.DISTRIBUTION_STROKE_COLOR)
-      .attr('transform', `translate(${xScale.range()[1]}, 0)`)
+      .attr('transform', `translate(${xScale(progressSteps[4].label) + (xScale.bandwidth() / 2)}, 0)`)
       .style('cursor', 'pointer')
       .on('click', () => {
         const stepIndex = progressSteps.findIndex(d1 => !d1.completed);
@@ -380,7 +408,7 @@ function FiperMenuProgressHandler() {
       .classed('leftArrow', true)
       .attr('d', 'M 0 0 l -5 5 l 5 5 Z')
       .attr('fill', FTTemplate.DISTRIBUTION_STROKE_COLOR)
-      .attr('transform', `translate(${xScale.range()[0] - xScale.bandwidth()}, 0)`)
+      .attr('transform', `translate(${xScale.bandwidth()}, 0)`)
       .style('cursor', 'pointer')
       .on('click', () => {
         const stepIndex = progressSteps.findLastIndex(d => d.completed);
@@ -395,11 +423,22 @@ function FiperMenuProgressHandler() {
       .classed('lastArrow', true)
       .attr('d', 'M 0 0 l 5 5 l -5 5 Z M 5 0 l 2 0 l 0 10 l -2 0 Z')
       .attr('fill', FTTemplate.DISTRIBUTION_STROKE_COLOR)
-      .attr('transform', `translate(${xScale.range()[1] + xScale.bandwidth()}, 0)`)
+      .attr('transform', `translate(${xScale(progressSteps[4].label) + xScale.bandwidth()}, 0)`)
       .style('cursor', 'pointer')
       .on('click', () => {
-        const step = progressSteps[progressSteps.length - 1];
-        dispatcher.call('changeProgressStep', null, step);
+        dispatcher.call('changeProgressStep', null, progressSteps.slice(0, progressSteps.length).map(d => d.name));
+      });
+
+    gCircles.selectAll('path.firstArrow')
+      .data([1])
+      .join('path')
+      .classed('firstArrow', true)
+      .attr('d', 'M 0 0 l -5 5 l 5 5 Z M -5 0 l -2 0 l 0 10 l 2 0 Z')
+      .attr('fill', FTTemplate.DISTRIBUTION_STROKE_COLOR)
+      .attr('transform', `translate(${0.5 * xScale.bandwidth()}, 0)`)
+      .style('cursor', 'pointer')
+      .on('click', () => {
+        dispatcher.call('changeProgressStep', null, progressSteps.slice(0, 1).map(d => d.name));
       });
   }
 
@@ -502,6 +541,7 @@ function FiperMenuFilterBy() {
 // Format the data (instead of using d3.stack()) and
 // filter out 0 values:
 // extracted from: https://observablehq.com/@eesur/d3-single-stacked-bar
+// eslint-disable-next-line no-unused-vars
 function prepareCategoricalValues(data, val) {
   // filter out data that has zero values
   // also get mapping for next placement
@@ -996,7 +1036,7 @@ function FiperMenu() {
       },
       {
         name: 'Rules',
-        label: 'Show Explanation',
+        label: 'Rules',
         tooltip: 'Shows the rule based explanation',
         completed: false,
         x: cl.dimensions('feature-labels').x + (cl.dimensions('feature-labels').width / 2),
@@ -1022,7 +1062,7 @@ function FiperMenu() {
       },
       {
         name: 'Feature Importance',
-        label: 'Feat. Imp.',
+        label: 'Feat. Importance',
         tooltip: 'Shows the feature importance',
         completed: false,
         x: cl.dimensions('crule-grid').x,
@@ -1044,7 +1084,7 @@ function FiperMenu() {
     });
     const currentStep = progressSteps.findLast(d => d.completed);
     progressSteps.forEach((step) => {
-      if (step.visibleAtStep === currentStep.name) {
+      if (step.name === currentStep.name) {
         // eslint-disable-next-line no-param-reassign
         step.visible = true;
       }
