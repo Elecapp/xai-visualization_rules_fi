@@ -200,7 +200,7 @@ function FiperChooseTextualFormat() {
   };
   const xScale = d3.scaleBand()
     .domain(Object.keys(formatOptions))
-    .range([0, (RULES_COLUMN_WIDTH * 2) /3])
+    .range([0, (RULES_COLUMN_WIDTH * 2) / 3])
     .paddingInner(0.2)
     .paddingOuter(0.4);
 
@@ -259,13 +259,13 @@ function FiperChooseTextualFormat() {
       {
         label: 'or',
         anchor: 'middle',
-        x: xScale('Graphic') - (1.5* GUTTER),
+        x: xScale('Graphic') - (1.5 * GUTTER),
       },
       {
         label: 'Explanation',
         anchor: 'start',
         x: xScale('Graphic') + xScale.bandwidth(),
-      }
+      },
     ];
 
     selection.selectAll('text.label')
@@ -516,7 +516,7 @@ function FiperMenuFilterBy() {
       .data(Object.keys(filterByOptions))
       .join('g')
       .classed('checkbox', true)
-      .attr('transform', (d, i) => `translate(${3 * GUTTER + filterByOptions[d].x}, ${1})`);
+      .attr('transform', d => `translate(${(3 * GUTTER) + filterByOptions[d].x}, ${1})`);
 
     gCheckbox.selectAll('rect.checkbox')
       .data(d => [d])
