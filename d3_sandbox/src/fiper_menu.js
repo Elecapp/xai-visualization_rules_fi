@@ -122,10 +122,10 @@ function FiperMenuOrderBy() {
       .join('text')
       .classed('label', true)
       .attr('x', 0)
-      .attr('y', (SINGLE_FEATURE_HEIGHT / 2) - (FONT_SIZE / 2))
+      .attr('y', (SINGLE_FEATURE_HEIGHT) - (FONT_SIZE * 1.25))
       .attr('font-size', FONT_SIZE)
       .attr('font-weight', 400)
-      .attr('dy', '1em')
+      // .attr('dy', '-1em')
       .attr('dx', '0.5em')
       .attr('fill', FTTemplate.TEXT_COLOR)
       .text('ORDER BY');
@@ -469,8 +469,7 @@ function FiperMenuFilterBy() {
       });
       const values = Object.keys(filterByOptions).filter(key => key !== 'All').map(key => filterByOptions[key].value);
       const allValues = !(values[0] || values[1]);
-      filterByOptions.All.value = allValues;
-
+      filterByOptions.noRules.value = allValues;
 
       dispatcher.call('changeFilter', null, filterByOptions);
     };
@@ -480,24 +479,40 @@ function FiperMenuFilterBy() {
       .join('text')
       .classed('label', true)
       .attr('x', 0)
-      .attr('y', (SINGLE_FEATURE_HEIGHT) + (FONT_SIZE / 2))
+      .attr('y', (FONT_SIZE / 2))
       .attr('font-size', FONT_SIZE)
       .attr('font-weight', 400)
       .attr('dy', '1em')
       .attr('dx', '0.5em')
       .attr('fill', FTTemplate.TEXT_COLOR)
-      .text('SHOW');
+      .text('Show features with ');
     const gCheckboxes = selection.selectAll('g.checkboxes')
       .data([0])
       .join('g')
       .classed('checkboxes', true)
-      .attr('transform', `translate(${GUTTER + 72}, ${SINGLE_FEATURE_HEIGHT + (FONT_SIZE / 2)})`);
+      .attr('transform', `translate(${GUTTER + 72}, ${(FONT_SIZE / 2)})`);
 
     const gCheckbox = gCheckboxes.selectAll('g.checkbox')
       .data(Object.keys(filterByOptions))
       .join('g')
       .classed('checkbox', true)
-      .attr('transform', (d, i) => `translate(${(i * RULES_COLUMN_WIDTH) / 4}, ${1})`);
+      .attr('transform', (d, i) => `translate(${3 * GUTTER + filterByOptions[d].x}, ${1})`);
+
+    gCheckbox.selectAll('rect.checkbox')
+      .data(d => [d])
+      .join('rect')
+      .classed('checkbox', true)
+      // .attr('x', (d, i) => 2 + ((Math.floor(i) * RULES_COLUMN_WIDTH) / 2) + VERTICAL_GUTTER)
+      // .attr('y', (d, i) => SINGLE_FEATURE_HEIGHT + GUTTER)
+      .attr('width', d => filterByOptions[d].width)
+      .attr('height', FONT_SIZE)
+      .attr('fill', d => (filterByOptions[d].color))
+      .attr('fill-opacity', d => (filterByOptions[d].value ? 0.8 : 0.2))
+      .attr('stroke', FTTemplate.TEXT_COLOR)
+      .attr('stroke-width', 0.5)
+      .style('cursor', 'pointer')
+      .on('click', generateEvent);
+
     gCheckbox.selectAll('text.filterBy')
       .data(d => [d])
       .join('text')
@@ -506,24 +521,9 @@ function FiperMenuFilterBy() {
       // .attr('y', (d, i) => SINGLE_FEATURE_HEIGHT + GUTTER)
       .attr('font-size', FONT_SIZE)
       .attr('dy', (SINGLE_FEATURE_HEIGHT / 2) - (FONT_SIZE / 2))
-      .attr('dx', '1.5em') // we leave some space for the checkbox
+      .attr('dx', '0.2em') // we leave some space for the checkbox
       .attr('fill', FTTemplate.TEXT_COLOR)
       .text(d => d)
-      .style('cursor', 'pointer')
-      .on('click', generateEvent);
-
-    gCheckbox.selectAll('rect.checkbox')
-      .data(d => [d])
-      .join('rect')
-      .classed('checkbox', true)
-      // .attr('x', (d, i) => 2 + ((Math.floor(i) * RULES_COLUMN_WIDTH) / 2) + VERTICAL_GUTTER)
-      // .attr('y', (d, i) => SINGLE_FEATURE_HEIGHT + GUTTER)
-      .attr('width', FONT_SIZE)
-      .attr('height', FONT_SIZE)
-      .attr('fill', d => (filterByOptions[d].color))
-      .attr('fill-opacity', d => (filterByOptions[d].value ? 0.8 : 0.2))
-      .attr('stroke', FTTemplate.TEXT_COLOR)
-      .attr('stroke-width', 0.5)
       .style('cursor', 'pointer')
       .on('click', generateEvent);
   }
@@ -686,7 +686,7 @@ function FiperInteractiveIndicator() {
 
   function me(selection) {
     selection.selectAll('path.interactiveIndicator')
-      .data(d => [1])
+      .data([1])
       .join('path')
       .classed('interactiveIndicator', true)
       .attr('d', `M 0 2 l 0 ${(lineHeight - 5) / 2} l 2 -2 l -2 -2 Z L 0 ${lineHeight - 8}`)
@@ -927,6 +927,7 @@ function FiperMenu() {
       .join('g')
       .classed('orderby', true)
       .attr('transform', `translate(${cl.dimensions('feature-values').x}, ${SINGLE_FEATURE_HEIGHT})`);
+    gOrder.call(interactiveIndicator);
     gOrder.call(menuOrderBy);
     if (steps.findIndex(d => d === 'Rules') < 0) {
       gOrder.remove();
@@ -973,23 +974,30 @@ function FiperMenu() {
       .data(d => [d])
       .join('g')
       .classed('filter', true)
-      .attr('transform', `translate(${cl.dimensions('feature-values').x}, ${3 * SINGLE_FEATURE_HEIGHT})`);
+      .attr('transform', `translate(${cl.dimensions('feature-labels').x}, ${4 * SINGLE_FEATURE_HEIGHT})`);
 
     const filterByOptions = {
-      All: {
+      noRules: {
         value: true,
         color: FTTemplate.DISTRIBUTION_COLOR,
+        width: 4 * FONT_SIZE,
+        x: 0,
       },
       Rules: {
         value: explanationDescriptor.filterRules,
         color: FTTemplate.RULE_COLOR,
+        width: 3 * FONT_SIZE,
+        x: (4 * FONT_SIZE) + (0.5 * GUTTER),
       },
       CRules: {
         value: explanationDescriptor.filterCRules,
         color: FTTemplate.CRULES_COLOR,
+        width: 4 * FONT_SIZE,
+        x: (7 * FONT_SIZE) + GUTTER,
       },
     };
     menuFilterBy.filterByOptions(filterByOptions);
+    gFilter.call(interactiveIndicator);
     gFilter.call(menuFilterBy);
     if (steps.findIndex(d => d === 'Rules') < 0) {
       gFilter.remove();
