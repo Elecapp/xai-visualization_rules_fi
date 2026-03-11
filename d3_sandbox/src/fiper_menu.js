@@ -972,7 +972,7 @@ function FiperMenu() {
         .classed('label', true)
         .attr('x', GUTTER / 2)
         .attr('y', (SINGLE_FEATURE_HEIGHT / 2) - (FONT_SIZE / 2))
-        .attr('dy', '1em')
+        .attr('dy', '0.70em')
         .attr('text-anchor', 'start')
         .attr('font-size', FONT_SIZE)
         .attr('font-weight', 400)
@@ -980,6 +980,7 @@ function FiperMenu() {
         .text(selection.datum().counterRules.length > 1 ? 'C.Rules' : 'C.R');
     }
     menuCRules.call(menuCRulesCall);
+    menuCRules.call(interactiveIndicator);
     if (steps.findIndex(d => d === 'Counter Rules') < 0) {
       menuCRules.remove();
     }
