@@ -303,15 +303,6 @@ function FiperMenuProgressHandler() {
       .classed('progressStep', true)
       .attr('transform', `translate(${cl.dimensions('feature-labels').x + (1.2 * xScale.bandwidth())}, ${0.5 * GUTTER})`);
 
-    selection.selectAll('circle.test')
-      .data([1])
-      .join('circle')
-      .classed('test', true)
-      .attr('cx', cl.dimensions('feature-labels').x)
-      .attr('cy', 0)
-      .attr('r', 5)
-      .attr('fill', 'red');
-
     gSteps.selectAll('rect.progressButton')
       .data(d => [d])
       .join('rect')
