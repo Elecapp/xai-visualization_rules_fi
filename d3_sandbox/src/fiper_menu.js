@@ -301,7 +301,7 @@ function FiperMenuProgressHandler() {
       .data(progressSteps.filter(d => d.visible))
       .join('g')
       .classed('progressStep', true)
-      .attr('transform', `translate(${cl.dimensions('feature-labels').x + (1.2 * xScale.bandwidth())}, ${0.5 * GUTTER})`);
+      .attr('transform', `translate(${(1.4 * xScale.bandwidth())}, ${0.5 * GUTTER})`);
 
     gSteps.selectAll('rect.progressButton')
       .data(d => [d])
@@ -309,9 +309,11 @@ function FiperMenuProgressHandler() {
       .classed('progressButton', true)
       .attr('x', 0)
       .attr('y', 0)
-      .attr('width', (cl.dimensions('feature-labels').width / 2) - (2.5 * GUTTER))
+      .attr('width', (cl.dimensions('feature-labels').width / 2) - (2.8 * GUTTER))
       .attr('height', 1.5 * GUTTER)
-      .attr('fill', d => d.backgroundColor);
+      .attr('fill', d => d.backgroundColor)
+      .attr('stroke', FTTemplate.CATEGORICAL_INSTANCE_STROKE_COLOR)
+      .attr('stroke-width', 0.75);
 
 
     gSteps.selectAll('text.progressButton')
@@ -337,7 +339,7 @@ function FiperMenuProgressHandler() {
       .data([1])
       .join('g')
       .classed('progressBullet', true)
-      .attr('transform', `translate(${cl.dimensions('feature-labels').x}, ${0.75 * GUTTER})`);
+      .attr('transform', `translate(${0}, ${0.75 * GUTTER})`);
 
     gCircles.selectAll('line.filrouge')
       .data([1])
@@ -384,6 +386,8 @@ function FiperMenuProgressHandler() {
       .classed('rightArrow', true)
       .attr('d', 'M 0 0 l 5 5 l -5 5 Z')
       .attr('fill', FTTemplate.DISTRIBUTION_STROKE_COLOR)
+      .attr('stroke', FTTemplate.CATEGORICAL_INSTANCE_STROKE_COLOR)
+      .attr('stroke-width', 0.75)
       .attr('transform', `translate(${xScale(progressSteps[4].label) + (xScale.bandwidth() / 2)}, 0)`)
       .style('cursor', 'pointer')
       .on('click', () => {
@@ -399,7 +403,9 @@ function FiperMenuProgressHandler() {
       .classed('leftArrow', true)
       .attr('d', 'M 0 0 l -5 5 l 5 5 Z')
       .attr('fill', FTTemplate.DISTRIBUTION_STROKE_COLOR)
-      .attr('transform', `translate(${xScale.bandwidth()}, 0)`)
+      .attr('stroke', FTTemplate.CATEGORICAL_INSTANCE_STROKE_COLOR)
+      .attr('stroke-width', 0.75)
+      .attr('transform', `translate(${xScale.bandwidth() * 1.2}, 0)`)
       .style('cursor', 'pointer')
       .on('click', () => {
         const stepIndex = progressSteps.findLastIndex(d => d.completed);
@@ -414,6 +420,8 @@ function FiperMenuProgressHandler() {
       .classed('lastArrow', true)
       .attr('d', 'M 0 0 l 5 5 l -5 5 Z M 5 0 l 2 0 l 0 10 l -2 0 Z')
       .attr('fill', FTTemplate.DISTRIBUTION_STROKE_COLOR)
+      .attr('stroke', FTTemplate.CATEGORICAL_INSTANCE_STROKE_COLOR)
+      .attr('stroke-width', 0.75)
       .attr('transform', `translate(${xScale(progressSteps[4].label) + xScale.bandwidth()}, 0)`)
       .style('cursor', 'pointer')
       .on('click', () => {
@@ -426,7 +434,9 @@ function FiperMenuProgressHandler() {
       .classed('firstArrow', true)
       .attr('d', 'M 0 0 l -5 5 l 5 5 Z M -5 0 l -2 0 l 0 10 l 2 0 Z')
       .attr('fill', FTTemplate.DISTRIBUTION_STROKE_COLOR)
-      .attr('transform', `translate(${0.5 * xScale.bandwidth()}, 0)`)
+      .attr('stroke', FTTemplate.CATEGORICAL_INSTANCE_STROKE_COLOR)
+      .attr('stroke-width', 0.75)
+      .attr('transform', `translate(${0.7 * xScale.bandwidth()}, 0)`)
       .style('cursor', 'pointer')
       .on('click', () => {
         dispatcher.call('changeProgressStep', null, progressSteps.slice(0, 1).map(d => d.name));
@@ -671,6 +681,23 @@ function FiperClassificationBox() {
   return me;
 }
 
+function FiperInteractiveIndicator() {
+  const lineHeight = SINGLE_FEATURE_HEIGHT;
+
+  function me(selection) {
+    selection.selectAll('path.interactiveIndicator')
+      .data(d => [1])
+      .join('path')
+      .classed('interactiveIndicator', true)
+      .attr('d', `M 0 2 l 0 ${(lineHeight - 5) / 2} l 2 -2 l -2 -2 Z L 0 ${lineHeight - 8}`)
+      .attr('stroke-width', 1.5)
+      .attr('fill', FTTemplate.TEXT_COLOR)
+      .attr('stroke', FTTemplate.TEXT_COLOR);
+  }
+
+  return me;
+}
+
 function FiperMenuColumnTitles() {
   function me(selection) {
     // horizontal separator lines
@@ -830,6 +857,7 @@ function FiperMenu() {
     .width(LABELS_COLUMN_WIDTH);
   const menuColumnTitles = FiperMenuColumnTitles();
   const menuPaletteSelector = FiperMenuPaletteSelector().width(SINGLE_FEATURE_HEIGHT + GUTTER);
+  const interactiveIndicator = FiperInteractiveIndicator();
 
   function me(selection) {
     // create a group to contain the menu elements:
@@ -996,7 +1024,8 @@ function FiperMenu() {
     const gProgress = gMenu.selectAll('g.progress')
       .data(d => [d])
       .join('g')
-      .classed('progress', true);
+      .classed('progress', true)
+      .attr('transform', `translate(${cl.dimensions('feature-labels').x}, ${0})`);
 
     const progressSteps = [
       {
@@ -1083,6 +1112,7 @@ function FiperMenu() {
 
 
     progressButtons.progressSteps(progressSteps);
+    gProgress.call(interactiveIndicator);
     gProgress.call(progressButtons);
   }
   // eslint-disable-next-line func-names
