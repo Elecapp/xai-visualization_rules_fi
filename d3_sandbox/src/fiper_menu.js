@@ -200,8 +200,9 @@ function FiperChooseTextualFormat() {
   };
   const xScale = d3.scaleBand()
     .domain(Object.keys(formatOptions))
-    .range([0, RULES_COLUMN_WIDTH / 3])
-    .padding(0.01);
+    .range([0, (RULES_COLUMN_WIDTH * 2) /3])
+    .paddingInner(0.2)
+    .paddingOuter(0.4);
 
   const colorScale = d3.scaleOrdinal()
     .domain([true, false])
@@ -249,18 +250,37 @@ function FiperChooseTextualFormat() {
       .style('cursor', 'pointer')
       .on('click', generateEvent);
 
+    const tokens = [
+      {
+        label: 'Show',
+        anchor: 'end',
+        x: xScale('Textual') - (GUTTER),
+      },
+      {
+        label: 'or',
+        anchor: 'middle',
+        x: xScale('Graphic') - (1.5* GUTTER),
+      },
+      {
+        label: 'Explanation',
+        anchor: 'start',
+        x: xScale('Graphic') + xScale.bandwidth(),
+      }
+    ];
+
     selection.selectAll('text.label')
-      .data(['Explanation'])
+      .data(tokens)
       .join('text')
       .classed('label', true)
-      .attr('x', xScale.range()[1])
+      .attr('x', d => d.x)
       .attr('y', 0.5 * GUTTER)
       .attr('font-size', FONT_SIZE)
       .attr('font-weight', 400)
       .attr('dy', '1em')
       .attr('dx', '0.5em')
+      .attr('text-anchor', d => d.anchor)
       .attr('fill', FTTemplate.TEXT_COLOR)
-      .text(d => d);
+      .text(d => d.label);
   }
 
   // eslint-disable-next-line func-names
@@ -1020,6 +1040,7 @@ function FiperMenu() {
       Graphic: !explanationDescriptor.textVersion,
     };
     chooseFormat.formatOptions(formatOptions);
+    gChooseFormat.call(interactiveIndicator);
     gChooseFormat.call(chooseFormat);
     if (steps.findIndex(d => d === 'Rules') < 0) {
       gChooseFormat.remove();
