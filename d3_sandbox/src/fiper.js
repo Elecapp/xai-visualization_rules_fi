@@ -1800,7 +1800,7 @@ function preprocessData(data) {
     counterRules: CRulesList,
     predicted_class: data.predicted_class,
     predicted_proba: data.predicted_proba,
-    selectedCounterRule: '',
+    selectedCounterRule: 'C0',
     filterRules: false,
     filterCRules: false,
     filterNoRules: false,
