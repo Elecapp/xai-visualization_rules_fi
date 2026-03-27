@@ -1803,6 +1803,7 @@ function preprocessData(data) {
     selectedCounterRule: '',
     filterRules: false,
     filterCRules: false,
+    filterNoRules: false,
     textVersion: false,
     progressStatus: ['Classification', 'Feature Values', 'Rules', 'Counter Rules'], // is one of ['Classification', 'Feature Values', 'Rules', 'Counter Rules', 'Feature Importance']
   };
@@ -1872,19 +1873,19 @@ function InstanceView() {
     function refreshVisualization(descriptor) {
       const filterFunctionRule = f => d3.sum(Object.values(f.rulePredicateMap)) > 0;
       const filterFunctionCRule = f => d3.sum(Object.values(f.cRulesRelevanceMap)) > 0;
-      const filterFunctionBoth = f => (d3.sum(Object.values(f.rulePredicateMap)) +
-      d3.sum(Object.values(f.cRulesRelevanceMap))) > 0;
+      const filterFunctionNoRules = f => (d3.sum(Object.values(f.rulePredicateMap)) +
+        d3.sum(Object.values(f.cRulesRelevanceMap))) === 0;
 
-      let currentFilter = () => true;
-      if (descriptor.filterRules) {
-        currentFilter = filterFunctionRule;
-      }
-      if (descriptor.filterCRules) {
-        currentFilter = filterFunctionCRule;
-      }
-      if (descriptor.filterRules && descriptor.filterCRules) {
-        currentFilter = filterFunctionBoth;
-      }
+      // Accumulate all active filters and apply them in OR:
+      // a feature is shown if it matches ANY of the active filters.
+      const activeFilters = [];
+      if (descriptor.filterRules) activeFilters.push(filterFunctionRule);
+      if (descriptor.filterCRules) activeFilters.push(filterFunctionCRule);
+      if (descriptor.filterNoRules) activeFilters.push(filterFunctionNoRules);
+
+      const currentFilter = activeFilters.length === 0
+        ? () => true
+        : f => activeFilters.some(fn => fn(f));
 
       const filteredDescriptor = {
         ...explanationDescriptor,
@@ -1939,9 +1940,10 @@ function InstanceView() {
       refreshVisualization(explanationDescriptor);
     });
     dispatcher.on('changeFilter', (d) => {
-      explanationDescriptor.filterRules = d.Rules.value;
-      explanationDescriptor.filterCRules = d.CRules.value;
-
+      explanationDescriptor.filterRules = d.Rules ? d.Rules.value : false;
+      explanationDescriptor.filterCRules = d.CRules ? d.CRules.value : false;
+      explanationDescriptor.filterNoRules = d.noRules ? d.noRules.value : false;
+      console.log('explanation Descriptor', explanationDescriptor);
       refreshVisualization(explanationDescriptor);
     });
 

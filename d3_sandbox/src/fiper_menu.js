@@ -476,21 +476,39 @@ function FiperMenuProgressHandler() {
 
 function FiperMenuFilterBy() {
   let filterByOptions = {
-    Cose: false, Rules: false, CRules: false,
+    noRules: {
+      value: false,
+      color: FTTemplate.DISTRIBUTION_COLOR,
+      width: 4 * FONT_SIZE,
+      x: 0,
+    },
+    Rules: {
+      value: false,
+      color: FTTemplate.RULE_COLOR,
+      width: 4 * FONT_SIZE,
+      x: 10 * FONT_SIZE,
+    },
+    CRules: {
+      value: false,
+      color: FTTemplate.CRULES_COLOR,
+      width: 4 * FONT_SIZE,
+      x: 20 * FONT_SIZE,
+    },
   };
 
   function me(selection) {
     const generateEvent = (d) => {
+      console.log('event', d);
       const selectedKey = d3.select(d.target).datum();
       Object.keys(filterByOptions).forEach((key) => {
         if (key === selectedKey) {
           filterByOptions[key].value = !(filterByOptions[key].value);
         }
       });
-      const values = Object.keys(filterByOptions).filter(key => key !== 'All').map(key => filterByOptions[key].value);
-      const allValues = !(values[0] || values[1]);
-      filterByOptions.noRules.value = allValues;
-
+      // const values = Object.keys(filterByOptions).filter(key => key !== 'All').map(key => filterByOptions[key].value);
+      // const allValues = !(values[0] || values[1]);
+      // filterByOptions.noRules.value = allValues;
+      console.log('filteroptions', filterByOptions);
       dispatcher.call('changeFilter', null, filterByOptions);
     };
 
@@ -999,8 +1017,8 @@ function FiperMenu() {
 
     const filterByOptions = {
       noRules: {
-        value: true,
-        color: FTTemplate.DISTRIBUTION_COLOR,
+        value: explanationDescriptor.filterNoRules,
+        color: FTTemplate.CATEGORICAL_INSTANCE_STROKE_COLOR,
         width: 4 * FONT_SIZE,
         x: 0,
       },
