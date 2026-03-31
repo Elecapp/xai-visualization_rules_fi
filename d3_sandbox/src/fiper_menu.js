@@ -748,7 +748,6 @@ function FiperInfoindicator() {
     'M 0 0 H 10 V 10 H 0 Z M 4 1 H 6 V 3 H 4 Z M 4 4 H 6 V 9 H 4 Z';
 
   function me(selection) {
-
     const g = selection.selectAll('g.infoIndicator')
       .data([1])
       .join('g')
@@ -761,8 +760,8 @@ function FiperInfoindicator() {
       .attr('d', INFO_ICON_PATH)
       .attr('fill-rule', 'evenodd')
       .attr('stroke-width', 1)
-      .attr('fill', FTTemplate.DISTRIBUTION_STROKE_COLOR)
-      // .attr('stroke', FTTemplate.CATEGORICAL_INSTANCE_STROKE_COLOR);
+      .attr('fill', FTTemplate.DISTRIBUTION_STROKE_COLOR);
+    // .attr('stroke', FTTemplate.CATEGORICAL_INSTANCE_STROKE_COLOR);
   }
 
   me.width = function (_) {
@@ -839,6 +838,56 @@ function FiperMenuColumnTitles() {
   return me;
 }
 
+function FiperMenuTutorial() {
+  const buttonList = [
+    {
+      name: 'Info',
+      value: 'info',
+      color: colorSet.default.RULE_COLOR,
+      icon: `M2.87,3.42s.04,.04,.03,.07l-1.58,5.58c-.07,.3-.11,.47-.11,.53,0,.08,.02,.15,.05,.2,.03,.06,.09,.09,.2,.09,.18,0,.41-.15,.7-.46,.17-.18,.38-.44,.63-.78l.2,.17-.08,.11c-.39,.55-.71,.94-.97,1.18-.4,.38-.79,.56-1.17,.56-.22,0-.41-.09-.56-.28s-.22-.41-.22-.66c0-.15,.01-.28,.03-.39,.02-.11,.06-.28,.12-.5L1.26,4.82c.02-.06,.03-.12,.04-.17,.01-.05,.02-.1,.02-.16,0-.19-.07-.3-.21-.35-.14-.04-.41-.07-.82-.07v-.26c.43-.05,.74-.09,.93-.12,.19-.03,.38-.06,.57-.09,.25-.04,.48-.09,.71-.14,.22-.05,.35-.07,.38-.05Zm-.74-1.96c-.15-.17-.23-.37-.23-.6s.08-.44,.23-.61c.15-.17,.33-.25,.55-.25s.4,.08,.55,.25c.15,.17,.23,.37,.23,.61s-.08,.44-.23,.61c-.15,.16-.34,.25-.55,.25s-.4-.08-.55-.25Z`, // Rounded stem
+    },
+  ];
+
+  function me(selection) {
+    const gButtons = selection.selectAll('g.infoButtons')
+      .data(buttonList)
+      .join('g')
+      .classed('infoButtons', true)
+      .attr('transform', 'translate(10, 6)');
+
+
+    gButtons.selectAll('circle.palette-background')
+      .data(d => [d])
+      .join('circle')
+      .classed('palette-background', true)
+      .attr('cx', 2)
+      .attr('cy', 6)
+      .attr('r', SINGLE_FEATURE_HEIGHT * 0.4)
+      .attr('fill', FTTemplate.SECONDARY_BACKGROUND_COLOR)
+      .attr('stroke', FTTemplate.DISTRIBUTION_STROKE_COLOR);
+
+    gButtons.selectAll('path.infoButton')
+      .data(d => [d])
+      .join('path')
+      .classed('infoButton', true)
+      .attr('d', d => d.icon)
+      .attr('fill', FTTemplate.TEXT_COLOR)
+      .attr('stroke', FTTemplate.TEXT_COLOR)
+      .attr('stroke-width', 1);
+
+    gButtons
+      .style('cursor', 'pointer')
+      .on('click', (d) => {
+        const button = d3.select(d.target).datum();
+        // dispatcher.call('tutorialButtonClick', null, button.value);
+        console.log('buttons', button);
+      });
+  }
+
+  return me;
+}
+
+
 function FiperMenuPaletteSelector() {
   let width = 200;
   const paletteOptions = [
@@ -855,13 +904,8 @@ function FiperMenuPaletteSelector() {
       name: 'Dark',
       value: 'darkModeColorPalette',
       color: colorSet.darkModeColorPalette.RULE_COLOR,
-      icon: 'M8 0c-4.4 0-8 3.6-8 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zM8 15c-3.9 0-7-3.1-7-7 0-2.4 1.2-4.6 3.2-5.9-0.1 0.6-0.2 1.3-0.2 1.9 0 4.9 4 8.9 8.9 9-1.3 1.3-3 2-4.9 2z',
-    },
-    {
-      name: 'ColorBlind',
-      value: 'grayscaleHighContrast',
-      color: colorSet.grayscaleHighContrast.RULE_COLOR,
-      icon: 'M0.929,-0.595l-1.178,1.178,3.26,3.26c-.187.446-.323.918-.383,1.417-1.756.896-2.96,2.717-2.96,4.823,0,2.992,2.425,5.417,5.417,5.417,1.075,0,2.074-.317,2.917-.857.842.54,1.842.857,2.917.857,1.069,0,2.063-.312,2.902-.848l1.841,1.841,1.178-1.178L0.929,-0.595ZM7.276,8.109l1.805,1.805c-.347.098-.703.169-1.081.169-.431,0-.838-.084-1.229-.206.032-.64.218-1.235.505-1.768ZM5.083,5.917l1.273,1.273c-.397.624-.677,1.329-.792,2.092-.992-.719-1.647-1.86-1.712-3.16.391-.122.798-.206,1.229-.206h0ZM5.083,14.25c-2.297,0-4.167-1.869-4.167-4.167,0-1.387.687-2.608,1.732-3.367.262,1.761,1.367,3.243,2.895,4.023.142,1.17.657,2.222,1.422,3.04-.567.291-1.202.47-1.882.47h0ZM6.929,11.227c.346.069.704.107,1.071.107s.724-.038,1.071-.107c-.201.699-.565,1.328-1.071,1.825-.505-.497-.869-1.126-1.071-1.825ZM10.917,14.25c-.681,0-1.314-.18-1.882-.47.663-.708,1.121-1.599,1.328-2.583l2.534,2.534c-.588.327-1.26.519-1.981.519ZM8,1.75c1.898,0,3.487,1.284,3.987,3.023-.346-.069-.704-.107-1.071-.107-.702,0-1.365.147-1.979.39l.988.988c.317-.082.648-.128.991-.128.431,0,.838.084,1.229.206-.03.607-.193,1.177-.455,1.687l.922.922c.369-.605.63-1.283.739-2.014,1.045.758,1.733,1.98,1.733,3.367,0,.342-.053.67-.132.988l1,1c.243-.616.382-1.285.382-1.988,0-2.107-1.205-3.927-2.96-4.823-.325-2.681-2.604-4.76-5.373-4.76-1.035,0-2.002.291-2.824.795l.924.924c.569-.297,1.212-.47,1.9-.47h0Z',
+      icon: 'M8 0c-4.4 0-8 3.6-8 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8z' +
+        'M8 15c-3.9 0-7-3.1-7-7 0-2.4 1.2-4.6 3.2-5.9-0.1 0.6-0.2 1.3-0.2 1.9 0 4.9 4 8.9 8.9 9-1.3 1.3-3 2-4.9 2z',
     },
     {
       name: 'ColorBlind',
@@ -933,6 +977,7 @@ function FiperMenu() {
     .width(LABELS_COLUMN_WIDTH);
   const menuColumnTitles = FiperMenuColumnTitles();
   const menuPaletteSelector = FiperMenuPaletteSelector().width(SINGLE_FEATURE_HEIGHT + GUTTER);
+  const menuInfoTutorial = FiperMenuTutorial();
   const interactiveIndicator = FiperInteractiveIndicator();
   const infoIndicator = FiperInfoindicator();
 
@@ -992,8 +1037,16 @@ function FiperMenu() {
       .data(d => [d])
       .join('g')
       .classed('palette', true)
-      .attr('transform', `translate(${cl.dimensions('feature-handler').x}, 0)`);
+      .attr('transform', `translate(${cl.dimensions('feature-handler').x}, ${SINGLE_FEATURE_HEIGHT + (GUTTER * 0.5)})`);
     gPalette.call(menuPaletteSelector);
+
+    const gInfoTutorial = gMenu.selectAll('g.infoTutorial')
+      .data(d => [d])
+      .join('g')
+      .classed('infoTutorial', true)
+      .attr('transform', `translate(${cl.dimensions('feature-handler').x}, 0)`);
+
+    gInfoTutorial.call(menuInfoTutorial);
 
 
     // =========================================================
