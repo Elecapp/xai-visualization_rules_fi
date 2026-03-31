@@ -560,7 +560,7 @@ function FiperMenuFilterBy() {
       .attr('font-size', FONT_SIZE)
       .attr('dy', (SINGLE_FEATURE_HEIGHT / 2) - (FONT_SIZE / 2))
       .attr('dx', '0.2em') // we leave some space for the checkbox
-      .attr('fill', FTTemplate.TEXT_COLOR)
+      .attr('fill', d => (filterByOptions[d].value ? FTTemplate.BACKGROUND_COLOR : FTTemplate.TEXT_COLOR))
       .text(d => d)
       .style('cursor', 'pointer')
       .on('click', generateEvent);
