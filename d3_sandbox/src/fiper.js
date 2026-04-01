@@ -1095,6 +1095,55 @@ function FIPERCRuleGrid() {
   return me;
 }
 
+function FiperMenuTutorial() {
+  const buttonList = [
+    {
+      name: 'Info',
+      value: 'info',
+      color: colorSet.default.RULE_COLOR,
+      icon: 'M2.87,3.42s.04,.04,.03,.07l-1.58,5.58c-.07,.3-.11,.47-.11,.53,0,.08,.02,.15,.05,.2,.03,.06,.09,.09,.2,.09,.18,0,.41-.15,.7-.46,.17-.18,.38-.44,.63-.78l.2,.17-.08,.11c-.39,.55-.71,.94-.97,1.18-.4,.38-.79,.56-1.17,.56-.22,0-.41-.09-.56-.28s-.22-.41-.22-.66c0-.15,.01-.28,.03-.39,.02-.11,.06-.28,.12-.5L1.26,4.82c.02-.06,.03-.12,.04-.17,.01-.05,.02-.1,.02-.16,0-.19-.07-.3-.21-.35-.14-.04-.41-.07-.82-.07v-.26c.43-.05,.74-.09,.93-.12,.19-.03,.38-.06,.57-.09,.25-.04,.48-.09,.71-.14,.22-.05,.35-.07,.38-.05Zm-.74-1.96c-.15-.17-.23-.37-.23-.6s.08-.44,.23-.61c.15-.17,.33-.25,.55-.25s.4,.08,.55,.25c.15,.17,.23,.37,.23,.61s-.08,.44-.23,.61c-.15,.16-.34,.25-.55,.25s-.4-.08-.55-.25Z', // Rounded stem
+    },
+  ];
+
+  function me(selection) {
+    const gButtons = selection.selectAll('g.infoButtons')
+      .data(buttonList)
+      .join('g')
+      .classed('infoButtons', true)
+      .attr('transform', 'translate(10, 6)');
+
+
+    gButtons.selectAll('circle.palette-background')
+      .data(d => [d])
+      .join('circle')
+      .classed('palette-background', true)
+      .attr('cx', 2)
+      .attr('cy', 6)
+      .attr('r', SINGLE_FEATURE_HEIGHT * 0.4)
+      .attr('fill', FTTemplate.SECONDARY_BACKGROUND_COLOR)
+      .attr('stroke', FTTemplate.DISTRIBUTION_STROKE_COLOR);
+
+    gButtons.selectAll('path.infoButton')
+      .data(d => [d])
+      .join('path')
+      .classed('infoButton', true)
+      .attr('d', d => d.icon)
+      .attr('fill', FTTemplate.TEXT_COLOR)
+      .attr('stroke', FTTemplate.TEXT_COLOR)
+      .attr('stroke-width', 1);
+
+    gButtons
+      .style('cursor', 'pointer')
+      .on('click', (d) => {
+        const button = d3.select(d.target).datum();
+        dispatcher.call('tutorialButtonClick', null, button.value);
+      });
+  }
+
+  return me;
+}
+
+
 function FIPERView() {
   // global width of the whole visualization
   let width = GLOBAL_WIDTH;
@@ -1810,12 +1859,209 @@ function preprocessData(data) {
   return explanationDescriptor;
 }
 
+function FiperTutorial() {
+  let width = 200;
+  let height = 200;
+
+  let zones = [
+    {
+      label: 'Label of the zone',
+      name: 'example_zone',
+      x: 0,
+      y: 0,
+      width: 300, // use -1 to expand to the whole visible horizontal space
+      height: MENU_HEIGHT, // use -1 to expand to the whole visible vertical space
+      description: 'This is a plain text description of the content highlighted by the zone.',
+    },
+  ];
+
+
+  function me(selection) {
+    const gZones = selection.selectAll('g.zone')
+      .data(zones)
+      .join('g')
+      .classed('zone', true)
+      .attr('transform', d => `translate(${d.x < 0 ? width + d.x : d.x}, ${d.y})`);
+
+
+    gZones.selectAll('rect.zone')
+      .data(d => [d])
+      .join('rect')
+      .classed('zone', true)
+      .attr('width', d => (d.width < 0 ? width + d.width : d.width))
+      .attr('height', d => (d.height < 0 ? height + d.height : d.height))
+      .attr('fill', 'lightblue')
+      .attr('stroke', 'black')
+      .attr('stroke-width', 1)
+      .attr('dash-array', '4 2')
+      .attr('opacity', 0.5)
+    ;
+  }
+
+  me.width = function (_) {
+    if (!arguments.length) return width;
+    width = _;
+
+    return me;
+  };
+
+
+  me.height = function (_) {
+    if (!arguments.length) return height;
+    height = _;
+
+    return me;
+  };
+
+  me.zones = function (_) {
+    if (!arguments.length) return zones;
+    zones = _;
+
+    return me;
+  };
+
+  return me;
+}
+
+
 function InstanceView() {
   function me(selection) {
     const explanationDescriptor = selection.datum();
     const fv = FIPERView().width(GLOBAL_WIDTH +
     (explanationDescriptor.counterRules.length * CRULES_GRID_COLUMN_WIDTH));
     const fm = FiperMenu();
+    const ftb = FiperMenuTutorial();
+
+    // ==================== TUTORIAL COMPONENT ====================
+    const zones = [
+      {
+        label: 'Menu',
+        name: 'menu_zone',
+        x: cl.dimensions('feature-labels').x - (GUTTER * 0.25),
+        y: GUTTER * 0.5,
+        width: -(cl.dimensions('feature-labels').x - (GUTTER * 0.25)), // use -1 to expand to the whole visible horizontal space
+        height: MENU_HEIGHT, // use -1 to expand to the whole visible vertical space
+        description: 'This is the menu, where you can select the counterfactual rule to be highlighted and the' +
+        ' order of the features. You can also filter the features based on the presence of rules or counterfactual rules.',
+      },
+      {
+        label: 'Explanation',
+        name: 'explanation_zone',
+        x: GUTTER * 0.5,
+        y: MENU_HEIGHT + GUTTER, // position it below the menu and the title of the chart
+        width: -(GUTTER * 0.5), // use -1 to expand to the whole visible horizontal space
+        height: -(GUTTER * 0.5), // use -1 to expand to the whole visible vertical space
+        description: 'This is the explanation area, where you can see the features and their corresponding values. ' +
+        'The features are ordered based on their importance, but you can change the order using the menu. ' +
+        'You can also click on a feature to select it and see its values and rules.',
+      },
+      {
+        label: 'Classification',
+        name: 'classification_zone',
+        x: cl.dimensions('feature-labels').x - (GUTTER * 0.25),
+        y: SINGLE_FEATURE_HEIGHT + GUTTER,
+        width: (cl.dimensions('feature-labels').width) + (0.5 * GUTTER), // use -1 to expand to the whole visible horizontal space
+        height: MENU_HEIGHT - (2 * SINGLE_FEATURE_HEIGHT), // use -1 to expand to the whole visible vertical space
+        description: 'This is the classification area, where you can see the predicted class and the corresponding probability.',
+      },
+      {
+        label: 'Progressive Bar',
+        name: 'progressive_bar_zone',
+        x: cl.dimensions('feature-labels').x - (GUTTER * 0.25),
+        y: GUTTER * 0.5,
+        width: (cl.dimensions('feature-labels').width) + (0.5 * GUTTER), // use -1 to expand to the whole visible horizontal space
+        height: (SINGLE_FEATURE_HEIGHT), // use -1 to expand to the whole visible vertical space
+        description: 'This is the progressive bar, where you can see the progress of the tutorial steps.',
+      },
+      {
+        label: 'Explanation modality',
+        name: 'explanation_modality_zone',
+        x: cl.dimensions('feature-values').x - (GUTTER * 0.25),
+        y: GUTTER * 0.5,
+        width: (cl.dimensions('feature-values').width) + (0.5 * GUTTER), // use -1 to expand to the whole visible horizontal space
+        height: SINGLE_FEATURE_HEIGHT, // use -1 to expand to the whole visible vertical space
+        description: 'This is the explanation modality selector, where you can select the textual or graphical version ' +
+          'of the explanation.',
+      },
+      {
+        label: 'Ordering',
+        name: 'ordering_zone',
+        x: cl.dimensions('feature-values').x - (GUTTER * 0.25),
+        y: SINGLE_FEATURE_HEIGHT + GUTTER,
+        width: (cl.dimensions('feature-values').width) + (0.5 * GUTTER), // use -1 to expand to the whole visible horizontal space
+        height: MENU_HEIGHT - (2 * SINGLE_FEATURE_HEIGHT), // use -1 to expand to the whole visible vertical space
+        description: 'This is the ordering selector, where you can select the order of the features based on their ' +
+          'importance or their original order in the dataset.',
+      },
+      {
+        label: 'Filtering',
+        name: 'filtering_zone',
+        x: cl.dimensions('feature-labels').x - (GUTTER * 0.25),
+        y: (4 * SINGLE_FEATURE_HEIGHT) + GUTTER,
+        width: (cl.dimensions('feature-labels').width) + (0.5 * GUTTER), // use -1 to expand to the whole visible horizontal space
+        height: SINGLE_FEATURE_HEIGHT - (GUTTER * 0.5), // use -1 to expand to the whole visible vertical space
+        description: 'This is the filtering selector, where you can filter the features based on the presence of rules ' +
+          'or counterfactual rules.',
+      },
+      {
+        label: 'Counter Rules Selector',
+        name: 'counter_rules_selector_zone',
+        x: cl.dimensions('crule-grid').x - (GUTTER * 0.25),
+        y: SINGLE_FEATURE_HEIGHT + GUTTER,
+        width: -(cl.dimensions('feature-importance').width + cl.dimensions('crule-grid').x + (GUTTER * 2)), // use -1 to expand to the whole visible horizontal space
+        height: MENU_HEIGHT - (2 * SINGLE_FEATURE_HEIGHT), // use -1 to expand to the whole visible vertical space
+        description: 'This is the counter rules selector, where you can select the counterfactual rule to be ' +
+          'highlighted in the visualization.',
+      },
+      {
+        label: 'Feature Importance',
+        name: 'feature_importance_zone',
+        x: -cl.dimensions('feature-importance').width - (1.5 * GUTTER),
+        y: MENU_HEIGHT + GUTTER,
+        width: (cl.dimensions('feature-importance').width) + (0.5 * GUTTER), // use -1 to expand to the whole visible horizontal space
+        height: -0.5 * GUTTER, // use -1 to expand to the whole visible vertical space
+        description: 'This is the feature importance zone, where you can see the feature importance values ' +
+          'of the features.',
+      },
+      {
+        label: 'Counter Rules features',
+        name: 'counter_rules_features_zone',
+        x: cl.dimensions('crule-grid').x - (GUTTER * 0.25),
+        y: MENU_HEIGHT + GUTTER,
+        width: -(cl.dimensions('feature-importance').width + cl.dimensions('crule-grid').x + (GUTTER * 2)), // use -1 to expand to the whole visible horizontal space
+        height: -0.5 * GUTTER, // use -1 to expand to the whole visible vertical space
+        description: 'This is the counter rules features zone, where you can see the features that are involved in ' +
+          'the counterfactual rules. A bullet matches the feature with the corresponding counter rules. A larger bullet ' +
+          'means that the feature values should be changed to satisfy the counterfactual rule, while a smaller bullet means ' +
+          'that the feature values should not be changed to satisfy the counterfactual rule.',
+      },
+      {
+        label: 'Feature Distribution',
+        name: 'feature_distribution_zone',
+        x: cl.dimensions('feature-values').x - (GUTTER * 0.25),
+        y: MENU_HEIGHT + GUTTER,
+        width: (cl.dimensions('feature-values').width) + (0.5 * GUTTER), // use -1 to expand to the whole visible horizontal space
+        height: -0.5 * GUTTER, // use -1 to expand to the whole visible vertical space
+        description: 'This is the feature distribution zone, where you can see the distribution of the feature values ' +
+          'of the features. The distribution depends on the type of data. For categorical data, the distribution is ' +
+          'represented as a stacked bar chart, where each bar represents the frequency of a specific value. For numerical ' +
+          'features, the distribution is represented as a line plot, where the x-axis represents the feature values ' +
+          'and the y-axis represents the density of the feature values. The bottom part of each plot highlights the ' +
+          'value range where the rules or counter rules are satisfied.',
+      },
+      {
+        label: 'Feature values',
+        name: 'feature_values_zone',
+        x: cl.dimensions('feature-labels').x - (GUTTER * 0.25),
+        y: MENU_HEIGHT + GUTTER,
+        width: (cl.dimensions('feature-labels').width) + (0.5 * GUTTER), // use -1 to expand to the whole visible horizontal space
+        height: -0.5 * GUTTER, // use -1 to expand to the whole visible vertical space
+        description: 'This is the feature values zone, where you can see the feature values of the instance.',
+      },
+    ];
+
+
+    const ft = FiperTutorial().zones([]);
 
     const mainSvg = selection.selectAll('svg.viz')
       .data([0]) // Usa un array con un singolo elemento come dati
@@ -1829,6 +2075,7 @@ function InstanceView() {
       .data([0]) // Usa un array con un singolo elemento come dati
       .join('g')
       .classed('main', true)
+      .attr('id', 'main')
       .attr('transform', `translate(0, ${6 + MENU_HEIGHT + (2 * SINGLE_FEATURE_HEIGHT)})`)
   ;
 
@@ -1836,9 +2083,24 @@ function InstanceView() {
       .data([0]) // Usa un array con un singolo elemento come dati
       .join('g')
       .classed('menu', true)
+      .attr('id', 'menu')
       // .attr('width', 300)
       .attr('height', MENU_HEIGHT + (2 * SINGLE_FEATURE_HEIGHT)) // added height of the menu + chart title here, check if it is correct
       .attr('style', `background-color: ${FTTemplate.BACKGROUND_COLOR};`);
+
+
+    const gInfoTutorial = mainSvg.selectAll('g.infoTutorial')
+      .data(d => [d])
+      .join('g')
+      .classed('infoTutorial', true)
+      ;
+
+    const gPaletteTutorial = mainSvg.selectAll('g.paletteTutorial')
+      .data(d => [d])
+      .join('g')
+      .classed('paletteTutorial', true)
+      .attr('transform', `translate(${GUTTER}, ${GUTTER})`)
+      ;
 
 
     const defs = svg.selectAll('defs')
@@ -1893,6 +2155,8 @@ function InstanceView() {
       };
       svg.datum(filteredDescriptor).call(fv);
       menuSvg.datum(filteredDescriptor).call(fm);
+      gInfoTutorial.call(ft);
+      gPaletteTutorial.call(ftb);
     }
 
     // it is important that fm component is called after fv has been called the first time
@@ -1907,6 +2171,8 @@ function InstanceView() {
     (GUTTER + (MENU_HEIGHT + (2 * SINGLE_FEATURE_HEIGHT))));
     mainSvg.node().parentNode.setAttribute('width', bbox.width + GUTTER);
     fv.width(bbox.width + GUTTER);
+    ft.width(bbox.width + GUTTER);
+    ft.height(bbox.height + (150 * Math.random()));
     // menuSvg.node().setAttribute('width', bbox.width + GUTTER);
 
 
@@ -1962,6 +2228,18 @@ function InstanceView() {
 
     dispatcher.on('changeProgressStep', (d) => {
       explanationDescriptor.progressStatus = d;
+      refreshVisualization(explanationDescriptor);
+    });
+
+    dispatcher.on('tutorialButtonClick', (d) => {
+      const numZones = ft.zones().length;
+      if (numZones === 0) {
+        ft.zones(zones);
+      } else {
+        ft.zones([]);
+      }
+      const bboxl = svg.node().getBBox();
+      ft.height(bboxl.height + (2 * SINGLE_FEATURE_HEIGHT));
       refreshVisualization(explanationDescriptor);
     });
   }

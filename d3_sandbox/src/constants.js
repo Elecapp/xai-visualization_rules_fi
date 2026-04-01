@@ -8,12 +8,13 @@ export const LABELS_COLUMN_WIDTH = 250;
 export const CRULES_GRID_COLUMN_WIDTH = 20;
 export const GUTTER = 10;
 export const VERTICAL_GUTTER = 5;
-export const MENU_HEIGHT = SINGLE_FEATURE_HEIGHT * 4;
+export const MENU_HEIGHT = SINGLE_FEATURE_HEIGHT * 5;
 export const FONT_SIZE = 11;
 
 export const GLOBAL_WIDTH = 700;
 export const dispatcher = d3.dispatch('changeCounterRule',
-  'changeOrder', 'changeFilter', 'changePalette', 'changeTextualFormat', 'changeProgressStep');
+  'changeOrder', 'changeFilter', 'changePalette', 'changeTextualFormat', 'changeProgressStep',
+  'tutorialButtonClick');
 
 
 // eslint-disable-next-line no-unused-vars

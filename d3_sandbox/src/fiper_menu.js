@@ -838,56 +838,6 @@ function FiperMenuColumnTitles() {
   return me;
 }
 
-function FiperMenuTutorial() {
-  const buttonList = [
-    {
-      name: 'Info',
-      value: 'info',
-      color: colorSet.default.RULE_COLOR,
-      icon: `M2.87,3.42s.04,.04,.03,.07l-1.58,5.58c-.07,.3-.11,.47-.11,.53,0,.08,.02,.15,.05,.2,.03,.06,.09,.09,.2,.09,.18,0,.41-.15,.7-.46,.17-.18,.38-.44,.63-.78l.2,.17-.08,.11c-.39,.55-.71,.94-.97,1.18-.4,.38-.79,.56-1.17,.56-.22,0-.41-.09-.56-.28s-.22-.41-.22-.66c0-.15,.01-.28,.03-.39,.02-.11,.06-.28,.12-.5L1.26,4.82c.02-.06,.03-.12,.04-.17,.01-.05,.02-.1,.02-.16,0-.19-.07-.3-.21-.35-.14-.04-.41-.07-.82-.07v-.26c.43-.05,.74-.09,.93-.12,.19-.03,.38-.06,.57-.09,.25-.04,.48-.09,.71-.14,.22-.05,.35-.07,.38-.05Zm-.74-1.96c-.15-.17-.23-.37-.23-.6s.08-.44,.23-.61c.15-.17,.33-.25,.55-.25s.4,.08,.55,.25c.15,.17,.23,.37,.23,.61s-.08,.44-.23,.61c-.15,.16-.34,.25-.55,.25s-.4-.08-.55-.25Z`, // Rounded stem
-    },
-  ];
-
-  function me(selection) {
-    const gButtons = selection.selectAll('g.infoButtons')
-      .data(buttonList)
-      .join('g')
-      .classed('infoButtons', true)
-      .attr('transform', 'translate(10, 6)');
-
-
-    gButtons.selectAll('circle.palette-background')
-      .data(d => [d])
-      .join('circle')
-      .classed('palette-background', true)
-      .attr('cx', 2)
-      .attr('cy', 6)
-      .attr('r', SINGLE_FEATURE_HEIGHT * 0.4)
-      .attr('fill', FTTemplate.SECONDARY_BACKGROUND_COLOR)
-      .attr('stroke', FTTemplate.DISTRIBUTION_STROKE_COLOR);
-
-    gButtons.selectAll('path.infoButton')
-      .data(d => [d])
-      .join('path')
-      .classed('infoButton', true)
-      .attr('d', d => d.icon)
-      .attr('fill', FTTemplate.TEXT_COLOR)
-      .attr('stroke', FTTemplate.TEXT_COLOR)
-      .attr('stroke-width', 1);
-
-    gButtons
-      .style('cursor', 'pointer')
-      .on('click', (d) => {
-        const button = d3.select(d.target).datum();
-        // dispatcher.call('tutorialButtonClick', null, button.value);
-        console.log('buttons', button);
-      });
-  }
-
-  return me;
-}
-
-
 function FiperMenuPaletteSelector() {
   let width = 200;
   const paletteOptions = [
@@ -977,7 +927,6 @@ function FiperMenu() {
     .width(LABELS_COLUMN_WIDTH);
   const menuColumnTitles = FiperMenuColumnTitles();
   const menuPaletteSelector = FiperMenuPaletteSelector().width(SINGLE_FEATURE_HEIGHT + GUTTER);
-  const menuInfoTutorial = FiperMenuTutorial();
   const interactiveIndicator = FiperInteractiveIndicator();
   const infoIndicator = FiperInfoindicator();
 
@@ -1039,14 +988,6 @@ function FiperMenu() {
       .classed('palette', true)
       .attr('transform', `translate(${cl.dimensions('feature-handler').x}, ${SINGLE_FEATURE_HEIGHT + (GUTTER * 0.5)})`);
     gPalette.call(menuPaletteSelector);
-
-    const gInfoTutorial = gMenu.selectAll('g.infoTutorial')
-      .data(d => [d])
-      .join('g')
-      .classed('infoTutorial', true)
-      .attr('transform', `translate(${cl.dimensions('feature-handler').x}, 0)`);
-
-    gInfoTutorial.call(menuInfoTutorial);
 
 
     // =========================================================
