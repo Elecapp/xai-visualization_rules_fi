@@ -505,10 +505,6 @@ function FiperMenuFilterBy() {
           filterByOptions[key].value = !(filterByOptions[key].value);
         }
       });
-      // const values = Object.keys(filterByOptions).filter(key => key !== 'All').map(key => filterByOptions[key].value);
-      // const allValues = !(values[0] || values[1]);
-      // filterByOptions.noRules.value = allValues;
-      console.log('filteroptions', filterByOptions);
       dispatcher.call('changeFilter', null, filterByOptions);
     };
 
@@ -764,6 +760,7 @@ function FiperInfoindicator() {
     // .attr('stroke', FTTemplate.CATEGORICAL_INSTANCE_STROKE_COLOR);
   }
 
+  // eslint-disable-next-line func-names
   me.width = function (_) {
     if (!arguments.length) return width;
     width = _;

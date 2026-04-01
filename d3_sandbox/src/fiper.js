@@ -1103,14 +1103,35 @@ function FiperMenuTutorial() {
       color: colorSet.default.RULE_COLOR,
       icon: 'M2.87,3.42s.04,.04,.03,.07l-1.58,5.58c-.07,.3-.11,.47-.11,.53,0,.08,.02,.15,.05,.2,.03,.06,.09,.09,.2,.09,.18,0,.41-.15,.7-.46,.17-.18,.38-.44,.63-.78l.2,.17-.08,.11c-.39,.55-.71,.94-.97,1.18-.4,.38-.79,.56-1.17,.56-.22,0-.41-.09-.56-.28s-.22-.41-.22-.66c0-.15,.01-.28,.03-.39,.02-.11,.06-.28,.12-.5L1.26,4.82c.02-.06,.03-.12,.04-.17,.01-.05,.02-.1,.02-.16,0-.19-.07-.3-.21-.35-.14-.04-.41-.07-.82-.07v-.26c.43-.05,.74-.09,.93-.12,.19-.03,.38-.06,.57-.09,.25-.04,.48-.09,.71-.14,.22-.05,.35-.07,.38-.05Zm-.74-1.96c-.15-.17-.23-.37-.23-.6s.08-.44,.23-.61c.15-.17,.33-.25,.55-.25s.4,.08,.55,.25c.15,.17,.23,.37,.23,.61s-.08,.44-.23,.61c-.15,.16-.34,.25-.55,.25s-.4-.08-.55-.25Z', // Rounded stem
     },
+    {
+      name: 'Previous',
+      value: 'previous',
+      color: colorSet.default.RULE_COLOR,
+      // Points: (5,2.5), (-1,6), (5,9.5)
+      icon: 'M5,2.5 L-1,6 L5,9.5 Z',
+    },
+    {
+      name: 'Next',
+      value: 'next',
+      color: colorSet.default.RULE_COLOR,
+      // Points: (5,6), (-1,2.5), (-1,9.5)
+      icon: 'M-1,2.5 L5,6 L-1,9.5 Z',
+    },
   ];
+  const yScale = d3.scaleBand()
+    .range([0, buttonList.length * SINGLE_FEATURE_HEIGHT])
+    .domain(buttonList.map(d => d.value))
+    .padding(0.1);
+
+  let toggleInfo = false; // the two buttons prev and next will be shown only when the info button is toggled
+
 
   function me(selection) {
     const gButtons = selection.selectAll('g.infoButtons')
       .data(buttonList)
       .join('g')
       .classed('infoButtons', true)
-      .attr('transform', 'translate(10, 6)');
+      .attr('transform', d => `translate(10, ${yScale(d.value)})`);
 
 
     gButtons.selectAll('circle.palette-background')
@@ -1132,10 +1153,23 @@ function FiperMenuTutorial() {
       .attr('stroke', FTTemplate.TEXT_COLOR)
       .attr('stroke-width', 1);
 
+    gButtons.filter(d1 => d1.value !== 'info')
+      .transition()
+      .duration(100)
+      .attr('opacity', toggleInfo ? 1 : 0);
+
     gButtons
       .style('cursor', 'pointer')
       .on('click', (d) => {
         const button = d3.select(d.target).datum();
+        if (button.value === 'info') {
+          toggleInfo = !toggleInfo;
+          gButtons.filter(d1 => d1.value !== 'info')
+            .transition()
+            .duration(100)
+            .attr('opacity', toggleInfo ? 1 : 0);
+        }
+
         dispatcher.call('tutorialButtonClick', null, button.value);
       });
   }
@@ -1862,6 +1896,9 @@ function preprocessData(data) {
 function FiperTutorial() {
   let width = 200;
   let height = 200;
+  let currentStep = -1; // -1 means that the boxes are not visible,
+  // 0 means that only the first box is visible,
+  // 1 means that the first and the second box are visible, and so on.
 
   let zones = [
     {
@@ -1877,8 +1914,9 @@ function FiperTutorial() {
 
 
   function me(selection) {
+    const selectedZones = currentStep >= 0 ? zones.slice(currentStep, currentStep + 1) : [];
     const gZones = selection.selectAll('g.zone')
-      .data(zones)
+      .data(selectedZones)
       .join('g')
       .classed('zone', true)
       .attr('transform', d => `translate(${d.x < 0 ? width + d.x : d.x}, ${d.y})`);
@@ -1910,6 +1948,27 @@ function FiperTutorial() {
     if (!arguments.length) return height;
     height = _;
 
+    return me;
+  };
+
+  me.currentStep = function (_) {
+    if (!arguments.length) return currentStep;
+    currentStep = _;
+
+    return me;
+  };
+
+  me.forwardStep = function () {
+    if (currentStep < zones.length - 1) {
+      currentStep += 1;
+    }
+    return me;
+  };
+
+  me.backwardStep = function () {
+    if (currentStep > 0) {
+      currentStep -= 1;
+    }
     return me;
   };
 
@@ -2061,7 +2120,7 @@ function InstanceView() {
     ];
 
 
-    const ft = FiperTutorial().zones([]);
+    const ft = FiperTutorial().zones(zones);
 
     const mainSvg = selection.selectAll('svg.viz')
       .data([0]) // Usa un array con un singolo elemento come dati
@@ -2232,12 +2291,23 @@ function InstanceView() {
     });
 
     dispatcher.on('tutorialButtonClick', (d) => {
-      const numZones = ft.zones().length;
-      if (numZones === 0) {
-        ft.zones(zones);
-      } else {
-        ft.zones([]);
+      const currentStep = ft.currentStep();
+      console.log('current step', d);
+      if (d === 'info') {
+        if (currentStep === -1) {
+          ft.currentStep(0);
+        } else {
+          ft.currentStep(-1);
+        }
       }
+
+      if (d === 'next') {
+        ft.forwardStep();
+      }
+      if (d === 'previous') {
+        ft.backwardStep();
+      }
+
       const bboxl = svg.node().getBBox();
       ft.height(bboxl.height + (2 * SINGLE_FEATURE_HEIGHT));
       refreshVisualization(explanationDescriptor);
