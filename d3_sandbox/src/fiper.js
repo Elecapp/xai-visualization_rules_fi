@@ -82,7 +82,7 @@ function TooltipHandler() {
   // Css for the tooltip
 
   const tooltipStyleText = `
-      .d3-tooltip {
+      .d3-tooltip, .d3-tutorial-tooltip {
           position: absolute;
           padding: 4px 8px;
           font-family: 'M PLUS 1 Code', 'Courier New', monospace;
@@ -1128,7 +1128,7 @@ function FiperMenuTutorial() {
 
   function me(selection) {
     const gButtons = selection.selectAll('g.infoButtons')
-      .data(buttonList)
+      .data(toggleInfo ? buttonList : buttonList.filter(d => d.value === 'info'))
       .join('g')
       .classed('infoButtons', true)
       .attr('transform', d => `translate(10, ${yScale(d.value)})`);
@@ -1917,10 +1917,10 @@ function FiperTutorial() {
   // it is created once when the Tutorial instance is created and then updated
   // with the content of the active box
   const tooltip = d3.select('body')
-    .selectAll('div.d3-tooltip.tutorial')
+    .selectAll('div.d3-tutorial-tooltip.tutorial')
     .data([1])
     .join('div')
-    .classed('d3-tooltip', true)
+    .classed('d3-tutorial-tooltip', true)
     .classed('tutorial', true)
     .style('opacity', 0);
 
@@ -1951,13 +1951,13 @@ function FiperTutorial() {
       .data(d => [d])
       .join('rect')
       .classed('zone', true)
-      .attr('width', d => (d.width < 0 ? width + d.width : d.width))
-      .attr('height', d => (d.height < 0 ? height + d.height : d.height))
       .attr('fill', 'lightblue')
       .attr('stroke', 'black')
       .attr('stroke-width', 1)
       .attr('dash-array', '4 2')
       .attr('opacity', 0.5)
+      .attr('width', d => (d.width < 0 ? width + d.width : d.width))
+      .attr('height', d => (d.height < 0 ? height + d.height : d.height))
     ;
   }
 
