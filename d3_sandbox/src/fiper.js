@@ -16,7 +16,7 @@ import {
 
 import { predicate2text, text2tspan, text2html, columnLayout as cl } from './utilities';
 
-const d3 = require('d3');
+import * as d3 from 'd3';
 
 function fontScaleFactor(fontSize) {
   const cWidthFactor = d3.scaleLinear()

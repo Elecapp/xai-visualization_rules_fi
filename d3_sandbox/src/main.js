@@ -2,7 +2,7 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import { InstanceView, preprocessData } from './fiper';
 
-const d3 = require('d3');
+import * as d3 from 'd3';
 
 const instanceView = InstanceView();
 

@@ -16,7 +16,7 @@ import {
   columnLayout as cl,
 } from './utilities';
 
-const d3 = require('d3');
+import * as d3 from 'd3';
 
 let FTTemplate = colorSet.default;
 
