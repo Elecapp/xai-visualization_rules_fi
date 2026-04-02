@@ -1897,6 +1897,7 @@ function FiperTutorial() {
   let width = 200;
   let height = 200;
   let top = 0;
+  let left = 0;
   let currentStep = -1; // -1 means that the boxes are not visible,
   // 0 means that only the first box is visible,
   // 1 means that the first and the second box are visible, and so on.
@@ -1935,12 +1936,14 @@ function FiperTutorial() {
     // we have a single zone selected
     if (selectedZones.length === 1) {
       const activeZone = selectedZones[0];
+      const ax = activeZone.x < 0 ? width + activeZone.x : activeZone.x;
+      const ay = activeZone.y;
       tooltip.transition()
         .duration(200)
         .style('opacity', 0.9);
       tooltip.html(`<strong>${activeZone.label}</strong><br>${activeZone.description}`)
-        .style('left', `${activeZone.x + (2 * GUTTER)}px`)
-        .style('top', `${activeZone.y + top + 10}px`);
+        .style('left', `${ax + left + activeZone.dx}px`)
+        .style('top', `${ay + top + activeZone.dy}px`);
     } else {
       tooltip.transition()
         .duration(200)
@@ -1970,6 +1973,14 @@ function FiperTutorial() {
   };
 
   // eslint-disable-next-line func-names
+  me.height = function (_) {
+    if (!arguments.length) return height;
+    height = _;
+
+    return me;
+  };
+
+    // eslint-disable-next-line func-names
   me.top = function (_) {
     if (!arguments.length) return top;
     top = _;
@@ -1977,14 +1988,12 @@ function FiperTutorial() {
     return me;
   };
 
-
-  // eslint-disable-next-line func-names
-  me.height = function (_) {
-    if (!arguments.length) return height;
-    height = _;
+  me.left = function(_) {
+    if (!arguments.length) return left;
+    left = _;
 
     return me;
-  };
+  }
 
   // eslint-disable-next-line func-names
   me.currentStep = function (_) {
@@ -2041,6 +2050,9 @@ function InstanceView() {
         height: MENU_HEIGHT, // use -1 to expand to the whole visible vertical space
         description: 'This is the menu, where you can select the counterfactual rule to be highlighted and the' +
         ' order of the features. You can also filter the features based on the presence of rules or counterfactual rules.',
+        // the position of the description with respect to zone positioning
+        dx: GUTTER,
+        dy: GUTTER,
       },
       {
         label: 'Explanation',
@@ -2052,6 +2064,9 @@ function InstanceView() {
         description: 'This is the explanation area, where you can see the features and their corresponding values. ' +
         'The features are ordered based on their importance, but you can change the order using the menu. ' +
         'You can also click on a feature to select it and see its values and rules.',
+        // the position of the description with respect to zone positioning
+        dx: GUTTER,
+        dy: GUTTER,
       },
       {
         label: 'Classification',
@@ -2061,6 +2076,9 @@ function InstanceView() {
         width: (cl.dimensions('feature-labels').width) + (0.5 * GUTTER), // use -1 to expand to the whole visible horizontal space
         height: MENU_HEIGHT - (2 * SINGLE_FEATURE_HEIGHT), // negative value for vertical expansion
         description: 'This is the classification area, where you can see the predicted class and the corresponding probability.',
+        // the position of the description with respect to zone positioning
+        dx: GUTTER,
+        dy: GUTTER,
       },
       {
         label: 'Progressive Bar',
@@ -2070,6 +2088,9 @@ function InstanceView() {
         width: (cl.dimensions('feature-labels').width) + (0.5 * GUTTER), // use -1 to expand to the whole visible horizontal space
         height: (SINGLE_FEATURE_HEIGHT), // use -1 to expand to the whole visible vertical space
         description: 'This is the progressive bar, where you can see the progress of the tutorial steps.',
+        // the position of the description with respect to zone positioning
+        dx: GUTTER,
+        dy: GUTTER,
       },
       {
         label: 'Explanation modality',
@@ -2081,6 +2102,9 @@ function InstanceView() {
         height: SINGLE_FEATURE_HEIGHT, // use -1 to expand to the whole visible vertical space
         description: 'This is the explanation modality selector, where you can select the textual or graphical version ' +
           'of the explanation.',
+        // the position of the description with respect to zone positioning
+        dx: GUTTER,
+        dy: GUTTER,
       },
       {
         label: 'Ordering',
@@ -2091,6 +2115,9 @@ function InstanceView() {
         height: MENU_HEIGHT - (2 * SINGLE_FEATURE_HEIGHT), // negative value for vertical expansion
         description: 'This is the ordering selector, where you can select the order of the features based on their ' +
           'importance or their original order in the dataset.',
+        // the position of the description with respect to zone positioning
+        dx: GUTTER,
+        dy: GUTTER,
       },
       {
         label: 'Filtering',
@@ -2101,6 +2128,9 @@ function InstanceView() {
         height: SINGLE_FEATURE_HEIGHT - (GUTTER * 0.5), // negative value for vertical expansion
         description: 'This is the filtering selector, where you can filter the features based on the presence of rules ' +
           'or counterfactual rules.',
+        // the position of the description with respect to zone positioning
+        dx: GUTTER,
+        dy: GUTTER,
       },
       {
         label: 'Counter Rules Selector',
@@ -2112,6 +2142,9 @@ function InstanceView() {
         height: MENU_HEIGHT - (2 * SINGLE_FEATURE_HEIGHT), // negative value for vertical expansion
         description: 'This is the counter rules selector, where you can select the counterfactual rule to be ' +
           'highlighted in the visualization.',
+        // the position of the description with respect to zone positioning
+        dx: GUTTER,
+        dy: GUTTER,
       },
       {
         label: 'Feature Importance',
@@ -2122,6 +2155,9 @@ function InstanceView() {
         height: -0.5 * GUTTER, // use -1 to expand to the whole visible vertical space
         description: 'This is the feature importance zone, where you can see the feature importance values ' +
           'of the features.',
+        // the position of the description with respect to zone positioning
+        dx: GUTTER,
+        dy: GUTTER,
       },
       {
         label: 'Counter Rules features',
@@ -2134,6 +2170,9 @@ function InstanceView() {
           'the counterfactual rules. A bullet matches the feature with the corresponding counter rules. A larger bullet ' +
           'means that the feature values should be changed to satisfy the counterfactual rule, while a smaller bullet means ' +
           'that the feature values should not be changed to satisfy the counterfactual rule.',
+        // the position of the description with respect to zone positioning
+        dx: GUTTER,
+        dy: GUTTER,
       },
       {
         label: 'Feature Distribution',
@@ -2148,6 +2187,9 @@ function InstanceView() {
           'features, the distribution is represented as a line plot, where the x-axis represents the feature values ' +
           'and the y-axis represents the density of the feature values. The bottom part of each plot highlights the ' +
           'value range where the rules or counter rules are satisfied.',
+        // the position of the description with respect to zone positioning
+        dx: GUTTER,
+        dy: GUTTER,
       },
       {
         label: 'Feature values',
@@ -2157,6 +2199,9 @@ function InstanceView() {
         width: (cl.dimensions('feature-labels').width) + (0.5 * GUTTER), // use -1 to expand to the whole visible horizontal space
         height: -0.5 * GUTTER, // use -1 to expand to the whole visible vertical space
         description: 'This is the feature values zone, where you can see the feature values of the instance.',
+        // the position of the description with respect to zone positioning
+        dx: GUTTER,
+        dy: GUTTER,
       },
     ];
 
@@ -2351,8 +2396,10 @@ function InstanceView() {
       // to correctly position the description of the zones, compute top offset of the svg element
       const bboxParent = svg.node().parentNode.getBoundingClientRect();
       const absoluteTop = bboxParent.top + window.scrollY;
+      const absoluteLeft = bboxParent.left + window.scrollX;
       ft.height(bboxl.height + (2 * SINGLE_FEATURE_HEIGHT));
       ft.top(absoluteTop);
+      ft.left(absoluteLeft);
       refreshVisualization(explanationDescriptor);
     });
   }
