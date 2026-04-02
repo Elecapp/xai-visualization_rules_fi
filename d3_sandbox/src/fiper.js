@@ -1123,8 +1123,8 @@ function FiperMenuTutorial() {
     .domain(buttonList.map(d => d.value))
     .padding(0.1);
 
-  let toggleInfo = false; // the two buttons prev and next will be shown only when the info button is toggled
-
+  // the two buttons prev and next will be shown only when the info button is toggled
+  let toggleInfo = false;
 
   function me(selection) {
     const gButtons = selection.selectAll('g.infoButtons')
@@ -1896,6 +1896,7 @@ function preprocessData(data) {
 function FiperTutorial() {
   let width = 200;
   let height = 200;
+  let top = 0;
   let currentStep = -1; // -1 means that the boxes are not visible,
   // 0 means that only the first box is visible,
   // 1 means that the first and the second box are visible, and so on.
@@ -1912,6 +1913,16 @@ function FiperTutorial() {
     },
   ];
 
+  // This tooltip will contain the description of the active tutorial box
+  // it is created once when the Tutorial instance is created and then updated
+  // with the content of the active box
+  const tooltip = d3.select('body')
+    .selectAll('div.d3-tooltip.tutorial')
+    .data([1])
+    .join('div')
+    .classed('d3-tooltip', true)
+    .classed('tutorial', true)
+    .style('opacity', 0);
 
   function me(selection) {
     const selectedZones = currentStep >= 0 ? zones.slice(currentStep, currentStep + 1) : [];
@@ -1921,6 +1932,20 @@ function FiperTutorial() {
       .classed('zone', true)
       .attr('transform', d => `translate(${d.x < 0 ? width + d.x : d.x}, ${d.y})`);
 
+    // we have a single zone selected
+    if (selectedZones.length === 1) {
+      const activeZone = selectedZones[0];
+      tooltip.transition()
+        .duration(200)
+        .style('opacity', 0.9);
+      tooltip.html(`<strong>${activeZone.label}</strong><br>${activeZone.description}`)
+        .style('left', `${activeZone.x + (2 * GUTTER)}px`)
+        .style('top', `${activeZone.y + top + 10}px`);
+    } else {
+      tooltip.transition()
+        .duration(200)
+        .style('opacity', 0);
+    }
 
     gZones.selectAll('rect.zone')
       .data(d => [d])
@@ -1936,6 +1961,7 @@ function FiperTutorial() {
     ;
   }
 
+  // eslint-disable-next-line func-names
   me.width = function (_) {
     if (!arguments.length) return width;
     width = _;
@@ -1943,7 +1969,16 @@ function FiperTutorial() {
     return me;
   };
 
+  // eslint-disable-next-line func-names
+  me.top = function (_) {
+    if (!arguments.length) return top;
+    top = _;
 
+    return me;
+  };
+
+
+  // eslint-disable-next-line func-names
   me.height = function (_) {
     if (!arguments.length) return height;
     height = _;
@@ -1951,6 +1986,7 @@ function FiperTutorial() {
     return me;
   };
 
+  // eslint-disable-next-line func-names
   me.currentStep = function (_) {
     if (!arguments.length) return currentStep;
     currentStep = _;
@@ -1958,6 +1994,7 @@ function FiperTutorial() {
     return me;
   };
 
+  // eslint-disable-next-line func-names
   me.forwardStep = function () {
     if (currentStep < zones.length - 1) {
       currentStep += 1;
@@ -1965,6 +2002,7 @@ function FiperTutorial() {
     return me;
   };
 
+  // eslint-disable-next-line func-names
   me.backwardStep = function () {
     if (currentStep > 0) {
       currentStep -= 1;
@@ -1972,6 +2010,7 @@ function FiperTutorial() {
     return me;
   };
 
+  // eslint-disable-next-line func-names
   me.zones = function (_) {
     if (!arguments.length) return zones;
     zones = _;
@@ -2020,7 +2059,7 @@ function InstanceView() {
         x: cl.dimensions('feature-labels').x - (GUTTER * 0.25),
         y: SINGLE_FEATURE_HEIGHT + GUTTER,
         width: (cl.dimensions('feature-labels').width) + (0.5 * GUTTER), // use -1 to expand to the whole visible horizontal space
-        height: MENU_HEIGHT - (2 * SINGLE_FEATURE_HEIGHT), // use -1 to expand to the whole visible vertical space
+        height: MENU_HEIGHT - (2 * SINGLE_FEATURE_HEIGHT), // negative value for vertical expansion
         description: 'This is the classification area, where you can see the predicted class and the corresponding probability.',
       },
       {
@@ -2037,7 +2076,8 @@ function InstanceView() {
         name: 'explanation_modality_zone',
         x: cl.dimensions('feature-values').x - (GUTTER * 0.25),
         y: GUTTER * 0.5,
-        width: (cl.dimensions('feature-values').width) + (0.5 * GUTTER), // use -1 to expand to the whole visible horizontal space
+        width: (cl.dimensions('feature-values').width)
+          + (0.5 * GUTTER), // use -1 to expand to the whole visible horizontal space
         height: SINGLE_FEATURE_HEIGHT, // use -1 to expand to the whole visible vertical space
         description: 'This is the explanation modality selector, where you can select the textual or graphical version ' +
           'of the explanation.',
@@ -2048,7 +2088,7 @@ function InstanceView() {
         x: cl.dimensions('feature-values').x - (GUTTER * 0.25),
         y: SINGLE_FEATURE_HEIGHT + GUTTER,
         width: (cl.dimensions('feature-values').width) + (0.5 * GUTTER), // use -1 to expand to the whole visible horizontal space
-        height: MENU_HEIGHT - (2 * SINGLE_FEATURE_HEIGHT), // use -1 to expand to the whole visible vertical space
+        height: MENU_HEIGHT - (2 * SINGLE_FEATURE_HEIGHT), // negative value for vertical expansion
         description: 'This is the ordering selector, where you can select the order of the features based on their ' +
           'importance or their original order in the dataset.',
       },
@@ -2058,7 +2098,7 @@ function InstanceView() {
         x: cl.dimensions('feature-labels').x - (GUTTER * 0.25),
         y: (4 * SINGLE_FEATURE_HEIGHT) + GUTTER,
         width: (cl.dimensions('feature-labels').width) + (0.5 * GUTTER), // use -1 to expand to the whole visible horizontal space
-        height: SINGLE_FEATURE_HEIGHT - (GUTTER * 0.5), // use -1 to expand to the whole visible vertical space
+        height: SINGLE_FEATURE_HEIGHT - (GUTTER * 0.5), // negative value for vertical expansion
         description: 'This is the filtering selector, where you can filter the features based on the presence of rules ' +
           'or counterfactual rules.',
       },
@@ -2067,8 +2107,9 @@ function InstanceView() {
         name: 'counter_rules_selector_zone',
         x: cl.dimensions('crule-grid').x - (GUTTER * 0.25),
         y: SINGLE_FEATURE_HEIGHT + GUTTER,
-        width: -(cl.dimensions('feature-importance').width + cl.dimensions('crule-grid').x + (GUTTER * 2)), // use -1 to expand to the whole visible horizontal space
-        height: MENU_HEIGHT - (2 * SINGLE_FEATURE_HEIGHT), // use -1 to expand to the whole visible vertical space
+        width: -(cl.dimensions('feature-importance').width + cl.dimensions('crule-grid').x
+          + (GUTTER * 2)), // use -1 to expand to the whole visible horizontal space
+        height: MENU_HEIGHT - (2 * SINGLE_FEATURE_HEIGHT), // negative value for vertical expansion
         description: 'This is the counter rules selector, where you can select the counterfactual rule to be ' +
           'highlighted in the visualization.',
       },
@@ -2268,7 +2309,6 @@ function InstanceView() {
       explanationDescriptor.filterRules = d.Rules ? d.Rules.value : false;
       explanationDescriptor.filterCRules = d.CRules ? d.CRules.value : false;
       explanationDescriptor.filterNoRules = d.noRules ? d.noRules.value : false;
-      console.log('explanation Descriptor', explanationDescriptor);
       refreshVisualization(explanationDescriptor);
     });
 
@@ -2292,7 +2332,6 @@ function InstanceView() {
 
     dispatcher.on('tutorialButtonClick', (d) => {
       const currentStep = ft.currentStep();
-      console.log('current step', d);
       if (d === 'info') {
         if (currentStep === -1) {
           ft.currentStep(0);
@@ -2309,7 +2348,11 @@ function InstanceView() {
       }
 
       const bboxl = svg.node().getBBox();
+      // to correctly position the description of the zones, compute top offset of the svg element
+      const bboxParent = svg.node().parentNode.getBoundingClientRect();
+      const absoluteTop = bboxParent.top + window.scrollY;
       ft.height(bboxl.height + (2 * SINGLE_FEATURE_HEIGHT));
+      ft.top(absoluteTop);
       refreshVisualization(explanationDescriptor);
     });
   }

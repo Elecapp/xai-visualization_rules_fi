@@ -498,7 +498,6 @@ function FiperMenuFilterBy() {
 
   function me(selection) {
     const generateEvent = (d) => {
-      console.log('event', d);
       const selectedKey = d3.select(d.target).datum();
       Object.keys(filterByOptions).forEach((key) => {
         if (key === selectedKey) {
