@@ -1100,26 +1100,26 @@ function FiperMenuTutorial() {
     {
       name: 'Info',
       value: 'info',
-      color: colorSet.default.RULE_COLOR,
+      color: colorSet.default.CRULES_COLOR,
       icon: 'M2.87,3.42s.04,.04,.03,.07l-1.58,5.58c-.07,.3-.11,.47-.11,.53,0,.08,.02,.15,.05,.2,.03,.06,.09,.09,.2,.09,.18,0,.41-.15,.7-.46,.17-.18,.38-.44,.63-.78l.2,.17-.08,.11c-.39,.55-.71,.94-.97,1.18-.4,.38-.79,.56-1.17,.56-.22,0-.41-.09-.56-.28s-.22-.41-.22-.66c0-.15,.01-.28,.03-.39,.02-.11,.06-.28,.12-.5L1.26,4.82c.02-.06,.03-.12,.04-.17,.01-.05,.02-.1,.02-.16,0-.19-.07-.3-.21-.35-.14-.04-.41-.07-.82-.07v-.26c.43-.05,.74-.09,.93-.12,.19-.03,.38-.06,.57-.09,.25-.04,.48-.09,.71-.14,.22-.05,.35-.07,.38-.05Zm-.74-1.96c-.15-.17-.23-.37-.23-.6s.08-.44,.23-.61c.15-.17,.33-.25,.55-.25s.4,.08,.55,.25c.15,.17,.23,.37,.23,.61s-.08,.44-.23,.61c-.15,.16-.34,.25-.55,.25s-.4-.08-.55-.25Z', // Rounded stem
-    },
-    {
-      name: 'Previous',
-      value: 'previous',
-      color: colorSet.default.RULE_COLOR,
-      // Points: (5,2.5), (-1,6), (5,9.5)
-      icon: 'M5,2.5 L-1,6 L5,9.5 Z',
     },
     {
       name: 'Next',
       value: 'next',
-      color: colorSet.default.RULE_COLOR,
-      // Points: (5,6), (-1,2.5), (-1,9.5)
-      icon: 'M-1,2.5 L5,6 L-1,9.5 Z',
+      color: colorSet.default.CRULES_COLOR,
+      // Points shifted slightly right: (5.6,6), (-0.4,2.5), (-0.4,9.5)
+      icon: 'M-0.4,2.5 L5.6,6 L-0.4,9.5 Z',
     },
+    {
+      name: 'Previous',
+      value: 'previous',
+      color: colorSet.default.CRULES_COLOR,
+      // Points shifted slightly left: (4.4,2.5), (-1.6,6), (4.4,9.5)
+      icon: 'M4.4,2.5 L-1.6,6 L4.4,9.5 Z',
+    }
   ];
   const yScale = d3.scaleBand()
-    .range([0, buttonList.length * SINGLE_FEATURE_HEIGHT])
+    .range([0, buttonList.length * SINGLE_FEATURE_HEIGHT+GUTTER])
     .domain(buttonList.map(d => d.value))
     .padding(0.1);
 
@@ -1127,7 +1127,28 @@ function FiperMenuTutorial() {
   let toggleInfo = false;
 
   function me(selection) {
-    const gButtons = selection.selectAll('g.infoButtons')
+    const gBackground = selection.selectAll('g.tutorialBackground')
+      .data([null])
+      .join('g')
+      .classed('tutorialBackground', true);
+
+    gBackground.selectAll('rect.tutorialBg')
+      .data([null])
+      .join('rect')
+      .classed('tutorialBg', true)
+      .attr('width', 25)
+      .attr('height', MENU_HEIGHT - SINGLE_FEATURE_HEIGHT)
+      .attr('fill', FTTemplate.BACKGROUND_COLOR )
+      .attr('opacity', toggleInfo ? 1 : 0);
+
+    // Buttons group, translated 10px down
+    const gButtonsWrapper = selection.selectAll('g.infoButtonsWrapper')
+      .data([null])
+      .join('g')
+      .classed('infoButtonsWrapper', true)
+      .attr('transform', 'translate(0, 3)');
+
+    const gButtons = gButtonsWrapper.selectAll('g.infoButtons')
       .data(toggleInfo ? buttonList : buttonList.filter(d => d.value === 'info'))
       .join('g')
       .classed('infoButtons', true)
@@ -1140,17 +1161,17 @@ function FiperMenuTutorial() {
       .classed('palette-background', true)
       .attr('cx', 2)
       .attr('cy', 6)
-      .attr('r', SINGLE_FEATURE_HEIGHT * 0.4)
+      .attr('r', SINGLE_FEATURE_HEIGHT * 0.35)
       .attr('fill', FTTemplate.SECONDARY_BACKGROUND_COLOR)
-      .attr('stroke', FTTemplate.DISTRIBUTION_STROKE_COLOR);
+      .attr('stroke', d => d.color);
 
     gButtons.selectAll('path.infoButton')
       .data(d => [d])
       .join('path')
       .classed('infoButton', true)
       .attr('d', d => d.icon)
-      .attr('fill', FTTemplate.TEXT_COLOR)
-      .attr('stroke', FTTemplate.TEXT_COLOR)
+      .attr('fill', d => d.color)
+      .attr('stroke', d => d.color)
       .attr('stroke-width', 1);
 
     gButtons.filter(d1 => d1.value !== 'info')
