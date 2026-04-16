@@ -1969,10 +1969,10 @@ function FiperTutorial() {
       const activeZone = selectedZones[0];
       const ax = activeZone.x < 0 ? width + activeZone.x : activeZone.x;
       const ay = activeZone.y;
-      tooltip.transition()
-        .duration(200)
-        .style('opacity', 0.9);
+      tooltip.style('opacity', 0.9);
       tooltip.html(`<strong>${activeZone.label}</strong><br>${activeZone.description}`)
+        .transition()
+        .duration(200)
         .style('left', `${ax + left + activeZone.dx}px`)
         .style('top', `${ay + top + activeZone.dy}px`);
     } else {
@@ -1989,6 +1989,8 @@ function FiperTutorial() {
       .attr('fill-opacity', 0.4)
       .attr('stroke', FTTemplate.CRULES_COLOR)
       .attr('stroke-width', 1)
+      .transition()
+      .duration(200)
       .attr('d', d => rect2path(
         d.x < 0 ? width + d.x : d.x,
         d.y,
@@ -2096,7 +2098,7 @@ function InstanceView() {
         ' order of the features. You can also filter the features based on the presence of rules or counterfactual rules.',
         // the position of the description with respect to zone positioning
         dx: GUTTER,
-        dy: GUTTER,
+        dy: MENU_HEIGHT  - (0.5 * GUTTER),
       },
       {
         label: 'Explanation',
@@ -2109,8 +2111,8 @@ function InstanceView() {
         'The features are ordered based on their importance, but you can change the order using the menu. ' +
         'You can also click on a feature to select it and see its values and rules.',
         // the position of the description with respect to zone positioning
-        dx: GUTTER,
-        dy: GUTTER,
+        dx: 5 * GUTTER,
+        dy: -MENU_HEIGHT + 2*GUTTER,
       },
       {
         label: 'Classification',
