@@ -731,44 +731,6 @@ function FiperInteractiveIndicator() {
   return me;
 }
 
-function FiperInfoindicator() {
-  let width = 200;
-
-  // Compound path: outer 10×10 square with two rectangular holes
-  // that form the letter "i" (dot + stem) using the even-odd fill rule.
-  //   Outer square : M 0 0 H 10 V 10 H 0 Z
-  //   Dot  of "i"  : M 4 1 H 6 V 3 H 4 Z   (2 wide × 2 tall, x 4→6, y 1→3)
-  //   Stem of "i"  : M 4 4 H 6 V 9 H 4 Z   (2 wide × 5 tall, x 4→6, y 4→9)
-  const INFO_ICON_PATH =
-    'M 0 0 H 10 V 10 H 0 Z M 4 1 H 6 V 3 H 4 Z M 4 4 H 6 V 9 H 4 Z';
-
-  function me(selection) {
-    const g = selection.selectAll('g.infoIndicator')
-      .data([1])
-      .join('g')
-      .classed('infoIndicator', true)
-      .attr('transform', `translate(${width - 10},0)`);
-
-    g.selectAll('path')
-      .data([1])
-      .join('path')
-      .attr('d', INFO_ICON_PATH)
-      .attr('fill-rule', 'evenodd')
-      .attr('stroke-width', 1)
-      .attr('fill', FTTemplate.DISTRIBUTION_STROKE_COLOR);
-    // .attr('stroke', FTTemplate.CATEGORICAL_INSTANCE_STROKE_COLOR);
-  }
-
-  // eslint-disable-next-line func-names
-  me.width = function (_) {
-    if (!arguments.length) return width;
-    width = _;
-    return me;
-  };
-
-  return me;
-}
-
 function FiperMenuColumnTitles() {
   function me(selection) {
     // horizontal separator lines
@@ -924,7 +886,6 @@ function FiperMenu() {
   const menuColumnTitles = FiperMenuColumnTitles();
   const menuPaletteSelector = FiperMenuPaletteSelector().width(SINGLE_FEATURE_HEIGHT + GUTTER);
   const interactiveIndicator = FiperInteractiveIndicator();
-  const infoIndicator = FiperInfoindicator();
 
   function me(selection) {
     // create a group to contain the menu elements:
@@ -995,7 +956,6 @@ function FiperMenu() {
       .classed('orderby', true)
       .attr('transform', `translate(${cl.dimensions('feature-values').x}, ${SINGLE_FEATURE_HEIGHT})`);
     gOrder.call(interactiveIndicator);
-    gOrder.call(infoIndicator.width(cl.dimensions('feature-values').width));
     gOrder.call(menuOrderBy);
     if (steps.findIndex(d => d === 'Rules') < 0) {
       gOrder.remove();
