@@ -2237,8 +2237,8 @@ function InstanceView() {
         description: 'This is the menu, where you can select the counterfactual rule to be highlighted and the' +
         ' order of the features. You can also filter the features based on the presence of rules or counterfactual rules.',
         // the position of the description with respect to zone positioning
-        dx: GUTTER,
-        dy: MENU_HEIGHT  - (0.5 * GUTTER),
+        dx: 0,
+        dy: MENU_HEIGHT  + (0.5 * GUTTER),
       },
       {
         label: 'Explanation',
@@ -2247,7 +2247,7 @@ function InstanceView() {
         y: MENU_HEIGHT + GUTTER, // position it below the menu and the title of the chart
         width: -(GUTTER * 0.5), // use -1 to expand to the whole visible horizontal space
         height: -(GUTTER * 0.5), // use -1 to expand to the whole visible vertical space
-        description: 'This is the explanation area, where you can see the features and their corresponding values. ' +
+        description: 'This is the area, where you can see the value of the features. ' +
         'The features are ordered based on their importance, but you can change the order using the menu. ' +
         'You can also click on a feature to select it and see its values and rules.',
         // the position of the description with respect to zone positioning
@@ -2257,26 +2257,26 @@ function InstanceView() {
       {
         label: 'Classification',
         name: 'classification_zone',
-        x: cl.dimensions('feature-labels').x - (GUTTER * 0.25),
-        y: SINGLE_FEATURE_HEIGHT + GUTTER,
-        width: (cl.dimensions('feature-labels').width) + (0.5 * GUTTER), // use -1 to expand to the whole visible horizontal space
-        height: MENU_HEIGHT - (2 * SINGLE_FEATURE_HEIGHT), // negative value for vertical expansion
+        x: cl.dimensions('feature-labels').x - (GUTTER * 0.5),
+        y: SINGLE_FEATURE_HEIGHT + (GUTTER * 0.5),
+        width: (cl.dimensions('feature-labels').width) + GUTTER, // use -1 to expand to the whole visible horizontal space
+        height: MENU_HEIGHT - (2 * SINGLE_FEATURE_HEIGHT) + GUTTER, // negative value for vertical expansion
         description: 'This is the classification area, where you can see the predicted class and the corresponding probability.',
         // the position of the description with respect to zone positioning
-        dx: 0.5 * GUTTER,
-        dy: MENU_HEIGHT - 2 * SINGLE_FEATURE_HEIGHT - (0.5 * GUTTER),
+        dx: 0,
+        dy: MENU_HEIGHT - 2 * SINGLE_FEATURE_HEIGHT + (GUTTER * 1.5),
       },
       {
         label: 'Progressive Bar',
         name: 'progressive_bar_zone',
-        x: cl.dimensions('feature-labels').x - (GUTTER * 0.25),
+        x: cl.dimensions('feature-labels').x - (GUTTER * 0.5),
         y: GUTTER * 0.5,
-        width: (cl.dimensions('feature-labels').width) + (0.5 * GUTTER), // use -1 to expand to the whole visible horizontal space
-        height: (SINGLE_FEATURE_HEIGHT), // use -1 to expand to the whole visible vertical space
+        width: (cl.dimensions('feature-labels').width) + GUTTER, // use -1 to expand to the whole visible horizontal space
+        height: SINGLE_FEATURE_HEIGHT + (GUTTER * 0.5), // use -1 to expand to the whole visible vertical space
         description: 'This is the progressive bar, where you can see the progress of the tutorial steps.',
         // the position of the description with respect to zone positioning
-        dx: 0.5 * GUTTER,
-        dy: SINGLE_FEATURE_HEIGHT - (0.5 * GUTTER),
+        dx: 0,
+        dy: SINGLE_FEATURE_HEIGHT + GUTTER,
       },
       {
         label: 'Explanation modality',
@@ -2285,12 +2285,12 @@ function InstanceView() {
         y: GUTTER * 0.5,
         width: (cl.dimensions('feature-values').width)
           + (0.5 * GUTTER), // use -1 to expand to the whole visible horizontal space
-        height: SINGLE_FEATURE_HEIGHT, // use -1 to expand to the whole visible vertical space
+        height: SINGLE_FEATURE_HEIGHT + (GUTTER * 0.5), // use -1 to expand to the whole visible vertical space
         description: 'This is the explanation modality selector, where you can select the textual or graphical version ' +
           'of the explanation.',
         // the position of the description with respect to zone positioning
-        dx: GUTTER,
-        dy: SINGLE_FEATURE_HEIGHT - (0.5 * GUTTER),
+        dx: 0,
+        dy: SINGLE_FEATURE_HEIGHT + GUTTER,
       },
       {
         label: 'Ordering',
@@ -2302,21 +2302,21 @@ function InstanceView() {
         description: 'This is the ordering selector, where you can select the order of the features based on their ' +
           'importance or their original order in the dataset.',
         // the position of the description with respect to zone positioning
-        dx: GUTTER,
-        dy: 3 * SINGLE_FEATURE_HEIGHT - (0.5 * GUTTER),
+        dx: 0,
+        dy: 3 * SINGLE_FEATURE_HEIGHT + (GUTTER * 0.5),
       },
       {
         label: 'Filtering',
         name: 'filtering_zone',
-        x: cl.dimensions('feature-labels').x - (GUTTER * 0.25),
+        x: cl.dimensions('feature-labels').x - (GUTTER * 0.5),
         y: (4 * SINGLE_FEATURE_HEIGHT) + GUTTER,
         width: (cl.dimensions('feature-labels').width) + (0.5 * GUTTER), // use -1 to expand to the whole visible horizontal space
         height: SINGLE_FEATURE_HEIGHT - (GUTTER * 0.5), // negative value for vertical expansion
         description: 'This is the filtering selector, where you can filter the features based on the presence of rules ' +
           'or counterfactual rules.',
         // the position of the description with respect to zone positioning
-        dx: GUTTER,
-        dy: SINGLE_FEATURE_HEIGHT - (0.5 * GUTTER),
+        dx: 0,
+        dy: SINGLE_FEATURE_HEIGHT ,
       },
       {
         label: 'Counter Rules Selector',
@@ -2329,21 +2329,21 @@ function InstanceView() {
         description: 'This is the counter rules selector, where you can select the counterfactual rule to be ' +
           'highlighted in the visualization.',
         // the position of the description with respect to zone positioning
-        dx: GUTTER,
-        dy: 3 * SINGLE_FEATURE_HEIGHT - (0.5 * GUTTER),
+        dx: 0,
+        dy: 3 * SINGLE_FEATURE_HEIGHT + (0.5 * GUTTER),
       },
       {
         label: 'Feature Importance',
         name: 'feature_importance_zone',
-        x: -cl.dimensions('feature-importance').width - (1.5 * GUTTER),
+        x: -cl.dimensions('feature-importance').width - (2 * GUTTER),
         y: MENU_HEIGHT + GUTTER,
-        width: (cl.dimensions('feature-importance').width) + (0.5 * GUTTER), // use -1 to expand to the whole visible horizontal space
+        width: (cl.dimensions('feature-importance').width) +  GUTTER, // use -1 to expand to the whole visible horizontal space
         height: -0.5 * GUTTER, // use -1 to expand to the whole visible vertical space
         description: 'This is the feature importance zone, where you can see the feature importance values ' +
           'of the features.',
         // the position of the description with respect to zone positioning
-        dx: -(cl.dimensions('feature-importance').width)  - (1.5 * GUTTER),
-        dy: - 0.5 * GUTTER,
+        dx: -220,
+        dy: 0,
       },
       {
         label: 'Counter Rules features',
@@ -2357,8 +2357,8 @@ function InstanceView() {
           'means that the feature values should be changed to satisfy the counterfactual rule, while a smaller bullet means ' +
           'that the feature values should not be changed to satisfy the counterfactual rule.',
         // the position of the description with respect to zone positioning
-        dx: -(1.5 * GUTTER) - 200,
-        dy: GUTTER,
+        dx: - 220,
+        dy: 0,
       },
       {
         label: 'Feature Distribution',
@@ -2374,8 +2374,8 @@ function InstanceView() {
           'and the y-axis represents the density of the feature values. The bottom part of each plot highlights the ' +
           'value range where the rules or counter rules are satisfied.',
         // the position of the description with respect to zone positioning
-        dx:  -(1.5 * GUTTER) - 200,
-        dy: GUTTER,
+        dx: - 220,
+        dy: 0,
       },
       {
         label: 'Feature values',
@@ -2386,8 +2386,8 @@ function InstanceView() {
         height: -0.5 * GUTTER, // use -1 to expand to the whole visible vertical space
         description: 'This is the feature values zone, where you can see the feature values of the instance.',
         // the position of the description with respect to zone positioning
-        dx: cl.dimensions('feature-labels').width + (GUTTER),
-        dy: GUTTER,
+        dx: cl.dimensions('feature-labels').width + 10,
+        dy: 0,
       },
     ];
     ft.zones(zones);
