@@ -95,6 +95,9 @@ function TooltipHandler() {
           max-width: 200px;
           box-shadow: 0 2px 4px rgba(0,0,0,0.2);
       }
+      .d3-tutorial-tooltip {
+        border-color: ${FTTemplate.CRULES_COLOR};
+      }
     `;
   d3.select('head').selectAll('style.d3-tooltip')
     .data([1])
