@@ -2026,7 +2026,12 @@ function FiperTutorial() {
 
   // eslint-disable-next-line func-names
   me.forwardStep = function () {
-    if (currentStep < zones.length - 1) {
+    if (!zones.length) {
+      return me;
+    }
+    if (currentStep >= zones.length - 1) {
+      currentStep = 0;
+    } else {
       currentStep += 1;
     }
     return me;
@@ -2034,7 +2039,12 @@ function FiperTutorial() {
 
   // eslint-disable-next-line func-names
   me.backwardStep = function () {
-    if (currentStep > 0) {
+    if (!zones.length) {
+      return me;
+    }
+    if (currentStep <= 0) {
+      currentStep = zones.length - 1;
+    } else {
       currentStep -= 1;
     }
     return me;
