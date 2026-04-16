@@ -2357,7 +2357,7 @@ function InstanceView() {
           'means that the feature values should be changed to satisfy the counterfactual rule, while a smaller bullet means ' +
           'that the feature values should not be changed to satisfy the counterfactual rule.',
         // the position of the description with respect to zone positioning
-        dx: GUTTER,
+        dx: -(1.5 * GUTTER) - 200,
         dy: GUTTER,
       },
       {
@@ -2374,7 +2374,7 @@ function InstanceView() {
           'and the y-axis represents the density of the feature values. The bottom part of each plot highlights the ' +
           'value range where the rules or counter rules are satisfied.',
         // the position of the description with respect to zone positioning
-        dx: GUTTER,
+        dx:  -(1.5 * GUTTER) - 200,
         dy: GUTTER,
       },
       {
@@ -2386,7 +2386,7 @@ function InstanceView() {
         height: -0.5 * GUTTER, // use -1 to expand to the whole visible vertical space
         description: 'This is the feature values zone, where you can see the feature values of the instance.',
         // the position of the description with respect to zone positioning
-        dx: GUTTER,
+        dx: cl.dimensions('feature-labels').width + (GUTTER),
         dy: GUTTER,
       },
     ];
