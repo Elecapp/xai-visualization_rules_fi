@@ -1127,6 +1127,12 @@ function FiperMenuTutorial() {
       color: colorSet.default.CRULES_COLOR,
       // Points shifted slightly left: (4.4,2.5), (-1.6,6), (4.4,9.5)
       icon: 'M4.4,2.5 L-1.6,6 L4.4,9.5 Z',
+    },
+    {
+      name: 'Close',
+      value: 'close',
+      color: colorSet.default.CRULES_COLOR,
+      icon: closeIconPath,
     }
   ];
   const yScale = d3.scaleBand()
@@ -1143,15 +1149,15 @@ function FiperMenuTutorial() {
       .join('g')
       .classed('tutorialBackground', true);
 
-    gBackground.selectAll('rect.tutorialBg')
-      .data([null])
-      .join('rect')
-      .classed('tutorialBg', true)
-      .attr('width', 25)
-      .attr('height', MENU_HEIGHT - SINGLE_FEATURE_HEIGHT)
-      .attr('fill', FTTemplate.BACKGROUND_COLOR )
-      .attr('opacity', toggleInfo ? 1 : 0)
-      .attr('pointer-events', 'none');
+    // gBackground.selectAll('rect.tutorialBg')
+    //   .data([null])
+    //   .join('rect')
+    //   .classed('tutorialBg', true)
+    //   .attr('width', 25)
+    //   .attr('height', MENU_HEIGHT - SINGLE_FEATURE_HEIGHT)
+    //   .attr('fill', FTTemplate.BACKGROUND_COLOR )
+    //   .attr('opacity', toggleInfo ? 1 : 0)
+    //   .attr('pointer-events', 'none');
 
     // Buttons group, translated 10px down
     const gButtonsWrapper = selection.selectAll('g.infoButtonsWrapper')
@@ -1163,6 +1169,7 @@ function FiperMenuTutorial() {
     const gButtons = gButtonsWrapper.selectAll('g.infoButtons')
       .data(toggleInfo ? buttonList : buttonList.filter(d => d.value === 'info'))
       .join('g')
+      .attr('class', d => d.value)
       .classed('infoButtons', true)
       .attr('transform', d => `translate(10, ${yScale(d.value)})`);
 
@@ -1181,10 +1188,10 @@ function FiperMenuTutorial() {
       .data(d => [d])
       .join('path')
       .classed('infoButton', true)
-      .attr('d', d => (d.value === 'info' && toggleInfo ? closeIconPath : d.icon))
+      .attr('d', d => d.icon)
       .attr('fill', d => d.color)
       .attr('stroke', d => d.color)
-      .attr('stroke-width', d => (d.value === 'info' && toggleInfo ? 1.35 : 1));
+      .attr('stroke-width', 1);
 
     gButtons.filter(d1 => d1.value !== 'info')
       .transition()
@@ -1195,12 +1202,24 @@ function FiperMenuTutorial() {
       .style('cursor', 'pointer')
       .on('click', (d) => {
         const button = d3.select(d.target).datum();
-        if (button.value === 'info') {
-          toggleInfo = !toggleInfo;
-          gButtons.filter(d1 => d1.value !== 'info')
+        const gfButtons = gButtons.filter(d1 => d1.value !== 'info')
             .transition()
-            .duration(100)
-            .attr('opacity', toggleInfo ? 1 : 0);
+            .duration(100);
+
+        if (button.value === 'close') {
+          toggleInfo = false;
+          gfButtons.attr('opacity', 0);
+          console.log('false', gButtonsWrapper.selectAll('g.info'));
+          gButtonsWrapper.selectAll('g.info')
+            .style('cursor', 'pointer');
+        }
+
+        if (button.value === 'info') {
+          toggleInfo = true;
+          gfButtons.attr('opacity', 1);
+          console.log('true', gButtonsWrapper.selectAll('g.info'));
+          gButtonsWrapper.selectAll('g.info')
+            .style('cursor', 'default');
         }
 
         dispatcher.call('tutorialButtonClick', null, button.value);
@@ -2431,12 +2450,11 @@ function InstanceView() {
 
     dispatcher.on('tutorialButtonClick', (d) => {
       const currentStep = ft.currentStep();
-      if (d === 'info') {
-        if (currentStep === -1) {
-          ft.currentStep(0);
-        } else {
-          ft.currentStep(-1);
-        }
+      if ((d === 'info') && (currentStep === -1)) {
+        ft.currentStep(0);
+      }
+      if (d === 'close') {
+        ft.currentStep(-1);
       }
 
       if (d === 'next') {
