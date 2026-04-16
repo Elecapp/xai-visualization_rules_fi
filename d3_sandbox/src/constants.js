@@ -44,6 +44,7 @@ export const colorSet = {
     FI_POSITIVE_COLOR: '#4b7561',
     NEGATIVE_FI_COLOR: '#73584E',
     GRID_COLOR: '#2d3748',
+    TUTOTRIAL_COLOR: 'rgba(128, 90, 162, 1)',
   },
   darkModeColorPalette: {
     BACKGROUND_COLOR: '#263135',
@@ -65,6 +66,7 @@ export const colorSet = {
     FI_POSITIVE_COLOR: '#608176',
     NEGATIVE_FI_COLOR: '#73635f',
     GRID_COLOR: '#d2d2dc',
+    TUTOTRIAL_COLOR: 'rgba(128, 90, 162, 1)',
   },
   grayscaleHighContrast: {
     BACKGROUND_COLOR: '#f8f8f8', // Grigio molto chiaro per un leggero contrasto con il bianco
@@ -86,5 +88,6 @@ export const colorSet = {
     FI_POSITIVE_COLOR: '#535353', // Grigio molto scuro per i valori positivi
     NEGATIVE_FI_COLOR: '#202020', // Grigio quasi nero per i valori negativi
     GRID_COLOR: '#000000', // Nero puro per una griglia ben definita
+    TUTOTRIAL_COLOR: 'rgba(80,80,80,1)', // colore per il tutorial 
   },
 };

@@ -99,8 +99,8 @@ function TooltipHandler() {
         border-color: ${FTTemplate.CRULES_COLOR};
         font-family: sans-serif;
         font-size: 12px;
-        color: ${FTTemplate.BACKGROUND_COLOR};
-        background: ${FTTemplate.CRULES_COLOR};
+        color: white;
+        background: ${FTTemplate.TUTOTRIAL_COLOR};
         border-radius: 2px;
         line-height: 1.4;
       }
@@ -2011,7 +2011,7 @@ function FiperTutorial() {
       .join('path')
       .classed('zone', true)
       .attr('fill', FTTemplate.CRULES_COLOR)
-      .attr('fill-opacity', 0.4)
+      .attr('fill-opacity', 0.5)
       .attr('stroke', FTTemplate.CRULES_COLOR)
       .attr('stroke-width', 1)
       .transition()
