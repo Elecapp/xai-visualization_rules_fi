@@ -97,6 +97,12 @@ function TooltipHandler() {
       }
       .d3-tutorial-tooltip {
         border-color: ${FTTemplate.CRULES_COLOR};
+        font-family: sans-serif;
+        font-size: 12px;
+        color: ${FTTemplate.BACKGROUND_COLOR};
+        background: ${FTTemplate.CRULES_COLOR};
+        border-radius: 2px;
+        line-height: 1.4;
       }
     `;
   d3.select('head').selectAll('style.d3-tooltip')
@@ -2086,173 +2092,7 @@ function InstanceView() {
     const ftb = FiperMenuTutorial();
 
     // ==================== TUTORIAL COMPONENT ====================
-    const zones = [
-      {
-        label: 'Menu',
-        name: 'menu_zone',
-        x: cl.dimensions('feature-labels').x - (GUTTER * 0.25),
-        y: GUTTER * 0.5,
-        width: -(cl.dimensions('feature-labels').x - (GUTTER * 0.25)), // use -1 to expand to the whole visible horizontal space
-        height: MENU_HEIGHT, // use -1 to expand to the whole visible vertical space
-        description: 'This is the menu, where you can select the counterfactual rule to be highlighted and the' +
-        ' order of the features. You can also filter the features based on the presence of rules or counterfactual rules.',
-        // the position of the description with respect to zone positioning
-        dx: GUTTER,
-        dy: MENU_HEIGHT  - (0.5 * GUTTER),
-      },
-      {
-        label: 'Explanation',
-        name: 'explanation_zone',
-        x: GUTTER * 0.5,
-        y: MENU_HEIGHT + GUTTER, // position it below the menu and the title of the chart
-        width: -(GUTTER * 0.5), // use -1 to expand to the whole visible horizontal space
-        height: -(GUTTER * 0.5), // use -1 to expand to the whole visible vertical space
-        description: 'This is the explanation area, where you can see the features and their corresponding values. ' +
-        'The features are ordered based on their importance, but you can change the order using the menu. ' +
-        'You can also click on a feature to select it and see its values and rules.',
-        // the position of the description with respect to zone positioning
-        dx: 5 * GUTTER,
-        dy: -MENU_HEIGHT + 2*GUTTER,
-      },
-      {
-        label: 'Classification',
-        name: 'classification_zone',
-        x: cl.dimensions('feature-labels').x - (GUTTER * 0.25),
-        y: SINGLE_FEATURE_HEIGHT + GUTTER,
-        width: (cl.dimensions('feature-labels').width) + (0.5 * GUTTER), // use -1 to expand to the whole visible horizontal space
-        height: MENU_HEIGHT - (2 * SINGLE_FEATURE_HEIGHT), // negative value for vertical expansion
-        description: 'This is the classification area, where you can see the predicted class and the corresponding probability.',
-        // the position of the description with respect to zone positioning
-        dx: GUTTER,
-        dy: GUTTER,
-      },
-      {
-        label: 'Progressive Bar',
-        name: 'progressive_bar_zone',
-        x: cl.dimensions('feature-labels').x - (GUTTER * 0.25),
-        y: GUTTER * 0.5,
-        width: (cl.dimensions('feature-labels').width) + (0.5 * GUTTER), // use -1 to expand to the whole visible horizontal space
-        height: (SINGLE_FEATURE_HEIGHT), // use -1 to expand to the whole visible vertical space
-        description: 'This is the progressive bar, where you can see the progress of the tutorial steps.',
-        // the position of the description with respect to zone positioning
-        dx: GUTTER,
-        dy: GUTTER,
-      },
-      {
-        label: 'Explanation modality',
-        name: 'explanation_modality_zone',
-        x: cl.dimensions('feature-values').x - (GUTTER * 0.25),
-        y: GUTTER * 0.5,
-        width: (cl.dimensions('feature-values').width)
-          + (0.5 * GUTTER), // use -1 to expand to the whole visible horizontal space
-        height: SINGLE_FEATURE_HEIGHT, // use -1 to expand to the whole visible vertical space
-        description: 'This is the explanation modality selector, where you can select the textual or graphical version ' +
-          'of the explanation.',
-        // the position of the description with respect to zone positioning
-        dx: GUTTER,
-        dy: GUTTER,
-      },
-      {
-        label: 'Ordering',
-        name: 'ordering_zone',
-        x: cl.dimensions('feature-values').x - (GUTTER * 0.25),
-        y: SINGLE_FEATURE_HEIGHT + GUTTER,
-        width: (cl.dimensions('feature-values').width) + (0.5 * GUTTER), // use -1 to expand to the whole visible horizontal space
-        height: MENU_HEIGHT - (2 * SINGLE_FEATURE_HEIGHT), // negative value for vertical expansion
-        description: 'This is the ordering selector, where you can select the order of the features based on their ' +
-          'importance or their original order in the dataset.',
-        // the position of the description with respect to zone positioning
-        dx: GUTTER,
-        dy: GUTTER,
-      },
-      {
-        label: 'Filtering',
-        name: 'filtering_zone',
-        x: cl.dimensions('feature-labels').x - (GUTTER * 0.25),
-        y: (4 * SINGLE_FEATURE_HEIGHT) + GUTTER,
-        width: (cl.dimensions('feature-labels').width) + (0.5 * GUTTER), // use -1 to expand to the whole visible horizontal space
-        height: SINGLE_FEATURE_HEIGHT - (GUTTER * 0.5), // negative value for vertical expansion
-        description: 'This is the filtering selector, where you can filter the features based on the presence of rules ' +
-          'or counterfactual rules.',
-        // the position of the description with respect to zone positioning
-        dx: GUTTER,
-        dy: GUTTER,
-      },
-      {
-        label: 'Counter Rules Selector',
-        name: 'counter_rules_selector_zone',
-        x: cl.dimensions('crule-grid').x - (GUTTER * 0.25),
-        y: SINGLE_FEATURE_HEIGHT + GUTTER,
-        width: -(cl.dimensions('feature-importance').width + cl.dimensions('crule-grid').x
-          + (GUTTER * 2)), // use -1 to expand to the whole visible horizontal space
-        height: MENU_HEIGHT - (2 * SINGLE_FEATURE_HEIGHT), // negative value for vertical expansion
-        description: 'This is the counter rules selector, where you can select the counterfactual rule to be ' +
-          'highlighted in the visualization.',
-        // the position of the description with respect to zone positioning
-        dx: GUTTER,
-        dy: GUTTER,
-      },
-      {
-        label: 'Feature Importance',
-        name: 'feature_importance_zone',
-        x: -cl.dimensions('feature-importance').width - (1.5 * GUTTER),
-        y: MENU_HEIGHT + GUTTER,
-        width: (cl.dimensions('feature-importance').width) + (0.5 * GUTTER), // use -1 to expand to the whole visible horizontal space
-        height: -0.5 * GUTTER, // use -1 to expand to the whole visible vertical space
-        description: 'This is the feature importance zone, where you can see the feature importance values ' +
-          'of the features.',
-        // the position of the description with respect to zone positioning
-        dx: GUTTER,
-        dy: GUTTER,
-      },
-      {
-        label: 'Counter Rules features',
-        name: 'counter_rules_features_zone',
-        x: cl.dimensions('crule-grid').x - (GUTTER * 0.25),
-        y: MENU_HEIGHT + GUTTER,
-        width: -(cl.dimensions('feature-importance').width + cl.dimensions('crule-grid').x + (GUTTER * 2)), // use -1 to expand to the whole visible horizontal space
-        height: -0.5 * GUTTER, // use -1 to expand to the whole visible vertical space
-        description: 'This is the counter rules features zone, where you can see the features that are involved in ' +
-          'the counterfactual rules. A bullet matches the feature with the corresponding counter rules. A larger bullet ' +
-          'means that the feature values should be changed to satisfy the counterfactual rule, while a smaller bullet means ' +
-          'that the feature values should not be changed to satisfy the counterfactual rule.',
-        // the position of the description with respect to zone positioning
-        dx: GUTTER,
-        dy: GUTTER,
-      },
-      {
-        label: 'Feature Distribution',
-        name: 'feature_distribution_zone',
-        x: cl.dimensions('feature-values').x - (GUTTER * 0.25),
-        y: MENU_HEIGHT + GUTTER,
-        width: (cl.dimensions('feature-values').width) + (0.5 * GUTTER), // use -1 to expand to the whole visible horizontal space
-        height: -0.5 * GUTTER, // use -1 to expand to the whole visible vertical space
-        description: 'This is the feature distribution zone, where you can see the distribution of the feature values ' +
-          'of the features. The distribution depends on the type of data. For categorical data, the distribution is ' +
-          'represented as a stacked bar chart, where each bar represents the frequency of a specific value. For numerical ' +
-          'features, the distribution is represented as a line plot, where the x-axis represents the feature values ' +
-          'and the y-axis represents the density of the feature values. The bottom part of each plot highlights the ' +
-          'value range where the rules or counter rules are satisfied.',
-        // the position of the description with respect to zone positioning
-        dx: GUTTER,
-        dy: GUTTER,
-      },
-      {
-        label: 'Feature values',
-        name: 'feature_values_zone',
-        x: cl.dimensions('feature-labels').x - (GUTTER * 0.25),
-        y: MENU_HEIGHT + GUTTER,
-        width: (cl.dimensions('feature-labels').width) + (0.5 * GUTTER), // use -1 to expand to the whole visible horizontal space
-        height: -0.5 * GUTTER, // use -1 to expand to the whole visible vertical space
-        description: 'This is the feature values zone, where you can see the feature values of the instance.',
-        // the position of the description with respect to zone positioning
-        dx: GUTTER,
-        dy: GUTTER,
-      },
-    ];
-
-
-    const ft = FiperTutorial().zones(zones);
+    const ft = FiperTutorial();
 
     const mainSvg = selection.selectAll('svg.viz')
       .data([0]) // Usa un array con un singolo elemento come dati
@@ -2361,9 +2201,177 @@ function InstanceView() {
     mainSvg.node().parentNode.setAttribute('height', bbox.height +
     (GUTTER + (MENU_HEIGHT + (2 * SINGLE_FEATURE_HEIGHT))));
     mainSvg.node().parentNode.setAttribute('width', bbox.width + GUTTER);
-    fv.width(bbox.width + GUTTER);
-    ft.width(bbox.width + GUTTER);
+    const totalWidth = bbox.width + GUTTER;
+    fv.width(totalWidth);
+    ft.width(totalWidth);
     ft.height(bbox.height + (150 * Math.random()));
+
+    // zones are defined here so that totalWidth is available
+    const zones = [
+      {
+        label: 'Menu',
+        name: 'menu_zone',
+        x: cl.dimensions('feature-labels').x - (GUTTER * 0.25),
+        y: GUTTER * 0.5,
+        width: -(cl.dimensions('feature-labels').x - (GUTTER * 0.25)), // use -1 to expand to the whole visible horizontal space
+        height: MENU_HEIGHT, // use -1 to expand to the whole visible vertical space
+        description: 'This is the menu, where you can select the counterfactual rule to be highlighted and the' +
+        ' order of the features. You can also filter the features based on the presence of rules or counterfactual rules.',
+        // the position of the description with respect to zone positioning
+        dx: GUTTER,
+        dy: MENU_HEIGHT  - (0.5 * GUTTER),
+      },
+      {
+        label: 'Explanation',
+        name: 'explanation_zone',
+        x: GUTTER * 0.5,
+        y: MENU_HEIGHT + GUTTER, // position it below the menu and the title of the chart
+        width: -(GUTTER * 0.5), // use -1 to expand to the whole visible horizontal space
+        height: -(GUTTER * 0.5), // use -1 to expand to the whole visible vertical space
+        description: 'This is the explanation area, where you can see the features and their corresponding values. ' +
+        'The features are ordered based on their importance, but you can change the order using the menu. ' +
+        'You can also click on a feature to select it and see its values and rules.',
+        // the position of the description with respect to zone positioning
+        dx: GUTTER * 4,
+        dy: -MENU_HEIGHT,
+      },
+      {
+        label: 'Classification',
+        name: 'classification_zone',
+        x: cl.dimensions('feature-labels').x - (GUTTER * 0.25),
+        y: SINGLE_FEATURE_HEIGHT + GUTTER,
+        width: (cl.dimensions('feature-labels').width) + (0.5 * GUTTER), // use -1 to expand to the whole visible horizontal space
+        height: MENU_HEIGHT - (2 * SINGLE_FEATURE_HEIGHT), // negative value for vertical expansion
+        description: 'This is the classification area, where you can see the predicted class and the corresponding probability.',
+        // the position of the description with respect to zone positioning
+        dx: 0.5 * GUTTER,
+        dy: MENU_HEIGHT - 2 * SINGLE_FEATURE_HEIGHT - (0.5 * GUTTER),
+      },
+      {
+        label: 'Progressive Bar',
+        name: 'progressive_bar_zone',
+        x: cl.dimensions('feature-labels').x - (GUTTER * 0.25),
+        y: GUTTER * 0.5,
+        width: (cl.dimensions('feature-labels').width) + (0.5 * GUTTER), // use -1 to expand to the whole visible horizontal space
+        height: (SINGLE_FEATURE_HEIGHT), // use -1 to expand to the whole visible vertical space
+        description: 'This is the progressive bar, where you can see the progress of the tutorial steps.',
+        // the position of the description with respect to zone positioning
+        dx: 0.5 * GUTTER,
+        dy: SINGLE_FEATURE_HEIGHT - (0.5 * GUTTER),
+      },
+      {
+        label: 'Explanation modality',
+        name: 'explanation_modality_zone',
+        x: cl.dimensions('feature-values').x - (GUTTER * 0.25),
+        y: GUTTER * 0.5,
+        width: (cl.dimensions('feature-values').width)
+          + (0.5 * GUTTER), // use -1 to expand to the whole visible horizontal space
+        height: SINGLE_FEATURE_HEIGHT, // use -1 to expand to the whole visible vertical space
+        description: 'This is the explanation modality selector, where you can select the textual or graphical version ' +
+          'of the explanation.',
+        // the position of the description with respect to zone positioning
+        dx: GUTTER,
+        dy: SINGLE_FEATURE_HEIGHT - (0.5 * GUTTER),
+      },
+      {
+        label: 'Ordering',
+        name: 'ordering_zone',
+        x: cl.dimensions('feature-values').x - (GUTTER * 0.25),
+        y: SINGLE_FEATURE_HEIGHT + GUTTER,
+        width: (cl.dimensions('feature-values').width) + (0.5 * GUTTER), // use -1 to expand to the whole visible horizontal space
+        height: MENU_HEIGHT - (2 * SINGLE_FEATURE_HEIGHT), // negative value for vertical expansion
+        description: 'This is the ordering selector, where you can select the order of the features based on their ' +
+          'importance or their original order in the dataset.',
+        // the position of the description with respect to zone positioning
+        dx: GUTTER,
+        dy: 3 * SINGLE_FEATURE_HEIGHT - (0.5 * GUTTER),
+      },
+      {
+        label: 'Filtering',
+        name: 'filtering_zone',
+        x: cl.dimensions('feature-labels').x - (GUTTER * 0.25),
+        y: (4 * SINGLE_FEATURE_HEIGHT) + GUTTER,
+        width: (cl.dimensions('feature-labels').width) + (0.5 * GUTTER), // use -1 to expand to the whole visible horizontal space
+        height: SINGLE_FEATURE_HEIGHT - (GUTTER * 0.5), // negative value for vertical expansion
+        description: 'This is the filtering selector, where you can filter the features based on the presence of rules ' +
+          'or counterfactual rules.',
+        // the position of the description with respect to zone positioning
+        dx: GUTTER,
+        dy: SINGLE_FEATURE_HEIGHT - (0.5 * GUTTER),
+      },
+      {
+        label: 'Counter Rules Selector',
+        name: 'counter_rules_selector_zone',
+        x: cl.dimensions('crule-grid').x - (GUTTER * 0.25),
+        y: SINGLE_FEATURE_HEIGHT + GUTTER,
+        width: -(cl.dimensions('feature-importance').width + cl.dimensions('crule-grid').x
+          + (GUTTER * 2)), // use -1 to expand to the whole visible horizontal space
+        height: MENU_HEIGHT - (2 * SINGLE_FEATURE_HEIGHT), // negative value for vertical expansion
+        description: 'This is the counter rules selector, where you can select the counterfactual rule to be ' +
+          'highlighted in the visualization.',
+        // the position of the description with respect to zone positioning
+        dx: GUTTER,
+        dy: 3 * SINGLE_FEATURE_HEIGHT - (0.5 * GUTTER),
+      },
+      {
+        label: 'Feature Importance',
+        name: 'feature_importance_zone',
+        x: -cl.dimensions('feature-importance').width - (1.5 * GUTTER),
+        y: MENU_HEIGHT + GUTTER,
+        width: (cl.dimensions('feature-importance').width) + (0.5 * GUTTER), // use -1 to expand to the whole visible horizontal space
+        height: -0.5 * GUTTER, // use -1 to expand to the whole visible vertical space
+        description: 'This is the feature importance zone, where you can see the feature importance values ' +
+          'of the features.',
+        // the position of the description with respect to zone positioning
+        dx: -(cl.dimensions('feature-importance').width)  - (1.5 * GUTTER),
+        dy: - 0.5 * GUTTER,
+      },
+      {
+        label: 'Counter Rules features',
+        name: 'counter_rules_features_zone',
+        x: cl.dimensions('crule-grid').x - (GUTTER * 0.25),
+        y: MENU_HEIGHT + GUTTER,
+        width: -(cl.dimensions('feature-importance').width + cl.dimensions('crule-grid').x + (GUTTER * 2)), // use -1 to expand to the whole visible horizontal space
+        height: -0.5 * GUTTER, // use -1 to expand to the whole visible vertical space
+        description: 'This is the counter rules features zone, where you can see the features that are involved in ' +
+          'the counterfactual rules. A bullet matches the feature with the corresponding counter rules. A larger bullet ' +
+          'means that the feature values should be changed to satisfy the counterfactual rule, while a smaller bullet means ' +
+          'that the feature values should not be changed to satisfy the counterfactual rule.',
+        // the position of the description with respect to zone positioning
+        dx: GUTTER,
+        dy: GUTTER,
+      },
+      {
+        label: 'Feature Distribution',
+        name: 'feature_distribution_zone',
+        x: cl.dimensions('feature-values').x - (GUTTER * 0.25),
+        y: MENU_HEIGHT + GUTTER,
+        width: (cl.dimensions('feature-values').width) + (0.5 * GUTTER), // use -1 to expand to the whole visible horizontal space
+        height: -0.5 * GUTTER, // use -1 to expand to the whole visible vertical space
+        description: 'This is the feature distribution zone, where you can see the distribution of the feature values ' +
+          'of the features. The distribution depends on the type of data. For categorical data, the distribution is ' +
+          'represented as a stacked bar chart, where each bar represents the frequency of a specific value. For numerical ' +
+          'features, the distribution is represented as a line plot, where the x-axis represents the feature values ' +
+          'and the y-axis represents the density of the feature values. The bottom part of each plot highlights the ' +
+          'value range where the rules or counter rules are satisfied.',
+        // the position of the description with respect to zone positioning
+        dx: GUTTER,
+        dy: GUTTER,
+      },
+      {
+        label: 'Feature values',
+        name: 'feature_values_zone',
+        x: cl.dimensions('feature-labels').x - (GUTTER * 0.25),
+        y: MENU_HEIGHT + GUTTER,
+        width: (cl.dimensions('feature-labels').width) + (0.5 * GUTTER), // use -1 to expand to the whole visible horizontal space
+        height: -0.5 * GUTTER, // use -1 to expand to the whole visible vertical space
+        description: 'This is the feature values zone, where you can see the feature values of the instance.',
+        // the position of the description with respect to zone positioning
+        dx: GUTTER,
+        dy: GUTTER,
+      },
+    ];
+    ft.zones(zones);
     // menuSvg.node().setAttribute('width', bbox.width + GUTTER);
 
 
