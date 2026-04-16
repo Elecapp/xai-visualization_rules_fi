@@ -1141,7 +1141,8 @@ function FiperMenuTutorial() {
       .attr('width', 25)
       .attr('height', MENU_HEIGHT - SINGLE_FEATURE_HEIGHT)
       .attr('fill', FTTemplate.BACKGROUND_COLOR )
-      .attr('opacity', toggleInfo ? 1 : 0);
+      .attr('opacity', toggleInfo ? 1 : 0)
+      .attr('pointer-events', 'none');
 
     // Buttons group, translated 10px down
     const gButtonsWrapper = selection.selectAll('g.infoButtonsWrapper')
