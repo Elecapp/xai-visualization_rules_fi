@@ -1949,13 +1949,17 @@ function FiperTutorial() {
     .classed('tutorial', true)
     .style('opacity', 0);
 
+
+  function rect2path(x, y, w, h) {
+    return `M-10,-100 h${width+200}v${height+top+200}h${-width-200}v${-height-top-200}Z M${x},${y}v${h}h${w}v${-h}h${-w}Z`;
+  }
+
   function me(selection) {
     const selectedZones = currentStep >= 0 ? zones.slice(currentStep, currentStep + 1) : [];
     const gZones = selection.selectAll('g.zone')
       .data(selectedZones)
       .join('g')
-      .classed('zone', true)
-      .attr('transform', d => `translate(${d.x < 0 ? width + d.x : d.x}, ${d.y})`);
+      .classed('zone', true);
 
     // we have a single zone selected
     if (selectedZones.length === 1) {
@@ -1974,17 +1978,20 @@ function FiperTutorial() {
         .style('opacity', 0);
     }
 
-    gZones.selectAll('rect.zone')
+    gZones.selectAll('path.zone')
       .data(d => [d])
-      .join('rect')
+      .join('path')
       .classed('zone', true)
-      .attr('fill', 'transparent')
+      .attr('fill', FTTemplate.CRULES_COLOR)
+      .attr('fill-opacity', 0.4)
       .attr('stroke', FTTemplate.CRULES_COLOR)
-      .attr('stroke-width', 3)
-      .attr('stroke-dasharray', '6 3')
-      .attr('opacity', 0.5)
-      .attr('width', d => (d.width < 0 ? width + d.width : d.width))
-      .attr('height', d => (d.height < 0 ? height + d.height : d.height))
+      .attr('stroke-width', 1)
+      .attr('d', d => rect2path(
+        d.x < 0 ? width + d.x : d.x,
+        d.y,
+        (d.width < 0 ? width + d.width  : d.width),
+        (d.height < 0 ? height + d.height  : d.height),
+      ))
     ;
   }
 
