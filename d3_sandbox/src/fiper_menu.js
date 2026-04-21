@@ -200,7 +200,7 @@ function FiperChooseTextualFormat() {
   };
   const xScale = d3.scaleBand()
     .domain(Object.keys(formatOptions))
-    .range([0, (RULES_COLUMN_WIDTH * 2) / 3])
+    .range([8, (RULES_COLUMN_WIDTH * 0.55)])
     .paddingInner(0.2)
     .paddingOuter(0.4);
 
@@ -209,8 +209,11 @@ function FiperChooseTextualFormat() {
     .range([FTTemplate.OTHER_TEXT_COLOR, FTTemplate.DISTRIBUTION_COLOR]);
 
   const textColorScale = d3.scaleOrdinal()
-    .domain([true, false])
-    .range([FTTemplate.SECONDARY_BACKGROUND_COLOR, FTTemplate.BASE_COLOR]);
+    .domain([false, true])
+    .range([FTTemplate.INSTANCE_COLOR, FTTemplate.BASE_COLOR]);
+  const textWeightScale = d3.scaleOrdinal()
+    .domain([false, true])
+    .range([400, 500]);
 
 
   function me(selection) {
@@ -226,10 +229,12 @@ function FiperChooseTextualFormat() {
       .data(xScale.domain())
       .join('rect')
       .classed('chooseFormat', true)
-      .attr('x', xScale)
-      .attr('y', 0.5 * GUTTER)
-      .attr('width', xScale.bandwidth())
-      .attr('height', 1.5 * GUTTER)
+      .attr('x', d => xScale(d) + 4)
+      .attr('y', (0.5 * FONT_SIZE))
+      .attr('width', FONT_SIZE)
+      .attr('height', FONT_SIZE)
+      .attr('stroke', FTTemplate.TEXT_COLOR)
+      .attr('stroke-width', 0.5)
       .attr('fill', d => colorScale(formatOptions[d]))
       .style('cursor', 'pointer')
       .on('click', generateEvent);
@@ -242,10 +247,10 @@ function FiperChooseTextualFormat() {
       .attr('x', xScale)
       .attr('y', 0.5 * GUTTER)
       .attr('font-size', FONT_SIZE)
-      .attr('font-weight', 400)
+      .attr('font-weight', d => textWeightScale(formatOptions[d]))
       .attr('dy', '1em')
-      .attr('dx', '0.5em')
-      .attr('fill', d => textColorScale(formatOptions[d]))
+      .attr('dx', '1.6em')
+      // .attr('fill', d => textColorScale(formatOptions[d]))
       .text(d => d)
       .style('cursor', 'pointer')
       .on('click', generateEvent);
@@ -256,15 +261,15 @@ function FiperChooseTextualFormat() {
         anchor: 'end',
         x: xScale('Textual') - (GUTTER),
       },
-      {
-        label: 'or',
-        anchor: 'middle',
-        x: xScale('Graphic') - (1.5 * GUTTER),
-      },
+      // {
+      //   label: 'or',
+      //   anchor: 'middle',
+      //   x: xScale('Graphic') - (1.5 * GUTTER),
+      // },
       {
         label: 'Explanation',
         anchor: 'start',
-        x: xScale('Graphic') + xScale.bandwidth(),
+        x: xScale('Graphic') + xScale.bandwidth() + 8,
       },
     ];
 
