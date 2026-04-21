@@ -504,11 +504,7 @@ function FiperMenuFilterBy() {
   function me(selection) {
     const generateEvent = (d) => {
       const selectedKey = d3.select(d.target).datum();
-      Object.keys(filterByOptions).forEach((key) => {
-        if (key === selectedKey) {
-          filterByOptions[key].value = !(filterByOptions[key].value);
-        }
-      });
+      selectedKey.value = !selectedKey.value;
       dispatcher.call('changeFilter', null, filterByOptions);
     };
 
@@ -531,21 +527,22 @@ function FiperMenuFilterBy() {
       .attr('transform', `translate(${GUTTER + 72}, ${(FONT_SIZE / 2)})`);
 
     const gCheckbox = gCheckboxes.selectAll('g.checkbox')
-      .data(Object.keys(filterByOptions))
+      .data(Object.values(filterByOptions))
       .join('g')
       .classed('checkbox', true)
-      .attr('transform', d => `translate(${(3 * GUTTER) + filterByOptions[d].x}, ${1})`);
+      .attr('transform', d => `translate(${(3 * GUTTER) + d.x}, ${1})`);
 
     gCheckbox.selectAll('rect.checkbox')
       .data(d => [d])
       .join('rect')
       .classed('checkbox', true)
+      .attr('y',  -2)
       // .attr('x', (d, i) => 2 + ((Math.floor(i) * RULES_COLUMN_WIDTH) / 2) + VERTICAL_GUTTER)
       // .attr('y', (d, i) => SINGLE_FEATURE_HEIGHT + GUTTER)
-      .attr('width', d => filterByOptions[d].width)
-      .attr('height', FONT_SIZE)
-      .attr('fill', d => (filterByOptions[d].color))
-      .attr('fill-opacity', d => (filterByOptions[d].value ? 0.8 : 0.2))
+      .attr('width', d => d.width)
+      .attr('height', FONT_SIZE + 4)
+      .attr('fill', d => (d.color))
+      .attr('fill-opacity', d => (d.value ? 0.8 : 0.2))
       .attr('stroke', FTTemplate.TEXT_COLOR)
       .attr('stroke-width', 0.5)
       .style('cursor', 'pointer')
@@ -560,8 +557,8 @@ function FiperMenuFilterBy() {
       .attr('font-size', FONT_SIZE)
       .attr('dy', (SINGLE_FEATURE_HEIGHT / 2) - (FONT_SIZE / 2))
       .attr('dx', '0.2em') // we leave some space for the checkbox
-      .attr('fill', d => (filterByOptions[d].value ? FTTemplate.BACKGROUND_COLOR : FTTemplate.TEXT_COLOR))
-      .text(d => d)
+      .attr('fill', d => (d.value ? FTTemplate.BACKGROUND_COLOR : FTTemplate.TEXT_COLOR))
+      .text(d => d.label)
       .style('cursor', 'pointer')
       .on('click', generateEvent);
   }
@@ -1111,23 +1108,25 @@ function FiperMenu() {
       .attr('transform', `translate(${cl.dimensions('feature-labels').x}, ${4 * SINGLE_FEATURE_HEIGHT})`);
 
     const filterByOptions = {
-      noRules: {
-        value: explanationDescriptor.filterNoRules,
-        color: FTTemplate.CATEGORICAL_INSTANCE_STROKE_COLOR,
-        width: 4 * FONT_SIZE,
-        x: 0,
-      },
+      // noRules: {
+      //   value: explanationDescriptor.filterNoRules,
+      //   color: FTTemplate.CATEGORICAL_INSTANCE_STROKE_COLOR,
+      //   width: 4 * FONT_SIZE,
+      //   x: 0,
+      // },
       Rules: {
         value: explanationDescriptor.filterRules,
         color: FTTemplate.RULE_COLOR,
         width: 3 * FONT_SIZE,
-        x: (4 * FONT_SIZE) + (0.5 * GUTTER),
+        x: (FONT_SIZE) - (0.5 * GUTTER),
+        label: 'Rules'
       },
       CRules: {
         value: explanationDescriptor.filterCRules,
         color: FTTemplate.CRULES_COLOR,
-        width: 4 * FONT_SIZE,
-        x: (7 * FONT_SIZE) + GUTTER,
+        width: 7 * FONT_SIZE,
+        x: (4 * FONT_SIZE) + ( 0.5 * GUTTER),
+        label: 'Counter Rules'
       },
     };
     menuFilterBy.filterByOptions(filterByOptions);

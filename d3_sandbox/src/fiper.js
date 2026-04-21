@@ -2100,17 +2100,17 @@ function InstanceView() {
     function refreshVisualization(descriptor) {
       const filterFunctionRule = f => d3.sum(Object.values(f.rulePredicateMap)) > 0;
       const filterFunctionCRule = f => d3.sum(Object.values(f.cRulesRelevanceMap)) > 0;
-      const filterFunctionNoRules = f => (d3.sum(Object.values(f.rulePredicateMap)) +
-        d3.sum(Object.values(f.cRulesRelevanceMap))) === 0;
+      // const filterFunctionNoRules = f => (d3.sum(Object.values(f.rulePredicateMap)) +
+      //   d3.sum(Object.values(f.cRulesRelevanceMap))) === 0;
 
-      // Accumulate all active filters and apply them in OR:
+      // Accumulate all active filters and apply them in OR
       // a feature is shown if it matches ANY of the active filters.
       const activeFilters = [];
       if (descriptor.filterRules) activeFilters.push(filterFunctionRule);
       if (descriptor.filterCRules) activeFilters.push(filterFunctionCRule);
-      if (descriptor.filterNoRules) activeFilters.push(filterFunctionNoRules);
+      // if (descriptor.filterNoRules) activeFilters.push(filterFunctionNoRules);
 
-      const currentFilter = activeFilters.length === 0
+      let currentFilter = activeFilters.length === 0
         ? () => true
         : f => activeFilters.some(fn => fn(f));
 
