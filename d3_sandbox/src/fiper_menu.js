@@ -250,7 +250,7 @@ function FiperChooseTextualFormat() {
       .attr('font-weight', d => textWeightScale(formatOptions[d]))
       .attr('dy', '1em')
       .attr('dx', '1.6em')
-      // .attr('fill', d => textColorScale(formatOptions[d]))
+      .attr('fill', FTTemplate.TEXT_COLOR)
       .text(d => d)
       .style('cursor', 'pointer')
       .on('click', generateEvent);
