@@ -100,7 +100,7 @@ function TooltipHandler() {
         font-family: sans-serif;
         font-size: 12px;
         color: white;
-        background: ${FTTemplate.TUTOTRIAL_COLOR};
+        background: ${FTTemplate.TUTORIAL_COLOR};
         border-radius: 2px;
         line-height: 1.4;
       }
@@ -2101,6 +2101,40 @@ function FiperTutorial() {
   return me;
 }
 
+function FiperDefs(){
+  const spacing = 2;
+  const thickness = 3;
+  const rotation = 45;
+
+  function me(selection){
+    const defs = selection.selectAll('defs')
+      .data([1]) // Usa un array con un singolo elemento come dati
+      .join('defs');
+
+    const patterns = defs.selectAll('pattern')
+      .data(Object.keys(FTTemplate))
+      .join('pattern')
+      .attr('id', d => `p_${d}`)
+      .attr('patternUnits', 'userSpaceOnUse')
+      .attr('width', spacing + (thickness / 2))
+      .attr('height', spacing + (thickness / 2))
+      .attr('patternTransform', d=> (d === 'CRULES_COLOR' ? `rotate(${rotation})` : `rotate(${-rotation})`));
+
+    patterns.selectAll('line')
+      .data(d => [d])
+      .join('line')
+      .attr('x1', 0)
+      .attr('y1', 0)
+      .attr('x2', 0)
+      .attr('y2', spacing + (thickness / 2))
+      .attr('stroke', d => FTTemplate[d])
+      .attr('stroke-width', thickness);
+  }
+
+  return me;
+
+}
+
 
 function InstanceView() {
   function me(selection) {
@@ -2109,6 +2143,7 @@ function InstanceView() {
     (explanationDescriptor.counterRules.length * CRULES_GRID_COLUMN_WIDTH));
     const fm = FiperMenu();
     const ftb = FiperMenuTutorial();
+    const fdefs = FiperDefs();
 
     // ==================== TUTORIAL COMPONENT ====================
     const ft = FiperTutorial();
@@ -2153,33 +2188,10 @@ function InstanceView() {
       ;
 
 
-    const defs = svg.selectAll('defs')
-      .data([null]) // Usa un array con un singolo elemento come dati
-      .join('defs');
 
 
-    const spacing = 2;
-    const thickness = 3;
-    const rotation = 45;
 
 
-    // create a pattern for each color in the template to be used in the visualization
-    // TODO: pattern must be created for all palette modes
-    Object.keys(FTTemplate).forEach((key) => {
-      defs.append('pattern')
-        .attr('id', `p_${key}`)
-        .attr('patternUnits', 'userSpaceOnUse')
-        .attr('width', spacing + (thickness / 2))
-        .attr('height', spacing + (thickness / 2))
-        .attr('patternTransform', (key === 'CRULES_COLOR' ? `rotate(${rotation})` : `rotate(${-rotation})`))
-        .append('line')
-        .attr('x1', 0)
-        .attr('y1', 0)
-        .attr('x2', 0)
-        .attr('y2', spacing + (thickness / 2))
-        .attr('stroke', FTTemplate[key])
-        .attr('stroke-width', thickness);
-    });
 
 
     function refreshVisualization(descriptor) {
@@ -2204,6 +2216,7 @@ function InstanceView() {
         features: explanationDescriptor.features.filter(currentFilter),
       };
       svg.datum(filteredDescriptor).call(fv);
+      svg.call(fdefs);
       menuSvg.datum(filteredDescriptor).call(fm);
       gInfoTutorial.call(ft);
       gPaletteTutorial.call(ftb);
