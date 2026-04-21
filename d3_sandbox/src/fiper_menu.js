@@ -609,8 +609,106 @@ function prepareClassesProbabilitesValues(data, val) {
       // want the cumulative to prior value (start of rect)
       cumulative: cumulative - d,
       instance_value: (val === key) ? 1 : 0,
+      key: key,
     };
   }).filter(d => d.value > 0);
+}
+
+// Reusable tooltip
+function TooltipHandler() {
+  // Creates the tooltip div and adds it to the body
+  const tooltip = d3.select('body')
+    .selectAll('div.d3-tooltip')
+    .data([1])
+    .join('div')
+    .attr('class', 'd3-tooltip')
+    .style('opacity', 0);
+
+  let tooltipHtml = (d) => {
+    const formatter = d3.format('.2%');
+    return `<div>Value: ${d.label} (<span style="font-weight: 500">${formatter(d.percent / 100)}</span>)</div>`;
+  };
+
+  // Css for the tooltip
+
+  const tooltipStyleText = `
+      .d3-tooltip, .d3-tutorial-tooltip {
+          position: absolute;
+          padding: 4px 8px;
+          font-family: 'M PLUS 1 Code', 'Courier New', monospace;
+          font-size: 11px;
+          color: ${FTTemplate.TEXT_COLOR};
+          background: ${FTTemplate.SECONDARY_BACKGROUND_COLOR};
+          border-radius: 2px;
+          pointer-events: none;
+          z-index: 1000;
+          max-width: 200px;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      }
+      .d3-tutorial-tooltip {
+        border-color: ${FTTemplate.CRULES_COLOR};
+        font-family: sans-serif;
+        font-size: 12px;
+        color: white;
+        background: ${FTTemplate.TUTORIAL_COLOR};
+        border-radius: 2px;
+        line-height: 1.4;
+      }
+    `;
+  d3.select('head').selectAll('style.d3-tooltip')
+    .data([1])
+    .join('style')
+    .classed('d3-tooltip', true)
+    .text(tooltipStyleText);
+
+  // Function to handle the tooltip
+  function me(selection) {
+    selection
+      .on('mouseover', (event, d) => {
+        // Show the tooltip with a transition
+        tooltip
+          .transition()
+          .duration(200)
+          .style('opacity', 0.9);
+
+        // Set the content of the tooltip and position it
+        tooltip
+          .html(() => tooltipHtml(d))
+          .style('left', `${event.pageX + 10}px`)
+          .style('top', `${event.pageY - 20}px`);
+      })
+      .on('mousemove', (event) => {
+        // Update the position of the tooltip
+        tooltip
+          .style('left', `${event.pageX + 10}px`)
+          .style('top', `${event.pageY - 20}px`);
+      })
+      .on('click', () => {
+        // Hide the tooltip with a transition
+        tooltip
+          .transition()
+          .duration(50)
+          .style('opacity', 0);
+      })
+      .on('mouseout', () => {
+        // Hide the tooltip with a transition
+        tooltip
+          .transition()
+          .duration(50)
+          .style('opacity', 0);
+      });
+  }
+
+  // Method to set the content of the tooltip
+  // eslint-disable-next-line func-names
+  me.html = function (formatter) {
+    // eslint-disable-next-line no-use-before-define
+    if (!arguments.length) return tooltipHtml;
+    tooltipHtml = typeof formatter === 'function' ? formatter : () => formatter;
+    return me;
+  };
+
+  return me;
 }
 
 
@@ -630,7 +728,9 @@ function FiperMenuClassesBarChart() {
       .attr('width', d => lengthScale(d.value))
       .attr('height', height)
       .attr('fill', d => (d.instance_value === 1 ? FTTemplate.CATEGORICAL_INSTANCE_COLOR : FTTemplate.DISTRIBUTION_COLOR))
-      .attr('stroke', FTTemplate.DISTRIBUTION_STROKE_COLOR);
+      .attr('stroke', FTTemplate.DISTRIBUTION_STROKE_COLOR)
+      .call(TooltipHandler().html(d => `<div style="font-weight: 400">Class: <span style="font-weight: 500">${d.key}</span></div><div style="font-weight: 400">Probability: <span style="font-weight: 500">${d3.format(".2%")(d.value)}</span></div>`))
+
   }
 
   // eslint-disable-next-line func-names
@@ -678,7 +778,7 @@ function FiperClassificationBox() {
       .attr('font-weight', 400)
       .attr('dy', '1em')
       .attr('fill', FTTemplate.TEXT_COLOR)
-      .html(d => text2tspan(`The instance is classified as _*${d.predicted_class}*_ with a probability of _*${formatValue(d.predicted_proba[d.predicted_class])}*_`, 50, GUTTER));
+      .html(d => text2tspan(`_*Classification:*_ Predicted class is _*${d.predicted_class}*_ with a probability of _*${formatValue(d.predicted_proba[d.predicted_class])}*_`, 50, GUTTER));
 
     const pprobaBars = FiperMenuClassesBarChart().width(width - GUTTER)
       .height(SINGLE_FEATURE_HEIGHT / 2);
@@ -1175,4 +1275,7 @@ function FiperMenu() {
   return me;
 }
 
-export default FiperMenu;
+export {
+  FiperMenu,
+  TooltipHandler,
+};

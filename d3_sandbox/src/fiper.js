@@ -1,4 +1,4 @@
-import FiperMenu from './fiper_menu';
+import {FiperMenu, TooltipHandler} from './fiper_menu';
 import {
   colorSet,
   CRULES_GRID_COLUMN_WIDTH,
@@ -62,103 +62,6 @@ function prepareCategoricalValues(data) {
       name: d.name,
     };
   }).filter(d => d.value > 0);
-}
-
-// Reusable tooltip
-function TooltipHandler() {
-  // Creates the tooltip div and adds it to the body
-  const tooltip = d3.select('body')
-    .selectAll('div.d3-tooltip')
-    .data([1])
-    .join('div')
-    .attr('class', 'd3-tooltip')
-    .style('opacity', 0);
-
-  let tooltipHtml = (d) => {
-    const formatter = d3.format('.2%');
-    return `<div>Value: ${d.label} (<span style="font-weight: 500">${formatter(d.percent / 100)}</span>)</div>`;
-  };
-
-  // Css for the tooltip
-
-  const tooltipStyleText = `
-      .d3-tooltip, .d3-tutorial-tooltip {
-          position: absolute;
-          padding: 4px 8px;
-          font-family: 'M PLUS 1 Code', 'Courier New', monospace;
-          font-size: 11px;
-          color: ${FTTemplate.TEXT_COLOR};
-          background: ${FTTemplate.SECONDARY_BACKGROUND_COLOR};
-          border-radius: 2px;
-          pointer-events: none;
-          z-index: 1000;
-          max-width: 200px;
-          box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-      }
-      .d3-tutorial-tooltip {
-        border-color: ${FTTemplate.CRULES_COLOR};
-        font-family: sans-serif;
-        font-size: 12px;
-        color: white;
-        background: ${FTTemplate.TUTORIAL_COLOR};
-        border-radius: 2px;
-        line-height: 1.4;
-      }
-    `;
-  d3.select('head').selectAll('style.d3-tooltip')
-    .data([1])
-    .join('style')
-    .classed('d3-tooltip', true)
-    .text(tooltipStyleText);
-
-  // Function to handle the tooltip
-  function me(selection) {
-    selection
-      .on('mouseover', (event, d) => {
-        // Show the tooltip with a transition
-        tooltip
-          .transition()
-          .duration(200)
-          .style('opacity', 0.9);
-
-        // Set the content of the tooltip and position it
-        tooltip
-          .html(() => tooltipHtml(d))
-          .style('left', `${event.pageX + 10}px`)
-          .style('top', `${event.pageY - 20}px`);
-      })
-      .on('mousemove', (event) => {
-        // Update the position of the tooltip
-        tooltip
-          .style('left', `${event.pageX + 10}px`)
-          .style('top', `${event.pageY - 20}px`);
-      })
-      .on('click', () => {
-        // Hide the tooltip with a transition
-        tooltip
-          .transition()
-          .duration(50)
-          .style('opacity', 0);
-      })
-      .on('mouseout', () => {
-        // Hide the tooltip with a transition
-        tooltip
-          .transition()
-          .duration(50)
-          .style('opacity', 0);
-      });
-  }
-
-  // Method to set the content of the tooltip
-  // eslint-disable-next-line func-names
-  me.html = function (formatter) {
-    // eslint-disable-next-line no-use-before-define
-    if (!arguments.length) return tooltipHtml;
-    tooltipHtml = typeof formatter === 'function' ? formatter : () => formatter;
-    return me;
-  };
-
-  return me;
 }
 
 function FIPERFeatureInstanceValueView() {
