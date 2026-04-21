@@ -46,11 +46,8 @@ root_logger.setLevel(logging.INFO)
 logger = logging.getLogger(__name__)
 from plot_explanation import PlotExplanation
 
-path = os.getcwd() + '/../d3_sandbox/static/german_explanations'
-
 def load_data_from_csv(class_field, number_of_dataset):
     datasets = ['titanic_c.csv','german_credit.csv','abalone.csv','iris.csv']
-
 
     source_file = f'../datasets/{datasets[number_of_dataset]}'
     # Load and transform dataset
@@ -246,9 +243,10 @@ def select_and_explain_instance(number_of_dataset,class_field,bbox, X_train, X_t
         output_data = {
             "features": features,
             "predicted_class": predicted_class[0],
-            "true_class": int(true_class),
+            "true_class": true_class,
             "predicted_proba": { label: prob for label, prob in zip(bbox.classes_, predicted_proba[0]) },
         }
+        path = f'../d3_sandbox/static/{folder}'
 
         with open(f'{path}/instance_{inst_num}.json', "w") as outfile:
             json.dump(output_data, outfile, cls=CustomJSONEncoder, indent=4)
@@ -269,9 +267,9 @@ if __name__ == '__main__':
 
 
 
-    number_of_dataset = 1  # Select the dataset index (0 for Titanic, 1 for German Credit, etc.)
-    class_field = "default"  # Select the proper class field for the dataset
-    folder = "german_explanations" #Select the folder to save the result
+    number_of_dataset = 2  # Select the dataset index (0 for Titanic, 1 for German Credit, etc.)
+    class_field = "Sex"  # Select the proper class field for the dataset
+    folder = "abalone_explanations" #Select the folder to save the result
     sample_length = 10  # Number of instances to explain
     df, preprocessor, class_field = load_data_from_csv(class_field, number_of_dataset)
     model, X_test, X_train, y_test, _ =  train_model(df, preprocessor, class_field)
