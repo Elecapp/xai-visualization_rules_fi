@@ -2451,6 +2451,7 @@ function InstanceView() {
     dispatcher.on('tutorialButtonClick', (d) => {
       const currentStep = ft.currentStep();
       if ((d === 'info') && (currentStep === -1)) {
+        explanationDescriptor.progressStatus = ['Classification', 'Feature Values', 'Rules', 'Counter Rules', 'Feature Importance'];
         ft.currentStep(0);
       }
       if (d === 'close') {
