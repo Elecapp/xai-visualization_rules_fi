@@ -24,15 +24,15 @@ function syncUrl(path) {
 }
 
 async function renderPath(path) {
-  setStatus('Caricamento istanza...');
+  setStatus('Loading instance...');
   try {
     const data = await d3.json(path);
     const explanationDescriptor = preprocessData(data);
     d3.select('#app').datum(explanationDescriptor).call(instanceView);
-    setStatus('Visualizzazione aggiornata.');
+    setStatus('New instance loaded');
   } catch (error) {
     console.error(error);
-    setStatus('Errore nel caricamento dell\'istanza selezionata.', true);
+    setStatus('Error loading instance.', true);
   }
 }
 
@@ -72,7 +72,7 @@ async function initViewer() {
 
   const initialPath = resolveInitialPath();
   if (!initialPath) {
-    setStatus('Nessuna istanza configurata.', true);
+    setStatus('No instance configured.', true);
     return;
   }
 
