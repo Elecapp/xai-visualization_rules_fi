@@ -33,6 +33,17 @@ body {
   font-family: 'M PLUS 1 Code', monospace;
 }
 
+a,
+a:visited {
+  color: var(--brand);
+  text-decoration-color: currentColor;
+}
+
+a:hover,
+a:focus-visible {
+  color: var(--brand-strong);
+}
+
 h1 {
   font-weight: 700;
   size: 48px;
@@ -132,6 +143,10 @@ margin: 1rem;
 
 .btn-primary {
   background: var(--brand);
+  color: #ffffff;
+}
+
+.btn-primary:visited {
   color: #ffffff;
 }
 
