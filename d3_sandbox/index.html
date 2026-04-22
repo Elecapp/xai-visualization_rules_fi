@@ -1,54 +1,96 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TRACE - Explainability Explorer</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=M+PLUS+1+Code:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/src/styles.css">
   </head>
   <body>
     <main class="landing-shell">
-      <section class="hero-card" aria-label="Introduzione progetto">
+      
+      <section class="hero-card" aria-label="Introduction and Test Invitation">
         <p class="eyebrow">TRACE / XAI Visualization</p>
-        <h1>Visual analytics per spiegazioni locali basate su regole</h1>
-        <p class="lead">
-          Questa demo presenta un visualizzatore interattivo D3 per esplorare le
-          spiegazioni di singole istanze su diversi dataset.
-        </p>
+        <h1>Welcome to TRACE's Heuristic Evaluation</h1>
+        <h2 class="subtitle">Help us evaluate our Explainable AI dashboard</h2>
+        <div>
+          <p>
+            For each of Nielsen's 10 Usability Heuristics, look for specific places where the interface fails to adhere to the guideline. Write your recommendations for how to fix those usability issues. Thank you for your time and help, here's a cookie 🍪.
+          </p>
+          <p>
+            <strong>What is TRACE?</strong> It is a visual analytics interface designed to explain the decision-making processes of AI models on tabular data, showing the <em>Rules</em> (why a decision was made) and the <em>Counter-rules</em> (what should change to obtain a different outcome).
+          </p>
+        </div>
         <div class="cta-row">
-          <a class="btn btn-primary" href="/viewer.html">Apri il visualizzatore</a>
-          <a class="btn btn-ghost" href="https://forms.gle/INSERISCI-LINK-FORM" target="_blank" rel="noopener noreferrer">
-            Compila il test euristico
+        <a class="btn btn-ghost" href="/viewer.html">Explore the interface</a>
+          <a class="btn btn-primary" href="https://docs.google.com/forms/d/e/1FAIpQLSdg6ZiC2emb1zsjrCiWez8vzyCbWoiJ_uoe7OQ6CzpBE5454Q/viewform?usp=dialog" target="_blank" rel="noopener noreferrer">
+            Take the survey
           </a>
         </div>
-        <p class="hint">Sostituisci il link del form nella landing con il tuo Google Form definitivo.</p>
       </section>
 
-      <section class="grid-cards" aria-label="Contenuti della demo">
+      <section class="grid-cards" aria-label="Demo contents">
         <article class="info-card">
-          <h2>Cosa troverai</h2>
+          <h2>Test objective</h2>
           <p>
-            Una pagina viewer dedicata con selettore di istanze, caricamento dinamico
-            dei JSON e aggiornamento immediato della visualizzazione D3.
+            Gather feedback on the readability, utility, and navigability of the interface during the analysis of local explanations, based on Nielsen's heuristics.
           </p>
         </article>
         <article class="info-card">
-          <h2>Obiettivo test</h2>
+          <h2>What you will find</h2>
           <p>
-            Raccogliere feedback sulla leggibilita', utilita' e navigabilita'
-            dell'interfaccia durante l'analisi delle spiegazioni locali.
+            A dedicated viewer page with an instance selector, dynamic JSON loading, and immediate updating of the D3 visualization.
           </p>
         </article>
         <article class="info-card">
-          <h2>Dataset inclusi</h2>
+          <h2>Included datasets</h2>
           <p>
-            Sono disponibili esempi da Abalone, German Credit e Iris, con un set
-            rappresentativo di istanze per la valutazione.
+            Examples from Abalone, German Credit, and Iris are available, providing a representative set of instances for the evaluation.
           </p>
         </article>
+      </section>
+
+      <section class="hero-card" aria-label="TRACE Documentation">
+        <h2>About TRACE Methodology</h2>
+        <div>
+          <p>
+            To generate these explanations, TRACE integrates the <strong>LORE (Local Rule Explanator)</strong> algorithm. LORE is a model-agnostic method that analyzes the behavior of any opaque "black box" model by generating a synthetic neighborhood of data to build a transparent surrogate model (like a Decision Tree). This process allows us to extract:
+          </p>
+          <ul>
+            <li><strong>Rules</strong>: Sequences of conditions (predicates) that explain exactly why a decision was made.</li>
+            <li><strong>Counter-rules</strong>: Indications of what variations in the input features would lead to a different predicted outcome.</li>
+          </ul>
+          <p>The rules are integrated with Feature Importance scores generated via <strong>SHAP</strong>.</p>
+          
+          <hr>
+          
+          <h2>How to read the interface</h2>
+          <img src="https://placehold.co/311x42" alt="Navigation bar">
+          <p>
+            To help you explore the explanation, TRACE uses a <strong>progressive disclosure workflow</strong>. The interface consists of five steps that you can navigate using the colored dots or arrows in the menu.
+          </p>
+          
+          <h3>Key visual elements</h3>
+          <ol>
+            <li><strong>Rules (Yellow Indicators)</strong><br>These highlight the conditions and feature values that favor the current classification.
+            <br><img src="https://placehold.co/378x46" alt="Rules">
+            </li>
+            <li><strong>Counter-rules (Purple Indicators)</strong><br>These suggest the changes required for the instance to receive an alternative classification.
+            <br><img src="https://placehold.co/378x46" alt="Counter-rules"></li>
+            <li><strong>Distributions</strong><br> For numerical data, a curve shows the distribution from the training dataset, with a black vertical line marking your specific instance. Categorical data is shown via stacked bar charts.
+            <br><img src="https://placehold.co/378x46" alt="Distributions"></li>
+            <li><strong>Feature Importance Bars</strong><br> Located on the right side, these bars indicate the importance of each feature to the decision, and you can use them to sort the visualization.
+            <br><img src="https://placehold.co/378x70" alt="Feature Importance Bars"></li>
+          </ol>
+
+          <h3>Customizing your view</h3>
+          <p>The Menu Panel on the left allows you to adapt the interface to your visual preferences and analytical needs:</p>
+          <ul>
+            <li><span><strong>Walkthrough Tutorial</strong>: You can view punctual information about each section by clicking on the Info button <span class="icon"><img src="https://placehold.co/30x30" alt="Info icon"></span> and navigating with the arrows.</span></li>
+            <li><span><strong>Color Themes</strong>: You can switch between Light <span class="icon"><img src="https://placehold.co/30x30" alt="Color Themes icon"></span> and Dark <span class="icon"><img src="https://placehold.co/30x30" alt="Color Themes icon"></span> modes using the intuitive icons.</span></li>
+            <li><span><strong>Accessibility</strong>: A dedicated color-blind-friendly palette <span class="icon"><img src="https://placehold.co/30x30" alt="Accessibility icon"></span> is available to ensure clear differentiation of all interface elements.</span></li>
+          </ul>
+        </div>
       </section>
     </main>
   </body>
