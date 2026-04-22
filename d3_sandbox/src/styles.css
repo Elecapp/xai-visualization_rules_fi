@@ -90,6 +90,10 @@ margin: 1rem;
   padding: 44px 0 64px;
 }
 
+.landing-shell > section + section {
+  margin-top: 18px;
+}
+
 .hero-card {
   background: var(--surface);
   border: 1px solid var(--line);
@@ -173,7 +177,7 @@ margin: 1rem;
 }
 
 .grid-cards {
-  margin-top: 18px;
+  margin-top: 0;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
@@ -184,7 +188,7 @@ margin: 1rem;
   border: 1px solid var(--line);
   border-radius: 18px;
   padding: 20px;
-  margin-bottom: 20px;
+  margin-bottom: 0;
 }
 
 .info-card h2 {
