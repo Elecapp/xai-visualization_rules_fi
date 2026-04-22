@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRACE - XAI Instance Viewer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=M+PLUS+1+Code:wght@400;600&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <header class="viewer-header shell">
+      <a class="ghost-link" href="/index.html">Torna alla presentazione</a>
+      <h1>TRACE - XAI Instance Viewer</h1>
+      <p>Seleziona un'istanza per aggiornare la visualizzazione D3.</p>
+    </header>
+
+    <main class="shell viewer-layout" aria-live="polite">
+      <section class="controls-card" aria-label="Controlli visualizzazione">
+        <label for="instance" class="control-label">Istanza</label>
+        <select id="instance" name="instance"></select>
+        <p id="viewer-status" class="status-text" role="status"></p>
+      </section>
+
+      <section class="viz-card" aria-label="Visualizzazione D3">
+        <div id="app" class="viz-canvas"></div>
+      </section>
+    </main>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

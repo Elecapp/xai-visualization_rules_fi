@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite';
+import { resolve } from 'path';
 
 export default defineConfig({
   // index.html is at the project root
@@ -17,6 +18,12 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     emptyOutDir: true,
+    rollupOptions: {
+      input: {
+        landing: resolve(__dirname, 'index.html'),
+        viewer: resolve(__dirname, 'viewer.html'),
+      },
+    },
   },
 });
 
