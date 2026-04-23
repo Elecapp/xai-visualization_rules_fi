@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRACE - XAI Instance Viewer</title>
+  </head>
+  <body>
+    <header class="viewer-header shell">
+      <a class="ghost-link eyebrow" href="/index.html"> &lt;- INTRO</a>
+      <h1>TRACE - XAI Instance Viewer</h1>
+      <p>Select an instance to update the visualization</p>
+    </header>
+
+    <main class="shell viewer-layout" aria-live="polite">
+      <section class="controls-card" aria-label="Controlli visualizzazione">
+        <label for="instance" class="control-label">Instance</label>
+        <select id="instance" name="instance"></select>
+        <p id="viewer-status" class="status-text" role="status"></p>
+      </section>
+
+      <section class="viz-card" aria-label="Visualizzazione D3">
+        <div id="app" class="viz-canvas"></div>
+      </section>
+    </main>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
