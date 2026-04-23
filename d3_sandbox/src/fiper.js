@@ -962,6 +962,7 @@ function FIPERCRuleGrid() {
       .attr('fill', d => ((d === selectedCounterRule) ? FTTemplate.CRULES_COLOR : FTTemplate.BASE_COLOR))
       .attr('stroke', d => ((d === selectedCounterRule) ? FTTemplate.CRULES_STROKE_COLOR : FTTemplate.BASE_STROKE_COLOR))
       .call(TooltipHandler().html(d => text2html(selection.datum().cruleText[d], 1000)))
+      .classed('cursor-manina', true)
       .on('click', (d) => {
         dispatcher.call('changeCounterRule', this, d3.select(d.target).datum());
         d.stopPropagation(); // this to avoid that the deatils are shown when clicking on the circle
@@ -1102,7 +1103,7 @@ function FiperMenuTutorial() {
       .attr('opacity', toggleInfo ? 1 : 0);
 
     gButtons
-      .style('cursor', 'pointer')
+      .classed('cursor-manina', d => (!toggleInfo || d.value !== 'info'))
       .on('click', (d) => {
         const button = d3.select(d.target).datum();
         const gfButtons = gButtons.filter(d1 => d1.value !== 'info')
@@ -1114,7 +1115,7 @@ function FiperMenuTutorial() {
           gfButtons.attr('opacity', 0);
           console.log('false', gButtonsWrapper.selectAll('g.info'));
           gButtonsWrapper.selectAll('g.info')
-            .style('cursor', 'pointer');
+            .classed('cursor-manina', true);
         }
 
         if (button.value === 'info') {
@@ -1266,7 +1267,9 @@ function FIPERView() {
     const gFeatures = selection.selectAll('g.feature')
       .data(features, d => d.rname)
       .join('g')
-      .classed('feature', true);
+      .classed('feature', true)
+      .classed('cursor-expand', (d) => !d.status)
+      .classed('cursor-close', (d) => d.status);
 
     cl.setWidth('crule-grid', crWidth);
 

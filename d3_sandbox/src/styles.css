@@ -305,6 +305,26 @@ margin: 1rem;
   font-family: 'M PLUS 1 Code', monospace;
 }
 
+svg {
+  cursor: default;
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none;      /* IE 10 and 11 */
+  user-select: none;          /* Standard syntax */
+}
+
+svg .cursor-manina{
+  cursor: pointer;
+}
+
+svg .cursor-expand{
+  cursor: text;
+}
+
+svg .cursor-close{
+  cursor: vertical-text;
+}
+
+
 @media (max-width: 900px) {
   .grid-cards {
     grid-template-columns: 1fr;

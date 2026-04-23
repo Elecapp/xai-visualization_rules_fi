@@ -36,6 +36,7 @@ function FiperMenuCRule() {
       .join('g')
       .classed('counterRule', true)
       .attr('transform', d => `translate(${bandScale(d)}, 0)`)
+      .classed('cursor-manina', true)
       .on('click', (d) => {
         let selectedCounterRule = d3.select(d.target).datum();
         if (explanationDescriptor.selectedCounterRule === selectedCounterRule) {
@@ -150,7 +151,7 @@ function FiperMenuOrderBy() {
       .attr('fill', FTTemplate.TEXT_COLOR)
       .attr('font-weight', d => (orderByOptions[d] ? 500 : 400))
       .text(d => d)
-      .style('cursor', 'pointer')
+      .classed('cursor-manina', true)
       .on('click', generateEvent);
 
     selection.selectAll('rect.checkbox')
@@ -164,7 +165,7 @@ function FiperMenuOrderBy() {
       .attr('fill', d => (orderByOptions[d] ? FTTemplate.CATEGORICAL_INSTANCE_STROKE_COLOR : FTTemplate.SECONDARY_BACKGROUND_COLOR))
       .attr('stroke', FTTemplate.TEXT_COLOR)
       .attr('stroke-width', 0.5)
-      .style('cursor', 'pointer')
+      .classed('cursor-manina', true)
       .on('click', generateEvent);
 
     selection.selectAll('line.horizontalLine')
@@ -236,7 +237,7 @@ function FiperChooseTextualFormat() {
       .attr('stroke', FTTemplate.TEXT_COLOR)
       .attr('stroke-width', 0.5)
       .attr('fill', d => colorScale(formatOptions[d]))
-      .style('cursor', 'pointer')
+      .classed('cursor-manina', true)
       .on('click', generateEvent);
 
 
@@ -252,7 +253,7 @@ function FiperChooseTextualFormat() {
       .attr('dx', '1.6em')
       .attr('fill', FTTemplate.TEXT_COLOR)
       .text(d => d)
-      .style('cursor', 'pointer')
+      .classed('cursor-manina', true)
       .on('click', generateEvent);
 
     const tokens = [
@@ -353,11 +354,6 @@ function FiperMenuProgressHandler() {
       .attr('dx', '0.5em')
       .attr('fill', d => d.textColor)
       .text(d => d.label);
-    // .style('cursor', 'pointer')
-    // .on('click', (d) => {
-    //   const step = d3.select(d.target).datum();
-    //   processStep(step);
-    // });
 
     // create the bullets of the progress bar
     const gCircles = selection.selectAll('g.progressBullet')
@@ -398,6 +394,7 @@ function FiperMenuProgressHandler() {
       .attr('fill-opacity', d => (d.completed ? 1 : 0.6))
       .attr('stroke-width', 0.75)
       .attr('stroke', d => (d.completed ? FTTemplate.CATEGORICAL_INSTANCE_STROKE_COLOR : FTTemplate.BACKGROUND_COLOR))
+      .classed('cursor-manina', true)
       .on('click', (d) => {
         const step = d3.select(d.target).datum();
         processStep(step);
@@ -414,7 +411,7 @@ function FiperMenuProgressHandler() {
       .attr('stroke', FTTemplate.CATEGORICAL_INSTANCE_STROKE_COLOR)
       .attr('stroke-width', 0.75)
       .attr('transform', `translate(${xScale(progressSteps[4].label) + (xScale.bandwidth() / 2)}, 0)`)
-      .style('cursor', 'pointer')
+      .classed('cursor-manina', true)
       .on('click', () => {
         const stepIndex = progressSteps.findIndex(d1 => !d1.completed);
         if ((stepIndex < progressSteps.length) && (stepIndex > -1)) {
@@ -431,7 +428,7 @@ function FiperMenuProgressHandler() {
       .attr('stroke', FTTemplate.CATEGORICAL_INSTANCE_STROKE_COLOR)
       .attr('stroke-width', 0.75)
       .attr('transform', `translate(${xScale.bandwidth() * 1.2}, 0)`)
-      .style('cursor', 'pointer')
+      .classed('cursor-manina', true)
       .on('click', () => {
         const stepIndex = progressSteps.findLastIndex(d => d.completed);
         if (stepIndex > 0) {
@@ -448,7 +445,7 @@ function FiperMenuProgressHandler() {
       .attr('stroke', FTTemplate.CATEGORICAL_INSTANCE_STROKE_COLOR)
       .attr('stroke-width', 0.75)
       .attr('transform', `translate(${xScale(progressSteps[4].label) + xScale.bandwidth()}, 0)`)
-      .style('cursor', 'pointer')
+      .classed('cursor-manina', true)
       .on('click', () => {
         dispatcher.call('changeProgressStep', null, progressSteps.slice(0, progressSteps.length).map(d => d.name));
       });
@@ -462,7 +459,7 @@ function FiperMenuProgressHandler() {
       .attr('stroke', FTTemplate.CATEGORICAL_INSTANCE_STROKE_COLOR)
       .attr('stroke-width', 0.75)
       .attr('transform', `translate(${0.7 * xScale.bandwidth()}, 0)`)
-      .style('cursor', 'pointer')
+      .classed('cursor-manina', true)
       .on('click', () => {
         dispatcher.call('changeProgressStep', null, progressSteps.slice(0, 1).map(d => d.name));
       });
@@ -545,7 +542,7 @@ function FiperMenuFilterBy() {
       .attr('fill-opacity', d => (d.value ? 0.8 : 0.2))
       .attr('stroke', FTTemplate.TEXT_COLOR)
       .attr('stroke-width', 0.5)
-      .style('cursor', 'pointer')
+      .classed('cursor-manina', true)
       .on('click', generateEvent);
 
     gCheckbox.selectAll('text.filterBy')
@@ -559,7 +556,7 @@ function FiperMenuFilterBy() {
       .attr('dx', '0.2em') // we leave some space for the checkbox
       .attr('fill', d => (d.value ? FTTemplate.BACKGROUND_COLOR : FTTemplate.TEXT_COLOR))
       .text(d => d.label)
-      .style('cursor', 'pointer')
+      .classed('cursor-manina', true)
       .on('click', generateEvent);
   }
 
