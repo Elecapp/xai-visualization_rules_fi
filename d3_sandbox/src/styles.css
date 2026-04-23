@@ -1,4 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=M+PLUS+1+Code:wght@400;600&display=swap');
+@font-face {
+  font-family: 'M PLUS 1 Code';
+  src: url('../static/assets/fonts/MPLUS1Code-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 700;
+  font-style: normal;
+  font-display: swap;
+}
 
 :root {
   --bg-main: #f6f8f7;
@@ -18,6 +24,13 @@
   box-sizing: border-box;
 }
 
+
+/* Apply it globally or to a specific class */
+.d3-label {
+  font-family: 'M PLUS 1 Code', monospace;
+}
+
+
 html,
 body {
   margin: 0;
@@ -27,9 +40,6 @@ body {
     radial-gradient(circle at 15% 0%, var(--bg-accent) 0%, transparent 30%),
     radial-gradient(circle at 88% 10%, #dce8e2 0%, transparent 28%),
     var(--bg-main);
-}
-
-body {
   font-family: 'M PLUS 1 Code', monospace;
 }
 
