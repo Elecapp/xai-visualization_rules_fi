@@ -15,10 +15,12 @@
         <h2 class="subtitle">Help us evaluate our Explainable AI dashboard</h2>
         <div>
           <p>
-            For each of Nielsen's 10 Usability Heuristics, look for specific places where the interface fails to adhere to the guideline. Write your recommendations for how to fix those usability issues. Thank you for your time and help, here's a cookie 🍪.
+            Help us to identify usability issues in our interface by participating in this heuristic evaluation. We are looking for feedback on how well the interface adheres to Nielsen's 10 Usability Heuristics, which are fundamental principles for designing user-friendly interfaces. Your insights will be invaluable in improving the usability and overall user experience of our TRACE dashboard. Thank you for your time and help, here's a cookie 🍪.
           </p>
           <p>
-            <strong>What is TRACE?</strong> It is a visual analytics interface designed to explain the decision-making processes of AI models on tabular data, showing the <em>Rules</em> (why a decision was made) and the <em>Counter-rules</em> (what should change to obtain a different outcome).
+            <strong>What is TRACE?</strong> It is a visual analytics interface designed to explain the decision-making processes of AI models on tabular data, showing the contribution of each feature in relation to the data distribution. 
+            
+            It facilitates the interpretation of model predictions by showing <em>Rules</em> (why a decision was made) and the <em>Counter-rules</em> (what should change to obtain a different outcome).
           </p>
         </div>
         <div class="cta-row">
@@ -33,59 +35,59 @@
         <article class="info-card">
           <h2>Test objective</h2>
           <p>
-            Gather feedback on the readability, utility, and navigability of the interface during the analysis of local explanations, based on Nielsen's heuristics.
+            Gather feedback on the clarity, usability, and ease of navigation of the interface during the analysis of local explanations. 
           </p>
         </article>
         <article class="info-card">
           <h2>What you will find</h2>
           <p>
-            A dedicated viewer page with an instance selector, dynamic JSON loading, and immediate updating of the D3 visualization.
+            You can explore the interface by navigating through different instances and datasets. For each instance, you will see the local explanation presented by the TRACE interface.
           </p>
         </article>
         <article class="info-card">
           <h2>Included datasets</h2>
           <p>
-            Examples from Abalone, German Credit, and Iris are available, providing a representative set of instances for the evaluation.
-          </p>
-          <p>
-            References:
-            <a href="https://archive.ics.uci.edu/dataset/1/abalone" target="_blank" rel="noopener noreferrer">Abalone</a>,
-            <a href="https://archive.ics.uci.edu/dataset/144/statlog+german+credit+data" target="_blank" rel="noopener noreferrer">German Credit</a>,
-            <a href="https://archive.ics.uci.edu/dataset/53/iris" target="_blank" rel="noopener noreferrer">Iris</a>.
+            Examples from:
+            <a href="https://archive.ics.uci.edu/dataset/1/abalone" target="_blank" rel="noopener noreferrer">Abalone</a> (predicting the sex of abalone -- male, female, infant),
+            <a href="https://archive.ics.uci.edu/dataset/144/statlog+german+credit+data" target="_blank" rel="noopener noreferrer">German Credit</a> (predicting credit risk -- good or bad), and
+            <a href="https://archive.ics.uci.edu/dataset/53/iris" target="_blank" rel="noopener noreferrer">Iris</a> (predicting the species of iris -- setosa, versicolor, virginica).
           </p>
         </article>
       </section>
 
       <section class="hero-card" aria-label="TRACE Documentation">
-        <h2>About TRACE Methodology</h2>
+        <h2>About TRACE Interface</h2>
         <div>
           <p>
-            To generate these explanations, TRACE integrates the <strong>LORE (Local Rule Explanator)</strong> algorithm. LORE is a model-agnostic method that analyzes the behavior of any opaque "black box" model by generating a synthetic neighborhood of data to build a transparent surrogate model (like a Decision Tree). This process allows us to extract:
+            To generate these explanations, TRACE allows the combined exploration of feature importance and rule-based explanations. Among the various algorithms  for rule-based explanations, TRACE integrates the <strong>LORE (Local Rule Explanator)</strong> [<a href="https://link.springer.com/article/10.1007/s10618-022-00878-5" target="_blank" rel="noopener noreferrer">DOI</a>] algorithm. LORE is a model-agnostic method that analyzes the behavior of any opaque "black box" model by generating a synthetic neighborhood of data to build a transparent surrogate model (like a Decision Tree). This process allows us to extract:
           </p>
           <ul>
-            <li><strong>Rules</strong>: Sequences of conditions (predicates) that explain exactly why a decision was made.</li>
+            <li><strong>Rules</strong>: Sequences of conditions (predicates) that explain why a decision was made on a local instance.</li>
             <li><strong>Counter-rules</strong>: Indications of what variations in the input features would lead to a different predicted outcome.</li>
+            <li><strong>Feature Relevance</strong>: Measures of how much each feature contributes to the decision-making process.</li>
           </ul>
-          <p>The rules are integrated with Feature Importance scores generated via <strong>SHAP</strong>.</p>
 
           <hr>
 
           <h2>How to read the interface</h2>
           <img src="static/assets/img/navigation_bar.png" alt="Navigation bar">
           <p>
-            To help you explore the explanation, TRACE uses a <strong>progressive disclosure workflow</strong>. The interface consists of five steps that you can navigate using the colored dots or arrows in the menu.
+            To help you explore the explanation, TRACE uses a <strong>progressive disclosure workflow</strong>. The interface consists of five steps that you can navigate using the colored dots or arrows on the top left corner of the menu.
           </p>
 
           <h3>Key visual elements</h3>
           <ol>
-            <li><strong>Rules (Yellow Indicators)</strong><br>These highlight the conditions and feature values that favor the current classification.
+            <li><strong>Rules (Yellow Indicators)</strong><br>These highlight the conditions and feature values for which the current classification holds.
             <br><img src="static/assets/img/rules.png" alt="Rules">
             </li>
             <li><strong>Counter-rules (Purple Indicators)</strong><br>These suggest the changes required for the instance to receive an alternative classification.
             <br><img src="static/assets/img/counter_rules.png" alt="Counter-rules"></li>
-            <li><strong>Distributions</strong><br> For numerical data, a curve shows the distribution from the training dataset, with a black vertical line marking your specific instance. Categorical data is shown via stacked bar charts.
-            <br><img src="static/assets/img/distributions.png" alt="Distributions"></li>
-            <li><strong>Feature Importance Bars</strong><br> Located on the right side, these bars indicate the importance of each feature to the decision, and you can use them to sort the visualization.
+            <li><strong>Distributions</strong><br> For numerical data, a curve shows the distribution from the training dataset, with a black vertical line marking your specific instance. 
+            <br><img src="static/assets/img/distributions.png" alt="Distributions">
+            <br>Categorical data is shown via stacked bar charts, highlighting current instance value.
+            <br><img src="static/assets/img/distributions.png" alt="Distributions">
+            </li>
+            <li><strong>Feature Importance Bars</strong><br> Located on the right side, these bars indicate the importance of each feature to the decision. They can be used as a sorting mechanism of the visualization.
             <br><img src="static/assets/img/feature_importance.png" alt="Feature Importance Bars"></li>
           </ol>
 
