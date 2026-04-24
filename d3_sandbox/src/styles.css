@@ -89,6 +89,11 @@ li {
 margin: 1rem;
 }
 
+ol img {
+  margin-top: 1rem;
+  margin-bottom:1rem;
+}
+
 .shell {
   width: min(1200px, 92vw);
   margin: 0 auto;
