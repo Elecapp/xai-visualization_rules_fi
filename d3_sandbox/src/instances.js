@@ -8,9 +8,10 @@ const germanInstances = Array.from({ length: 300 }, (_, index) => index);
 const irisInstances = [0, 1, 11, 20, 23, 34,39];
 
 function buildDatasetEntries(datasetLabel, basePath, ids) {
+  const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   return ids.map((id) => ({
     label: `${datasetLabel} - Instance ${id}`,
-    value: `${basePath}/instance_${id}.json`,
+    value: `${base}${basePath}/instance_${id}.json`,
   }));
 }
 
