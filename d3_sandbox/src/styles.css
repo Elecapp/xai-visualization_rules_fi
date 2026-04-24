@@ -322,11 +322,11 @@ svg .cursor-manina{
 }
 
 svg .cursor-expand{
-  cursor: text;
+  cursor: url('/static/assets/img/cursor_expand.png') 12 12, auto;
 }
 
 svg .cursor-close{
-  cursor: vertical-text;
+  cursor: url('/static/assets/img/cursor_close.png') 12 12, auto;
 }
 
 
