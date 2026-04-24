@@ -13,3 +13,19 @@ notebooks/chart.zip
 notebooks/__pycache__
 .idea
 /node_modules/
+# Ambiente virtuale
+venv/
+venv_nuovo/
+.env/
+
+# Cache di Python
+__pycache__/
+*.pyc
+
+# Cartelle di sistema e IDE
+.DS_Store
+.vscode/
+.idea/
+
+# Dataset e Output (opzionale, se non vuoi caricare i JSON pesanti)
+../d3_sandbox/static/abalone_explanations/
