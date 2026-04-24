@@ -14,7 +14,7 @@
                 "q3": 6.4,
                 "median": 5.8
             },
-            "instance_value": 5.4,
+            "instance_value": 6.5,
             "rule": [],
             "crules": {
                 "C0": [
@@ -22,8 +22,8 @@
                         {
                             "att": "sepal.length",
                             "is_continuous": true,
-                            "op": "<=",
-                            "thr": 5.568155765533447
+                            "op": ">",
+                            "thr": 5.712558031082153
                         },
                         "Setosa"
                     ]
@@ -47,7 +47,39 @@
             },
             "instance_value": 3.0,
             "rule": [],
-            "crules": {},
+            "crules": {
+                "C1": [
+                    [
+                        {
+                            "att": "sepal.width",
+                            "is_continuous": true,
+                            "op": "<=",
+                            "thr": 3.4838593006134033
+                        },
+                        "Versicolor"
+                    ],
+                    [
+                        {
+                            "att": "sepal.width",
+                            "is_continuous": true,
+                            "op": ">",
+                            "thr": 2.2303738594055176
+                        },
+                        "Versicolor"
+                    ]
+                ],
+                "C3": [
+                    [
+                        {
+                            "att": "sepal.width",
+                            "is_continuous": true,
+                            "op": ">",
+                            "thr": 2.2303738594055176
+                        },
+                        "Virginica"
+                    ]
+                ]
+            },
             "feature_importance": "sepal.width"
         },
         {
@@ -64,35 +96,37 @@
                 "q3": 5.1,
                 "median": 4.35
             },
-            "instance_value": 4.5,
+            "instance_value": 5.8,
             "rule": [
                 [
                     {
                         "att": "petal.length",
                         "is_continuous": true,
-                        "op": "<=",
-                        "thr": 4.83771824836731
-                    },
-                    "Versicolor"
-                ],
-                [
-                    {
-                        "att": "petal.length",
-                        "is_continuous": true,
                         "op": ">",
-                        "thr": 2.4582812786102295
+                        "thr": 4.828068971633911
                     },
-                    "Versicolor"
+                    "Virginica"
                 ]
             ],
             "crules": {
-                "C0": [
+                "C1": [
+                    [
+                        {
+                            "att": "petal.length",
+                            "is_continuous": true,
+                            "op": ">",
+                            "thr": 5.313452959060669
+                        },
+                        "Versicolor"
+                    ]
+                ],
+                "C2": [
                     [
                         {
                             "att": "petal.length",
                             "is_continuous": true,
                             "op": "<=",
-                            "thr": 4.83771824836731
+                            "thr": 2.3212881088256836
                         },
                         "Setosa"
                     ],
@@ -101,31 +135,20 @@
                             "att": "petal.length",
                             "is_continuous": true,
                             "op": ">",
-                            "thr": 2.4582812786102295
+                            "thr": 1.534424066543579
                         },
                         "Setosa"
                     ]
                 ],
-                "C1": [
-                    [
-                        {
-                            "att": "petal.length",
-                            "is_continuous": true,
-                            "op": "<=",
-                            "thr": 2.4582812786102295
-                        },
-                        "Setosa"
-                    ]
-                ],
-                "C2": [
+                "C3": [
                     [
                         {
                             "att": "petal.length",
                             "is_continuous": true,
                             "op": ">",
-                            "thr": 4.83771824836731
+                            "thr": 5.313452959060669
                         },
-                        "Versicolor"
+                        "Virginica"
                     ]
                 ]
             },
@@ -145,16 +168,16 @@
                 "q3": 1.8,
                 "median": 1.3
             },
-            "instance_value": 1.5,
+            "instance_value": 2.2,
             "rule": [
                 [
                     {
                         "att": "petal.width",
                         "is_continuous": true,
                         "op": ">",
-                        "thr": 0.6925265789031982
+                        "thr": 1.651145875453949
                     },
-                    "Versicolor"
+                    "Virginica"
                 ]
             ],
             "crules": {
@@ -164,18 +187,18 @@
                             "att": "petal.width",
                             "is_continuous": true,
                             "op": "<=",
-                            "thr": 0.6925265789031982
+                            "thr": 0.6463706493377686
                         },
                         "Setosa"
                     ]
                 ],
-                "C2": [
+                "C1": [
                     [
                         {
                             "att": "petal.width",
                             "is_continuous": true,
                             "op": "<=",
-                            "thr": 1.6948701739311218
+                            "thr": 1.4721062183380127
                         },
                         "Versicolor"
                     ],
@@ -184,20 +207,51 @@
                             "att": "petal.width",
                             "is_continuous": true,
                             "op": ">",
-                            "thr": 0.6256349384784698
+                            "thr": 0.6463706493377686
                         },
                         "Versicolor"
+                    ]
+                ],
+                "C2": [
+                    [
+                        {
+                            "att": "petal.width",
+                            "is_continuous": true,
+                            "op": ">",
+                            "thr": 1.651145875453949
+                        },
+                        "Setosa"
+                    ]
+                ],
+                "C3": [
+                    [
+                        {
+                            "att": "petal.width",
+                            "is_continuous": true,
+                            "op": "<=",
+                            "thr": 1.651145875453949
+                        },
+                        "Virginica"
+                    ],
+                    [
+                        {
+                            "att": "petal.width",
+                            "is_continuous": true,
+                            "op": ">",
+                            "thr": 1.4721062183380127
+                        },
+                        "Virginica"
                     ]
                 ]
             },
             "feature_importance": "petal.width"
         }
     ],
-    "predicted_class": "Versicolor",
-    "true_class": "Versicolor",
+    "predicted_class": "Virginica",
+    "true_class": "Virginica",
     "predicted_proba": {
-        "Setosa": 0.02,
-        "Versicolor": 0.98,
-        "Virginica": 0.0
+        "Setosa": 0.0,
+        "Versicolor": 0.0,
+        "Virginica": 1.0
     }
 }

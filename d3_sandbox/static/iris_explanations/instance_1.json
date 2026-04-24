@@ -1,0 +1,363 @@
+{
+    "features": [
+        {
+            "index": 0,
+            "name": "sepal.length",
+            "rname": "sepal.length",
+            "type": "numeric",
+            "eda": {
+                "min": 4.3,
+                "max": 7.9,
+                "mean": 5.843333333333334,
+                "std": 0.828066127977863,
+                "q1": 5.1,
+                "q3": 6.4,
+                "median": 5.8
+            },
+            "instance_value": 6.1,
+            "rule": [
+                [
+                    {
+                        "att": "sepal.length",
+                        "is_continuous": true,
+                        "op": ">",
+                        "thr": 4.479479551315308
+                    },
+                    "Versicolor"
+                ]
+            ],
+            "crules": {
+                "C2": [
+                    [
+                        {
+                            "att": "sepal.length",
+                            "is_continuous": true,
+                            "op": "<=",
+                            "thr": 4.479479551315308
+                        },
+                        "Setosa"
+                    ]
+                ],
+                "C4": [
+                    [
+                        {
+                            "att": "sepal.length",
+                            "is_continuous": true,
+                            "op": ">",
+                            "thr": 5.874068260192871
+                        },
+                        "Setosa"
+                    ]
+                ]
+            },
+            "feature_importance": "sepal.length"
+        },
+        {
+            "index": 1,
+            "name": "sepal.width",
+            "rname": "sepal.width",
+            "type": "numeric",
+            "eda": {
+                "min": 2.0,
+                "max": 4.4,
+                "mean": 3.0573333333333337,
+                "std": 0.4358662849366982,
+                "q1": 2.8,
+                "q3": 3.3,
+                "median": 3.0
+            },
+            "instance_value": 2.9,
+            "rule": [
+                [
+                    {
+                        "att": "sepal.width",
+                        "is_continuous": true,
+                        "op": "<=",
+                        "thr": 2.9747302532196045
+                    },
+                    "Versicolor"
+                ]
+            ],
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "sepal.width",
+                            "is_continuous": true,
+                            "op": "<=",
+                            "thr": 2.9747302532196045
+                        },
+                        "Virginica"
+                    ]
+                ],
+                "C1": [
+                    [
+                        {
+                            "att": "sepal.width",
+                            "is_continuous": true,
+                            "op": "<=",
+                            "thr": 2.9747302532196045
+                        },
+                        "Setosa"
+                    ]
+                ],
+                "C2": [
+                    [
+                        {
+                            "att": "sepal.width",
+                            "is_continuous": true,
+                            "op": "<=",
+                            "thr": 2.9747302532196045
+                        },
+                        "Setosa"
+                    ]
+                ],
+                "C3": [
+                    [
+                        {
+                            "att": "sepal.width",
+                            "is_continuous": true,
+                            "op": "<=",
+                            "thr": 2.9535590410232544
+                        },
+                        "Virginica"
+                    ]
+                ],
+                "C4": [
+                    [
+                        {
+                            "att": "sepal.width",
+                            "is_continuous": true,
+                            "op": ">",
+                            "thr": 4.137137413024902
+                        },
+                        "Setosa"
+                    ]
+                ],
+                "C5": [
+                    [
+                        {
+                            "att": "sepal.width",
+                            "is_continuous": true,
+                            "op": "<=",
+                            "thr": 3.0965813398361206
+                        },
+                        "Virginica"
+                    ],
+                    [
+                        {
+                            "att": "sepal.width",
+                            "is_continuous": true,
+                            "op": ">",
+                            "thr": 2.9747302532196045
+                        },
+                        "Virginica"
+                    ]
+                ]
+            },
+            "feature_importance": "sepal.width"
+        },
+        {
+            "index": 2,
+            "name": "petal.length",
+            "rname": "petal.length",
+            "type": "numeric",
+            "eda": {
+                "min": 1.0,
+                "max": 6.9,
+                "mean": 3.7580000000000005,
+                "std": 1.7652982332594662,
+                "q1": 1.6,
+                "q3": 5.1,
+                "median": 4.35
+            },
+            "instance_value": 4.7,
+            "rule": [
+                [
+                    {
+                        "att": "petal.length",
+                        "is_continuous": true,
+                        "op": "<=",
+                        "thr": 4.773314952850342
+                    },
+                    "Versicolor"
+                ]
+            ],
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "petal.length",
+                            "is_continuous": true,
+                            "op": "<=",
+                            "thr": 4.773314952850342
+                        },
+                        "Virginica"
+                    ]
+                ],
+                "C1": [
+                    [
+                        {
+                            "att": "petal.length",
+                            "is_continuous": true,
+                            "op": "<=",
+                            "thr": 4.773314952850342
+                        },
+                        "Setosa"
+                    ]
+                ],
+                "C2": [
+                    [
+                        {
+                            "att": "petal.length",
+                            "is_continuous": true,
+                            "op": "<=",
+                            "thr": 4.773314952850342
+                        },
+                        "Setosa"
+                    ]
+                ],
+                "C3": [
+                    [
+                        {
+                            "att": "petal.length",
+                            "is_continuous": true,
+                            "op": "<=",
+                            "thr": 5.206883907318115
+                        },
+                        "Virginica"
+                    ],
+                    [
+                        {
+                            "att": "petal.length",
+                            "is_continuous": true,
+                            "op": ">",
+                            "thr": 4.773314952850342
+                        },
+                        "Virginica"
+                    ]
+                ],
+                "C4": [
+                    [
+                        {
+                            "att": "petal.length",
+                            "is_continuous": true,
+                            "op": "<=",
+                            "thr": 4.773314952850342
+                        },
+                        "Setosa"
+                    ],
+                    [
+                        {
+                            "att": "petal.length",
+                            "is_continuous": true,
+                            "op": ">",
+                            "thr": 4.69926905632019
+                        },
+                        "Setosa"
+                    ]
+                ],
+                "C5": [
+                    [
+                        {
+                            "att": "petal.length",
+                            "is_continuous": true,
+                            "op": "<=",
+                            "thr": 4.773314952850342
+                        },
+                        "Virginica"
+                    ],
+                    [
+                        {
+                            "att": "petal.length",
+                            "is_continuous": true,
+                            "op": ">",
+                            "thr": 2.760150909423828
+                        },
+                        "Virginica"
+                    ]
+                ]
+            },
+            "feature_importance": "petal.length"
+        },
+        {
+            "index": 3,
+            "name": "petal.width",
+            "rname": "petal.width",
+            "type": "numeric",
+            "eda": {
+                "min": 0.1,
+                "max": 2.5,
+                "mean": 1.1993333333333336,
+                "std": 0.7622376689603465,
+                "q1": 0.3,
+                "q3": 1.8,
+                "median": 1.3
+            },
+            "instance_value": 1.4,
+            "rule": [
+                [
+                    {
+                        "att": "petal.width",
+                        "is_continuous": true,
+                        "op": "<=",
+                        "thr": 1.767985999584198
+                    },
+                    "Versicolor"
+                ]
+            ],
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "petal.width",
+                            "is_continuous": true,
+                            "op": "<=",
+                            "thr": 2.412405848503113
+                        },
+                        "Virginica"
+                    ],
+                    [
+                        {
+                            "att": "petal.width",
+                            "is_continuous": true,
+                            "op": ">",
+                            "thr": 1.767985999584198
+                        },
+                        "Virginica"
+                    ]
+                ],
+                "C1": [
+                    [
+                        {
+                            "att": "petal.width",
+                            "is_continuous": true,
+                            "op": ">",
+                            "thr": 2.412405848503113
+                        },
+                        "Setosa"
+                    ]
+                ],
+                "C2": [
+                    [
+                        {
+                            "att": "petal.width",
+                            "is_continuous": true,
+                            "op": "<=",
+                            "thr": 1.767985999584198
+                        },
+                        "Setosa"
+                    ]
+                ]
+            },
+            "feature_importance": "petal.width"
+        }
+    ],
+    "predicted_class": "Versicolor",
+    "true_class": "Versicolor",
+    "predicted_proba": {
+        "Setosa": 0.0,
+        "Versicolor": 1.0,
+        "Virginica": 0.0
+    }
+}

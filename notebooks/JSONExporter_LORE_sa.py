@@ -271,9 +271,9 @@ if __name__ == '__main__':
 
 
 
-    number_of_dataset = 2  # Select the dataset index (0 for Titanic, 1 for German Credit, etc.)
-    class_field = "Rings"  # Select the proper class field for the dataset
-    folder = "abalone_explanations" #Select the folder to save the result
+    number_of_dataset = 3  # Select the dataset index (0 for Titanic, 1 for German Credit, etc.)
+    class_field = "variety"  # Select the proper class field for the dataset
+    folder = "iris_explanations" #Select the folder to save the result
     sample_length = 10  # Number of instances to explain
     df, preprocessor, class_field = load_data_from_csv(class_field, number_of_dataset)
     model, X_test, X_train, y_test, _ =  train_model(df, preprocessor, class_field)
