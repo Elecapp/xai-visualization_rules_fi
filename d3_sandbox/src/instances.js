@@ -1,11 +1,11 @@
 const abaloneInstances = [
-  1, 10, 82, 530, 621, 733,
-  788, 829, 861, 976, 995, 1047, 1194
+  62, 83,196, 228, 666, 675,
+  759, 799, 1073, 1081
 ];
 
 const germanInstances = Array.from({ length: 300 }, (_, index) => index);
 
-const irisInstances = [2, 24, 26];
+const irisInstances = [0, 1, 11, 20, 23, 34,39];
 
 function buildDatasetEntries(datasetLabel, basePath, ids) {
   return ids.map((id) => ({
