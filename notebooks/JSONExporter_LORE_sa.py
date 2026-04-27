@@ -108,7 +108,7 @@ def select_and_explain_instance(number_of_dataset,class_field,bbox, X_train, X_t
     if class_field == "Rings":
         df_raw['Rings'] = pd.cut(df_raw['Rings'], bins=[-np.inf, 8, 10, np.inf], labels=['young', 'medium', 'old'])
     if class_field == "default":
-        dataset.df['default'] = dataset.df['default'].astype(str)
+        df_raw['default'] = df_raw['default'].astype(str)
     dataset = TabularDataset(df_raw, class_name=class_field)
     dataset.update_descriptor()
     enc = ColumnTransformerEnc(dataset.descriptor)
@@ -271,9 +271,9 @@ if __name__ == '__main__':
 
 
 
-    number_of_dataset = 3  # Select the dataset index (0 for Titanic, 1 for German Credit, etc.)
-    class_field = "variety"  # Select the proper class field for the dataset
-    folder = "iris_explanations" #Select the folder to save the result
+    number_of_dataset = 1  # Select the dataset index (0 for Titanic, 1 for German Credit, etc.)
+    class_field = "default"  # Select the proper class field for the dataset
+    folder = "german_explanations" #Select the folder to save the result
     sample_length = 10  # Number of instances to explain
     df, preprocessor, class_field = load_data_from_csv(class_field, number_of_dataset)
     model, X_test, X_train, y_test, _ =  train_model(df, preprocessor, class_field)

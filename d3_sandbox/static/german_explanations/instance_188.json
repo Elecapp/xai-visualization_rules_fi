@@ -14,7 +14,7 @@
                 "q3": 24.0,
                 "median": 18.0
             },
-            "instance_value": 24,
+            "instance_value": 6,
             "rule": [],
             "crules": {},
             "feature_importance": "credit_amount"
@@ -33,9 +33,32 @@
                 "q3": 3972.25,
                 "median": 2319.5
             },
-            "instance_value": 2872,
+            "instance_value": 1238,
             "rule": [],
-            "crules": {},
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "credit_amount",
+                            "is_continuous": true,
+                            "op": "<=",
+                            "thr": 1929.0
+                        },
+                        "1"
+                    ]
+                ],
+                "C3": [
+                    [
+                        {
+                            "att": "credit_amount",
+                            "is_continuous": true,
+                            "op": ">",
+                            "thr": 1929.0
+                        },
+                        "1"
+                    ]
+                ]
+            },
             "feature_importance": "age"
         },
         {
@@ -52,9 +75,21 @@
                 "q3": 4.0,
                 "median": 3.0
             },
-            "instance_value": 3,
+            "instance_value": 4,
             "rule": [],
-            "crules": {},
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "installment_as_income_perc",
+                            "is_continuous": true,
+                            "op": "<=",
+                            "thr": 3.5
+                        },
+                        "1"
+                    ]
+                ]
+            },
             "feature_importance": "account_check_status=0 <= ... < 200 DM"
         },
         {
@@ -73,7 +108,19 @@
             },
             "instance_value": 4,
             "rule": [],
-            "crules": {},
+            "crules": {
+                "C1": [
+                    [
+                        {
+                            "att": "present_res_since",
+                            "is_continuous": true,
+                            "op": ">",
+                            "thr": 1.5
+                        },
+                        "1"
+                    ]
+                ]
+            },
             "feature_importance": "savings=.. >= 1000 DM "
         },
         {
@@ -92,7 +139,41 @@
             },
             "instance_value": 36,
             "rule": [],
-            "crules": {},
+            "crules": {
+                "C0": [
+                    [
+                        {
+                            "att": "age",
+                            "is_continuous": true,
+                            "op": ">",
+                            "thr": 31.5
+                        },
+                        "1"
+                    ]
+                ],
+                "C2": [
+                    [
+                        {
+                            "att": "age",
+                            "is_continuous": true,
+                            "op": "<=",
+                            "thr": 31.5
+                        },
+                        "1"
+                    ]
+                ],
+                "C3": [
+                    [
+                        {
+                            "att": "age",
+                            "is_continuous": true,
+                            "op": ">",
+                            "thr": 31.5
+                        },
+                        "1"
+                    ]
+                ]
+            },
             "feature_importance": "personal_status_sex=female : divorced/separated/married"
         },
         {
@@ -130,7 +211,19 @@
             },
             "instance_value": 2,
             "rule": [],
-            "crules": {},
+            "crules": {
+                "C1": [
+                    [
+                        {
+                            "att": "people_under_maintenance",
+                            "is_continuous": true,
+                            "op": "<=",
+                            "thr": 1.5
+                        },
+                        "1"
+                    ]
+                ]
+            },
             "feature_importance": "job=management/ self-employed/ highly qualified employee/ officer"
         },
         {
@@ -210,12 +303,12 @@
                 "category": "critical account/ other credits existing (not at this bank)",
                 "count": 293
             },
-            "instance_value": true,
+            "instance_value": false,
             "rule": [],
             "crules": {},
             "feature_importance": [
                 "installment_as_income_perc",
-                0
+                0.004664594696333469
             ]
         },
         {
@@ -227,12 +320,12 @@
                 "category": "existing credits paid back duly till now",
                 "count": 530
             },
-            "instance_value": false,
+            "instance_value": true,
             "rule": [],
             "crules": {},
             "feature_importance": [
                 "installment_as_income_perc",
-                0
+                0.004664594696333469
             ]
         },
         {
@@ -249,7 +342,7 @@
             "crules": {},
             "feature_importance": [
                 "installment_as_income_perc",
-                0
+                0.004664594696333469
             ]
         },
         {
@@ -266,7 +359,7 @@
             "crules": {},
             "feature_importance": [
                 "installment_as_income_perc",
-                0
+                0.004664594696333469
             ]
         },
         {
@@ -283,7 +376,7 @@
             "crules": {},
             "feature_importance": [
                 "installment_as_income_perc",
-                0
+                0.004664594696333469
             ]
         },
         {
@@ -295,12 +388,12 @@
                 "category": "domestic appliances",
                 "count": 280
             },
-            "instance_value": true,
+            "instance_value": false,
             "rule": [],
             "crules": {},
             "feature_importance": [
                 "present_res_since",
-                0
+                0.000979209218102309
             ]
         },
         {
@@ -317,7 +410,7 @@
             "crules": {},
             "feature_importance": [
                 "present_res_since",
-                0
+                0.000979209218102309
             ]
         },
         {
@@ -334,7 +427,7 @@
             "crules": {},
             "feature_importance": [
                 "present_res_since",
-                0
+                0.000979209218102309
             ]
         },
         {
@@ -351,7 +444,7 @@
             "crules": {},
             "feature_importance": [
                 "present_res_since",
-                0
+                0.000979209218102309
             ]
         },
         {
@@ -368,7 +461,7 @@
             "crules": {},
             "feature_importance": [
                 "present_res_since",
-                0
+                0.000979209218102309
             ]
         },
         {
@@ -385,7 +478,7 @@
             "crules": {},
             "feature_importance": [
                 "present_res_since",
-                0
+                0.000979209218102309
             ]
         },
         {
@@ -402,7 +495,7 @@
             "crules": {},
             "feature_importance": [
                 "present_res_since",
-                0
+                0.000979209218102309
             ]
         },
         {
@@ -419,7 +512,7 @@
             "crules": {},
             "feature_importance": [
                 "present_res_since",
-                0
+                0.000979209218102309
             ]
         },
         {
@@ -436,7 +529,7 @@
             "crules": {},
             "feature_importance": [
                 "present_res_since",
-                0
+                0.000979209218102309
             ]
         },
         {
@@ -448,12 +541,12 @@
                 "category": "retraining",
                 "count": 9
             },
-            "instance_value": false,
+            "instance_value": true,
             "rule": [],
             "crules": {},
             "feature_importance": [
                 "present_res_since",
-                0
+                0.000979209218102309
             ]
         },
         {
@@ -465,7 +558,7 @@
                 "category": "unknown/ no savings account",
                 "count": 183
             },
-            "instance_value": false,
+            "instance_value": true,
             "rule": [],
             "crules": {},
             "feature_importance": [
@@ -533,7 +626,7 @@
                 "category": "100 <= ... < 500 DM",
                 "count": 103
             },
-            "instance_value": true,
+            "instance_value": false,
             "rule": [],
             "crules": {},
             "feature_importance": [
@@ -550,12 +643,12 @@
                 "category": ".. >= 7 years",
                 "count": 253
             },
-            "instance_value": true,
+            "instance_value": false,
             "rule": [],
             "crules": {},
             "feature_importance": [
                 "people_under_maintenance",
-                0
+                0.00923819787106132
             ]
         },
         {
@@ -572,7 +665,7 @@
             "crules": {},
             "feature_importance": [
                 "people_under_maintenance",
-                0
+                0.00923819787106132
             ]
         },
         {
@@ -589,7 +682,7 @@
             "crules": {},
             "feature_importance": [
                 "people_under_maintenance",
-                0
+                0.00923819787106132
             ]
         },
         {
@@ -601,12 +694,12 @@
                 "category": "unemployed",
                 "count": 62
             },
-            "instance_value": false,
+            "instance_value": true,
             "rule": [],
             "crules": {},
             "feature_importance": [
                 "people_under_maintenance",
-                0
+                0.00923819787106132
             ]
         },
         {
@@ -623,7 +716,7 @@
             "crules": {},
             "feature_importance": [
                 "people_under_maintenance",
-                0
+                0.00923819787106132
             ]
         },
         {
@@ -754,12 +847,12 @@
                 "category": "real estate",
                 "count": 282
             },
-            "instance_value": true,
+            "instance_value": false,
             "rule": [],
             "crules": {},
             "feature_importance": [
                 "present_emp_since=.. >= 7 years",
-                0
+                0.00667161751683932
             ]
         },
         {
@@ -771,12 +864,12 @@
                 "category": "if not A121 : building society savings agreement/ life insurance",
                 "count": 232
             },
-            "instance_value": false,
+            "instance_value": true,
             "rule": [],
             "crules": {},
             "feature_importance": [
                 "present_emp_since=.. >= 7 years",
-                0
+                0.00667161751683932
             ]
         },
         {
@@ -793,7 +886,7 @@
             "crules": {},
             "feature_importance": [
                 "present_emp_since=.. >= 7 years",
-                0
+                0.00667161751683932
             ]
         },
         {
@@ -810,7 +903,7 @@
             "crules": {},
             "feature_importance": [
                 "present_emp_since=.. >= 7 years",
-                0
+                0.00667161751683932
             ]
         },
         {
@@ -827,7 +920,7 @@
             "crules": {},
             "feature_importance": [
                 "other_debtors=co-applicant",
-                0
+                0.0002413771463871912
             ]
         },
         {
@@ -844,7 +937,7 @@
             "crules": {},
             "feature_importance": [
                 "other_debtors=co-applicant",
-                0
+                0.0002413771463871912
             ]
         },
         {
@@ -861,7 +954,7 @@
             "crules": {},
             "feature_importance": [
                 "other_debtors=co-applicant",
-                0
+                0.0002413771463871912
             ]
         },
         {
@@ -878,7 +971,7 @@
             "crules": {},
             "feature_importance": [
                 "property=if not A121 : building society savings agreement/ life insurance",
-                0
+                0.0053619117431702714
             ]
         },
         {
@@ -895,7 +988,7 @@
             "crules": {},
             "feature_importance": [
                 "property=if not A121 : building society savings agreement/ life insurance",
-                0
+                0.0053619117431702714
             ]
         },
         {
@@ -912,7 +1005,7 @@
             "crules": {},
             "feature_importance": [
                 "property=if not A121 : building society savings agreement/ life insurance",
-                0
+                0.0053619117431702714
             ]
         },
         {
@@ -924,7 +1017,7 @@
                 "category": "skilled employee / official",
                 "count": 630
             },
-            "instance_value": true,
+            "instance_value": false,
             "rule": [],
             "crules": {},
             "feature_importance": [
@@ -958,7 +1051,7 @@
                 "category": "management/ self-employed/ highly qualified employee/ officer",
                 "count": 148
             },
-            "instance_value": false,
+            "instance_value": true,
             "rule": [],
             "crules": {},
             "feature_importance": [
@@ -1055,7 +1148,7 @@
     "predicted_class": "0",
     "true_class": "0",
     "predicted_proba": {
-        "0": 0.97,
-        "1": 0.03
+        "0": 0.88,
+        "1": 0.12
     }
 }
