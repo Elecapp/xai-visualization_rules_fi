@@ -411,7 +411,10 @@ function FiperMenuProgressHandler() {
       .attr('stroke', FTTemplate.CATEGORICAL_INSTANCE_STROKE_COLOR)
       .attr('stroke-width', 0.75)
       .attr('transform', `translate(${xScale(progressSteps[4].label) + (xScale.bandwidth() / 2)}, 0)`)
-      .classed('cursor-manina', true)
+      .classed('cursor-manina', () => {
+        const stepIndex = progressSteps.findIndex(d1 => !d1.completed);
+        return ((stepIndex < progressSteps.length) && (stepIndex > -1));
+      })
       .on('click', () => {
         const stepIndex = progressSteps.findIndex(d1 => !d1.completed);
         if ((stepIndex < progressSteps.length) && (stepIndex > -1)) {
